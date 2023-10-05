@@ -1,0 +1,5 @@
+#+TITLE: Enzymatic Hydrolysis and Anaerobic Digestion of Food Waste - Master's Thesis
+
+This repository is a place for me to store most of the files concerning my master's thesis to be able to have version control on what I do and back it up somewhere, as well as the ability to share it.
+
+Most of the files will be in Greek as that is the language in which the thesis will be written.
