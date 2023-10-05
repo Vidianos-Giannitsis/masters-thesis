@@ -1,0 +1,95 @@
+% Created 2023-10-02 Δευ 13:56
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{import}
+\usepackage[LGR, T1]{fontenc}
+\usepackage[greek, english, american]{babel}
+\usepackage{alphabeta}
+\usepackage{esint}
+\usepackage{mathtools}
+\usepackage{esdiff}
+\usepackage{makeidx}
+\usepackage{glossaries}
+\usepackage{newfloat}
+\usepackage{minted}
+\usepackage[a4paper, margin=3cm]{geometry}
+\usepackage{chemfig}
+\usepackage{svg}
+\author{Βιδιάνος Γιαννίτσης}
+\date{\today}
+\title{Συνθήκες Λειτουργίας Ενζυμικής Υδρόλυσης}
+\hypersetup{
+ pdfauthor={Βιδιάνος Γιαννίτσης},
+ pdftitle={Συνθήκες Λειτουργίας Ενζυμικής Υδρόλυσης},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.1 (Org mode 9.6.6)}, 
+ pdflang={English}}
+\makeatletter
+\newcommand{\citeprocitem}[2]{\hyper@linkstart{cite}{citeproc_bib_item_#1}#2\hyper@linkend}
+\makeatother
+
+\usepackage[notquote]{hanging}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\section{Προεπεξεργασία}
+\label{sec:org7ac09de}
+Πριν την ενζυμική υδρόλυση, χρειάζονται κάποια άλλα στάδια. Πρώτα πρέπει τα τρόφιμα να μπουν σε blender για να γίνουν λεπτόκοκκα στερεά τα οποία είναι πιο εύκολα στον χειρισμό. Έπειτα, συνήθως διαλύονται σε νερό ή σε αναλογία 1:1 \textsuperscript{\citeprocitem{1}{1},\citeprocitem{2}{2}} ή μέχρι το διάλυμα να έχει \(10 \%\) στερεά \textsuperscript{\citeprocitem{3}{3}} . Κάποιοι έκαναν και λιποδιαχωρισμό για να μην έχουν τα λίπη στο υπόστρωμα τους αλλά να τα αξιοποιήσουν διαφορετικά \textsuperscript{\citeprocitem{3}{3}} . Μετά από αυτά, μπορεί να γίνει η ενζυμική υδρόλυση. 
+
+\section{Ένζυμα που χρησιμοποιούνται}
+\label{sec:orgac5917a}
+Για να βγούν συμπεράσματα για τα ένζυμα και τις συνθήκες που χρησιμοποιούνται εξετάστηκαν 25 πειράματα από 3 reviews και 6 άρθρα \textsuperscript{\citeprocitem{1}{1}–\citeprocitem{9}{9}} .
+
+Γενικά, σχεδόν όλες οι μελέτες χρησιμοποιήσαν κάποιες υδατανθρακάσες. Ορισμένοι χρησιμοποιήσαν έτοιμα εμπορικά μίγματα υδατανθρακασών (πχ το ένζυμο Viscozyme της εταιρείας Novozyme) \textsuperscript{\citeprocitem{2}{2},\citeprocitem{5}{5}} ενώ άλλοι έκαναν πιο συγκεκριμένη επιλογή. Τα 3 βασικά ένζυμα που χρησιμοποιήθηκαν ήταν η αμυλογλυκοζιδάση, η α-αμυλάση και η γλυκοαμυλάση. Η α-αμυλάση έχει ως σκοπό την διάσπαση των μεγάλων αλυσίδων αμύλου σε μικρότερους υδρογονάνθρακες, ενώ η αμυλογλυκοζιδάση και η γλυκοαμυλάση σπάνε αυτά τα μικρότερα μόρια σε γλυκόζη. Ακόμη, ορισμένες μελέτες χρησιμοποιήσαν και κυτταρινάσες \textsuperscript{\citeprocitem{4}{4}} ή πεκτινάσες \textsuperscript{\citeprocitem{6}{6}} για διάσπαση της λιγνοκυτταρινικής βιομάζας που μπορεί να υπάρχει στα υπολείμματα. Πέρα από αυτές, αρκετοί χρησιμοποιήσαν και προτεάσες για να διασπάσουν τις πρωτείνες στα τρόφιμα σε χρήσιμα αμινοξέα \textsuperscript{\citeprocitem{1}{1}–\citeprocitem{3}{3},\citeprocitem{8}{8},\citeprocitem{9}{9}} . Η τελευταία κατηγορία ενζύμων που χρησιμοποιήθηκε είναι οι λιπάσες, οι οποίες διασπάνε τις λιπαρές ενώσεις στα τρόφιμα \textsuperscript{\citeprocitem{2}{2}} . Όμως οι περισσότερες μελέτες δεν τις συμπεριέλαβαν.
+
+Τα περισσότερα πειράματα έγιναν προσθέτοντας ταυτόχρονα όλα τα ένζυμα, αλλά ορισμένα έγιναν σε δύο στάδια. Σε αυτά, το πρώτο στάδιο ήταν πάντα η προσθήκη α-αμυλάσης για την διάσπαση του πολυμερούς σε μικρότερα κομμάτια ώστε μετά τα άλλα ένζυμα να δράσουν πιο γρήγορα και αποτελεσματικά. Επίσης, η χρήση δύο σταδίων επιτρέπει την επιλογή των βέλτιστων συνθηκών του εκάστοτε ενζύμου. Με την επιλογή αυτή, κάποια πειράματα είχαν καλύτερα αποτελέσματα \textsuperscript{\citeprocitem{4}{4},\citeprocitem{6}{6},\citeprocitem{7}{7}} .
+
+\section{Συνθήκες λειτουργίας}
+\label{sec:org9817f96}
+Οι παραμέτροι "εισόδου" του προβλήματος είναι για τα περισσότερα πειράματα η δόση του ενζύμου, η θερμοκρασία, το pH, η ανάδευση και ο χρόνος παραμονής. Η δόση του ενζύμου είναι αρκετά διαφορετική από πείραμα σε πείραμα και είναι σίγουρα μία από τις παραμέτρους που αξίζει να ρυθμίσουμε. Η θερμοκρασία και το pH δεν είναι σε μεγάλο εύρος τιμών. Η θερμοκρασία είναι σχεδόν αποκλειστικά στους 50-60 \(^oC\) με τις τιμές 50 και 55 \(^oC\) να είναι οι συχνότερες ενώ το pH είναι μεταξύ 4.5-5.5 σε σχεδόν κάθε μελέτη. Καθώς τα τρόφιμα είναι ήδη λίγο όξινα συνήθως, αυτό σημαίνει ότι μάλλον δεν απαιτείται ρύθμιση του pH και δεν έχει ιδιαίτερη σημασία η εξέταση διαφορετικών τιμών.
+
+Για την ανάδευση, πολλά πειράματα δεν την αναφέρουν καν, αλλά από αυτούς που την αναφέρουν, οι τιμές 100 και 150 rpm είναι συχνές \textsuperscript{\citeprocitem{1}{1},\citeprocitem{2}{2},\citeprocitem{4}{4},\citeprocitem{5}{5},\citeprocitem{9}{9}} . Μία μελέτη ανέφερε και γρηγορότερη ανάδευση στα 500 rpm \textsuperscript{\citeprocitem{3}{3}} . Πιθανόν να αξίζει περαιτέρω πειραματισμός στο πεδίο αυτό.
+
+Σχετικά με τον χρόνο παραμονής, είναι συχνά 24 ώρες, με κάποια πειράματα να δοκιμάζουν και πιο γρήγορες υδρολύσεις (3-12 ώρες). Ακόμη, κάποιοι λένε πως το δείγμα αφέθηκε για 24 ώρες, αλλά βρέθηκε ότι και μέσα σε 10 έχει φτάσει σε ικανοποιητική μετατροπή \textsuperscript{\citeprocitem{2}{2}} .
+
+\section{Μεταβλητές εξόδου}
+\label{sec:org66a18b0}
+Οι τρείς μεταβλητές που μετριούνται σχεδόν αποκλειστικά είναι η μείωση στα VSS, η γλυκόζη και τα αναγωγικά σάκχαρα. Η μέτρηση του VSS είναι η πιο εύκολη και μπορεί να χρησιμοποιηθεί για να δούμε την πρόοδο της υδρόλυσης, αλλά η "απόδοση" της μετρήθηκε από τα περισσότερα πειράματα αναφέροντας πόσα g/l γλυκόζη ή γενικότερα αναγωγικά σάκχαρα περιέχονται στο τελικό υδρόλυμα.
+
+\pagebreak
+\section{Βιβλιογραφία}
+\label{sec:org69aaece}
+\hypertarget{citeproc_bib_item_1}{(1) Usmani, Z.; Sharma, M.; Awasthi, A. K.; Sharma, G. D.; Cysneiros, D.; Nayak, S. C.; Thakur, V. K.; Naidu, R.; Pandey, A.; Gupta, V. K. Minimizing Hazardous Impact of Food Waste in a Circular Economy Advances in Resource Recovery through Green Strategies. \textit{Journal of hazardous materials} \textbf{2021}, \textit{416}, 126154. \url{https://doi.org/10.1016/j.jhazmat.2021.126154}.}
+
+\hypertarget{citeproc_bib_item_2}{(2) Moon, H. C.; Song, I. S. Enzymatic Hydrolysis of FoodWaste and Methane Production Using UASB Bioreactor. \textit{International journal of green energy} \textbf{2011}, \textit{8} (3), 361–371. \url{https://doi.org/10.1080/15435075.2011.557845}.}
+
+\hypertarget{citeproc_bib_item_3}{(3) Chen, X.; Zheng, X.; Pei, Y.; Chen, W.; Lin, Q.; Huang, J.; Hou, P.; Tang, J.; Han, W. Process Design and Techno-Economic Analysis of Fuel Ethanol Production from Food Waste by Enzymatic Hydrolysis and Fermentation. \textit{Bioresource technology} \textbf{2022}, \textit{363}, 127882. \url{https://doi.org/10.1016/j.biortech.2022.127882}.}
+
+\hypertarget{citeproc_bib_item_4}{(4) Cekmecelioglu, D.; Uncu, O. N. Kinetic Modeling of Enzymatic Hydrolysis of Pretreated Kitchen Wastes for Enhancing Bioethanol Production. \textit{Waste management} \textbf{2013}, \textit{33} (3), 735–739. \url{https://doi.org/10.1016/j.wasman.2012.08.003}.}
+
+\hypertarget{citeproc_bib_item_5}{(5) Moon, H. C.; Song, I. S.; Kim, J. C.; Shirai, Y.; Lee, D. H.; Kim, J. K.; Chung, S. O.; Kim, D. H.; Oh, K. K.; Cho, Y. S. Enzymatic Hydrolysis of Food Waste and Ethanol Fermentation. \textit{International journal of energy research} \textbf{2009}, \textit{33} (2), 164–172. \url{https://doi.org/10.1002/er.1432}.}
+
+\hypertarget{citeproc_bib_item_6}{(6) Zhang, C.; Kang, X.; Wang, F.; Tian, Y.; Liu, T.; Su, Y.; Qian, T.; Zhang, Y. Valorization of Food Waste for Cost-Effective Reducing Sugar Recovery in a Two-Stage Enzymatic Hydrolysis Platform. \textit{Energy} \textbf{2020}, \textit{208}, 118379. \url{https://doi.org/10.1016/j.energy.2020.118379}.}
+
+\hypertarget{citeproc_bib_item_7}{(7) Zhang, C.; Ling, Z.; Huo, S. Anaerobic Fermentation of Pretreated Food Waste for Butanol Production by Co-Cultures Assisted with in-Situ Extraction. \textit{Bioresource technology reports} \textbf{2021}, \textit{16}, 100852. \url{https://doi.org/10.1016/j.biteb.2021.100852}.}
+
+\hypertarget{citeproc_bib_item_8}{(8) Anwar Saeed, M.; Ma, H.; Yue, S.; Wang, Q.; Tu, M. Concise Review on Ethanol Production from Food Waste: Development and Sustainability. \textit{Environmental science and pollution research} \textbf{2018}, \textit{25} (29), 28851–28863. \url{https://doi.org/10.1007/s11356-018-2972-4}.}
+
+\hypertarget{citeproc_bib_item_9}{(9) Ma, C.; Liu, J.; Ye, M.; Zou, L.; Qian, G.; Li, Y.-Y. Towards Utmost Bioenergy Conversion Efficiency of Food Waste: Pretreatment, Co-Digestion, and Reactor Type. \textit{Renewable and sustainable energy reviews} \textbf{2018}, \textit{90}, 700–709. \url{https://doi.org/10.1016/j.rser.2018.03.110}.}\bigskip
+\end{document}
