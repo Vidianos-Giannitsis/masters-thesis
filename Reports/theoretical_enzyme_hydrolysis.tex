@@ -1,0 +1,152 @@
+% Created 2023-10-09 Δευ 18:39
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{import}
+\usepackage[LGR, T1]{fontenc}
+\usepackage[greek, english, american]{babel}
+\usepackage{alphabeta}
+\usepackage{esint}
+\usepackage{mathtools}
+\usepackage{esdiff}
+\usepackage{makeidx}
+\usepackage{glossaries}
+\usepackage{newfloat}
+\usepackage{minted}
+\usepackage[a4paper, margin=3cm]{geometry}
+\usepackage{chemfig}
+\usepackage{svg}
+\author{Βιδιάνος Γιαννίτσης}
+\date{\today}
+\title{Θεωρητικό Μέρος - Απόβλητα Τροφών και Ενζυμική Υδρόλυση}
+\hypersetup{
+ pdfauthor={Βιδιάνος Γιαννίτσης},
+ pdftitle={Θεωρητικό Μέρος - Απόβλητα Τροφών και Ενζυμική Υδρόλυση},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.1 (Org mode 9.6.6)}, 
+ pdflang={English}}
+\makeatletter
+\newcommand{\citeprocitem}[2]{\hyper@linkstart{cite}{citeproc_bib_item_#1}#2\hyper@linkend}
+\makeatother
+
+\usepackage[notquote]{hanging}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\renewcommand{\abstractname}{Περίληψη}
+\renewcommand{\tablename}{Πίνακας}
+\renewcommand{\figurename}{Σχήμα}
+\renewcommand\listingscaption{Κώδικας}
+
+\section{Απόβλητα Τροφών}
+\label{sec:org4ae8296}
+Τα απόβλητα τροφών αποτελούν μία από τις σημαντικότερες κατηγορίες αποβλήτων. Ο οργανισμός τροφίμων και αγρονομίας των ηνωμένων πολιτείων (FAO) υπολογίζει πως περίπου το 1/3 της παγκόσμιας παραγωγής φαγητού (περίπου 1.3 δισεκατομμύριοι τόνοι ετησίως) απορρίπτεται, σπαταλόντας το \(38 \%\) της συνολικής ενέργειας που δαπανούν οι βιομηχανίες τροφίμων για την δημιουργία του και οδηγώντας σε μία οικονομική απώλεια της τάξης των 936 δισεκατομμυρίων δολλαρίων \textsuperscript{\citeprocitem{1}{1}}. Περίπου το \(56 \%\) αυτού είναι σε ανεπτυγμένες χώρες, όπου η πλειοψηφία (περίπου \(40 \%\)) είναι στο στάδιο της κατανάλωσης, ενώ στις λιγότερο ανεπτυγμένες οι απώλειες είναι σε μεγάλο ποσοστό στην συγκομιδή και την επεξεργασία λόγω οικονομικών και τεχνολογικών περιορισμών αλλά και κακών εγκακαταστάσεων \textsuperscript{\citeprocitem{1}{1}} . Ακόμη, σύμφωνα με ειδικούς, αυτές οι ποσότητες δείχνουν αυξητική τάση \textsuperscript{\citeprocitem{1}{1},\citeprocitem{2}{2}} . Όμως, τα απόβλητα αυτά είναι πολύ πλούσια σε οργανική ύλη η οποία θα μπορούσε να αξιοποιηθεί.
+
+Η απόρριψη των τροφίμων αυτών δημιουργεί προβλήματα σε κάθε πυλώνα της βιωσιμότητας. Από κοινωνικής άποψης, είναι ανεπίτρεπτο τα απόβλητα τροφών στο στάδιο της κατανάλωσης σε ανεπτυγμένες χώρες να είναι περίπου ίδιο με την συνολική παραγωγή τροφίμων σε υποανάπτυκτες χώρες, όπου το πρόβλημα του υποσιτισμού είναι ιδιαίτερα συχνό \textsuperscript{\citeprocitem{1}{1}} . Από περιβαλλοντικής άποψης, τα απόβλητα αυτά είναι σε τόσο μεγάλη ποσότητα που η διαχείριση τους με συμβατικές μεθόδους (πχ απόρριψη ή αποτέφρωση) δημιουργεί σοβαρά περιβαλλοντικά προβλήματα \textsuperscript{\citeprocitem{1}{1}–\citeprocitem{3}{3}}. Πιο συγκεκριμένα, το ετήσιο αποτύπωμα άνθρακα που δημιουργείται μόνο λόγω των αποβλήτων αυτών υπολογίζεται περίπου στους 3.3 δισεκατομμύριους τόνους CO\textsubscript{2} eq \textsuperscript{\citeprocitem{4}{4}}. Αλλά και από οικονομικής άποψης, σπαταλάται τόση ενέργεια για την δημιουργία τους και λίγο λιγότερο από την μισή πάει χαμένη, ενώ αυτά τα απόβλητα θα μπορούσαν να χρησιμοποιηθούν ως μία νέα πρώτη ύλη και έτσι όχι μόνο να μην υπάρχει οικονομική απώλεια λόγω αυτών, αλλά να επιφέρουν και σημαντικό οικονομικό όφελος.
+
+\subsection{Τεχνικές αξιοποίησης των αποβλήτων τροφών}
+\label{sec:org566cb49}
+Στην βιβλιογραφία, υπάρχουν πάρα πολλές τεχνικές αξιοποίησης των αποβλήτων αυτών. Οι πιο σύνηθεις είναι τεχνικές όπως η κομποστοποίηση, η οποία παράγει ένα εδαφοβελτιωτικό προιόν, το κομπόστ \textsuperscript{\citeprocitem{5}{5}}, η αναερόβια χώνευση, η οποία παράγει βιοαέριο, ένα μίγμα μεθανίου και διοξειδίου του άνθρακα που μπορεί να χρησιμοποιηθεί ως βιοκαύσιμο στην ίδια λογική με το φυσικό αέριο \textsuperscript{\citeprocitem{6}{6},\citeprocitem{7}{7}} και η αλκοολική ζύμωση, η οποία παράγει βιοαιθανόλη, η οποία είναι επίσης πολύ χρήσιμη ως βιοκαύσιμο \textsuperscript{\citeprocitem{8}{8},\citeprocitem{9}{9}}. Η χρήση του απόβλητου αυτού σημαίνει ένα πολύ φθηνό υπόστρωμα για τις διεργασίες αυτές, αλλά ένα υπόστρωμα πολύ πλούσιο σε σάκχαρα και πρωτείνες τα οποία είναι ιδιαίτερα σημαντικά για τις διεργασίες αυτές.
+
+Πέρα από αυτές τις τεχνικές, υπάρχουν και άλλες που έχουν μελετηθεί αρκετά στη βιβλιογραφία όπως η παραγωγή υδρογόνου είτε με την βιολογική διεργασία της σκοτεινής ζύμωσης \textsuperscript{\citeprocitem{10}{10}} ή με την θερμική διεργασία της αεριοποίησης \textsuperscript{\citeprocitem{11}{11},\citeprocitem{12}{12}}. H ζύμωση ακετόνης-βουτανόλης-αιθανόλης (γνωστή και ως διεργασία Weizmann) \textsuperscript{\citeprocitem{13}{13}} ή η παραγωγή βιοπλαστικών για την αντικατάσταση των συμβατικών πλαστικών \textsuperscript{\citeprocitem{14}{14}} .
+
+Η τεχνική που θα παρουσιαστεί στη μελέτη αυτή είναι η αναερόβια χώνευση.
+
+\section{Προεπεξεργασία}
+\label{sec:org43975cb}
+Ένα πρόβλημα που υπάρχει όμως στα απόβλητα τροφίμων είναι πως είναι απόβλητα τα οποία είναι αρκετά ανομοιογενή. Επίσης, αποτελούνται κυρίως από πολυμερή τα οποία δεν είναι άμεσα ζυμώσιμα. Για αυτό, στις περισσότερες περιπτώσεις προτείνεται να γίνει ένα στάδιο προεπεξεργασίας στα τρόφιμα.
+
+Για να γίνουν πιο ομοιογενή, προτείνεται συνήθως ο τεμαχισμός και η ανάμειξη τους. Έτσι, έχουμε μία λεπτόκοκκη, ημιστερεή πούλπα η οποία μπορεί πιο εύκολα να αναδευτεί και να επιτύχει ομοιογένια. Αυτό γίνεται με κάποιο μπλέντερ συνήθως. Μετά από αυτό, είναι συχνό να περάσουν και από ένα κόσκινο (συνήθως 1-3 mm) για να συγκρατηθούν πιθανά χοντρόκοκκα κομμάτια που δεν είναι επιθυμητά στην υδρόλυση. Βέβαια, ανάλογα με την σύνθεση τους, υπάρχει πιθανότητα να μην είναι εύκολο να γίνει αυτό και να υπάρχει πολύ μεγάλη απώλεια στο κόσκινο \textsuperscript{\citeprocitem{6}{6},\citeprocitem{15}{15}} .
+
+Ακόμη και στην περίπτωση αυτή όμως, μιλάμε για ένα μίγμα το οποίο έχει πολλά στερεά. Καθώς πολλές από τις διεργασίες που ακολουθούν λειτουργούν καλύτερα σε υδατικά διαλύματα, είναι αρκετά συχνό πριν ακολουθήσει κάποια άλλη διεργασία να κάνουμε αραίωση του αποβλήτου σε νερό. Αυτό γίνεται συνήθως ή με κάποια αναλογία (πχ 1:1 ή 1:2 με νερό) ή μέχρι μία συγκεκριμένη ποσότητα στερεών (πχ \(10 \%\) της συνολικής μάζας) \textsuperscript{\citeprocitem{6}{6},\citeprocitem{10}{10},\citeprocitem{15}{15}} .
+
+\subsection{Υδρόλυση}
+\label{sec:org8fd7b5c}
+Μετά από αυτά τα στάδια, τα απόβλητα μπορούν να χρησιμοποιηθούν σε πολλές από τις παραπάνω διεργασίες. Βέβαια, όπως προαναφέρθηκε, δεν είναι άμεσα ζυμώσιμα καθώς αποτελούνται κυρίως από πολυμερή όπως το άμυλο ή διάφορες πρωτείνες. Κάποιες διεργασίες όπως η αναερόβια χώνευση μπορούν να ξεπεράσουν το πρόβλημα αυτό καθώς μπορούν να κάνουν την υδρόλυση μαζί με τα υπόλοιπα στάδια της διεργασίας. Σε κάποιες άλλες όπως η αλκοολική ζύμωση, αυτό δεν είναι εφικτό και η υδρόλυση πρέπει να γίνει ξεχωριστά. Βέβαια, ακόμη και σε αυτές που μπορεί να γίνει μέσα στη διεργασία, η ξεχωριστή υδρόλυση επιφέρει κάποια σημαντικά πλεονεκτήματα όπως επιτάχυνση της διεργασίας και συχνά αύξηση της απόδοσης της \textsuperscript{\citeprocitem{2}{2},\citeprocitem{7}{7}} .
+
+Υπάρχουν διάφορες τεχνικές υδρόλυσης όπως η θερμική, η χημική, ή η ενζυμική. Η θερμική βασίζεται στην θερμική διάσπαση των πολυμερών στα μονομερή τους, όμως, αρχικά απαιτεί μεγάλη ποσότητα ενέργειας και επίσης παράγει και προιόντα θερμικής αποσύνθεσης, τα οποία μπορεί να είναι τοξικά προς μικροοργανισμούς \textsuperscript{\citeprocitem{7}{7}}. Για αυτό, γενικά αποφεύγεται η θερμική επεξεργασία, εκτός από την περίπτωση της δύσκολα διασπάσημης λιγνοκυτταρινικής βιομάζας, η οποία την απαιτεί όχι για να σπάσει τα πολυμερή, αλλά για να διαταράξει την δομή του υλικού και να μπορεί κάποια άλλη μέθοδο να τα σπάσει \textsuperscript{\citeprocitem{16}{16}}. Τα απόβλητα τροφών όμως δεν υπάγονται στην κατηγορία αυτή.
+
+Η χημική προεπεξεργασία διακρίνεται σε δύο βασικές κατηγορίες, την όξινη και την αλκαλική. Βασικό χαρακτηριστικό και των δύο είναι ότι χρησιμοποιούν ακραίες τιμές του pH για να προκαλέσουν κατάρρευση στην πολυμερική αλυσίδα και να απελευθερωθούν μονομερή και ολιγομερή. Λύνει το πρόβλημα του κόστους χρησιμοποιώντας κοινότυπα και φθηνά χημικά και κάνει την διεργασία αρκετά πιο αποτελεσματική. Βέβαια τοξικά παραπροιόντα μπορούν να παραχθούν και από την διεργασία και για αυτό η απόδοση της δεν είναι τόσο υψηλή \textsuperscript{\citeprocitem{7}{7},\citeprocitem{10}{10}}.
+
+Η ενζυμική υδρόλυση χρησιμοποιεί ένζυμα τα οποία είναι εξειδικευμένα στην διάσπαση των πολυμερών αυτών καθώς και των ολιγομερών τους. Για αυτό, είναι εξαιρετικά αποτελεσματική και δεν παράγει καθόλου παραπροιόντα. Επίσης, απαιτεί ήπιες συνθήκες, δηλαδή ατμοσφαιρική πίεση και θερμοκρασία συνήθως στην περιοχή των 50-60 \(^oC\) \textsuperscript{\citeprocitem{7}{7},\citeprocitem{10}{10}}. Το βασικό της πρόβλημα είναι πως παρόλο που χρειάζεται μικρή ποσότητα ενζύμων, αυτά είναι πολύ ακριβά το οποίο ανεβάζει το κόστος της διεργασίας σημαντικά. Βέβαια, μία πρόσφατη μελέτη έδειξε πως επειδή είναι πολύ πιο αποτελεσματική διεργασία, μπορεί να αυξήσει την παραγωγή του επιθυμητού προιόντος και ως αποτέλεσμα από την πώληση του, το καθαρό κέρδος να είναι περισσότερο επειδή η διεργασία γίνεται χωρίς καθόλου τοξικά παραπροιόντα και άρα πάρα πολύ καλή απόδοση \textsuperscript{\citeprocitem{3}{3}}. Για αυτούς τους λόγους, η τεχνική αυτή θεωρείται η πιο συχνή μέθοδος υδρόλυσης.
+
+Κάποιες μελέτες έχουν δοκιμάσει όμως και κάποιες πιο προτωποριακές τεχνικές όπως οι υπέρηχοι και τα μικροκύματα. Τα μικροκύματα αυξάνουν την κινητική ενέργεια του διαλύματος επιτρέποντας του να φτάσει στο σημείο βρασμού του πολύ γρήγορα, προσωμοιάζοντας μία θερμική μέθοδο, βέβαια, δεν προτείνεται για επεξεργασία αποβλήτων τροφών επειδή δεν πετυχαίνει ιδιαίτερα υψηλή απόδοση \textsuperscript{\citeprocitem{7}{7}} . Η χρήση υπέρηχων δημιουργεί ελεύθερες ρίζες υδροξυλίου και υδρογόνου οι οποίες είναι πάρα πολύ αντιδραστικές και μπορούν να διασπάσουν πολύ αποτελεσματικά τα πολυμερή. Αναφέρεται πως δεν είναι όσο αποτελεσματική όσο άλλες τεχνικές από μόνη της \textsuperscript{\citeprocitem{7}{7}} όμως, σε συνδυασμό με τεχνικές όπως η ενζυμική υδρόλυση, παίζει επικουρικό ρόλο και βελτιώνει σημαντικά την απόδοση της υδρόλυσης  \textsuperscript{\citeprocitem{12}{12},\citeprocitem{17}{17}}. Μάλιστα, μία πιο αναλυτική μελέτη πάνω στην αλληλεπίδραση αυτή \textsuperscript{\citeprocitem{18}{18}} έδειξε πως οι υπέρηχοι μπορούν να αυξήσουν την απόδοση σε γλυκόζη κατά \(10 \%\) περίπου και ταυτόχρονα να μειώσουν τον απαιτούμενο χρόνο περίπου στο μισό. Βέβαια, η προσθήκη του βήματος αυτού αυξάνει το κόστος της διεργασίας. Όμως, λόγω της σημαντικής μείωσης του χρόνου - ο οποίος σε ένα συνεχές σύστημα είναι ανάλογος της ποσότητας των ενζύμου - μπορεί να μειωθεί σημαντικά το κόστος της διεργασίας καθώς τα ένζυμα είναι το ακριβότερο κομμάτι της διεργασίας αυτής. Οπότε η χρήση τεχνικών όπως αυτή, επικουρικά της υδρόλυσης μπορεί να επιφέρει σημαντικά πλεονεκτήματα.
+
+\section{Ενζυμική Υδρόλυση}
+\label{sec:org40a8472}
+Για τους λόγους που προαναφέρθηκαν, στην παρούσα μελέτη επιλέχθηκε η χρήση ενζυμικής υδρόλυσης ως προεπεξεργασία. Για να επιλέχθουν οι βέλτιστες συνθήκες λειτουργίας της διεργασίας, έγινε μία βιβλιογραφική ανασκόπηση από προηγούμενες μελέτες και αυτή χρησιμοποιήθηκε ως σημείο έναρξης για το πειραματικό κομμάτι της εργασίας. Εξετάστηκαν 25 πειράματα από 3 reviews και 6 άρθρα \textsuperscript{\citeprocitem{3}{3},\citeprocitem{6}{6},\citeprocitem{7}{7},\citeprocitem{9}{9},\citeprocitem{12}{12},\citeprocitem{13}{13},\citeprocitem{15}{15},\citeprocitem{19}{19},\citeprocitem{20}{20}} .
+
+\subsection{Ένζυμα}
+\label{sec:org99ccb57}
+Γενικά, σχεδόν όλες οι μελέτες χρησιμοποιήσαν κάποιες υδατανθρακάσες. Ορισμένοι χρησιμοποιήσαν έτοιμα εμπορικά μίγματα υδατανθρακασών (πχ το ένζυμο Viscozyme της εταιρείας Novozyme) \textsuperscript{\citeprocitem{6}{6},\citeprocitem{19}{19}} ενώ άλλοι έκαναν πιο συγκεκριμένη επιλογή. Τα 3 βασικά ένζυμα που χρησιμοποιήθηκαν ήταν η αμυλογλυκοζιδάση, η α-αμυλάση και η γλυκοαμυλάση. Η α-αμυλάση έχει ως σκοπό την διάσπαση των μεγάλων αλυσίδων αμύλου σε μικρότερους υδρογονάνθρακες, ενώ η αμυλογλυκοζιδάση και η γλυκοαμυλάση σπάνε αυτά τα μικρότερα μόρια σε γλυκόζη. Ακόμη, ορισμένες μελέτες χρησιμοποιήσαν και κυτταρινάσες \textsuperscript{\citeprocitem{20}{20}} ή πεκτινάσες \textsuperscript{\citeprocitem{3}{3}} για διάσπαση της λιγνοκυτταρινικής βιομάζας που μπορεί να υπάρχει στα υπολείμματα. Πέρα από αυτές, αρκετοί χρησιμοποιήσαν και προτεάσες για να διασπάσουν τις πρωτείνες στα τρόφιμα σε χρήσιμα αμινοξέα \textsuperscript{\citeprocitem{6}{6},\citeprocitem{7}{7},\citeprocitem{9}{9},\citeprocitem{12}{12},\citeprocitem{15}{15}} . Η τελευταία κατηγορία ενζύμων που χρησιμοποιήθηκε είναι οι λιπάσες, οι οποίες διασπάνε τις λιπαρές ενώσεις στα τρόφιμα \textsuperscript{\citeprocitem{6}{6}} . Όμως οι περισσότερες μελέτες δεν τις συμπεριέλαβαν, είτε επειδή δεν το θεώρησαν αρκετά σημαντικό ή επειδή στην προεπεξεργασία είχαν κάνει λιποδιαχωρισμό και εκμεταλλεύτηκαν διαφορετικά τα λίπη \textsuperscript{\citeprocitem{15}{15}} .  
+
+Τα περισσότερα πειράματα έγιναν προσθέτοντας ταυτόχρονα όλα τα ένζυμα, αλλά ορισμένα έγιναν σε δύο στάδια. Σε αυτά, το πρώτο στάδιο ήταν πάντα η προσθήκη α-αμυλάσης για την διάσπαση του πολυμερούς σε μικρότερα κομμάτια ώστε μετά τα άλλα ένζυμα να δράσουν πιο γρήγορα και αποτελεσματικά. Επίσης, η χρήση δύο σταδίων επιτρέπει την επιλογή των βέλτιστων συνθηκών του εκάστοτε ενζύμου. Με την επιλογή αυτή, κάποια πειράματα είχαν καλύτερα αποτελέσματα \textsuperscript{\citeprocitem{3}{3},\citeprocitem{13}{13},\citeprocitem{20}{20}} .
+
+\subsection{Συνθήκες Λειτουργίας}
+\label{sec:orgd8cbae3}
+Οι παραμέτροι "εισόδου" του προβλήματος είναι για τα περισσότερα πειράματα η δόση του ενζύμου, η θερμοκρασία, το pH, η ανάδευση και ο χρόνος παραμονής. Η δόση του ενζύμου είναι αρκετά διαφορετική από πείραμα σε πείραμα και είναι σίγουρα μία από τις παραμέτρους που πρέπει να γίνει πειραματισμός για να αποφασιστεί η βέλτιστη τιμή της. Η θερμοκρασία και το pH δεν είναι σε μεγάλο εύρος τιμών. Η θερμοκρασία είναι σχεδόν αποκλειστικά στους 50-60 \(^oC\) με τις τιμές 50 και 55 \(^oC\) να είναι οι συχνότερες ενώ το pH είναι μεταξύ 4.5-5.5 σε σχεδόν κάθε μελέτη. Καθώς τα τρόφιμα είναι ήδη λίγο όξινα συνήθως, αυτό σημαίνει ότι μάλλον δεν απαιτείται ρύθμιση του pH και δεν έχει ιδιαίτερη σημασία η εξέταση διαφορετικών τιμών.
+
+Για την ανάδευση, πολλά πειράματα δεν την αναφέρουν καν, αλλά από αυτούς που την αναφέρουν, οι τιμές 100 και 150 rpm είναι συχνές \textsuperscript{\citeprocitem{6}{6},\citeprocitem{7}{7},\citeprocitem{12}{12},\citeprocitem{19}{19},\citeprocitem{20}{20}} . Μία μελέτη ανέφερε και γρηγορότερη ανάδευση στα 500 rpm \textsuperscript{\citeprocitem{15}{15}} .
+
+Σχετικά με τον χρόνο παραμονής, είναι συχνά 24 ώρες, με κάποια πειράματα να δοκιμάζουν και πιο γρήγορες υδρολύσεις (3-12 ώρες). Ακόμη, κάποιοι λένε πως το δείγμα αφέθηκε για 24 ώρες, αλλά βρέθηκε ότι και μέσα σε 10 έχει φτάσει σε ικανοποιητική μετατροπή \textsuperscript{\citeprocitem{6}{6}} .
+
+\subsection{Μεταβλητές Εξόδου}
+\label{sec:orged50fc5}
+Οι τρείς μεταβλητές που μετριούνται συνήθως στην διεργασία αυτή είναι η μείωση στα VSS, η γλυκόζη και τα αναγωγικά σάκχαρα. Η μέτρηση του VSS είναι η πιο εύκολη και μπορεί να χρησιμοποιηθεί για να δούμε την πρόοδο της υδρόλυσης, αλλά η "απόδοση" της μετρήθηκε από τα περισσότερα πειράματα αναφέροντας πόσα g/l γλυκόζη ή γενικότερα αναγωγικά σάκχαρα περιέχονται στο τελικό υδρόλυμα.
+
+\section{Βιβλιογραφία}
+\label{sec:org4bf079c}
+\hypertarget{citeproc_bib_item_1}{(1) Ishangulyyev, R.; Kim, S.; Lee, S. H. Understanding Food Loss and WasteWhy Are We Losing and Wasting Food? \textit{Foods} \textbf{2019}, \textit{8} (8), 297. \url{https://doi.org/10.3390/foods8080297}.}
+
+\hypertarget{citeproc_bib_item_2}{(2) Wu, L.; Wei, W.; Liu, X.; Wang, D.; Ni, B.-J. Potentiality of Recovering Bioresource from Food Waste through Multi-Stage Co-digestion with Enzymatic Pretreatment. \textit{Journal of environmental management} \textbf{2022}, \textit{319}, 115777. \url{https://doi.org/10.1016/j.jenvman.2022.115777}.}
+
+\hypertarget{citeproc_bib_item_3}{(3) Zhang, C.; Kang, X.; Wang, F.; Tian, Y.; Liu, T.; Su, Y.; Qian, T.; Zhang, Y. Valorization of Food Waste for Cost-Effective Reducing Sugar Recovery in a Two-Stage Enzymatic Hydrolysis Platform. \textit{Energy} \textbf{2020}, \textit{208}, 118379. \url{https://doi.org/10.1016/j.energy.2020.118379}.}
+
+\hypertarget{citeproc_bib_item_4}{(4) Taheri, M. E.; Salimi, E.; Saragas, K.; Novakovic, J.; Barampouti, E. M.; Mai, S.; Malamis, D.; Moustakas, K.; Loizidou, M. Effect of Pretreatment Techniques on Enzymatic Hydrolysis of Food Waste. \textit{Biomass conversion and biorefinery} \textbf{2021}, \textit{11} (2), 219–226. \url{https://doi.org/10.1007/s13399-020-00729-7}.}
+
+\hypertarget{citeproc_bib_item_5}{(5) Cerda, A.; Artola, A.; Font, X.; Barrena, R.; Gea, T.; Sánchez, A. Composting of Food Wastes: Status and Challenges. \textit{Bioresource technology} \textbf{2018}, \textit{248}, 57–67. \url{https://doi.org/10.1016/j.biortech.2017.06.133}.}
+
+\hypertarget{citeproc_bib_item_6}{(6) Moon, H. C.; Song, I. S. Enzymatic Hydrolysis of FoodWaste and Methane Production Using UASB Bioreactor. \textit{International journal of green energy} \textbf{2011}, \textit{8} (3), 361–371. \url{https://doi.org/10.1080/15435075.2011.557845}.}
+
+\hypertarget{citeproc_bib_item_7}{(7) Ma, C.; Liu, J.; Ye, M.; Zou, L.; Qian, G.; Li, Y.-Y. Towards Utmost Bioenergy Conversion Efficiency of Food Waste: Pretreatment, Co-Digestion, and Reactor Type. \textit{Renewable and sustainable energy reviews} \textbf{2018}, \textit{90}, 700–709. \url{https://doi.org/10.1016/j.rser.2018.03.110}.}
+
+\hypertarget{citeproc_bib_item_8}{(8) Roukas, T.; Kotzekidou, P. From Food Industry Wastes to Second Generation Bioethanol: A Review. \textit{Reviews in environmental science and bio/technology} \textbf{2022}, \textit{21} (1), 299–329. \url{https://doi.org/10.1007/s11157-021-09606-9}.}
+
+\hypertarget{citeproc_bib_item_9}{(9) Anwar Saeed, M.; Ma, H.; Yue, S.; Wang, Q.; Tu, M. Concise Review on Ethanol Production from Food Waste: Development and Sustainability. \textit{Environmental science and pollution research} \textbf{2018}, \textit{25} (29), 28851–28863. \url{https://doi.org/10.1007/s11356-018-2972-4}.}
+
+\hypertarget{citeproc_bib_item_10}{(10) Han, W.; Yan, Y.; Shi, Y.; Gu, J.; Tang, J.; Zhao, H. Biohydrogen Production from Enzymatic Hydrolysis of Food Waste in Batch and Continuous Systems. \textit{Scientific reports} \textbf{2016}, \textit{6} (1), 38395. \url{https://doi.org/10.1038/srep38395}.}
+
+\hypertarget{citeproc_bib_item_11}{(11) Murugesan, P.; Raja, V.; Dutta, S.; Moses, J. A.; Anandharamakrishnan, C. Food Waste Valorisation via Gasification A Review on Emerging Concepts, Prospects and Challenges. \textit{Science of the total environment} \textbf{2022}, \textit{851}, 157955. \url{https://doi.org/10.1016/j.scitotenv.2022.157955}.}
+
+\hypertarget{citeproc_bib_item_12}{(12) Usmani, Z.; Sharma, M.; Awasthi, A. K.; Sharma, G. D.; Cysneiros, D.; Nayak, S. C.; Thakur, V. K.; Naidu, R.; Pandey, A.; Gupta, V. K. Minimizing Hazardous Impact of Food Waste in a Circular Economy Advances in Resource Recovery through Green Strategies. \textit{Journal of hazardous materials} \textbf{2021}, \textit{416}, 126154. \url{https://doi.org/10.1016/j.jhazmat.2021.126154}.}
+
+\hypertarget{citeproc_bib_item_13}{(13) Zhang, C.; Ling, Z.; Huo, S. Anaerobic Fermentation of Pretreated Food Waste for Butanol Production by Co-Cultures Assisted with in-Situ Extraction. \textit{Bioresource technology reports} \textbf{2021}, \textit{16}, 100852. \url{https://doi.org/10.1016/j.biteb.2021.100852}.}
+
+\hypertarget{citeproc_bib_item_14}{(14) Rajesh Banu, J.; Godvin Sharmila, V. Review on Food Waste Valorisation for Bioplastic Production towards a Circular Economy: Sustainable Approaches and Biodegradability Assessment. \textit{Sustainable energy \& fuels} \textbf{2023}, \textit{7} (14), 3165–3184. \url{https://doi.org/10.1039/D3SE00500C}.}
+
+\hypertarget{citeproc_bib_item_15}{(15) Chen, X.; Zheng, X.; Pei, Y.; Chen, W.; Lin, Q.; Huang, J.; Hou, P.; Tang, J.; Han, W. Process Design and Techno-Economic Analysis of Fuel Ethanol Production from Food Waste by Enzymatic Hydrolysis and Fermentation. \textit{Bioresource technology} \textbf{2022}, \textit{363}, 127882. \url{https://doi.org/10.1016/j.biortech.2022.127882}.}
+
+\hypertarget{citeproc_bib_item_16}{(16) Fernandez-Bolanos, J.; Felizon, B.; Heredia, A.; Rodriguez, R.; Guillen, R.; Jimenez, A. Steam-Explosion of Olive Stones: Hemicellulose Solubilization and Enhancement of Enzymatic Hydrolysis of Cellulose. \textit{Bioresource technology} \textbf{2001}, \textit{79} (1), 53–61. \url{https://doi.org/10.1016/S0960-8524(01)00015-3}.}
+
+\hypertarget{citeproc_bib_item_17}{(17) Suresh, T.; Sivarajasekar, N.; Balasubramani, K.; Ahamad, T.; Alam, M.; Naushad, M. Process Intensification and Comparison of Bioethanol Production from Food Industry Waste (Potatoes) by Ultrasonic Assisted Acid Hydrolysis and Enzymatic Hydrolysis: Statistical Modelling and Optimization. \textit{Biomass and bioenergy} \textbf{2020}, \textit{142}, 105752. \url{https://doi.org/10.1016/j.biombioe.2020.105752}.}
+
+\hypertarget{citeproc_bib_item_18}{(18) Li, X.; Mettu, S.; Martin, G.; Ashokkumar, M.; Lin, C. Ultrasonic Pretreatment of Food Waste to Accelerate Enzymatic Hydrolysis for Glucose Production. \textit{Ultrasonics sonochemistry} \textbf{2019}, \textit{53}, 77–82. \url{https://doi.org/10.1016/j.ultsonch.2018.12.035}.}
+
+\hypertarget{citeproc_bib_item_19}{(19) Moon, H. C.; Song, I. S.; Kim, J. C.; Shirai, Y.; Lee, D. H.; Kim, J. K.; Chung, S. O.; Kim, D. H.; Oh, K. K.; Cho, Y. S. Enzymatic Hydrolysis of Food Waste and Ethanol Fermentation. \textit{International journal of energy research} \textbf{2009}, \textit{33} (2), 164–172. \url{https://doi.org/10.1002/er.1432}.}
+
+\hypertarget{citeproc_bib_item_20}{(20) Cekmecelioglu, D.; Uncu, O. N. Kinetic Modeling of Enzymatic Hydrolysis of Pretreated Kitchen Wastes for Enhancing Bioethanol Production. \textit{Waste management} \textbf{2013}, \textit{33} (3), 735–739. \url{https://doi.org/10.1016/j.wasman.2012.08.003}.}\bigskip
+\end{document}

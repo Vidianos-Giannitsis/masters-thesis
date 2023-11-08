@@ -85,7 +85,7 @@ This is a useful table mentioning a lot of things about different AD systems tha
 This table has a list of the enzymes used in this process. Amylases, proteases, lipases are used for starch, proteins and lipids respectively and then cellulases, xylanases and pectinases are used to destroy the lignocellulosic parts of the waste. It also has conditions for these.
 
 * Towards utmost bioenergy conversion efficiency of food waste: Pretreatment, co-digestion, and reactor type
-Bibtex entry for node: cite:maUtmostBioenergyConversion2018a
+Bibtex entry for node: cite:maUtmostBioenergyConversion2018
 
 #+filetags: article
 - keywords :: 
