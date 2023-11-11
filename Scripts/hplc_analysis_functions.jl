@@ -1,4 +1,4 @@
-using DataFrames, CSV, Plots
+using DataFrames, CSV, StatsPlots
 
 area_data = CSV.read("hplc_test_table.csv", DataFrame)
 area = copy(area_data)
@@ -57,11 +57,15 @@ function plot_conc(t, C, title, fig_name)
 end
 
 function create_conc_table(df, table_name)
-    data_vector = [df.Time, sucrose(df.Sucrose), glucose(df.Glucose),
-                  fructose(df.Fructose), lactate(df.Lactate), acetate(df.Acetate),
-                  propionate(df.Propionate), ethanol(df.Ethanol)]
-    data_matrix = reduce(vcat, transpose.(data_vector))
-    data_table = Tables.table(data_matrix)
+    data_vector = [df.Time', sucrose(df.Sucrose)', glucose(df.Glucose)',
+                   fructose(df.Fructose)', lactate(df.Lactate)',
+                   acetate(df.Acetate)', propionate(df.Propionate)',
+                   ethanol(df.Ethanol)', df.pH', df.EC']
+    data_matrix = reduce(hcat, transpose.(data_vector))
+    data_table = Tables.table(data_matrix, header = [:Time, :Sucrose, :Glucose,
+                                                     :Fructose, :Lactate,
+                                                     :Acetate, :Propionate,
+                                                     :Ethanol, :pH, :EC])
     CSV.write(table_name, data_table)
 end
 
@@ -75,17 +79,5 @@ function create_plots(df, fig_name)
     plot_conc(t, propionate(df.Propionate), "Propionate Concentration", "Propionate " * fig_name)
     plot_conc(t, ethanol(df.Ethanol), "Ethanol Concentration", "Ethanol " * fig_name)
 end
-
-
-
-
-
-
-
-
-
-
-
-
 
 
