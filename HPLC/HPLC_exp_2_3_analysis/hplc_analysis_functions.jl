@@ -1,48 +1,46 @@
 using DataFrames, CSV, StatsPlots
 
-function make_neg_zero(vec)
-    for i in length(vec)
-        if vec[i] <= 0
-            vec[i] = 0
-        end
+function make_neg_zero(num)
+    if num <= 0
+        return 0
+    else
+        return num
     end
-    vec
 end
-
 
 function sucrose(a)
     C = @. (a - 5131.12)/130943.83
-    C = make_neg_zero(C)
+    C = map(make_neg_zero, C)
 end
 
 function glucose(a)
     C = @. (a - 7899.51)/264251.52
-    C = make_neg_zero(C)
+    C = map(make_neg_zero, C)
 end
 
 function fructose(a)
     C = @. (a + 11335.7)/270115.2
-    C = make_neg_zero(C)
+    C = map(make_neg_zero, C)
 end
 
 function lactate(a)
     C = @. (a - 0.946)/1521.642
-    C = make_neg_zero(C)
+    C = map(make_neg_zero, C)
 end
 
 function acetate(a)
     C = @. (a + 0.684)/1092.079
-    C = make_neg_zero(C)
+    C = map(make_neg_zero, C)
 end
 
 function propionate(a)
     C = @. (a + 25.17)/1060.057
-    C = make_neg_zero(C)
+    C = map(make_neg_zero, C)
 end
 
 function ethanol(a)
     C = @. (a - 8775.42)/113284.075
-    C = make_neg_zero(C)
+    C = map(make_neg_zero, C)
 end
 
 function plot_conc(t, C, title, fig_name)
