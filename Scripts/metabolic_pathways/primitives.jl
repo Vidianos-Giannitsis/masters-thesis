@@ -74,11 +74,45 @@ function m_butanol()
     molar_mass(C=4, H=10, O=1)
 end
 
-# Define an initial state
+function m_valerate()
+    molar_mass(C=5, H=10, O=2)
+end
+
+# Define an initial state. The system will expect this to be in mass
+# value and not concentration for sake of simplicity. We can however
+# define a function that does the conversion so both can work.
 state = (glucose = 16.0, pyruvate = 0.0, hydrogen = 0.0, water = 700.0, co2 = 0.0,
          acetate = 0.0, propionate = 0.0, butyrate = 0.0, ethanol = 0.0,
          lactate = 0.0, succinate = 0.0, formate = 0.0, acetaldehyde = 0.0,
-         fructose = 0.0, sucrose = 0.0, butanol = 0.0, acetone = 0.0)
+         fructose = 0.0, sucrose = 0.0, butanol = 0.0, acetone = 0.0,
+         valerate = 0.0)
+
+function conc_to_mass(st, volume)
+    new_st = (glucose=st.glucose*volume, pyruvate =st.pyruvate*volume,
+              hydrogen=st.hydrogen*volume,water=st.water*volume,
+              co2=st.co2*volume, acetate=st.acetate*volume,
+              propionate=st.propionate*volume, butyrate=st.butyrate*volume,
+              ethanol=st.ethanol*volume, lactate=st.lactate*volume,
+              succinate=st.succinate*volume, formate=st.formate*volume,
+              acetaldehyde=st.acetaldehyde*volume,
+              fructose=st.fructose*volume, sucrose=st.sucrose*volume,
+              butanol=st.butanol*volume, acetone=st.acetone*volume,
+              valerate=st.valerate*volume)
+end
+# We also ideally want output in concentration, so ideally we also
+# want the opposite conversion.
+function mass_to_conc(st, volume)
+    new_st = (glucose=st.glucose/volume, pyruvate =st.pyruvate/volume,
+              hydrogen=st.hydrogen/volume,water=st.water/volume,
+              co2=st.co2/volume, acetate=st.acetate/volume,
+              propionate=st.propionate/volume, butyrate=st.butyrate/volume,
+              ethanol=st.ethanol/volume, lactate=st.lactate/volume,
+              succinate=st.succinate/volume, formate=st.formate/volume,
+              acetaldehyde=st.acetaldehyde/volume,
+              fructose=st.fructose/volume, sucrose=st.sucrose/volume,
+              butanol=st.butanol/volume, acetone=st.acetone/volume,
+              valerate=st.valerate/volume)
+end
 
 # Glycolysis is the metabolic pathway in which glucose is broken down
 # into energy, pyruvate and hydrogen (in the form of NADH). Pyruvate
@@ -183,7 +217,7 @@ function pyruv_to_acetaldehyde(st; goal = (; pyruvate = 0.0))
     mass_stoic = (pyruvate = stoic.pyruvate*m_pyruvate(),
                   acetaldehyde = stoic.acetaldehyde*m_acetaldehyde(),
                   co2 = stoic.co2*m_co2())
-    goal.acetaldehyde <= st.acetaldehyde || error("Pyruvate is not sufficient for this goal")
+    goal.pyruvate <= st.pyruvate || error("Pyruvate is not sufficient for this goal")
     change = (goal.pyruvate - st.pyruvate)/mass_stoic.pyruvate
     new_st = merge(st,
                    (pyruvate = goal.pyruvate,
@@ -196,8 +230,9 @@ function acetaldehyde_to_ethanol(st; goal = (; acetaldehyde = 0.0))
     mass_stoic = (acetaldehyde = stoic.acetaldehyde*m_acetaldehyde(),
                   hydrogen = stoic.hydrogen*m_hydrogen(),
                   ethanol = stoic.ethanol*m_ethanol())
-    goal.pyruvate <= st.pyruvate || error("Acetaldehyde is not sufficient for this goal")
+    goal.acetaldehyde <= st.acetaldehyde || error("Acetaldehyde is not sufficient for this goal")
     change = (goal.acetaldehyde - st.acetaldehyde)/mass_stoic.acetaldehyde
+    abs(change*mass_stoic.hydrogen) <= st.hydrogen || error("Hydrogen is not sufficient for this goal")
     new_st = merge(st,
                    (acetaldehyde = goal.acetaldehyde,
                     hydrogen = st.hydrogen + change*mass_stoic.hydrogen,
@@ -226,6 +261,7 @@ function pyruv_to_butanol(st; goal = (; pyruvate = 0.0))
                   co2 = stoic.co2*m_co2())
     goal.pyruvate <= st.pyruvate || error("Pyruvate is not sufficient for this goal")
     change = (goal.pyruvate - st.pyruvate)/mass_stoic.pyruvate
+    abs(change*mass_stoic.hydrogen) <= st.hydrogen || error("Hydrogen is not sufficient for this goal")
     new_st = merge(st,
                    (pyruvate = goal.pyruvate,
                     butanol = st.butanol + change*mass_stoic.butanol,
@@ -258,6 +294,7 @@ function pyruv_to_lact(st; goal = (; pyruvate = 0.0))
                   lactate = stoic.lactate*m_lactate())
     goal.pyruvate <= st.pyruvate || error("Pyruvate is not sufficient for this goal")
     change = (goal.pyruvate - st.pyruvate)/mass_stoic.pyruvate
+    abs(change*mass_stoic.hydrogen) <= st.hydrogen || error("Hydrogen is not sufficient for this goal")
     new_st = merge(st,
                    (pyruvate = goal.pyruvate,
                     hydrogen = st.hydrogen + change*mass_stoic.hydrogen,
@@ -271,6 +308,7 @@ function lact_to_propionate(st; goal = (; lactate = 0.0))
                   propionate = stoic.propionate*m_propionate())
     goal.lactate <= st.lactate || error("Lactate is not sufficient for this goal")
     change = (goal.lactate - st.lactate)/mass_stoic.lactate
+    abs(change*mass_stoic.hydrogen) <= st.hydrogen || error("Hydrogen is not sufficient for this goal")
     new_st = merge(st,
                    (lactate = goal.lactate,
                     hydrogen = st.hydrogen + change*mass_stoic.hydrogen,
@@ -286,6 +324,8 @@ function pyruv_to_succin(st; goal = (; pyruvate = 0.0))
                   water = stoic.water*m_water())
     goal.pyruvate <= st.pyruvate || error("Pyruvate is not sufficient for this goal")
     change = (goal.pyruvate - st.pyruvate)/mass_stoic.pyruvate
+    abs(change*mass_stoic.hydrogen) <= st.hydrogen || error("Hydrogen is not sufficient for this goal")
+    abs(change*mass_stoic.co2) <= st.co2 || error("CO2 is not sufficient for this goal")
     new_st = merge(st,
                    (pyruvate = goal.pyruvate,
                     co2 = st.co2 + change*mass_stoic.co2,
@@ -320,8 +360,9 @@ function formate_balance(st; goal = (; formate = 0.0))
     mass_stoic = (co2 = stoic.co2*m_co2(),
                   hydrogen = stoic.hydrogen*m_hydrogen(),
                   formate = stoic.formate*m_formate())
-    goal.formate <= st.formate || error("Formate is not sufficient for this goal")
     change = (goal.formate - st.formate)/mass_stoic.formate
+    abs(change*mass_stoic.hydrogen) <= st.hydrogen || error("Hydrogen is not sufficient for this goal")
+    abs(change*mass_stoic.co2) <= st.co2 || error("CO2 is not sufficient for this goal")
     new_st = merge(st,
                    (formate = goal.formate,
                     co2 = st.co2 + change*mass_stoic.co2,
@@ -384,9 +425,8 @@ end
 # similar to propionate formation where we define to which extent each
 # pathway was followed to get a total of the heterolactic
 # fermentation, which value however can be a key argument as acetate
-# formation is generally rare. Also write the bifidus and PP pathways
-# as fundamental reactions, although in my analysis I'm most likely
-# skipping PP. Write propionate to valerate (which happens in mixed
+# formation is generally rare. Also write the bifidus pathway as a
+# fundamental. Write propionate to valerate (which happens in mixed
 # acid fermenation). Then, we can also write acetogenic (and maybe
 # methanogenic) reactions as fundamentals, to explain other products
 # which we can find in the reactor. After all fundamentals are done,
@@ -395,55 +435,371 @@ end
 # known or unknown stoichiometries and say that this is another
 # possible route. This is mostly for products of EMP.
 
-# function heterolactic_ferment(st; goal = (; glucose = 0.0))
-#     pyr_st = glycolysis(st, goal)
-#     eth_goal = (; pyruvate = pyr_st.pyruvate/2)
-#     lact_goal = (; pyruvate = pyr_st.pyruvate/2)
+function propionate_to_valerate(st; goal = (; valerate = 0.0))
+    stoic = (propionate = -1, co2 = -2, hydrogen = -6, valerate =+1)
+    mass_stoic = (propionate = stoic.propionate*m_propionate(),
+                  co2 = stoic.co2*m_co2(),
+                  hydrogen = stoic.hydrogen*m_hydrogen(),
+                  valerate = stoic.valerate*m_valerate())
+    goal.valerate <= m_valerate()*st.propionate/m_propionate() || error("Propionate is not sufficient for this goal")
+    change = (goal.valerate - st.valerate)/mass_stoic.valerate
+    new_st = merge(st,
+                   (valerate = goal.valerate,
+                    propionate = st.propionate + change*mass_stoic.propionate,
+                    co2 = st.co2 + change*mass_stoic.co2,
+                    hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+end
 
-#     eth_st = pyruv_to_ethanol(pyr_st, pyr_goal = eth_goal)
-#     lact_st = pyruv_to_lact(pyr_st, goal = lact_goal)
-#     new_st = merge(pyr_st,
-#                    (pyruvate = pyr_st.pyruvate - eth_st.pyruvate - lact_st.pyruvate,
-#                     hydrogen = pyr_st.hydrogen - eth_st.hydrogen - lact_st.hydrogen,
-#                     ethanol = eth_st.ethanol,
-#                     lactate = lact_st.lactate,
-#                     co2 = eth_st.co2))
-# end
-
-# function gluc_to_lact(st, het_amount; goal = (; glucose = 0.0))
-#     homo_goal = (; glucose = (st.glucose - (st.glucose - goal.glucose)*(1-het_amount)))
-#     het_goal = (; glucose = (st.glucose - (st.glucose - goal.glucose)*(het_amount)))
-
-#     homo_st = homolactic_ferment(st, goal = homo_goal)
-#     het_st = heterolactic_ferment(st, goal = het_goal)
-#     new_st = merge(st,
-#                    (glucose = goal.glucose,
-#                     hydrogen = st.hydrogen - homo_st.hydrogen - het_st.hydrogen,
-#                     lactate = homo_st.lactate + het_st.lactate,
-#                     ethanol = het_st.ethanol,
-#                     co2 = het_st.co2))
-# end
-
-# function gluc_to_propionate(st, lact_amount, hetlact_amount;
-#                             gluc_goal = (; glucose = 0.0),
-#                             lact_goal = (; lactate = 0.0),
-#                             succin_goal = (; succinate = 0.0))
-#     lact_prod_goal = (; glucose = (st.glucose - (st.glucose - gluc_goal.glucose)*lact_amount))
-#     succin_prod_goal = (; glucose = (st.glucose - (st.glucose - gluc_goal.glucose)*(1-lact_amount)))
-
-#     lact_st = gluc_to_lact(st, hetlact_amount, goal = lact_prod_goal)
-#     succin_st = gluc_to_succin(st, goal = succin_prod_goal)
-#     prop_st1 = lact_to_propionate(lact_st, goal = lact_goal)
-#     prop_st2 = succin_to_propionate(succin_st, goal = succin_goal)
-
-#     new_st = merge(st,
-#                    (glucose = gluc_goal.glucose,
-#                     lactate = lact_goal.lactate,
-#                     succinate = succin_goal.succinate,
-#                     propionate = prop_st1.propionate + prop_st2.propionate,
-#                     hydrogen = prop_st1.hydrogen + prop_st2.hydrogen,
-#                     co2 = prop_st1.co2 + prop_st2.co2,
-#                     ethanol = prop_st1.ethanol))
-# end
-
+function ethanol_heterolactate(st; goal = (; glucose = 0.0))
+    stoic = (glucose = -1, pyruvate = +1, ethanol = +1, hydrogen = +1, co2 = +2)
+    mass_stoic = (glucose = stoic.glucose*m_glucose(),
+                  pyruvate = stoic.pyruvate*m_pyruvate(),
+                  ethanol = stoic.ethanol*m_ethanol(),
+                  hydrogen = stoic.hydrogen*m_hydrogen(),
+                  co2 = stoic.co2*m_co2())
+    goal.glucose <= st.glucose || error("Glucose is not sufficient for this goal")
+    change = (goal.glucose - st.glucose)/mass_stoic.glucose
+    pyr_st = merge(st,
+                   (glucose = goal.glucose,
+                    pyruvate = st.pyruvate + change*mass_stoic.pyruvate,
+                    ethanol = st.ethanol + change*mass_stoic.ethanol,
+                    hydrogen = st.hydrogen + change*mass_stoic.hydrogen,
+                    co2 = st.co2 + change*mass_stoic.co2))
     
+    new_st = pyruv_to_lact(pyr_st)
+end
+
+function acetate_heterolactate(st; goal = (; glucose = 0.0))
+    stoic = (glucose = -1, pyruvate = +1, acetate = +1, hydrogen = +3, co2 = +2)
+    mass_stoic = (glucose = stoic.glucose*m_glucose(),
+                  pyruvate = stoic.pyruvate*m_pyruvate(),
+                  acetate = stoic.acetate*m_acetate(),
+                  hydrogen = stoic.hydrogen*m_hydrogen(),
+                  co2 = stoic.co2*m_co2())
+    goal.glucose <= st.glucose || error("Glucose is not sufficient for this goal")
+    change = (goal.glucose - st.glucose)/mass_stoic.glucose
+    pyr_st = merge(st,
+                   (glucose = goal.glucose,
+                    pyruvate = st.pyruvate + change*mass_stoic.pyruvate,
+                    acetate = st.acetate + change*mass_stoic.acetate,
+                    hydrogen = st.hydrogen + change*mass_stoic.hydrogen,
+                    co2 = st.co2 + change*mass_stoic.co2))
+    
+    new_st = pyruv_to_lact(pyr_st)
+end
+
+function heterolactic_ferment(st; goal = (; glucose = 0.0),
+                              acet_amount = 0)
+    acet_prod_goal = (; glucose = (st.glucose - (st.glucose - goal.glucose)*acet_amount))
+    eth_prod_goal = (; glucose = (st.glucose - (st.glucose - goal.glucose)*(1-acet_amount)))
+
+    eth_st = ethanol_heterolactate(st, goal)
+    acet_st = acetate_heterolactate(st, goal)
+    new_st = merge(st,
+                   (glucose = goal.glucose,
+                    ethanol = eth_st.ethanol,
+                    acetate = acet_st.acetate,
+                    lactate = eth_st.lactate + acet_st.lactate - st.lactate,
+                    co2 = eth_st.co2 + acet_st.co2 - st.co2,
+                    hydrogen = eth_sth.hydrogen + acet_st.hydrogen - st.hydrogen))
+end
+
+function bifidus_ferment(st; goal = (; glucose = 0.0))
+    stoic = (glucose = -1, acetate = +1.5, pyruvate = +1, hydrogen = +1)
+    mass_stoic = (glucose = stoic.glucose*m_glucose(),
+                  acetate = stoic.acetate*m_acetate(),
+                  pyruvate = stoic.pyruvate*m_pyruvate(),
+                  hydrogen = stoic.hydrogen*m_hydrogen())
+    goal.glucose <= st.glucose || error("Glucose is not sufficient for this goal")
+    change = (goal.glucose - st.glucose)/mass_stoic.glucose
+    pyr_st = merge(st,
+                   (glucose = goal.glucose,
+                    pyruvate = st.pyruvate + change*mass_stoic.pyruvate,
+                    acetate = st.acetate + change*mass_stoic.acetate,
+                    hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+    
+    new_st = pyruv_to_lact(pyr_st)
+end
+
+function ethanol_fermentation(st; goal = (; glucose = 0.0))
+    stoic = (glucose = -1, ethanol = +2, co2 = +2)
+    mass_stoic = (glucose = stoic.glucose*m_glucose(),
+                  ethanol = stoic.ethanol*m_ethanol(),
+                  co2 = stoic.co2*m_co2())
+    goal.glucose <= st.glucose || error("Glucose is not sufficient for this goal")
+    change = (goal.glucose - st.glucose)/mass_stoic.glucose
+    new_st = merge(st,
+                   (glucose = goal.glucose,
+                    ethanol = st.ethanol + change*mass_stoic.ethanol,
+                    co2 = st.co2 + change*mass_stoic.co2))
+end
+
+function propionate_to_acetate(st; goal = (; propionate = 0.0))
+    stoic = (propionate = -1, water = -2, acetate = +1, co2 = +1, hydrogen = +3)
+    mass_stoic = (propionate = stoic.propionate*m_propionate(),
+                  water = stoic.water*m_water(),
+                  acetate = stoic.acetate*m_acetate(),
+                  co2 = stoic.co2*m_co2(),
+                  hydrogen = stoic.hydrogen*m_hydrogen())
+    goal.propionate <= st.propionate || error("Propionate is not sufficient for this goal")
+    change = (goal.propionate - st.propionate)/mass_stoic.propionate
+    new_st = merge(st,
+                   (propionate = goal.propionate,
+                    water = st.water + change*mass_stoic.water,
+                    acetate = st.acetate + change*mass_stoic.acetate,
+                    co2 = st.co2 + change*mass_stoic.co2,
+                    hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+end
+
+function butyr_to_acetate(st; goal = (; butyrate = 0.0))
+    stoic = (butyrate = -1, water = -2, acetate = +2, hydrogen = +2)
+    mass_stoic = (butyrate = stoic.butyrate*m_butyrate(),
+                  water = stoic.water*m_water(),
+                  acetate = stoic.acetate*m_acetate(),
+                  hydrogen = stoic.hydrogen*m_hydrogen())
+    goal.butyrate <= st.butyrate || error("Butyrate is not sufficient for this goal")
+    change = (goal.butyrate - st.butyrate)/mass_stoic.butyrate
+    new_st = merge(st,
+                   (butyrate = goal.butyrate,
+                    water = st.water + change*mass_stoic.water,
+                    acetate = st.acetate + change*mass_stoic.acetate,
+                    hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+end
+
+function ethanol_to_acetate(st; goal = (; ethanol = 0.0))
+    stoic = (ethanol = -1, water = -2, acetate = +1, hydrogen = +2)
+    mass_stoic = (ethanol = stoic.ethanol*m_ethanol(),
+                  water = stoic.water*m_water(),
+                  acetate = stoic.acetate*m_acetate(),
+                  hydrogen = stoic.hydrogen*m_hydrogen())
+    goal.ethanol <= st.ethanol || error("Ethanol is not sufficient for this goal")
+    change = (goal.ethanol - st.ethanol)/mass_stoic.ethanol
+    new_st = merge(st,
+                   (ethanol = goal.ethanol,
+                    water = st.water + change*mass_stoic.water,
+                    acetate = st.acetate + change*mass_stoic.acetate,
+                    hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+end
+
+function lact_to_acetate(st; goal = (; lactate = 0.0))
+    stoic = (lactate = -1, water = -1, acetate = +1, hydrogen = +2, co2 = +1)
+    mass_stoic = (lactate = stoic.lactate*m_lactate(),
+                  water = stoic.water*m_water(),
+                  acetate = stoic.acetate*m_acetate(),
+                  co2 = stoic.co2*m_co2(),
+                  hydrogen = stoic.hydrogen*m_hydrogen())
+    goal.lactate <= st.lactate || error("Lactate is not sufficient for this goal")
+    change = (goal.lactate - st.lactate)/mass_stoic.lactate
+    new_st = merge(st,
+                   (lactate = goal.lactate,
+                    water = st.water + change*mass_stoic.water,
+                    acetate = st.acetate + change*mass_stoic.acetate,
+                    co2 = st.co2 + change*mass_stoic.co2,
+                    hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+end
+
+# In some cases, lactate acetogenesis can also happen together with
+# its reduction to propionate.
+
+function lact_to_acet_prop(st; goal = (; lactate = 0.0))
+    stoic = (lactate = -1, acetate = +1, propionate = +1, hydrogen = +1, co2 = +1)
+    mass_stoic = (lactate = stoic.lactate*m_lactate(),
+                  water = stoic.water*m_water(),
+                  acetate = stoic.acetate*m_acetate(),
+                  co2 = stoic.co2*m_co2(),
+                  propionate = stoic.propionate*m_propionate(),
+                  hydrogen = stoic.hydrogen*m_hydrogen())
+    goal.lactate <= st.lactate || error("Lactate is not sufficient for this goal")
+    change = (goal.lactate - st.lactate)/mass_stoic.lactate
+    new_st = merge(st,
+                   (lactate = goal.lactate,
+                    water = st.water + change*mass_stoic.water,
+                    acetate = st.acetate + change*mass_stoic.acetate,
+                    propionate = st.propionate + change*mass_stoic.propionate,
+                    hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+end
+
+# Then we can create a combined function that takes the extent of
+# propionate production in acetogenesis in mind.
+function lactate_acetogenesis(st, prop_amount; goal = (; lactate = 0.0))
+    acet_prod_goal = (; lactate = (st.lactate - (st.lactate - goal.lactate)*(1-prop_amount)))
+    prop_prod_goal = (; lactate = (st.lactate - (st.lactate - goal.lactate)*prop_amount))
+
+    acet_st = lact_to_acetate(st, goal = acet_prod_goal)
+    prop_st = lact_to_acet_prop(st, goal = prop_prod_goal)
+    new_st = merge(st,
+                   (lactate = goal.lactate,
+                    acetate = acet_st.acetate + prop_st.acetate - st.acetate,
+                    hydrogen = acet_st.hydrogen + prop_st.hydrogen - st.hydrogen,
+                    co2 = acet_st.co2 + prop_st.co2 - st.co2,
+                    propionate = prop_st.propionate))
+end
+
+function homoacetogenic_acetate(st; goal = (; hydrogen = 0.0))
+    stoic = (hydrogen = -4, co2 = -2, acetate = +1, water = +1)
+    mass_stoic = (hydrogen = stoic.hydrogen*m_hydrogen(),
+                  co2 = stoic.co2*m_co2(),
+                  acetate = stoic.acetate*m_acetate(),
+                  water = stoic.water*m_water())
+    goal.hydrogen <= st.hydrogen || error("Hydrogen is not sufficient for this goal")
+    abs(change*mass_stoic.co2) <= st.co2 || error("CO2 is not sufficient for this goal")
+    new_st = merge(st,
+                   (hydrogen = goal.hydrogen,
+                    co2 = st.co2 + change*mass_stoic.co2,
+                    acetate = st.acetate + change*mass_stoic.acetate,
+                    water = st.water + change*mass_stoic.water))
+end
+
+function acetogenesis(st; prop_goal = (; propionate = 0.0),
+                      butyr_goal = (; butyrate = 0.0),
+                      eth_goal = (; ethanol = 0.0),
+                      lact_goal = (; lactate = 0.0),
+                      hyd_goal = (; hydrogen = 0.0),
+                      lact_prop = 0)
+    prop_st = propionate_to_acetate(st, goal = prop_goal)
+    butyr_st = butyr_to_acetate(st, goal = butyr_goal)
+    eth_st = ethanol_to_acetate(st, goal = eth_goal)
+    lact_st = lactate_acetogenesis(st, lact_prop, goal = lact_goal)
+
+    new_st = merge(st,
+                   (propionate = prop_st.propionate + lact_st.propionate - st.propionate,
+                    butyrate = butyr_st.butyrate,
+                    ethanol = eth_st.ethanol,
+                    lactate = lact_st.lactate,
+                    co2 = prop_st.co2 + lact_st.co2 - st.co2,
+                    water = prop_st.water + butyr_st.water + eth_st.water + lact_st.water - 3st.water,
+                    acetate = prop_st.acetate + butyr_st.acetate + eth_st.acetate + lact_st.acetate - 3st.acetate,
+                    hydrogen = prop_st.hydrogen + butyr_st.hydrogen + eth_st.hydrogen + lact_st.hydrogen - 3st.hydrogen))
+
+    homoacetic_st = homoacetogenic_acetate(new_st, goal = hyd_goal)
+end
+
+function glucose_consumption(st, bifidus_amount, eth_amount,
+                             heterolact_amount; goal = (; glucose = 0.0),
+                             acet_amount = 0)
+    glycolysis_amount = 1-bifidus_amount-eth_amount-heterolact_amount
+    bifidus_goal = (; glucose = (st.glucose - (st.glucose - goal.glucose))*bifidus_amount)
+    eth_goal = (; glucose = (st.glucose - (st.glucose - goal.glucose))*eth_amount)
+    heterolact_goal = (; glucose = (st.glucose - (st.glucose - goal.glucose))*heterolact_amount)
+    glycolysis_goal = (; glucose = (st.glucose - (st.glucose - goal.glucose))*glycolysis_amount)
+
+    bifidus_st = bifidus_ferment(st, goal)
+    eth_st = ethanol_fermentation(st, goal)
+    heterolact_st = heterolactic_ferment(st, goal = goal, acet_amount = acet_amount)
+    glycolysis_st = glycolysis(st, goal)
+
+    new_st = merge(st,
+                   (glucose = goal.glucose,
+                    pyruvate = glycolysis_st.pyruvate,
+                    acetate = heterolact_st.acetate + bifidus_st.acetate - st.acetate,
+                    ethanol = heterolact_st.ethanol + eth_st.ethanol - st.ethanol,
+                    lactate = heterolact_st.lactate + bifidus_st.lactate - st.lactate,
+                    co2 = heterolact_st.co2 + eth_st.co2 - st.co2,
+                    hydrogen = glycolysis_st.hydrogen + heterolact_st.hydrogen))
+end
+
+# Then, after writing all the pathways of glucose consumption, we can
+# write the complex reactions of pyruvate to products. We know from
+# literature that ethanol-acetate is 1:1 in pyruvate consumption,
+# butyrate-acetate is 3:1 and propionate-acetate is 2:1, which are the
+# three main compound paths we need to define. We also know that
+# ethanol can be produced from EMP pyruvate only together with
+# acetate, propionate needs acetate to have enough hydrogen to react
+# with and butyrate is also very rarely seen without acetate
+# production. However, acetate being the only product is feasible
+# either on its own, or via acetogenic reactions. We also know ABE
+# fermentation can occur, where acetate, butyrate and ethanol are
+# produced during acidogenesis and then, in the solventogenic phase,
+# ethanol starts being produced with higher yield (ED pathway) and
+# acetacetyl-CoA starts giving acetone and butanol instead of
+# butyrate. However, there is not a consistent ratio in which these
+# are produced in ABE, so the ratios there will be given as a keyword
+# argument.
+function acetate_ethanol_fermentation(st; goal = (; pyruvate = 0.0))
+    acet_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate)*0.5))
+    eth_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate)*0.5))
+
+    acet_st = pyruv_to_acetate(st, goal = acet_goal)
+    eth_st = pyruv_to_ethanol(st, goal = eth_goal)
+
+    new_st = merge(st,
+                   (pyruvate = goal.pyruvate,
+                    acetate = acet_st.acetate,
+                    ethanol = eth_st.ethanol,
+                    co2 = acet_st.co2 + eth_st.co2 - st.co2,
+                    water = acet_st.water))
+end
+
+function acetate_butyrate_fermentation(st; goal = (; pyruvate = 0.0))
+    acet_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate)*0.25))
+    butyr_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate)*0.75))
+
+    acet_st = pyruv_to_acetate(st, goal = acet_goal)
+    butyr_st = pyruv_to_butyr(st, goal = butyr_goal)
+
+    new_st = merge(st,
+                   (pyruvate = goal.pyruvate,
+                    acetate = acet_st.acetate,
+                    butyrate = butyr_st.butyrate,
+                    hydrogen = acet_st.hydrogen + butyr_st.hydrogen - st.hydrogen,
+                    co2 = acet_st.co2 + butyr_st.co2 - st.co2))
+end
+
+# Reminder that the pyruvate to propionate function has levers for how
+# much lactate was produced from each pathway and if lactate or
+# succinate are accumulated in the reactor. In the case of
+# acetate-propionate fermentation with this stoichiometry, propionate
+# is fully converted so these aren't necessary. More complex ones can
+# be defined to explain accumulation of lactate and succinate, but
+# this is the standard acidogenic route.
+function acetate_propionate_fermentation(st; goal = (; pyruvate = 0.0))
+    acet_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate)*(1/3)))
+    prop_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate)*(2/3)))
+
+    acet_st = pyruv_to_acetate(st, goal = acet_goal)
+    prop_st = pyruv_to_propionate(st, 1, pyr_goal = prop_goal)
+
+    new_st = merge(st,
+                   (pyruvate = goal.pyruvate,
+                    acetate = acet_st.acetate,
+                    propionate = prop_st.propionate,
+                    co2 = acet_st.co2))
+end
+
+function ABE_fermentation(st; goal = (; pyruvate = 0.0),
+                          acet_amount, aceteth_amount, butyr_amount,
+                          solveth_amount, acetone_amount)
+    butanol_amount = 1 - acet_amount - aceteth_amount - butyr_amount - solveth_amount - acetone_amount
+    acet_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate))*acet_amount)
+    aceteth_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate))*aceteth_amount)
+    butyr_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate))*butyr_amount)
+    solveth_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate))*solveth_amount)
+    acetone_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate))*acetone_amount)
+    butanol_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate))*butanol_amount)
+
+    acet_st = pyruv_to_acetate(st, goal = acet_goal)
+    aceteth_st = acetate_ethanol_fermentation(st, goal = aceteth_goal)
+    butyr_st = pyruv_to_butyr(st, goal = butyr_goal)
+    acidogenic_st = merge(st,
+                          (pyruvate = acet_st.pyruvate + aceteth_st.pyruvate + butyr_st.pyruvate - 2st.pyruvate,
+                           acetate = acet_st.acetate + aceteth_st.acetate - st.acetate,
+                           butyrate = butyr_st.butyrate,
+                           ethanol = aceteth_st.ethanol,
+                           hydrogen = acet_st.hydrogen,
+                           co2 = acet_st.co2 + aceteth_st.co2 + butyr_st.co2 - 2st.co2,
+                           water = acet_st.water + aceteth_st.water - st.water))
+    
+    solveth_st = ethanol_fermentation(acidogenic_st, goal = solveth_goal)
+    acetone_st = pyruv_to_acetone(acidogenic_st, goal = acetone_goal)
+    butanol_st = pyruv_to_butanol(acidogenic_st, goal = butanol_goal)
+    solventogenic_st = merge(acidogenic_st,
+                             (pyruvate = goal.pyruvate,
+
+                              ethanol = solveth_st.ethanol,
+                              acetone = acetone_st.acetone,
+                              butanol = butanol_st.butanol,
+                              co2 = solveth_st.co2 + acetone_st.co2 + butanol_st.co2 - 2acidogenic_st.co2,
+                              hydrogen = acetone_st.hydrogen + butanol_st.hydrogen - acidogenic_st.hydrogen,
+                              water = acetone_st.water + butanol_st.water - acidogenic_st.water))
+end
+
