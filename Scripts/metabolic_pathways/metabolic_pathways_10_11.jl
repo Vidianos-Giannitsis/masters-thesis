@@ -5,6 +5,8 @@ df1_conc = CSV.read("hplc_conc_10_11_1.csv", DataFrame)
 df2_conc = CSV.read("hplc_conc_10_11_2.csv", DataFrame)
 df4_conc = CSV.read("hplc_conc_10_11_4.csv", DataFrame)
 df8_conc = CSV.read("hplc_conc_10_11_8.csv", DataFrame)
+df2310_1_conc = CSV.read("hplc_conc_23_10_1.csv", DataFrame)
+df2310_2_conc = CSV.read("hplc_conc_23_10_2.csv", DataFrame)
 
 v = 0.8
 init_st0 = (sucrose = df0_conc.Sucrose[1], glucose = df0_conc.Glucose[1],
@@ -42,6 +44,20 @@ init_st8 = (sucrose = df8_conc.Sucrose[1], glucose = df8_conc.Glucose[1],
             pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
 init_mass8 = conc_to_mass(init_st8, v)
 
+init_st2310_1 = (sucrose = df2310_1_conc.Sucrose[1], glucose = df2310_1_conc.Glucose[1],
+                 fructose = df2310_1_conc.Fructose[1], lactate = df2310_1_conc.Lactate[2],
+                 acetate = df2310_1_conc.Acetate[3], propionate = df2310_1_conc.Propionate[3],
+                 ethanol = df2310_1_conc.Ethanol[2], co2 = 0.0, hydrogen = 10.0, water = 750.0,
+                 pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+init_mass2310_1 = conc_to_mass(init_st2310_1, v)
+
+init_st2310_2 = (sucrose = df2310_2_conc.Sucrose[1], glucose = df2310_2_conc.Glucose[1],
+            fructose = df2310_2_conc.Fructose[1], lactate = df2310_2_conc.Lactate[1],
+            acetate = df2310_2_conc.Acetate[2], propionate = df2310_2_conc.Propionate[1],
+            ethanol = df2310_2_conc.Ethanol[1], co2 = 0.0, hydrogen = 0.0, water = 750.0,
+            pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+init_mass2310_2 = conc_to_mass(init_st2310_2, v)
+
 # Assumptions: All Sucrose is hydrolyzed, all glucose goes to the
 # heterolactate pathway and all fructose consumed up to 48 hours goes
 # to an acetate producing pathway with ethanol or propionate as the
@@ -66,21 +82,21 @@ function mixed_culture_fermentation(st; gluc_goal = (; glucose = 0.0), suc_goal 
                     ethanol = prop_st.ethanol + acet_st.ethanol - fruc_st.ethanol,
                     propionate = prop_st.propionate + acid_st.propionate - fruc_st.propionate,
                     co2 = acet_st.co2 + prop_st.co2 + acid_st.co2 - 2fruc_st.co2,
+                    lactate = acid_st.lactate + prop_st.lactate - fruc_st.lactate,
                     hydrogen = acet_st.hydrogen + prop_st.hydrogen + acid_st.hydrogen - 2fruc_st.hydrogen))
 end
 
-final_st0 = mixed_culture_fermentation(init_mass0, lact_goal = (; lactate = df0_conc.Lactate[4]*0.8), fruc_goal = (; fructose = df0_conc.Fructose[3]*0.8), aceteth_amount = 0.68, acid_amount = 0.25)
+final_st0 = mixed_culture_fermentation(init_mass0, lact_goal = (; lactate = df0_conc.Lactate[4]*0.8 + 0.1), fruc_goal = (; fructose = df0_conc.Fructose[3]*0.8), aceteth_amount = 0.68, acid_amount = 0.25)
 final_conc0 = mass_to_conc(final_st0, v)
 # Results: If we select an aceteth_amount and an acid amount such that
 # ethanol reaches the concentration its supposed to have and so does
-# acetate, we can get only a rough overestimation in lactate and one a
-# bit larger in propionate. This means that this pathway is probably
-# correct and the rest of the increases would be what we would see in
-# an eventual steady state. Propionate being largely overestimated can
-# make sense as its been shown to be the compound with the most
-# consistent increase.
+# acetate. Lactate is said to be a bit less than it should, but that
+# can be fixed by increasing its goal. Thus we can get that right as
+# well. Propionate has a decent overestimation however, propionate
+# being largely overestimated can make sense as its been shown to be
+# the compound with the most consistent increase throughout time.
 
-final_st1 = mixed_culture_fermentation(init_mass1, lact_goal = (; lactate = df1_conc.Lactate[4]*0.8), fruc_goal = (; fructose = df1_conc.Fructose[3]*0.8), aceteth_amount = 0.21, acid_amount = 0.79, prop_amount = 0.46)
+final_st1 = mixed_culture_fermentation(init_mass1, lact_goal = (; lactate = df1_conc.Lactate[4]*0.8 +0.18), fruc_goal = (; fructose = df1_conc.Fructose[3]*0.8), aceteth_amount = 0.21, acid_amount = 0.79, prop_amount = 0.46)
 final_conc1 = mass_to_conc(final_st1, v)
 # In this, much less ethanol needs to be produced, so if we assume
 # that the rest goes to acetate-propionate, we get a very large
@@ -90,40 +106,42 @@ final_conc1 = mass_to_conc(final_st1, v)
 # acetate. These amounts predict the final acetate at 72h, but in the
 # steady state its probably more due to ethanol acetogenesis,
 # propionate being way too overestimated and the rest of the fructose
-# consumption. Lactate is overestimated, but is expected to be
-# feasible to reach that number.
+# consumption. Ethanol and lactate are also predicted correctly with a
+# propionate overestimation.
 
 final_st2 = mixed_culture_fermentation(init_mass2, lact_goal = (; lactate = df2_conc.Lactate[4]*0.8), fruc_goal = (; fructose = df2_conc.Fructose[3]*0.8), aceteth_amount = 0.33, acid_amount = 0.03)
 final_conc2 = mass_to_conc(final_st2, v)
 # By the assumption that all glucose is made into lactate and ethanol
 # and nearly all fructose gives 1 mole of ethanol, we get almost
-# precisely the amount of lactate and ethanol of the
-# experimental. However, in this experiment, acetate didn't seem to
-# increase significantly and even is reduced in some phases (probably
-# for growth of the microorganisms). So the co-product of ethanol from
-# pyruvate appears to be propionate and not acetate. If only 30% of
-# pyruvate goes to ethanol together with acetate and the rest with
-# ethanol, we get the peak concentration of acetate and a small
-# overestimation of propionate which is assumed to be able in steady
-# state. However, that is not feasible by the redox balance (consumes
-# more hydrogen than is produced). By increasing it to 33%, hydrogen
-# consumption becomes almost 0, which means that the produced hydrogen
-# is just enough for the reactions that occur and acetate is only
-# slightly larger than the maximum recorded value.
+# precisely the amount of lactate and ethanol of the experimenta (and
+# this is without even needing to change the lactate goal). However,
+# in this experiment, acetate didn't seem to increase significantly
+# and even is reduced in some phases (probably for growth of the
+# microorganisms). So the co-product of ethanol from pyruvate appears
+# to be propionate and not acetate. If only 30% of pyruvate goes to
+# ethanol together with acetate and the rest with ethanol, we get the
+# peak concentration of acetate and a small overestimation of
+# propionate which is assumed to be able in steady state. However,
+# that is not feasible by the redox balance (consumes more hydrogen
+# than is produced). By increasing it to 33%, hydrogen consumption
+# becomes almost 0, which means that the produced hydrogen is just
+# enough for the reactions that occur and acetate is only slightly
+# larger than the maximum recorded value.
 
-final_st4 = mixed_culture_fermentation(init_mass4, lact_goal = (; lactate = df4_conc.Lactate[4]*0.8), fruc_goal = (; fructose = df4_conc.Fructose[3]*0.8), aceteth_amount = 0.46, acid_amount = 0.18)
+final_st4 = mixed_culture_fermentation(init_mass4, lact_goal = (; lactate = df4_conc.Lactate[4]*0.8 + 0.1), fruc_goal = (; fructose = df4_conc.Fructose[3]*0.8), aceteth_amount = 0.37, acid_amount = 0.18)
 final_conc4 = mass_to_conc(final_st4, v)
-# Again, this has a slight overestimation of lactate and a larger one
-# of propionate which make sense and can be justified by the steady
-# state not being achieved yet. Acetate is also slightly overestimated
-# by its current value, but it is assumed that a little bit more could
-# be produced. Hydrogen is just enough for reactions to be feasible.
+# Again, this has an overestimation of propionate which make sense and
+# can be justified by the steady state not being achieved yet. Acetate
+# is also slightly overestimated by its current value, but it is
+# barely enough for the redox balance to be satisfied. Lactate and
+# ethanol are predicted correctly.
 
-final_st8 = mixed_culture_fermentation(init_mass8, lact_goal = (; lactate = df8_conc.Lactate[4]*0.8), fruc_goal = (; fructose = df8_conc.Fructose[3]*0.8), aceteth_amount = 0.45, acid_amount = 0.07)
+final_st8 = mixed_culture_fermentation(init_mass8, lact_goal = (; lactate = df8_conc.Lactate[4]*0.8 + 0.03), fruc_goal = (; fructose = df8_conc.Fructose[3]*0.8), aceteth_amount = 0.45, acid_amount = 0.07)
 final_conc8 = mass_to_conc(final_st8, v)
-# This model can predict ethanol very well and have only slight error
-# in acetate and lactate predictions, with propionate showing to be
-# much more. The assumption that has been made, (which the kinetic
+# This model can predict ethanol and lactate very well and has only a
+# very slight error in acetate prediction, with propionate showing to
+# be much more than the estimation (same as with the other
+# experiments). The assumption that has been made, (which the kinetic
 # experiment did justify to an extent) is that propionate will be
 # produced in larger extent until steady state is reached and is why
 # we have accepted its overestimation. Also acetate doesn't show a
@@ -153,3 +171,16 @@ final_conc8 = mass_to_conc(final_st8, v)
 # pathways, to justify lactate overestimation. However, with its
 # constant increase, it is believable that the overestimation is
 # simply due to not taking measurements for long enough.
+
+final_st2310_1 = mixed_culture_fermentation(init_mass2310_1, lact_goal = (; lactate = df2310_1_conc.Lactate[19]*0.8 + 0.5), fruc_goal = (; fructose = df2310_1_conc.Fructose[20]*0.8), aceteth_amount = 0.01, acid_amount = 0.95)
+final_conc2310_1 = mass_to_conc(final_st2310_1, v)
+# This needs a completely different metabolic pathway to be described
+# and that will be done tomorrow.
+
+int_st2310_2 = mixed_culture_fermentation(init_mass2310_2, lact_goal = (; lactate = df2310_2_conc.Lactate[15]*0.8 + 0.40), fruc_goal = (; fructose = df2310_2_conc.Fructose[17]*0.8), aceteth_amount = 0.14, acid_amount = 0.86, prop_amount = 0.3)
+final_st2310_2 = ethanol_to_acetate(int_st2310_2, goal = (; ethanol = df2310_2_conc.Ethanol[17]*0.8))
+final_conc2310_2 = mass_to_conc(final_st2310_2, v)
+# These parameters seem to describe this system decently. There is a
+# lot of acetogenesis with only a small fraction of ethanol, which is
+# also then consumed for acetate. Acetogenesis is much more dominant
+# here and the parameters do reflect that.
