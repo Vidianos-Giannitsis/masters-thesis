@@ -121,13 +121,15 @@ label = ["COD Measurement" "HPLC Measurement"]
 cod0_plot = bar(mix_amount, [cod0_meas cod0_theor],
                 label=label, xlabel="Amount of mix (ml)",
                 ylabel = "COD (g/l)", legend=:bottom,
-                title = "COD comparison t=0")
+                title = "COD comparison t=0",
+                xticks = [0, 1, 2, 4, 8])
 savefig(cod0_plot, "cod_comparison_10_11_0.png")
 
 cod72_plot = bar(mix_amount, [cod72_meas cod72_theor],
                 label=label, xlabel="Amount of mix (ml)",
                 ylabel = "COD (g/l)", legend=:bottom,
-                title = "COD comparison t=72")
+                 title = "COD comparison t=72",
+                 xticks = [0, 1, 2, 4, 8])
 savefig(cod72_plot, "cod_comparison_10_11_72.png")
 
 cod_plot = plot(cod0_plot, cod72_plot, layout = (2,1), size = (900, 600))
