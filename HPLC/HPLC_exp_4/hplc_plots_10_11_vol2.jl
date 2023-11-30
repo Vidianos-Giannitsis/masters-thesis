@@ -69,3 +69,12 @@ savefig(prod_conc, "prod_conc_10_11.png")
 
 final_plot = plot(sugars_conc, prod_conc, total_conc, size = (1200, 800))
 savefig(final_plot, "final_plot_10_11.png")
+
+mix_amount = ["0", "1", "2", "4", "8"]
+init_sugars = [df0_sugars[1], df1_sugars[1], df2_sugars[1], df4_sugars[1], df8_sugars[1]]
+final_prod = [df0_prod[4], df1_prod[4], df2_prod[4], df4_prod[4], df8_prod[4]]
+sugar_to_prod = scatter([0, 1, 2, 3, 4], [init_sugars final_prod],
+                         xticks = (0:4, mix_amount), xlabel = "Amount of mix (ml)",
+                         ylabel = "Concentration (g/l)", title = "Conversion of sugars to products, T = 35 C",
+                         label = ["Initial Sugars" "Final Products"], markersize = 6)
+savefig(sugar_to_prod, "sugar_to_prod_10_11.png")
