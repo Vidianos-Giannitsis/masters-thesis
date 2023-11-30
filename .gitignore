@@ -3,9 +3,7 @@
 ################################################################################
 
 # Folders to ignore - files may be too large, too many, etc. NOTE: EDIT IF NEEDED.
-/data
 /videos
-/plots
 /notebooks
 /_research
 
@@ -319,6 +317,9 @@ TSWLatexianTemp*
 ./auto/*
 *.el
 
+# ltximg folder which stores previews of latex snippets in org
+/ltximg
+
 # expex forward references with \gathertags
 *-tags.tex
 
@@ -351,6 +352,9 @@ TSWLatexianTemp*
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
+
+# Emacs undo-tree files
+*.~undo-tree~
 
 ########################################
 #                macOS                 #

@@ -1,0 +1,29 @@
+#+TITLE: Enzymatic Hydrolysis and Anaerobic Digestion of Food Waste - Master's Thesis
+
+This repository stores a lot of information about my thesis. Since the experiments require a lot of data analysis, the [[https://julialang.org/][Julia Language]] was selected to do all of it and the [[https://juliadynamics.github.io/DrWatson.jl/stable/][DrWatson]] package is used widely to make the project reproducible. DrWatson automatically created most of the structure of this repository and provides a lot of very useful commands to ease this analysis while also making it fully reproducible to anyone interested. The primary purpose is to allow me to version control everything I need for my thesis and have it uploaded on Github to seamlessly sync it between my two machines
+
+To (locally) reproduce this project, do the following:
+
+0. Download this code base.
+1. Open a Julia console and do:
+#+BEGIN_SRC julia
+
+  using Pkg
+  Pkg.add("DrWatson") # install globally, for using `quickactivate`
+  Pkg.activate("path/to/this/project")
+  Pkg.instantiate()
+  
+#+END_SRC
+
+This will install all necessary packages for you to be able to run the scripts and
+everything should work out of the box, including correctly finding local paths.
+
+You may notice that most scripts start with the commands:
+#+BEGIN_SRC julia
+
+  using DrWatson
+  @quickactivate "Masters_Thesis"
+
+#+END_SRC
+
+which auto-activate the project and enable local path handling from DrWatson.
