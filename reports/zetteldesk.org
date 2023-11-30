@@ -1,0 +1,404 @@
+
+* Concise review on ethanol production from food waste: development and sustainability
+Bibtex entry for node: cite:anwarsaeedConciseReviewEthanol2018
+
+#+filetags: article
+- keywords :: Ethanol fermentation,Fermentation optimization parameters,Food waste,Metabolic regulation,Microorganisms,Stillage recycling technology
+- tags :: [[id:45fb3fbe-4eef-47d1-89af-5d163eca5f1c][1G και 2G Παραγωγή Βιοαιθανόλης - Bioethanol]] ,[[id:7e72e352-fffd-46f8-ab55-5adee534302a][Ενζυμική Υδρόλυση Αποβλήτων Τροφών και Παραγωγή Βιοαερίου μέσω Αναερόβιας Χώνευσης]] 
+
+  This is a paper reviewing various features on ethanol production from food waste. I currently am not so interesting in it, so I didn't note many things down, but there is a lot of info on the enzymes used for the hydrolysis.
+** Analysis of article by Anwar Saeed, M., Ma, H., Yue, S., Wang, Q., & Tu, M.
+:PROPERTIES:
+:URL: 
+:NOTER_DOCUMENT: ~/Sync/Zotero_pdfs/anwar_saeed_et_al2018concise_review_on_ethanol_production_from_food_waste_-_development_and.pdf  
+:NOTER_PAGE:              
+:END:
+*** Enzymes used in food waste hydrolysis
+:PROPERTIES:
+:NOTER_PAGE: (4 0.46543778801843316 . 0.1408163265306122)
+:END:
+This table is a very useful reference point for enzymes used in food waste hydrolysis.
+*** Effect of various parameters on ethanol fermentation
+:PROPERTIES:
+:NOTER_PAGE: (5 0.19662058371735788 . 0.1258503401360544)
+:END:
+In this section, how the fermentation is affected by various parameters is presented.
+
+* Minimizing hazardous impact of food waste in a circular economy  Advances in resource recovery through green strategies
+Bibtex entry for node: cite:usmaniMinimizingHazardousImpact2021
+
+#+filetags: article
+- keywords :: Biobased valorization,Circular economy,Food waste,Integrated biotechniques,Resource recovery
+- tags :: [[id:66fe3974-2ed9-40aa-9c81-4abec0d3d674][Κυκλική Οικονομία]] ,[[id:9eef4820-323f-48ce-a24d-c301748242c1][Αναερόβια Χώνευση - Βιοαέριο]] ,[[id:7e72e352-fffd-46f8-ab55-5adee534302a][Ενζυμική Υδρόλυση Αποβλήτων Τροφών και Παραγωγή Βιοαερίου μέσω Αναερόβιας Χώνευσης]] , υπέρηχοι, carbonization
+
+  This is a very interesting paper in various ways to valorize food waste covering anaerobic digestion, enzymatic hydrolysis, co-digestion and carbonization. It contains some potentially useful info.
+** Analysis of article by Usmani, Z., Sharma, M., Awasthi, A. K., Sharma, G. D., Cysneiros, D., Nayak, S. C., Thakur, V. K., …
+:PROPERTIES:
+:URL: 
+:NOTER_DOCUMENT: ~/Sync/Zotero_pdfs/usmani_et_al2021minimizing_hazardous_impact_of_food_waste_in_a_circular_economy_–.pdf  
+:NOTER_PAGE:              
+:END:
+*** Enzymatic Pretreatment
+:PROPERTIES:
+:NOTER_PAGE: (6 0.3571428571428571 . 0.08095238095238091)
+:END:
+This section has a very useful table on the various enzymes used in hydrolysis.
+*** Ultrasonic enzymatic hydrolysis
+:PROPERTIES:
+:NOTER_PAGE: (7 0.2040816326530612 . 0.08095238095238091)
+:END:
+Ultrasonic frequencies are sound waves at 20 kHz or higher. They contain a huge amount of energy and create "hot spots" which break down food waste so that the hydrolysis is much more effective.
+*** Hydrothermal carbonization (HTC)
+:PROPERTIES:
+:NOTER_PAGE: (7 0.4673469387755102 . 0.5448979591836735)
+:END:
+Hydrothermal carbonization is another green approach for using food waste. The idea is using moderately high pressure and temperature (as examples, 2-10 MPa pressure and 180-350 \( ^oC \) temperature are given) to make the waste into biochar, which can be used for a lot of things after.
+*** Co-hydrothermal carbonization
+:PROPERTIES:
+:NOTER_PAGE: (8 0.12755102040816327 . 0.14829931972789112)
+:END:
+This figure contains an interesting concept for dealing with food waste. First, you separate the oil, which can be used for hydrogen production via dark fermentation. Then, the rest of the waste can be carbonized together with the digestate to produce the biochar which can be either gasified to produce more hydrogen or combusted for energy. This allows for efficient hydrogen production from the biomass.
+
+* Potentiality of recovering bioresource from food waste through multi-stage Co-digestion with enzymatic pretreatment
+Bibtex entry for node: cite:wuPotentialityRecoveringBioresource2022
+
+#+filetags: article
+- keywords :: Bioresource recovery,Co-digestion,Enzymatic pretreatment,Food waste,Multi-phase configuration,Strategy
+- tags :: [[id:7e72e352-fffd-46f8-ab55-5adee534302a][Ενζυμική Υδρόλυση Αποβλήτων Τροφών και Παραγωγή Βιοαερίου μέσω Αναερόβιας Χώνευσης]] ,[[id:9eef4820-323f-48ce-a24d-c301748242c1][Αναερόβια Χώνευση - Βιοαέριο]] ,[[id:ff7612c8-772b-40db-8f38-79410227f9a8][Σκοτεινή Ζύμωση - Dark Fermentation]] 
+
+  This is an interesting article about anaerobic digestion and enzymatic pretreatment. There is a lot of useful info for anaerobic digestion but I didn't note it down for now as I don't need them. 
+** Analysis of article by Wu, L., Wei, W., Liu, X., Wang, D., & Ni, B.
+:PROPERTIES:
+:URL: 
+:NOTER_DOCUMENT: ~/Sync/Zotero_pdfs/wu_et_al2022potentiality_of_recovering_bioresource_from_food_waste_through.pdf  
+:NOTER_PAGE:              
+:END:
+*** Comparison of anaerobic digestion systems
+:PROPERTIES:
+:NOTER_PAGE: (4 0.22093813732154996 . 0.2139214686384498)
+:END:
+This is a useful table mentioning a lot of things about different AD systems that may be useful for reference.
+*** Enzymes used
+:PROPERTIES:
+:NOTER_PAGE: (11 0.6843447220805712 . 0.09591836734693875)
+:END:
+This table has a list of the enzymes used in this process. Amylases, proteases, lipases are used for starch, proteins and lipids respectively and then cellulases, xylanases and pectinases are used to destroy the lignocellulosic parts of the waste. It also has conditions for these.
+
+* Towards utmost bioenergy conversion efficiency of food waste: Pretreatment, co-digestion, and reactor type
+Bibtex entry for node: cite:maUtmostBioenergyConversion2018
+
+#+filetags: article
+- keywords :: 
+- tags :: [[id:9eef4820-323f-48ce-a24d-c301748242c1][Anaerobic Digestion]] ,[[id:7e72e352-fffd-46f8-ab55-5adee534302a][Ενζυμική Υδρόλυση Αποβλήτων Τροφών και Παραγωγή Βιοαερίου μέσω Αναερόβιας Χώνευσης]] ,[[id:facb8215-fb5b-4fa0-ba71-f4d8772e1b1c][Αντιδραστήρες UASB - Κοκκομετρία Λάσπης]] ,[[id:51a26a19-96b8-41c8-8550-e883570a5c11][Ανάκτηση Φαινολικών Ενώσεων - Λιγνίνη και Φλαβονοειδή]] 
+
+  An interesting study on the effect of different pretreatment types on anaerobic digestion and how co-digestion can help FW be used in more advanced reactors like UASB. Also has things that will be useful for my thesis on the enzymatic hydrolysis.
+** Analysis of article by Ma, C., Liu, J., Ye, M., Zou, L., Qian, G., & Li, Y.
+:PROPERTIES:
+:URL: 
+:NOTER_DOCUMENT: ~/Zotero/storage/XQ9S5LVK/Ma et al. - 2018 - Towards utmost bioenergy conversion efficiency of .pdf  
+:NOTER_PAGE:              
+:END:
+*** Food waste digestion
+:PROPERTIES:
+:NOTER_PAGE: (1 0.6887755102040816 . 0.0996598639455782)
+:END:
+Food waste (FW) have a high suspended solid content with a low organic loading rate but high HRT. For this reason, only batch or CSTR reactors can be used as is. Other reactors, which have many advantages cannot be used because they require low solids. 
+
+One way to solve this is enzymatic pretreatment which can solubilize a large amount of the solids.
+*** Physical pretreatment
+:PROPERTIES:
+:NOTER_PAGE: (3 0.31887755102040816 . 0.541156462585034)
+:END:
+Physical pretreatment of FW is very important as a preliminary step as the particle size plays an important role. Therefore, most of the time FW is crushed first before being sed. 
+*** Ultrasonic and Microwave pretreatment
+:PROPERTIES:
+:NOTER_PAGE: (3 0.6076530612244898 . 0.5336734693877551)
+:END:
+Ultrasonic and microwave pretreatment methods are also efficient. Ultrasonic creates radicals such as \( OH^{\cdot} \) which improves the reaction rates. Microwaves increase the kinetic energy of water and allow it to reac its boiling point and improve efficiency of AD. However, it can also be detrimental so its not the recommended treatment. 
+*** Enzymatic Pretreatment
+:PROPERTIES:
+:NOTER_PAGE: (4 0.09744897959183672 . 0.541156462585034)
+:END:
+Enzymes are more efficient than chemical pretreatment and can be done immediately on food waste. However, enzymes are more expensive which is an obstacle to this. Enzymes used are amylase, protease and lipase mainly. 
+*** Thermal treatment
+:PROPERTIES:
+:NOTER_PAGE: (4 0.14030612244897958 . 0.09217687074829929)
+:END:
+Another good idea is to thermally treat the waste to break macromolecular bonds. However, this is very energy consuming and not ideal. 
+*** Chemical pretreatment
+:PROPERTIES:
+:NOTER_PAGE: (4 0.4035714285714285 . 0.0996598639455782)
+:END:
+Chemical pretreatment (acid or alkali) is very common and simple. Acids break down lignocellulose and solubilize it which increases the efficiency of the process. However it has toxic byproducts with the primary ones being furans such as furfural which will decrease the efficienct.
+
+Alkali treatment disrupts the structure of lignin and separates it from the rest of the carbohydrates which allows it to then be hydrolyzed better. 
+*** Enzymes used
+:PROPERTIES:
+:NOTER_PAGE: (7 0.6760204081632653 . 0.5486394557823129)
+:END:
+THe pretreatment was at pH 5.5, temperature 55 \( ^oC \), agitation 150 rpm for 24 h using 10 U/g VS of α-amylase, 120 U/g VS glucoamylase and 150 U/g VS protease which gave fairly good results.
+
+* Anaerobic fermentation of pretreated food waste for butanol production by co-cultures assisted with in-situ extraction
+Bibtex entry for node: cite:zhangAnaerobicFermentationPretreated2021
+
+#+filetags: article
+- keywords :: Butanol,Co-culture fermentation,Food waste,Oleyl alcohol,Pretreatment
+- tags :: [[id:9eef4820-323f-48ce-a24d-c301748242c1][Αναερόβια Χώνευση - Βιοαέριο]] ,[[id:7e72e352-fffd-46f8-ab55-5adee534302a][Ενζυμική Υδρόλυση Αποβλήτων Τροφών και Παραγωγή Βιοαερίου μέσω Αναερόβιας Χώνευσης]] , Παραγωγή Βουτανόλης από απόβλητα
+
+  This is an interesting paper on improving butanol production from food waster using various techniques such as pretreatment (where enzymatic hydrolysis was the best), in-situ extraction and co-fermentation were used. I read it for the purpose of the enzymatic hydrolysis for my thesis, but it could be worth looking back for details on butanol.
+** TO-READ Analysis of article by Zhang, C., Ling, Z., & Huo, S.
+:PROPERTIES:
+:URL: 
+:NOTER_DOCUMENT: ~/Sync/Zotero_pdfs/zhang_et_al2021anaerobic_fermentation_of_pretreated_food_waste_for_butanol.pdf  
+:NOTER_PAGE:              
+:END:
+*** Butanol
+:PROPERTIES:
+:NOTER_PAGE: (1 0.6377551020408163 . 0.08843537414965984)
+:END:
+Butanol is a high energy density material that is not very soluble in the aqueous phase. It is considered a good energy carrier and substitute for fossil fuels. The best way to produce it is Acetone-Butanol-ethanol (ABE) fermentation, which is however expensive and doesn't produce very large amounts.
+
+For this reason, using waste biomass and more specifically food waste is an interesting proposition. But first, the waste needs to be pretreated. But even then, its problematic because the microorganisms used lack certain enzymes and cannot use multiple carbohydrates as feedstock. Furthermore, butanol as a product is incredibly toxic to the microorganisms, therefore, to produce large amounts we need in-situ removal of butanol, such as liquid-liquid extraction. 
+*** Enzymatic pretreatment
+:PROPERTIES:
+:NOTER_PAGE: (2 0.2040816326530612 . 0.5299319727891156)
+:END:
+The enzymatic pretreatment that was done was a two stage hydrolysis. First, 400 U/g α-amylase was used at pH 6 for 24 h at 50 \( ^oC \). Then, 150 U/g glucoamylase was used at pH 4, 60 \( ^oC \) for 12 h. Glucose was determined via DNS, proteins by a Nitrogen Analyzer and pH with a pH meter. 
+
+* Valorization of food waste for cost-effective reducing sugar recovery in a two-stage enzymatic hydrolysis platform
+Bibtex entry for node: cite:zhangValorizationFoodWaste2020
+
+#+filetags: article
+- keywords :: Bioeconomy,Enzymatic hydrolysis,Food waste,Glucoamylase,Glucose recovery
+- tags :: [[id:7e72e352-fffd-46f8-ab55-5adee534302a][Ενζυμική Υδρόλυση Αποβλήτων Τροφών και Παραγωγή Βιοαερίου μέσω Αναερόβιας Χώνευσης]] 
+
+  A very nice article all about hydrolysis of food waste. It shows that enzymatic hydrolysis is more profitable than chemical, albeit more expensive because it has better yields. The authors also mention the enzymatic hydrolysis that gave the best performance which was a two stage process using α-amylase and then glucoamylase. 
+** Analysis of article by Zhang, C., Kang, X., Wang, F., Tian, Y., Liu, T., Su, Y., Qian, T., …
+:PROPERTIES:
+:URL: 
+:NOTER_DOCUMENT: ~/Sync/Zotero_pdfs/zhang_et_al2020valorization_of_food_waste_for_cost-effective_reducing_sugar_recovery.pdf  
+:NOTER_PAGE:              
+:END:
+*** Abstract
+:PROPERTIES:
+:NOTER_PAGE: (1 0.4336734693877551 . 0.3540816326530612)
+:END:
+A two-stage enzymatic hydrolysis platform is discussed in this paper. The first stage uses α-amylase at pH 5.5 and dosage 150 U/g TS while the second uses glucoamylase at pH 4.0 and dosage 150 U/g TS. This was shown to be more effective than acidic, alkali or one stage enzymatic hydrolysis methods. 
+*** Enzymatic Hydrolysis
+:PROPERTIES:
+:NOTER_PAGE: (2 0.6647959183673469 . 0.07721088435374146)
+:END:
+Enzymatic hydrolysis has many advantages over other pretreatments such as high purity, mild reaction conditions. However, commercial enzymes tend to be expensive. To lower the cost, many studies test combination of enzymatic hydrolysis with other techniques. 
+
+For example, citation 2 used ultrasonic treatment and then enzymatic hydrolysis, which improved glucose concentration and halved hydrolysis time. Similar examples can be obtained from electrolysis. 
+
+Another study tried enzymes of glucoamylase and sucrase and the synergistic action of the enzymes. Another enzyme commonly used is α-amylase which can cut glucoside bonds in amylose or amylopectin in starch.
+
+This study tried a two stage enzymatic hydrolysis using α-amylase and glucoamylase at different pH and concentration ranges. The temperature was set at 50 \( ^oC \) for 16h or 60 \( ^oC \) for 8h.
+*** Parameters influencing the experiment
+:PROPERTIES:
+:NOTER_PAGE: (4 0.28061224489795916 . 0.07721088435374146)
+:END:
+The experiments were influenced by various parameters. The most important where pH, enzyme dosage and temperature of which pH showed the most extreme variation in performance. 
+*** Comparison of conditions in various studies
+:PROPERTIES:
+:NOTER_PAGE: (5 0.8035714285714285 . 0.09217687074829929)
+:END:
+This is a useful table that mentions different experiments, temperature and pH used in them, what enzymes were used and their dosage, retention time and the sugars that were obtained from them. 
+*** Economic evaluation
+:PROPERTIES:
+:NOTER_PAGE: (8 0.4464285714285714 . 0.08469387755102038)
+:END:
+In this section, an economic evaluation of each method is done. Enzymatic hydrolysis is by far the most expensive, but since the glucose produced by it is much more than that of the other methods, it is shown to be more economically profitable.
+
+* Process design and techno-economic analysis of fuel ethanol production from food waste by enzymatic hydrolysis and fermentation
+Bibtex entry for node: cite:chenProcessDesignTechnoeconomic2022
+
+#+filetags: article
+- keywords :: Food waste,Fuel ethanol,Minimum selling price,Sensitivity analysis,Techno-economic evaluation
+- tags :: [[id:54771b96-272c-43c4-9b39-84eba5db8fbd][Σχεδιασμός και Προσoμοίωση Διεργασιών]] ,[[id:14e4d2ba-594a-4b26-a59b-2babf160ac09][Ανάλυση Ευαισθησίας - Sensitivity Analysis]] ,[[id:7e72e352-fffd-46f8-ab55-5adee534302a][Ενζυμική Υδρόλυση Αποβλήτων Τροφών και Παραγωγή Βιοαερίου μέσω Αναερόβιας Χώνευσης]] ,[[id:45fb3fbe-4eef-47d1-89af-5d163eca5f1c][1G και 2G Παραγωγή Βιοαιθανόλης - Bioethanol]]  
+
+  This is an interesting paper on an in-depth process design and techno-economic analysis for the production of fuel ethanol from food waste. For my thesis, the most useful part is the hydrolysis conditions.
+** Analysis of article by Chen, X., Zheng, X., Pei, Y., Chen, W., Lin, Q., Huang, J., Hou, P., …
+:PROPERTIES:
+:URL: 
+:NOTER_DOCUMENT: ~/Sync/Zotero_pdfs/chen_et_al2022process_design_and_techno-economic_analysis_of_fuel_ethanol2.pdf  
+:NOTER_PAGE:              
+:END:
+*** Process Explanation
+:PROPERTIES:
+:NOTER_PAGE: (2 0.3061224489795918 . 0.5336734693877551)
+:END:
+First, cooking oil was separated from the rest of the FW by an oil-water separator. The FW was cut into pieces and mixed with water until solids were at 10%.
+
+Then, α-amylase, cellulase and protease (0.1-0.3 % w/w) were used to produce glucose and amino nitrogen. The reaction was performed at 55 \( ^oC \) with 500 rpm agitation for a duration of 4 h. The solids were then removed via centrifuge at 10000 rpm for 15 mins.
+
+Then, the hydrolysate was pumped into an ethanol fermenter at 30 \( ^oC \) and 400 rpm agitation. pH adjustment and sterilization were not applied to reduce cost.
+
+Finally, ethanol was purified. Firstly, the fermantation broth was evaporated at 78 \( ^oC \) under pressure 2.5 kPa. The isolated liquid is an ethanol-water azeotrope at 96% ethanol. Water was removed via adsorption with a zeolite to get 99.8% purity ethanol.
+
+* Kinetic modeling of enzymatic hydrolysis of pretreated kitchen wastes for enhancing bioethanol production
+Bibtex entry for node: cite:cekmeceliogluKineticModelingEnzymatic2013
+
+#+filetags: article
+- keywords :: 
+- tags :: [[id:7e72e352-fffd-46f8-ab55-5adee534302a][Ενζυμική Υδρόλυση Αποβλήτων Τροφών και Παραγωγή Βιοαερίου μέσω Αναερόβιας Χώνευσης]] ,[[id:20c834a6-a31c-4ecf-a7df-ece2f16e3fb3][Προσδιορισμός Αζώτου και Πρωτεινών σε Τρόφιμα με την Μέθοδο Kjeldahl]] ,[[id:149b25d2-9ed3-42a7-8c84-6245b45efb14][Μηχανισμός Υδρόλυσης της Κυτταρίνης και της Ημικυτταρίνης]] ,[[id:5e5f7358-d053-4e89-b94e-4e98144e7320][Κινητική Πρώτης Τάξης]] 
+
+  This is a study for kinetic modeling of enzymatic hydrolysis of kitchen wastes. They use a more complicated enzyme cocktail containing 4 different enzymes, use fairly high temperature (55 \( ^oC \)), acidic pH (5.5), low agitation (100 rpm) and treat the waste for about 6h as after that glucose remained constant.
+** Analysis of article by Cekmecelioglu, D., & Uncu, O. N.
+:PROPERTIES:
+:URL: 
+:NOTER_DOCUMENT: ~/Documents/9o_εξάμηνο/Διπλωματική Εργασία/Ενζυμική Υδρόλυση/Cekmecelioglu_2012.pdf  
+:NOTER_PAGE:              
+:END:
+*** Enzymes used
+:PROPERTIES:
+:NOTER_PAGE: (2 0.6760204081632653 . 0.09217687074829929)
+:END:
+The enzymes used were α-amylase, amyloglucosidase, cellulase, β-glucosidase which were purchased from SIGMA-Aldrich.
+*** Hydrolysis
+:PROPERTIES:
+:NOTER_PAGE: (2 0.17857142857142855 . 0.5261904761904762)
+:END:
+α-amylase (120 U/g dry FW) was added to the waste and kept at 95 \( ^oC \) for 1 h at 100 rpm and pH 5.5. This liquefied the starch, which allowed amyloglucosidase (120 U/g dry FW), cellulase (8 FPU/g dry FW) and β-glucosidase (50 U/g dry FW) to function at 55 \( ^oC \). Protein was estimated via the Kjeldahl method and glucose was determined by the Dinitro Salisylic Acid (DNS) method.
+*** Results
+:PROPERTIES:
+:NOTER_PAGE: (3 0.28061224489795916 . 0.09217687074829929)
+:END:
+Glucose reached a maximum after 6h for all pretreatment methods and doing no pretreatment proved to be the best. Glucose kinetics were approximated with first order dynamics.
+
+* Enzymatic hydrolysis of food waste and ethanol fermentation
+Bibtex entry for node: cite:moonEnzymaticHydrolysisFood2009
+
+#+filetags: article
+- keywords :: 
+- tags :: [[id:7e72e352-fffd-46f8-ab55-5adee534302a][Ενζυμική Υδρόλυση Αποβλήτων Τροφών και Παραγωγή Βιοαερίου μέσω Αναερόβιας Χώνευσης]] ,[[id:45fb3fbe-4eef-47d1-89af-5d163eca5f1c][1G και 2G Παραγωγή Βιοαιθανόλης - Bioethanol]] 
+
+  This article is about ethanol fermentation of food waste. A large sector of it focuses on enzymatic hydrolysis however as it is necessary pretreatment. The experiment used a 2:1 ratio of FW and water, pH adjusted at 4.5, temperature at 50 \( ^oC \), agitation at 150 rpm and lasted 3 hours. Two enzymes were tested (amyloglucosidase and carbohydrase) and in various amounts and the optimal conditions were found to be 2 units/g of dry FW for amyloglucosidase and 20 units/g of dry FW for carbohydrase.
+** Analysis of article by Moon, H. C., Song, I. S., Kim, J. C., Shirai, Y., Lee, D. H., Kim, J. K., Chung, S. O., …
+:PROPERTIES:
+:URL: 
+:NOTER_DOCUMENT: ~/Documents/9o_εξάμηνο/Διπλωματική Εργασία/Ενζυμική Υδρόλυση/Moon_2009.pdf  
+:NOTER_PAGE:              
+:END:
+*** Abstract
+:PROPERTIES:
+:NOTER_PAGE: (1 0.4578754578754579 . 0.16700680272108842)
+:END:
+Hydrolysis of FW appears to be the rate limiting step of processes such as bioethanol production. This study does laboratory experiments for finding optimal conditions for this. Amyloglucosidase and carbohydrase were the enzymes tested and a mixture showed better yields (0.46 g/g dry FW) than either on its own (0.41 for amyloglucosidase and 0.35 for carbohydrase).
+*** Hydrolysis
+:PROPERTIES:
+:NOTER_PAGE: (3 0.5232862375719519 . 0.5860544217687075)
+:END:
+100 g of FW and 50 g of water were mixed in a 250 ml flask. pH was adjusted to 4.5 and enzymatic hydrolysis was done at 50 \( ^oC \) and 150 rpm for 3 h using various amounts of enzymes.
+
+For amyloglucosidase, 0, 1, 2, 5 and 10 units/g of dry FW were used while for carbohydrase 0, 2.5, 5, 10, 20, 40  fungal β-glucanase units/g of dry FW were used. The optimal amounts were found to be 2 units/g of dry FW for amyloglucosidase and 20 units/g of dry FW for carbohydrase. Experiments were done 3 times.
+*** Enzymes used
+:PROPERTIES:
+:NOTER_PAGE: (3 0.7064364207221351 . 0.16700680272108842)
+:END:
+Both enzymes were purchased from Novozyme. The amyloglucosidase was extracted from genetically modified Aspergillus niger (Spirizyme Plus FG) while the Carbohydrase is a multi-enzyme complex from Aspergillus aculeatus (Viscozyme L).
+*** Analysis
+:PROPERTIES:
+:NOTER_PAGE: (4 0.17006802721088435 . 0.5785714285714286)
+:END:
+Samples were centrifuged at 4000 rpm for 5 mins and the supernatant was filtered through pore size of 0.45 μm. Reducing sugars were analyzed with the 3,5-dinitrosalicylic acid method. Glucose was found using HPLC. Ethanol was measured using GC. 
+*** Ethanol production
+:PROPERTIES:
+:NOTER_PAGE: (4 0.3139717425431711 . 0.16700680272108842)
+:END:
+S. cerevisiae KCTC 7107 was purchased and used for the fermentation. The experimental conditions are described here.
+*** Results
+:PROPERTIES:
+:NOTER_PAGE: (5 0.4840397697540555 . 0.16700680272108842)
+:END:
+In the control samples 4 g/l of glucose was found, which is assumed to be due to partial hydrolysis from NaOH. 23 g/l of reducing sugars were also found indicating that water soluble sugars exist in significant amounts in the food waste. The peak for amyloglucosidase was 52 and 61 g/l of glucose and reducing sugars respectively, while for carbohydrase it was 44 and 63 g/l. These were achieved at 2 AGU/g of dry FW and 20 FBGU/g of dry FW respectively.
+
+The mixture of the two managed a 58 and 71 g/l glucose and reducing sugars respectively.
+
+* Enzymatic Hydrolysis of FoodWaste and Methane Production Using UASB Bioreactor
+Bibtex entry for node: cite:moonEnzymaticHydrolysisFoodWaste2011
+
+#+filetags: article
+- keywords :: 
+- tags :: [[id:7e72e352-fffd-46f8-ab55-5adee534302a][Ενζυμική Υδρόλυση Αποβλήτων Τροφών και Παραγωγή Βιοαερίου μέσω Αναερόβιας Χώνευσης]] ,[[id:facb8215-fb5b-4fa0-ba71-f4d8772e1b1c][Αντιδραστήρες UASB - Κοκκομετρία Λάσπης]] ,[[id:9eef4820-323f-48ce-a24d-c301748242c1][Αναερόβια Χώνευση - Βιοαέριο]] 
+
+  This article discusses anaerobic digestion in a UASB reactor of hydrolyzed food waste. It uses a mixture of carbohydrase, protease and lipase for the hydrolysis, showing that a 1:2:1 rate was optimal and tested various dosage levels indicating that there is no significant improvement after a 0.1 % w/w FW dose, a 1:1 dilution with water, pH adjusted at 4.5, temperature at 50 \( ^oC \), 150 rpm and a 24 h reaction time. However, 10 h were shown to be enough after the experiment. VSS was used to monitor the hydrolysis.
+** Analysis of article by Moon, H. C., & Song, I. S.
+:PROPERTIES:
+:URL: 
+:NOTER_DOCUMENT: ~/Documents/9o_εξάμηνο/Διπλωματική Εργασία/Ενζυμική Υδρόλυση/Moon_2011.pdf  
+:NOTER_PAGE:              
+:END:
+*** Abstract
+:PROPERTIES:
+:NOTER_PAGE: (2 0.32142857142857145 . 0.32040816326530613)
+:END:
+Food waste (FW) was converted to biogas in a UASB reactor after being enzymatically hydrolyzed. It was found that a mixture of enzymes was optimal at a ratio of 1:2:1 with carbohydrase:protease:lipase. More than 95% of soluble COD was removed and about 0.35 L of methane were produced for each g of COD.
+*** Food waste composition
+:PROPERTIES:
+:NOTER_PAGE: (3 0.5861904761904763 . 0.2605442176870748)
+:END:
+Food waste was crushed and homogenized and then sieved in a 2x2 mm mesh. The pH was 4.3 with a moisture of 81.5 %.
+*** Hydrolysis
+:PROPERTIES:
+:NOTER_PAGE: (3 0.8242857142857144 . 0.2605442176870748)
+:END:
+Enzymatic hydrolysis was done using Carbohydrase, a complex multi-enzyme extracted from Aspergillus Aculeatus which was purchased from Novozyme (Viscozyme L). Protease from Aspergillus oryzae and Lipase from Candida rugosa were both purchased from Amano Enzyme Inc (Protease M "Amano" and Lipase AY "Amano" 30).
+
+500 g of FW and 500 g of water were mixed and pH was adjusted to 4.5. All reactions were conducted at 50 \( ^oC \) and 150 rpm for 24 h. 10 h reaction time was found as the optimum. The hydrolysate was centrifuged at 4000 rpm for 10 min.
+*** Results
+:PROPERTIES:
+:NOTER_PAGE: (6 0.2261904761904762 . 0.23809523809523808)
+:END:
+6 levels of enzyme dosage were tested. 0 (control), 0.02, 0.05, 0.1, 0.2 and 0.4 % w/w FW. To control the efficiency, VSS was selected.
+
+The control sample had an approximately 8% reduction. While in the other samples, VSS reduction was hyperbolically raised in accordance to the enzymes. Up to 0.1%, VSS was increasing but beyond that no increase was shown.
+
+Protease was shown to be the most important as a mixture of 1:2:1 carbohydrase/protease/lipase gave the optimal results.
+
+* Biohydrogen production from enzymatic hydrolysis of food waste in batch and continuous systems
+Bibtex entry for node: cite:hanBiohydrogenProductionEnzymatic2016
+#+filetags: article
+- keywords :: 
+- tags :: [[id:ff7612c8-772b-40db-8f38-79410227f9a8][Σκοτεινή Ζύμωση - Dark Fermentation]] ,[[id:7e72e352-fffd-46f8-ab55-5adee534302a][Ενζυμική Υδρόλυση Αποβλήτων Τροφών και Παραγωγή Βιοαερίου μέσω Αναερόβιας Χώνευσης]] 
+
+  This article indicates how food waste can be used for biohydrogen production after an enzymatic hydrolysis step. The enzyme used was Glucoamylase and a solid to liquid ration of 10% was used. The hydrolysis was done at 1 L reactor for 7 hours at 55 \( ^oC \) with 500 rpm agitation.
+** Analysis of article by Han, W., Yan, Y., Shi, Y., Gu, J., Tang, J., & Zhao, H.
+:PROPERTIES:
+:URL: 
+:NOTER_DOCUMENT: ~/Documents/9o_εξάμηνο/Διπλωματική Εργασία/Ενζυμική Υδρόλυση/Han_2016.pdf  
+:NOTER_PAGE:              
+:END:
+*** Abstract
+:PROPERTIES:
+:NOTER_PAGE: (1 0.34937888198757766 . 0.3727891156462585)
+:END:
+Food waste hydrolysis was done at a solid-to-liquid ratio 10% using glucoamylase. Then, the effluent was used for biohydrogen production.
+*** Why pretreatment is necessary
+:PROPERTIES:
+:NOTER_PAGE: (1 0.7505175983436853 . 0.3653061224489796)
+:END:
+Biohydrogen production is an important technology which has developed a lot in recent years. However, using food waste as a direct feedstock is not very efficient, while if a hydrolysis is taken, the efficiency is massively increased. Chemical and thermal hydrolysis produces inhibitory compounds such as furfural and for this reason enzymatic hydrolysis is commonly used.
+*** Results on hydrolysis
+:PROPERTIES:
+:NOTER_PAGE: (2 0.5693581780538303 . 0.3727891156462585)
+:END:
+The hydrolysis was done for 7 hours and a linear expression between glycose and time could be expressed with an R^2 of 0.957.
+*** Results on hydrogen production
+:PROPERTIES:
+:NOTER_PAGE: (3 0.5952380952380952 . 0.3802721088435374)
+:END:
+Hydrogen was produced via dark fermentation, which was left for 96 h with a final yield of 245.7 mL hydrogen/g glucose or 1.97 mol H_{2}/mol glucose, which is a good rate. A modified Gompertz equation was used for simulation in Matlab. After testing different HRTs, 6h was found to be optimal.
+*** Enzymes used
+:PROPERTIES:
+:NOTER_PAGE: (7 0.2458592132505176 . 0.3802721088435374)
+:END:
+The enzyme used wasz glucoamylase from Shanghai Beinuo Biotechnology Co. Ltd with an activity of 2000 U/g with 1 U being the amount of enzyme hydrolyzing 1 g of starch/h at 40 \( ^oC \) and pH 6. The reaction was in a 1 L bioreactor, at 55 \( ^oC \) with agitation of 500 rpm.
+
+Then, the mixture was centrifuged at 10000 rpm for 30 min and filtered by Whatman filter paper. This removed any solids or oil residue in the hydrolysate which weren't wanted. 
+*** Analytical methods
+:PROPERTIES:
+:NOTER_PAGE: (7 0.6469979296066253 . 0.3727891156462585)
+:END:
+Glucose was quantified using HPLC. COD was measured with dichromate in a COD analyzer and VSS was measured by the standard method.
