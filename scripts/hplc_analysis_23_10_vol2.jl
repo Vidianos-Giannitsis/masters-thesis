@@ -54,3 +54,4 @@ savefig(prod_conc_2310, plotsdir("23_10/prod_conc_23_10_1.png"))
 final_plot_2310 = plot(sugars_conc_2310, prod_conc_2310, total_conc_2310,
                        size = (1200, 800))
 savefig(final_plot_2310, plotsdir("23_10/total_plots_23_10.png"))
+
