@@ -10,7 +10,7 @@ v = 0.8
 init_st0 = (sucrose = df0_conc.Sucrose[1], glucose = df0_conc.Glucose[1],
             fructose = df0_conc.Fructose[1], lactate = df0_conc.Lactate[1],
             acetate = df0_conc.Acetate[1], propionate = df0_conc.Propionate[1],
-            ethanol = df0_conc.Ethanol[1], co2 = 0.0, hydrogen = 10.0, water = 750.0,
+            ethanol = df0_conc.Ethanol[1], co2 = 0.0, hydrogen = 0.0, water = 750.0,
             pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
 init_mass0 = conc_to_mass(init_st0, v)
 
@@ -70,7 +70,7 @@ function mixed_culture_fermentation(st; gluc_goal = (; glucose = 0.0), suc_goal 
     prop_st = lact_to_propionate(new_st, goal = lact_cons_goal)
 end
 
-final_st0 = mixed_culture_fermentation(init_mass0, lact_cons_goal = (; lactate = df0_conc.Lactate[4]*0.8), fruc_goal = (; fructose = df0_conc.Fructose[4]*0.8), acet_amount = 0.20, lact_amount = 0.3)
+final_st0 = mixed_culture_fermentation(init_mass0, lact_cons_goal = (; lactate = df0_conc.Lactate[4]*0.8), fruc_goal = (; fructose = df0_conc.Fructose[4]*0.8), acet_amount = 0.29, lact_amount = 0.33)
 final_conc0 = mass_to_conc(final_st0, v)
 # Results: If we select an aceteth_amount and an acid amount such that
 # ethanol reaches the concentration its supposed to have and so does
@@ -80,7 +80,7 @@ final_conc0 = mass_to_conc(final_st0, v)
 # being largely overestimated can make sense as its been shown to be
 # the compound with the most consistent increase throughout time.
 
-final_st1 = mixed_culture_fermentation(init_mass1, lact_goal = (; lactate = df1_conc.Lactate[4]*0.8 +0.18), fruc_goal = (; fructose = df1_conc.Fructose[3]*0.8), aceteth_amount = 0.21, acid_amount = 0.79, prop_amount = 0.46)
+final_st1 = mixed_culture_fermentation(init_mass1, lact_cons_goal = (; lactate = df1_conc.Lactate[4]*0.8 + 0.1), fruc_goal = (; fructose = df1_conc.Fructose[3]*0.8), acet_amount = 0.6, lact_amount = 0.4)
 final_conc1 = mass_to_conc(final_st1, v)
 # In this, much less ethanol needs to be produced, so if we assume
 # that the rest goes to acetate-propionate, we get a very large
@@ -93,7 +93,7 @@ final_conc1 = mass_to_conc(final_st1, v)
 # consumption. Ethanol and lactate are also predicted correctly with a
 # propionate overestimation.
 
-final_st2 = mixed_culture_fermentation(init_mass2, lact_goal = (; lactate = df2_conc.Lactate[4]*0.8), fruc_goal = (; fructose = df2_conc.Fructose[3]*0.8), aceteth_amount = 0.33, acid_amount = 0.03)
+final_st2 = mixed_culture_fermentation(init_mass2, lact_cons_goal = (; lactate = df2_conc.Lactate[4]*0.8), fruc_goal = (; fructose = df2_conc.Fructose[3]*0.8 - 0.1), acet_amount = 0.5, lact_amount = 0.4)
 final_conc2 = mass_to_conc(final_st2, v)
 # By the assumption that all glucose is made into lactate and ethanol
 # and nearly all fructose gives 1 mole of ethanol, we get almost
