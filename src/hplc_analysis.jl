@@ -77,3 +77,27 @@ function create_conc_table2(df, table_name)
     CSV.write(table_name, data_table)
 end
 
+function process_area_data(area, conc)
+    df_area = CSV.read(area, DataFrame)
+    create_conc_table(df_area, conc)
+    df_conc = CSV.read(conc, DataFrame)
+end
+
+function process_area_data2(area, conc)
+    df_area = CSV.read(area, DataFrame)
+    create_conc_table2(df_area, conc)
+    df_conc = CSV.read(conc, DataFrame)
+end
+
+function get_area_csv(date, amount)
+    datadir("exp_raw", "hplc_area_"*date*"_"*amount*".csv")
+end
+
+function get_conc_csv(date, amount)
+    datadir("exp_pro", "hplc_conc_"*date*"_"*amount*".csv")
+end
+
+function get_plot_name(name, date, plot_type)
+    plotsdir(date, name*"_"*plot_type*"_"*date*".png")
+end
+
