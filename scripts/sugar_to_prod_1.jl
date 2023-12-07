@@ -1,9 +1,12 @@
 using DrWatson
 @quickactivate "Masters_Thesis"
 include(srcdir("hplc_analysis.jl"))
+include(srcdir("filenames.jl"))
 
 # 10/11 Experiment
 date = "10_11"
+
+
 mix_amount = ["0", "1", "2", "4", "8"]
 t = [0, 24, 48, 72]
 
@@ -42,6 +45,8 @@ conversion_10_11 = [df0_10_11_conv, df1_10_11_conv, df2_10_11_conv, df4_10_11_co
 
 # 28/11 Experiment
 date = "28_11"
+
+
 mix_amount = ["0", "1", "2", "4", "8"]
 t = [0, 24, 48, 72]
 

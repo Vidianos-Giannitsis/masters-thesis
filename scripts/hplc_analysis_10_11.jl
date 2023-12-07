@@ -1,8 +1,11 @@
 using DrWatson
 @quickactivate "Masters_Thesis"
 include(srcdir("hplc_analysis.jl"))
+include(srcdir("filenames.jl"))
 
 date = "10_11"
+
+
 mix_amount = ["0", "1", "2", "4", "8"]
 t = [0, 24, 48, 72]
 

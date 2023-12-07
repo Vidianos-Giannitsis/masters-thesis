@@ -1,6 +1,7 @@
 using DrWatson
 @quickactivate "Masters_Thesis"
 include(srcdir("hplc_analysis.jl"))
+include(srcdir("filenames.jl"))
 
 date = "23_10"
 df2310_1_conc = process_area_data2(get_area_csv(date, "1"), get_conc_csv(date, "1"))
