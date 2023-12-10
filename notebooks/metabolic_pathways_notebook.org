@@ -1,0 +1,123 @@
+#+TITLE: Notebook for metabolic pathway prediction
+
+* Description of the core concepts
+This notebook is about a personal project of mine, which is mostly done as a learning experience in Julia, but if succesful can have application in my thesis (hence why it is in this directory). The idea is that since we know from literature every pathway a mixed culture fermentation can follow, if we have data for the input and output of either a continuous (in steady state) or batch reactor, we can try to find which pathways were followed and to what extent in each case.
+
+This example can be made into an optimization problem as the extent to which each pathway is followed can be considered the parameters of the simulator and with an L2 loss between experimental data and the output of the simulator, we can optimize it with the classic SciML toolchain.
+
+This can be very useful both for understanding the behaviour of a mixed culture of microorganisms and how they behave in different conditions but also can have very large application in modelling. Modelling mixed cultures is in general fairly hard because of the large amount of processes that can happen, but if we can quantify to what extent each process happens, it makes modelling much easier.
+
+* Primitives
+** Molar mass definition
+Since we generally measure concentration in g/l, but reactions are described in molar terms, a very important primitive to implement is molar mass. We define molar mass for a general C_{a}H_{b}O_{c}N_{d}S_{e} compound with the function
+
+#+NAME: molar_mass
+#+BEGIN_SRC julia
+# Primitive to calculate molar mass
+function molar_mass(; C=0, H=0, O=0, N=0, S=0)
+mass = 12C + H + 16O + 14N + 32S
+end
+
+#+END_SRC
+
+** Molar mass of substances used
+and then calculate molar mass for all substances used in the system.
+
+#+NAME: substance_molar_mass
+#+BEGIN_SRC julia
+
+  # Calculate the molar masses of all used substances
+  function m_glucose()
+  molar_mass(C=6, H=12, O=6)
+  end
+
+  function m_fructose()
+  molar_mass(C=6, H=12, O=6)
+  end
+
+  function m_sucrose()
+  molar_mass(C=12, H=24, O=12)
+  end
+
+  function m_pyruvate()
+  molar_mass(C=3, H=4, O=3)
+  end
+
+  function m_hydrogen()
+  molar_mass(H=2)
+  end
+
+  function m_oxygen()
+      molar_mass(O=2)
+  end
+
+  function m_co2()
+  molar_mass(C=1, O=2)
+  end
+
+  function m_water()
+  molar_mass(H=2, O=1)
+  end
+
+  function m_acetate()
+  molar_mass(C=2, H=4, O=2)
+  end
+
+  function m_propionate()
+  molar_mass(C=3, H=6, O=2)
+  end
+
+  function m_butyrate()
+  molar_mass(C=4, H=8, O=2)
+  end
+
+  function m_ethanol()
+  molar_mass(C=2, H=6, O=1)
+  end
+
+  function m_lactate()
+  molar_mass(C=3, H=6, O=3)
+  end
+
+  function m_succinate()
+  molar_mass(C=4, H=6, O=4)
+  end
+
+  function m_formate()
+  molar_mass(C=1, H=2, O=2)
+  end
+
+  function m_acetaldehyde()
+  molar_mass(C=2, H=4, O=1)
+  end
+
+  function m_acetone()
+  molar_mass(C=3, H=6, O=1)
+  end
+
+  function m_butanol()
+  molar_mass(C=4, H=10, O=1)
+  end
+
+  function m_valerate()
+  molar_mass(C=5, H=10, O=2)
+  end
+
+#+END_SRC
+
+** Concentration to mass
+Since we define molar mass, we can easily convert moles to mass and opposite. However, what we typically measure is concentration, so we also need a function to convert mass to concentration, which is easy as concentration to mass is multiplication with volume and the opposite is division. This is shown below
+
+#+NAME: conc_to_mass
+#+BEGIN_SRC julia
+
+  function conc_to_mass(st, volume)
+  new_st = NamedTuple{keys(st)}(values(st).*volume)
+  end
+
+  function mass_to_conc(st, volume)
+  new_st = NamedTuple{keys(st)}(values(st)./volume)
+  end
+
+#+END_SRC
+

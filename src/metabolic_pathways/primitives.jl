@@ -85,7 +85,7 @@ end
 #         acetate = 0.0, propionate = 0.0, butyrate = 0.0, ethanol = 0.0,
 #         lactate = 0.0, succinate = 0.0, formate = 0.0, acetaldehyde = 0.0,
 #         fructose = 0.0, sucrose = 0.0, butanol = 0.0, acetone = 0.0,
-#         valerate = 0.0)
+#         valerate = 0.0, oxygen = 0.0)
 
 function conc_to_mass(st, volume)
 new_st = NamedTuple{keys(st)}(values(st).*volume)
