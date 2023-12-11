@@ -121,3 +121,90 @@ Since we define molar mass, we can easily convert moles to mass and opposite. Ho
 
 #+END_SRC
 
+* Core pathways
+Then, we can start writing down the metabolic pathways which can happen in this system. The concept is that they all operate in a variable named st (state), which is a named tuple holding the concentration of each compound and return a new state of how the concentrations changed due to this process. Furthermore, they all have one (or multiple) goals, which describe to what extent each reaction is followed.
+
+** Initial state
+Therefore, we first need an initial state. A test state used for a lot of what is implemented here is displayed below.
+
+#+NAME: initial_state
+#+BEGIN_SRC julia
+
+  state = (glucose = 16.0, pyruvate = 0.0, hydrogen = 0.0, water = 700.0, co2 = 0.0,
+	  acetate = 0.0, propionate = 0.0, butyrate = 0.0, ethanol = 0.0,
+	  lactate = 0.0, succinate = 0.0, formate = 0.0, acetaldehyde = 0.0,
+	  fructose = 0.0, sucrose = 0.0, butanol = 0.0, acetone = 0.0,
+	  valerate = 0.0, oxygen = 0.0)
+
+#+END_SRC
+
+** Glycolysis definition and explanation
+After that, we can start writing down reactions. The first reaction we define is glycolysis, the pathway through which glucose is converted to pyruvate, hydrogen and energy. 
+
+#+NAME: glycolysis
+#+BEGIN_SRC julia
+
+  function glycolysis(st; goal = (; glucose = 0.0))
+  stoic = (glucose = -1, pyruvate = +2, hydrogen = +2)
+  mass_stoic = (glucose = stoic.glucose*m_glucose(),
+		  pyruvate = stoic.pyruvate*m_pyruvate(),
+		  hydrogen = stoic.hydrogen*m_hydrogen())
+  goal.glucose <= st.glucose || error("Glucose is not sufficient for this goal")
+  change = (goal.glucose - st.glucose)/mass_stoic.glucose
+  new_st = merge(st,
+		  (glucose = goal.glucose,
+		  pyruvate = st.pyruvate + change*mass_stoic.pyruvate,
+		  hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+  end
+
+#+END_SRC
+
+The logic of the function is we define the stoichiometry, which is known, convert it to mass stoichiometry with the molar mass primitives defined above, find the factor ~change~ which calculates the conversion of the reaction in mass terms, from the goal given and update the state so that all compounds are changed by this variable times the mass stoichiometric coefficient. For the variable for which goal is defined, its value can more simply be the value of goal. It also runs an error check if the goal of glucose is larger than the glucose in the initial state. Since it is consumed, it cannot be more than its initial value, so the function should give an error if this is given. The logic of all other core reactions is the same, so it won't be explained again below. 
+
+** Other sugars
+However, in a lot of cases we don't have only glucose. The case study I am doing contains sucrose and fructose, but other sugars could be similarly defined. Sucrose is hydrolyzed to an equimolar mixture of glucose and fructose, while fructose enters the EMP pathway (glycolysis) producing glyceraldehyde-3-phosphate, which is an intermediate of pyruvate. Since this system tries to look at a bigger picture and not every intermediate of the process, the implementation of fructolysis will be that fructose isomerises to glucose and goes through glycolysis. Theoretically it is not correct, but with the amount of abstracted detail we have assumed, it does not give any error. Below are there implementations.
+
+#+NAME: other_suagrs
+#+BEGIN_SRC julia
+
+  function sucrose_hydrolysis(st; goal = (; sucrose = 0.0))
+  stoic = (sucrose = -1, glucose = +1, fructose = +1)
+  mass_stoic = (sucrose = stoic.sucrose*m_sucrose(),
+		  glucose = stoic.glucose*m_glucose(),
+		  fructose = stoic.fructose*m_fructose())
+  goal.sucrose <= st.sucrose || error("Sucrose is not sufficient for this goal")
+  change = (goal.sucrose - st.sucrose)/mass_stoic.sucrose
+  new_st = merge(st,
+		  (sucrose = goal.sucrose,
+		  glucose = st.glucose + change*mass_stoic.glucose,
+		  fructose = st.fructose + change*mass_stoic.fructose))
+  end
+
+  function fructolysis(st; goal = (; fructose = 0.0))
+  stoic = (fructose = -1, glucose = +1)
+  mass_stoic = (fructose = stoic.fructose*m_fructose(),
+		  glucose = stoic.glucose*m_glucose())
+  goal.fructose <= st.fructose || error("Fructose is not sufficient for this goal")
+  change = (goal.fructose - st.fructose)/mass_stoic.fructose
+  fruc_st = merge(st,
+		  (fructose = goal.fructose,
+		  glucose = st.glucose + change*mass_stoic.glucose))
+  new_st = glycolysis(fruc_st, goal = (; glucose = st.glucose))
+  end
+
+#+END_SRC
+
+* Pathways of pyruvate consumption
+As mentioned, pyruvate is the core intermediate of the process, produced during glycolysis. There are many pathways it can partake in, producing different products depending on conditions. The core ones (abstracting intermediates of the processes) are:
+
+- Pyruvate + Water -> Acetate + CO2 + H2
+- Pyruvate -> Acetaldehyde + CO2
+- Acetaldehyde + H2 -> Ethanol
+- 2Pyruvate -> Butyrate + 2CO2
+- Pyruvate + H2 -> Lactate
+- Lactate + H2 -> Propionate
+- Pyruvate + CO2 + H2 -> Succinate
+- Succinate + CO2 -> Propionate
+- 2Pyruvate + 2H_2 -> Water + Butanol + 2CO_2
+- 2Pyruvate + Water -> 3CO2 + 2H_2 + Acetone
+- Formate <-> CO2 + H2
