@@ -12,7 +12,7 @@ This can be very useful both for understanding the behaviour of a mixed culture 
 Since we generally measure concentration in g/l, but reactions are described in molar terms, a very important primitive to implement is molar mass. We define molar mass for a general C_{a}H_{b}O_{c}N_{d}S_{e} compound with the function
 
 #+NAME: molar_mass
-#+BEGIN_SRC julia
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/primitives.jl
 # Primitive to calculate molar mass
 function molar_mass(; C=0, H=0, O=0, N=0, S=0)
 mass = 12C + H + 16O + 14N + 32S
@@ -24,7 +24,7 @@ end
 and then calculate molar mass for all substances used in the system.
 
 #+NAME: substance_molar_mass
-#+BEGIN_SRC julia
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/primitives.jl
 
   # Calculate the molar masses of all used substances
   function m_glucose()
@@ -109,7 +109,7 @@ and then calculate molar mass for all substances used in the system.
 Since we define molar mass, we can easily convert moles to mass and opposite. However, what we typically measure is concentration, so we also need a function to convert mass to concentration, which is easy as concentration to mass is multiplication with volume and the opposite is division. This is shown below
 
 #+NAME: conc_to_mass
-#+BEGIN_SRC julia
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/primitives.jl
 
   function conc_to_mass(st, volume)
   new_st = NamedTuple{keys(st)}(values(st).*volume)
@@ -128,7 +128,7 @@ Then, we can start writing down the metabolic pathways which can happen in this 
 Therefore, we first need an initial state. A test state used for a lot of what is implemented here is displayed below.
 
 #+NAME: initial_state
-#+BEGIN_SRC julia
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/core_pathways.jl
 
   state = (glucose = 16.0, pyruvate = 0.0, hydrogen = 0.0, water = 700.0, co2 = 0.0,
 	  acetate = 0.0, propionate = 0.0, butyrate = 0.0, ethanol = 0.0,
@@ -142,7 +142,7 @@ Therefore, we first need an initial state. A test state used for a lot of what i
 After that, we can start writing down reactions. The first reaction we define is glycolysis, the pathway through which glucose is converted to pyruvate, hydrogen and energy. 
 
 #+NAME: glycolysis
-#+BEGIN_SRC julia
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/core_pathways.jl
 
   function glycolysis(st; goal = (; glucose = 0.0))
   stoic = (glucose = -1, pyruvate = +2, hydrogen = +2)
@@ -165,7 +165,7 @@ The logic of the function is we define the stoichiometry, which is known, conver
 However, in a lot of cases we don't have only glucose. The case study I am doing contains sucrose and fructose, but other sugars could be similarly defined. Sucrose is hydrolyzed to an equimolar mixture of glucose and fructose, while fructose enters the EMP pathway (glycolysis) producing glyceraldehyde-3-phosphate, which is an intermediate of pyruvate. Since this system tries to look at a bigger picture and not every intermediate of the process, the implementation of fructolysis will be that fructose isomerises to glucose and goes through glycolysis. Theoretically it is not correct, but with the amount of abstracted detail we have assumed, it does not give any error. Below are there implementations.
 
 #+NAME: other_sugars
-#+BEGIN_SRC julia
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/core_pathways.jl
 
   function sucrose_hydrolysis(st; goal = (; sucrose = 0.0))
   stoic = (sucrose = -1, glucose = +1, fructose = +1)
@@ -206,7 +206,7 @@ As mentioned, pyruvate is the core intermediate of the process, produced during 
 - 2Pyruvate + Water -> 3CO2 + 2H_2 + Acetone
 
 #+NAME: pyruvate_consumption
-#+BEGIN_SRC julia
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/core_pathways.jl
 
 
   function pyruv_to_acetate(st; goal = (; pyruvate = 0.0))
@@ -335,7 +335,7 @@ However, there are also some other important reactions that are in these pathway
 
 and the code for their implementation can be seen below
 #+NAME: other_core_pathways
-#+BEGIN_SRC julia
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/core_pathways.jl
 
 
   function acetaldehyde_to_ethanol(st; goal = (; acetaldehyde = 0.0))
@@ -424,7 +424,7 @@ and the code for their implementation can be seen below
 With these implemented, we might want to write down the complete reaction of pyruvate to ethanol since we know it can be done through acetaldehyde. This is a rather simple implementation as it just sequentially runs the two functions.
 
 #+NAME: pyruv_to_ethanol
-#+BEGIN_SRC julia
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/compound_pathways.jl
 
   function pyruv_to_ethanol(st; pyr_goal = (; pyruvate = 0.0),
 			  acet_goal = (; acetaldehyde = 0.0))
@@ -437,7 +437,7 @@ With these implemented, we might want to write down the complete reaction of pyr
 A more complex one is the pathway that goes from pyruvate to propionate. Propionate can be produced from lactate as the intermediate or from succinate, with both having the same end result. We can write a more complex composition function which takes both pathways and the extent to which each is followed, which might be of interest. For this implementation, we follow a similar logic as above, with one more important step. One of our inputs is the amount of pyruvate that goes to lactate production (since there are two pathways, the other is 1-lactate). Since we know how much pyruvate goes to each reaction, we can change the goal of each function to not consume all the pyruvate, but only the one we define. If we want all the pyruvate to be consumed by this reaction and we want each intermediate to only take an amount, this is simple as it is just the initial pyruvate times the amount. However, since this compound reaction might be used in other larger composition reactions, we want a behaviour that works even if the pyruvate goal of the total reaction is non zero. This expression turns out to be [st.pyruvate - (st.pyryvate - goal.pyruvate)*lact_amount] and is used extensively below in all compound pathways that will be defined. Another important thing in this function is the final composition. Since reactions don't occur serially but simultaneously, we need to merge them together. However, in the case where what is being created in the reaction already existed in the reactor, each state will have the initial amount and add to it what was produced/consumed in it. Therefore, to get correct results, if 2 (or more in other more complex pathways) reactions produce the same thing, we must always substract the initial value to not inflate them. The definition can be seen below.
 
 #+NAME: pyruv_to_propionate
-#+BEGIN_SRC julia
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/compound_pathways.jl
 
   function pyruv_to_propionate(st, lact_amount; pyr_goal = (; pyruvate = 0.0),
 			      succin_goal = (; succinate = 0.0),
@@ -474,8 +474,7 @@ However, the glycolytic pathway for pyruvate production and its conversion to pr
 One such pathway is the PK pathway where glucose is converted to one mole of glyceraldehyde-3-phosphate (which is then converted to pyruvate) and one mole of acetyl-CoA. This route produces 3 hydrogen moles together with those, which means that reductions are heavily favored. For this reason, the pyruvate produced is converted to lactate and acetyl-CoA favors the reductive pathway of ethanol production instead of acetate, although acetate can be seen in this pathway. This is also called the heterolactic fermentation pathway due to how lactate is produced together with a co-product. The two primitive reactions for heterolactate with ethanol and acetate are defined and then a compound reaction that combines them.
 
 #+NAME: heterolactic_fermentation
-#+BEGIN_SRC julia
-
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/core_pathways.jl
 
   function ethanol_heterolactate(st; goal = (; glucose = 0.0))
   stoic = (glucose = -1, pyruvate = +1, ethanol = +1, hydrogen = +1, co2 = +2)
@@ -538,23 +537,24 @@ One such pathway is the PK pathway where glucose is converted to one mole of gly
 Another possible pathway is bifidus fermentation where 1/4th of the glucose is converted immediately to acetyl-CoA (half a molecule) and the rest of the carbons (5) go through a different pathway to pyruvate and acetyl-CoA. However, in this process, only one hydrogen is produced (oxidation of glyceraldehyde-3-phosphate to pyruvate) so pathways of reduction are not as favored and acetyl-CoA is converted to acetate. The common co-product however remains lactate using the one hydrogen created from pyruvate.
 
 #+NAME: bifidus
-#+BEGIN_SRC julia
-function bifidus_ferment(st; goal = (; glucose = 0.0))
-stoic = (glucose = -1, acetate = +1.5, pyruvate = +1, hydrogen = +1)
-mass_stoic = (glucose = stoic.glucose*m_glucose(),
-                acetate = stoic.acetate*m_acetate(),
-                pyruvate = stoic.pyruvate*m_pyruvate(),
-                hydrogen = stoic.hydrogen*m_hydrogen())
-goal.glucose <= st.glucose || error("Glucose is not sufficient for this goal")
-change = (goal.glucose - st.glucose)/mass_stoic.glucose
-pyr_st = merge(st,
-                (glucose = goal.glucose,
-                pyruvate = st.pyruvate + change*mass_stoic.pyruvate,
-                acetate = st.acetate + change*mass_stoic.acetate,
-                hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/core_pathways.jl
 
-new_st = pyruv_to_lact(pyr_st)
-end
+  function bifidus_ferment(st; goal = (; glucose = 0.0))
+  stoic = (glucose = -1, acetate = +1.5, pyruvate = +1, hydrogen = +1)
+  mass_stoic = (glucose = stoic.glucose*m_glucose(),
+		  acetate = stoic.acetate*m_acetate(),
+		  pyruvate = stoic.pyruvate*m_pyruvate(),
+		  hydrogen = stoic.hydrogen*m_hydrogen())
+  goal.glucose <= st.glucose || error("Glucose is not sufficient for this goal")
+  change = (goal.glucose - st.glucose)/mass_stoic.glucose
+  pyr_st = merge(st,
+		  (glucose = goal.glucose,
+		  pyruvate = st.pyruvate + change*mass_stoic.pyruvate,
+		  acetate = st.acetate + change*mass_stoic.acetate,
+		  hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+
+  new_st = pyruv_to_lact(pyr_st)
+  end
 
 #+END_SRC
 
@@ -562,7 +562,7 @@ end
 Another common pathway of glucose consumption is the ethanol fermentation which happens in yeasts. This is not very common in a typical mixed culture, but is added here for completion purposes and due to how easy it is to implement.
 
 #+NAME: ethanol
-#+BEGIN_SRC julia
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/core_pathways.jl
 
 
   function ethanol_fermentation(st; goal = (; glucose = 0.0))
@@ -580,4 +580,327 @@ Another common pathway of glucose consumption is the ethanol fermentation which 
 
 #+END_SRC
 
+** Glucose consumption
+Having defined 4 different pathways in which glucose is consumed, there is interest in defining a glucose consumption function which given the amount of glucose in each pathway can calculate the products. Then, this can be linked to pyruvate consumption pathways to final products. This is shown here.
 
+#+NAME: glucose_consumption
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/compound_pathways.jl
+
+  function glucose_consumption(st, bifidus_amount, eth_amount,
+			      heterolact_amount; goal = (; glucose = 0.0),
+			      acet_amount = 0)
+  glycolysis_amount = 1-bifidus_amount-eth_amount-heterolact_amount
+  bifidus_goal = (; glucose = (st.glucose - (st.glucose - goal.glucose))*bifidus_amount)
+  eth_goal = (; glucose = (st.glucose - (st.glucose - goal.glucose))*eth_amount)
+  heterolact_goal = (; glucose = (st.glucose - (st.glucose - goal.glucose))*heterolact_amount)
+  glycolysis_goal = (; glucose = (st.glucose - (st.glucose - goal.glucose))*glycolysis_amount)
+
+  bifidus_st = bifidus_ferment(st, goal)
+  eth_st = ethanol_fermentation(st, goal)
+  heterolact_st = heterolactic_ferment(st, goal = goal, acet_amount = acet_amount)
+  glycolysis_st = glycolysis(st, goal)
+
+  new_st = merge(st,
+		  (glucose = goal.glucose,
+		  pyruvate = glycolysis_st.pyruvate,
+		  acetate = heterolact_st.acetate + bifidus_st.acetate - st.acetate,
+		  ethanol = heterolact_st.ethanol + eth_st.ethanol - st.ethanol,
+		  lactate = heterolact_st.lactate + bifidus_st.lactate - st.lactate,
+		  co2 = heterolact_st.co2 + eth_st.co2 - st.co2,
+		  hydrogen = glycolysis_st.hydrogen + heterolact_st.hydrogen))
+  end
+
+#+END_SRC
+
+
+* Acetogenic routes
+Another big part of a typical anaerobic mixed culture fermentation is acetogenesis, the process in which various materials (such as propionate, butyrate, lactate, ethanol etc.) are converted to acetate. These processes are described below.
+
+#+NAME: acetogenic_routes
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/acetogenesis.jl
+
+  function propionate_to_acetate(st; goal = (; propionate = 0.0))
+  stoic = (propionate = -1, water = -2, acetate = +1, co2 = +1, hydrogen = +3)
+  mass_stoic = (propionate = stoic.propionate*m_propionate(),
+		  water = stoic.water*m_water(),
+		  acetate = stoic.acetate*m_acetate(),
+		  co2 = stoic.co2*m_co2(),
+		  hydrogen = stoic.hydrogen*m_hydrogen())
+  goal.propionate <= st.propionate || error("Propionate is not sufficient for this goal")
+  change = (goal.propionate - st.propionate)/mass_stoic.propionate
+  new_st = merge(st,
+		  (propionate = goal.propionate,
+		  water = st.water + change*mass_stoic.water,
+		  acetate = st.acetate + change*mass_stoic.acetate,
+		  co2 = st.co2 + change*mass_stoic.co2,
+		  hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+  end
+
+  function butyr_to_acetate(st; goal = (; butyrate = 0.0))
+  stoic = (butyrate = -1, water = -2, acetate = +2, hydrogen = +2)
+  mass_stoic = (butyrate = stoic.butyrate*m_butyrate(),
+		  water = stoic.water*m_water(),
+		  acetate = stoic.acetate*m_acetate(),
+		  hydrogen = stoic.hydrogen*m_hydrogen())
+  goal.butyrate <= st.butyrate || error("Butyrate is not sufficient for this goal")
+  change = (goal.butyrate - st.butyrate)/mass_stoic.butyrate
+  new_st = merge(st,
+		  (butyrate = goal.butyrate,
+		  water = st.water + change*mass_stoic.water,
+		  acetate = st.acetate + change*mass_stoic.acetate,
+		  hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+  end
+
+  function ethanol_to_acetate(st; goal = (; ethanol = 0.0))
+      stoic = (ethanol = -1, water = -2, acetate = +1, hydrogen = +2)
+      mass_stoic = (ethanol = stoic.ethanol*m_ethanol(),
+		    water = stoic.water*m_water(),
+		    acetate = stoic.acetate*m_acetate(),
+		    hydrogen = stoic.hydrogen*m_hydrogen())
+      goal.ethanol <= st.ethanol || error("Ethanol is not sufficient for this goal")
+      change = (goal.ethanol - st.ethanol)/mass_stoic.ethanol
+      new_st = merge(st,
+		     (ethanol = goal.ethanol,
+		      water = st.water + change*mass_stoic.water,
+		      acetate = st.acetate + change*mass_stoic.acetate,
+		      hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+  end
+
+  function lact_to_acetate(st; goal = (; lactate = 0.0))
+      stoic = (lactate = -1, water = -1, acetate = +1, hydrogen = +2, co2 = +1)
+      mass_stoic = (lactate = stoic.lactate*m_lactate(),
+		    water = stoic.water*m_water(),
+		    acetate = stoic.acetate*m_acetate(),
+		    co2 = stoic.co2*m_co2(),
+		    hydrogen = stoic.hydrogen*m_hydrogen())
+      goal.lactate <= st.lactate || error("Lactate is not sufficient for this goal")
+      change = (goal.lactate - st.lactate)/mass_stoic.lactate
+      new_st = merge(st,
+		     (lactate = goal.lactate,
+		      water = st.water + change*mass_stoic.water,
+		      acetate = st.acetate + change*mass_stoic.acetate,
+		      co2 = st.co2 + change*mass_stoic.co2,
+		      hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+  end
+
+  # In some cases, lactate acetogenesis can also happen together with
+  # its reduction to propionate.
+
+  function lact_to_acet_prop(st; goal = (; lactate = 0.0))
+      stoic = (lactate = -2, acetate = +1, propionate = +1, hydrogen = +1, co2 = +1)
+      mass_stoic = (lactate = stoic.lactate*m_lactate(),
+		    acetate = stoic.acetate*m_acetate(),
+		    co2 = stoic.co2*m_co2(),
+		    propionate = stoic.propionate*m_propionate(),
+		    hydrogen = stoic.hydrogen*m_hydrogen())
+      goal.lactate <= st.lactate || error("Lactate is not sufficient for this goal")
+      change = (goal.lactate - st.lactate)/mass_stoic.lactate
+      new_st = merge(st,
+		     (lactate = goal.lactate,
+		      acetate = st.acetate + change*mass_stoic.acetate,
+		      propionate = st.propionate + change*mass_stoic.propionate,
+		      hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+  end
+
+  # For this reason, we can also define a compound reaction that lists
+  # both pathways of lactate acetogenesis (conversion to acetate or
+  # conversion to a mixture of it and propionate due to the surplus of
+  # hydrogen allowing for lactate reduction) with the extent to which
+  # the propionate producing reaction happens.
+
+  function lactate_acetogenesis(st, prop_amount; goal = (; lactate = 0.0))
+      acet_prod_goal = (; lactate = (st.lactate - (st.lactate - goal.lactate)*(1-prop_amount)))
+      prop_prod_goal = (; lactate = (st.lactate - (st.lactate - goal.lactate)*prop_amount))
+
+      acet_st = lact_to_acetate(st, goal = acet_prod_goal)
+      prop_st = lact_to_acet_prop(st, goal = prop_prod_goal)
+      new_st = merge(st,
+		     (lactate = goal.lactate,
+		      acetate = acet_st.acetate + prop_st.acetate - st.acetate,
+		      hydrogen = acet_st.hydrogen + prop_st.hydrogen - st.hydrogen,
+		      co2 = acet_st.co2 + prop_st.co2 - st.co2,
+		      propionate = prop_st.propionate,
+		      water = acet_st.water))
+  end
+
+  function homoacetogenic_acetate(st; goal = (; hydrogen = 0.0))
+      stoic = (hydrogen = -4, co2 = -2, acetate = +1, water = +1)
+      mass_stoic = (hydrogen = stoic.hydrogen*m_hydrogen(),
+		    co2 = stoic.co2*m_co2(),
+		    acetate = stoic.acetate*m_acetate(),
+		    water = stoic.water*m_water())
+      goal.hydrogen <= st.hydrogen || error("Hydrogen is not sufficient for this goal")
+      abs(change*mass_stoic.co2) <= st.co2 || error("CO2 is not sufficient for this goal")
+      change = (goal.hydrogen - st.hydrogen)/mass_stoic.hydrogen
+      new_st = merge(st,
+		     (hydrogen = goal.hydrogen,
+		      co2 = st.co2 + change*mass_stoic.co2,
+		      acetate = st.acetate + change*mass_stoic.acetate,
+		      water = st.water + change*mass_stoic.water))
+  end
+
+#+END_SRC
+
+After this is done, we can define a large compound reaction for acetogenesis that given the final mass of each material can find the final state that is reached. 
+
+#+NAME: acetogenesis
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/acetogenesis.jl
+
+  function acetogenesis(st; prop_goal = (; propionate = st.propionate),
+			butyr_goal = (; butyrate = st.butyrate),
+			eth_goal = (; ethanol = st.ethanol),
+			lact_goal = (; lactate = st.lactate),
+			hyd_goal = (; hydrogen = st.hydrogen),
+			lact_prop = 0)
+      prop_st = propionate_to_acetate(st, goal = prop_goal)
+      butyr_st = butyr_to_acetate(st, goal = butyr_goal)
+      eth_st = ethanol_to_acetate(st, goal = eth_goal)
+      lact_st = lactate_acetogenesis(st, lact_prop, goal = lact_goal)
+
+      new_st = merge(st,
+		     (propionate = prop_st.propionate + lact_st.propionate - st.propionate,
+		      butyrate = butyr_st.butyrate,
+		      ethanol = eth_st.ethanol,
+		      lactate = lact_st.lactate,
+		      co2 = prop_st.co2 + lact_st.co2 - st.co2,
+		      water = prop_st.water + butyr_st.water + eth_st.water + lact_st.water - 3st.water,
+		      acetate = prop_st.acetate + butyr_st.acetate + eth_st.acetate + lact_st.acetate - 3st.acetate,
+		      hydrogen = prop_st.hydrogen + butyr_st.hydrogen + eth_st.hydrogen + lact_st.hydrogen - 3st.hydrogen))
+
+      #homoacetic_st = homoacetogenic_acetate(new_st, goal = hyd_goal)
+  end
+
+#+END_SRC
+
+* Common fermentative pathways
+After defining all the above, there is a lot of interest in some very common compound fermentative pathways. For example, we know from literature that a very common pathway is that ethanol and acetate are produced in equimolar amounts, so instead of writing that in the final function we want to use, we can implement it directly and then use this in the final function that describes the combination of pathways we assume to be followed. Besides acetate-ethanol fermentation, we know that a fermentation of butyrate with acetate in a 3:1 molar analogy is common and propionate-acetate in a 2:1.
+
+#+NAME: common_pathways
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/compound_pathways.jl
+
+  function acetate_ethanol_fermentation(st; goal = (; pyruvate = 0.0))
+  acet_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate)*0.5))
+  eth_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate)*0.5))
+
+  acet_st = pyruv_to_acetate(st, goal = acet_goal)
+  eth_st = pyruv_to_ethanol(st, pyr_goal = eth_goal)
+
+  new_st = merge(st,
+		  (pyruvate = goal.pyruvate,
+		  acetate = acet_st.acetate,
+		  ethanol = eth_st.ethanol,
+		  co2 = acet_st.co2 + eth_st.co2 - st.co2,
+		  water = acet_st.water))
+  end
+
+  function acetate_butyrate_fermentation(st; goal = (; pyruvate = 0.0))
+  acet_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate)*0.25))
+  butyr_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate)*0.75))
+
+  acet_st = pyruv_to_acetate(st, goal = acet_goal)
+  butyr_st = pyruv_to_butyr(st, goal = butyr_goal)
+
+  new_st = merge(st,
+		  (pyruvate = goal.pyruvate,
+		  acetate = acet_st.acetate,
+		  butyrate = butyr_st.butyrate,
+		  hydrogen = acet_st.hydrogen + butyr_st.hydrogen - st.hydrogen,
+		  co2 = acet_st.co2 + butyr_st.co2 - st.co2))
+  end
+
+  # Reminder that the pyruvate to propionate function has levers for how
+  # much lactate was produced from each pathway and if lactate or
+  # succinate are accumulated in the reactor. In the case of
+  # acetate-propionate fermentation with this stoichiometry, propionate
+  # is fully converted so these aren't necessary. More complex ones can
+  # be defined to explain accumulation of lactate and succinate, but
+  # this is the standard acidogenic route.
+  function acetate_propionate_fermentation(st; pyr_goal = (; pyruvate = 0.0), lact_goal=(; lactate = 0.0), lact_amount = 1, prop_amount = 2/3)
+      acet_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - pyr_goal.pyruvate)*(1-prop_amount)))
+      prop_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - pyr_goal.pyruvate)*prop_amount))
+
+      acet_st = pyruv_to_acetate(st, goal = acet_goal)
+      prop_st = pyruv_to_propionate(st, lact_amount, pyr_goal = prop_goal, lact_goal = lact_goal)
+
+      new_st = merge(st,
+		     (pyruvate = pyr_goal.pyruvate,
+		      acetate = acet_st.acetate,
+		      propionate = prop_st.propionate,
+		      co2 = acet_st.co2,
+		      lactate = prop_st.lactate,
+		      hydrogen = acet_st.hydrogen + prop_st.hydrogen - st.hydrogen))
+  end
+
+#+END_SRC
+
+Besides these, there is another one, which I have not seen in literature but I have needed to accurately describe my experiments, which is the ethanol-propionate pathway. Due to both ethanol and propionate being pathways that need multiple reductions, this ends up needing a lot of hydrogen and as such is not commonly reported. But if there is a surplus of hydrogen from other processes, it can be used to describe a system and therefore is implemented here.
+
+#+NAME: eth_prop
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/compound_pathways.jl
+
+  function ethanol_propionate_fermentation(st; pyr_goal = (; pyruvate = 0.0),
+					   lact_goal = (; lactate = 0.0),
+					   succin_goal = (; succinate = 0.0),
+					   prop_amount = 0.5, lact_amount = 1)
+      eth_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - pyr_goal.pyruvate)*(1-prop_amount)))
+      prop_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - pyr_goal.pyruvate)*prop_amount))
+
+      eth_st = pyruv_to_ethanol(st, pyr_goal = eth_goal)
+      prop_st = pyruv_to_propionate(st, lact_amount, pyr_goal = prop_goal, lact_goal = lact_goal, succin_goal = succin_goal)
+
+      new_st = merge(st,
+		     (pyruvate = pyr_goal.pyruvate,
+		      ethanol = eth_st.ethanol,
+		      propionate = prop_st.propionate,
+		      lactate = prop_st.lactate,
+		      co2 = eth_st.co2,
+		      hydrogen = eth_st.hydrogen + prop_st.hydrogen - st.hydrogen,
+		      succinate = prop_st.succinate))
+  end
+
+#+END_SRC
+
+** ABE Fermentation
+Another common pathway studied in literature is ABE fermentation. In this, there is an acidogenic phase where mostly acetate and butyrate are produced (with some ethanol production) and after some time, the culture enters the solventogenic phase where ethanol is produced with a higher yield and together with acetone and butanol. This system is described with the below, fairly complex, function. Note that the extent to which each product is produced is not set in stone for ABE fermentation so all of these are given as keyword arguments.
+
+#+NAME: abe
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/compound_pathways.jl
+
+  function ABE_fermentation(st; goal = (; pyruvate = 0.0),
+			  acet_amount, aceteth_amount, butyr_amount,
+			  solveth_amount, acetone_amount)
+  butanol_amount = 1 - acet_amount - aceteth_amount - butyr_amount - solveth_amount - acetone_amount
+  acet_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate))*acet_amount)
+  aceteth_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate))*aceteth_amount)
+  butyr_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate))*butyr_amount)
+  solveth_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate))*solveth_amount)
+  acetone_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate))*acetone_amount)
+  butanol_goal = (; pyruvate = (st.pyruvate - (st.pyruvate - goal.pyruvate))*butanol_amount)
+
+  acet_st = pyruv_to_acetate(st, goal = acet_goal)
+  aceteth_st = acetate_ethanol_fermentation(st, goal = aceteth_goal)
+  butyr_st = pyruv_to_butyr(st, goal = butyr_goal)
+  acidogenic_st = merge(st,
+			  (pyruvate = acet_st.pyruvate + aceteth_st.pyruvate + butyr_st.pyruvate - 2st.pyruvate,
+			  acetate = acet_st.acetate + aceteth_st.acetate - st.acetate,
+			  butyrate = butyr_st.butyrate,
+			  ethanol = aceteth_st.ethanol,
+			  hydrogen = acet_st.hydrogen,
+			  co2 = acet_st.co2 + aceteth_st.co2 + butyr_st.co2 - 2st.co2,
+			  water = acet_st.water + aceteth_st.water - st.water))
+
+  solveth_st = pyruv_to_ethanol(acidogenic_st, goal = solveth_goal)
+  acetone_st = pyruv_to_acetone(acidogenic_st, goal = acetone_goal)
+  butanol_st = pyruv_to_butanol(acidogenic_st, goal = butanol_goal)
+  solventogenic_st = merge(acidogenic_st,
+			      (pyruvate = goal.pyruvate,
+
+			      ethanol = solveth_st.ethanol,
+			      acetone = acetone_st.acetone,
+			      butanol = butanol_st.butanol,
+			      co2 = solveth_st.co2 + acetone_st.co2 + butanol_st.co2 - 2acidogenic_st.co2,
+			      hydrogen = acetone_st.hydrogen + butanol_st.hydrogen - acidogenic_st.hydrogen,
+			      water = acetone_st.water + butanol_st.water - acidogenic_st.water))
+  end
+
+#+END_SRC

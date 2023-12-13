@@ -1,8 +1,6 @@
-
 # Primitive to calculate molar mass
 function molar_mass(; C=0, H=0, O=0, N=0, S=0)
 mass = 12C + H + 16O + 14N + 32S
-return mass
 end
 
 # Calculate the molar masses of all used substances
@@ -24,6 +22,10 @@ end
 
 function m_hydrogen()
 molar_mass(H=2)
+end
+
+function m_oxygen()
+    molar_mass(O=2)
 end
 
 function m_co2()
@@ -78,21 +80,10 @@ function m_valerate()
 molar_mass(C=5, H=10, O=2)
 end
 
-# Define an initial state. The system will expect this to be in mass
-# value and not concentration for sake of simplicity. We can however
-# define a function that does the conversion so both can work.
-# state = (glucose = 16.0, pyruvate = 0.0, hydrogen = 0.0, water = 700.0, co2 = 0.0,
-#         acetate = 0.0, propionate = 0.0, butyrate = 0.0, ethanol = 0.0,
-#         lactate = 0.0, succinate = 0.0, formate = 0.0, acetaldehyde = 0.0,
-#         fructose = 0.0, sucrose = 0.0, butanol = 0.0, acetone = 0.0,
-#         valerate = 0.0, oxygen = 0.0)
-
 function conc_to_mass(st, volume)
 new_st = NamedTuple{keys(st)}(values(st).*volume)
 end
-# We also ideally want output in concentration, so ideally we also
-# want the opposite conversion.
+
 function mass_to_conc(st, volume)
 new_st = NamedTuple{keys(st)}(values(st)./volume)
 end
-
