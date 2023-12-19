@@ -55,7 +55,7 @@ savefig(eth_scatter, get_plot_name("ethanol", date, plot_type))
 
 pH_scatter = scatter(t, [df0_conc.pH df1_conc.pH df2_conc.pH df4_conc.pH df8_conc.pH], label = plot_label,
 		     xticks = t, title = "pH-t",
-		     xlabel = "Time (h)", ylabel = "pH", markersize = 6)
+		     xlabel = "Time (h)", ylabel = "pH", markersize = 6, ylims = (3.5, 4.5))
 savefig(pH_scatter, get_plot_name("pH", date, plot_type))
 
 scatter_final = plot(suc_scatter, gluc_scatter, fruc_scatter,
@@ -134,7 +134,7 @@ savefig(eth_groupedbar, get_plot_name("ethanol", date, plot_type))
 
 pH_groupedbar = groupedbar(t, [df0_conc.pH df1_conc.pH df2_conc.pH df4_conc.pH df8_conc.pH], label = plot_label,
 		     xticks = t, title = "pH-t",
-		     xlabel = "Time (h)", ylabel = "pH", markersize = 6)
+		     xlabel = "Time (h)", ylabel = "pH", markersize = 6, ylims = (3.5, 4.5))
 savefig(pH_groupedbar, get_plot_name("pH", date, plot_type))
 
 groupedbar_final = plot(suc_groupedbar, gluc_groupedbar, fruc_groupedbar,

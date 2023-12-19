@@ -168,7 +168,7 @@
 
   pH_scatter = scatter(t, [df0_conc.pH df1_conc.pH df2_conc.pH df4_conc.pH df8_conc.pH], label = plot_label,
 		       xticks = t, title = "pH-t",
-		       xlabel = "Time (h)", ylabel = "pH", markersize = 6)
+		       xlabel = "Time (h)", ylabel = "pH", markersize = 6, ylims = (3.5, 4.5))
   savefig(pH_scatter, get_plot_name("pH", date, plot_type))
 
   scatter_final = plot(suc_scatter, gluc_scatter, fruc_scatter,
@@ -326,7 +326,7 @@
 
   pH_groupedbar = groupedbar(t, [df0_conc.pH df1_conc.pH df2_conc.pH df4_conc.pH df8_conc.pH], label = plot_label,
 		       xticks = t, title = "pH-t",
-		       xlabel = "Time (h)", ylabel = "pH", markersize = 6)
+		       xlabel = "Time (h)", ylabel = "pH", markersize = 6, ylims = (3.5, 4.5))
   savefig(pH_groupedbar, get_plot_name("pH", date, plot_type))
 
   groupedbar_final = plot(suc_groupedbar, gluc_groupedbar, fruc_groupedbar,
@@ -856,7 +856,7 @@
   df2_10_11_conv = df2_prod[4]/df2_sugars[1]
   df4_10_11_conv = df4_prod[4]/df4_sugars[1]
   df8_10_11_conv = df8_prod[4]/df8_sugars[1]
-  conversion_10_11 = [df0_10_11_conv, df1_10_11_conv, df2_10_11_conv, df4_10_11_conv, df8_10_11_conv]
+  conversion_10_11 = [df0_10_11_conv, df1_10_11_conv, df2_10_11_conv, df4_10_11_conv, df8_10_11_conv].*100
 
   # 28/11 Experiment
   <<area_to_conc_28_11>>
@@ -867,15 +867,15 @@
   df2_28_11_conv = df2_prod[4]/df2_sugars[1]
   df4_28_11_conv = df4_prod[4]/df4_sugars[1]
   df8_28_11_conv = df8_prod[4]/df8_sugars[1]
-  conversion_28_11 = [df0_28_11_conv, df1_28_11_conv, df2_28_11_conv, df4_28_11_conv, df8_28_11_conv]
+  conversion_28_11 = [df0_28_11_conv, df1_28_11_conv, df2_28_11_conv, df4_28_11_conv, df8_28_11_conv].*100
 
   # 23/10 Experiment
-  df2310_1_conv = df2310_1_prod[21]/df2310_1_sugars[1]
-  df2310_2_conv = df2310_2_prod[17]/df2310_2_sugars[1]
+  df2310_1_conv = df2310_1_prod[21]/df2310_1_sugars[1]*100
+  df2310_2_conv = df2310_2_prod[17]/df2310_2_sugars[1]*100
 #+END_SRC
 
 #+RESULTS: sugar_to_prod_1
-: 0.7771551384057258
+: 77.71551384057258
 
 ** Δημιουργία διαγραμμάτων
 Έπειτα, με τα παραπάνω δεδομένα μπορούμε να φτιάξουμε ξεχωριστά διαγράμματα για το πείραμα 10/11 και 28/11, συγκριτικά τους και ένα συγκριτικό και με τα 3 πειράματα.
@@ -888,34 +888,37 @@
 
   sugar_10_11_conv = scatter([0, 1, 2, 3, 4], [conversion_10_11],
 		       xticks = (0:4, mix_amount), xlabel = "Amount of mix (ml)",
-		       ylabel = "Conversion rate", markersize = 6,
+		       ylabel = "Conversion rate (%)", markersize = 6,
 		       title = "Conversion of sugars to products, T = 35 C",
 		       legend = false)
   savefig(sugar_10_11_conv, plotsdir("10_11/sugar_conv_10_11.png"))
 
   sugar_28_11_conv = scatter([0, 1, 2, 3, 4], [conversion_28_11],
 		       xticks = (0:4, mix_amount), xlabel = "Amount of mix (ml)",
-		       ylabel = "Conversion rate", markersize = 6,
+		       ylabel = "Conversion rate (%)", markersize = 6,
 		       title = "Conversion of sugars to products, T = 40 C",
 		       legend = false)
   savefig(sugar_28_11_conv, plotsdir("28_11/sugar_conv_28_11.png"))
 
   sugar_conv = scatter([0, 1, 2, 3, 4], [conversion_10_11 conversion_28_11],
 		       xticks = (0:4, mix_amount), xlabel = "Amount of mix (ml)",
-		       ylabel = "Conversion rate", markersize = 6,
+		       ylabel = "Conversion rate (%)", markersize = 6,
 		       title = "Conversion of sugars to products",
 		       label = ["35 C" "40 C"])
   savefig(sugar_conv, plotsdir("35_40_comp/sugar_conv.png"))
 
   sugar_conv_complete = scatter([0, 1, 2, 3, 4], [conversion_10_11 conversion_28_11],
 				xticks = (0:4, mix_amount), xlabel = "Amount of mix (ml)",
-				ylabel = "Conversion rate", markersize = 6,
+				ylabel = "Conversion rate (%)", markersize = 6,
 				title = "Conversion of sugars to products",
 				label = ["35 C" "40 C"])
   scatter!([2], [df2310_1_conv df2310_2_conv],
 	   markersize = 6, label = ["45 C (1)" "45 C (2)"])
   savefig(sugar_conv_complete, plotsdir("35_40_45_comp/sugar_conv.png"))
 #+END_SRC
+
+#+RESULTS: sugar_to_prod_plots_1
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/35_40_45_comp/sugar_conv.png"
 
 #+RESULTS: sugar_to_prod_plots
 : "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/35_40_45_comp/sugar_conv.png"
