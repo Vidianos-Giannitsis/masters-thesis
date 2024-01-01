@@ -1,0 +1,11 @@
+prefix=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+toolexeclibdir=${libdir}
+includedir=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env/include
+
+Name: libffi
+Description: Library supporting Foreign Function Interfaces
+Version: 3.4.2
+Libs: -L${toolexeclibdir} -lffi
+Cflags: -I${includedir}

@@ -1,0 +1,11 @@
+prefix=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env
+exec_prefix=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env
+libdir=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env/lib
+includedir=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env/include
+
+Name: uuid
+Description: Universally unique id library
+Version: 2.38.1
+Requires:
+Cflags: -I${includedir}/uuid
+Libs: -L${libdir} -luuid

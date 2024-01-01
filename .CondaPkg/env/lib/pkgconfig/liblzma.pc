@@ -1,0 +1,19 @@
+#
+# Author: Lasse Collin
+#
+# This file has been put into the public domain.
+# You can do whatever you want with this file.
+#
+
+prefix=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env
+exec_prefix=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env
+libdir=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env/lib
+includedir=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env/include
+
+Name: liblzma
+Description: General purpose data compression library
+URL: https://tukaani.org/xz/
+Version: 5.2.6
+Cflags: -I${includedir}
+Libs: -L${libdir} -llzma
+Libs.private: -pthread -lrt  -lpthread
