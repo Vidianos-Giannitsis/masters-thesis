@@ -53,6 +53,13 @@ scatter_final = plot(suc_scatter, gluc_scatter, fruc_scatter,
 savefig(scatter_final, get_plot_name("final", date, plot_type))
 
 
+date = "23_10"
+df2310_1_conc = process_area_data2(get_area_csv(date, "1"), get_conc_csv(date, "1"))
+t1 = df2310_1_conc.Time
+
+df2310_2_conc = process_area_data2(get_area_csv(date, "2"), get_conc_csv(date, "2"))
+t2 = df2310_2_conc.Time
+
 df2310_1_total = map(sum, eachrow(df2310_1_conc[:, 2:8]))
 df2310_2_total = map(sum, eachrow(df2310_2_conc[:, 2:8]))
 
