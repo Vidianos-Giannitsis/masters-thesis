@@ -49,6 +49,8 @@ acet = prod[2,:]
 prop = prod[3,:]
 eth = prod[4,:]
 
+using Interpolations, GlobalSensitivity, Statistics
+
 nodes = ([0.0, 1.0, 2.0, 4.0, 8.0], [35, 40])
 lact_itp = interpolate(nodes, reshape(lact, 5, 2), Gridded(Linear()))
 acet_itp = interpolate(nodes, reshape(acet, 5, 2), Gridded(Linear()))
@@ -73,8 +75,7 @@ end
 
 function sens_analysis(bounds)
     sens_mean_vector = []
-#    sens_dev_vector = []
-    for i in 1:100
+    for i in 1:200
         lact_sens = gsa(lact_interp, Morris(), bounds)
 
         acet_sens = gsa(acet_interp, Morris(), bounds)
@@ -84,19 +85,18 @@ function sens_analysis(bounds)
         eth_sens = gsa(eth_interp, Morris(), bounds)
 
         push!(sens_mean_vector, [lact_sens.means, acet_sens.means, prop_sens.means, eth_sens.means])
-#        push!(sens_dev_vector, [lact_sens.variances, acet_sens.variances, prop_sens.variances, eth_sens.variances])
     end
 
     return mean(sens_mean_vector)
 end
 
-sens_bound_35 = [[0,8],[35,35.5]]
-sens_bounds2 = [[0,8],[35,40]]
-sens_bound_40 = [[0,8],[39.5,40]]
+sens_bounds = [[0,8],[35,40]]
+sens_bound_35 = [[0,8],[35,35.1]]
+sens_bound_40 = [[0,8],[39.9,40]]
 sens_bound_low = [[0,2],[35,40]]
 sens_bound_high = [[2, 8],[35,40]]
 
-total_sens = sens_analysis(sens_bounds2)
+total_sens = sens_analysis(sens_bounds)
 sens_35 = sens_analysis(sens_bound_35)
 sens_40 = sens_analysis(sens_bound_40)
 sens_low = sens_analysis(sens_bound_low)
@@ -131,101 +131,40 @@ sens_high = sens_analysis(sens_bound_high)
 # also has a small negative correlation. Ethanol on the other hand
 # shows a more significant positive correlation with mix amount.
 
-## ML TEST, DIDNT WORK
-# Then create the input matrix
-X = [35.0 0.0; 35.0 1.0; 35.0 2.0; 35.0 4.0; 35.0 8.0; 40.0 0.0; 40.0 1.0; 40.0 2.0; 40.0 4.0; 40.0 8.0]
-X_df = DataFrame(X, [:Temp, :Mix])
+# We also want to visualize these results. Heatmaps are a good way of
+# making this visualization and the CairoMakie package provides nice
+# behaviour for this.
+using CairoMakie
 
-# Now that we have the data, we can test various regression algorithms
-# and see which works best
-using MLJ
+# We need one Matrix instead of Vectors of vectors for the data
+total_sens2 = vcat(total_sens[1], total_sens[2], total_sens[3], total_sens[4])
+sens_35_2 = vcat(sens_35[1], sens_35[2], sens_35[3], sens_35[4])[:,1]
+sens_40_2 = vcat(sens_40[1], sens_40[2], sens_40[3], sens_40[4])[:,1]
+sens_temp = hcat(sens_35_2, sens_40_2)
+sens_low2 = vcat(sens_low[1], sens_low[2], sens_low[3], sens_low[4])
+sens_high2 = vcat(sens_high[1], sens_high[2], sens_high[3], sens_high[4])
 
-# First let's see how linear correlation does (probably not well)
-using GLM, MLJGLMInterface
-LinearRegressor = @load LinearRegressor pkg = GLM
-lm = LinearRegressor()
-cv=CV(nfolds=6)
+x_label = ["Lactate", "Acetate", "Propionate", "Ethanol"]
+y_label = ["Mix Amount", "Temperature"]
 
-lact_lm = machine(lm, X_df, lact)
-fit!(lact_lm)
-lm_rep = report(lact_lm)
-lm_eval = evaluate!(lact_lm, resampling=cv, measure=[rms, l1, l2])
-lm_lact_hat = MLJ.predict_mean(lact_lm, X_df)
-lm_rsq = RSquared()(lm_lact_hat, lact)
-# R^2 = 0.36
+# Make the figures
+gs_fig = Figure(size = (600, 400))
+ax, hm = CairoMakie.heatmap(gs_fig[1,1], total_sens2, axis = (xticks = (1:4, x_label), yticks = (1:2, y_label), title = "Global Sensitivity Analysis"))
+Colorbar(gs_fig[1, 2], hm)
+save(plotsdir("sensitivity/global_sens.png"), gs_fig)
 
-# Let's try decision tree regression
-using DecisionTree
-DecisionTreeRegressor = @load DecisionTreeRegressor pkg = DecisionTree
-rng_seed = 34
+sfig_temp = Figure(size = (600, 400))
+ax1, hm1 = CairoMakie.heatmap(sfig_temp[1,1], sens_temp, axis = (xticks = (1:4, x_label), yticks = (1:2, ["35 C", "40 C"]), title = "Sensitivity to mix amount in specific temperature"))
+Colorbar(sfig_temp[1, 2], hm1)
+save(plotsdir("sensitivity/temp_sens.png"), sfig_temp)
 
-dt = DecisionTreeRegressor(rng = rng_seed)
-lact_dt = machine(dt, X_df, lact) |> fit!
-dt_eval = evaluate!(lact_dt, resampling=cv, measure = [rms, l1, l2])
-lact_hat = MLJ.predict_mean(lact_dt, X_df)
-dt_rsq = RSquared()(lact_hat, lact)
-# Performs even worse
+sens_low_fig = Figure(size = (600, 400))
+ax, hm = CairoMakie.heatmap(sens_low_fig[1,1], sens_low2, axis = (xticks = (1:4, x_label), yticks = (1:2, y_label), title = "Sensitivity in mix amounts 0-2 ml"))
+Colorbar(sens_low_fig[1, 2], hm)
+save(plotsdir("sensitivity/sens_low.png"), sens_low_fig)
 
-# Let's use XGBoost
-using XGBoost
-XGBoostRegressor = @load XGBoostRegressor pkg=XGBoost
-
-xgb = XGBoostRegressor(eta = 0.3, max_depth = 3, num_parallel_tree =10,
-                       subsample = 0.6, lambda = 0.8)
-lact_xgb = machine(xgb, X_df, lact) |> fit!
-xgb_lact_eval = evaluate!(lact_xgb, resampling=cv, measure = [rms, l1, l2])
-xgb_lact_hat = MLJ.predict(lact_xgb, X_df)
-xgb_lact_rsq = RSquared()(xgb_lact_hat, lact)
-# Gets very good performance after playing around with the hyperparameters
-
-# Let's see if the others will work well with this parameter set
-acet_xgb = machine(xgb, X_df, acet) |> fit!
-xgb_acet_eval = evaluate!(acet_xgb, resampling=cv, measure = [rms, l1, l2])
-xgb_acet_hat = MLJ.predict(acet_xgb, X_df)
-xgb_acet_rsq = RSquared()(xgb_acet_hat, acet)
-
-prop_xgb = machine(xgb, X_df, prop) |> fit!
-xgb_prop_eval = evaluate!(prop_xgb, resampling=cv, measure = [rms, l1, l2])
-xgb_prop_hat = MLJ.predict(prop_xgb, X_df)
-xgb_prop_rsq = RSquared()(xgb_prop_hat, prop)
-
-eth_xgb = machine(xgb, X_df, eth) |> fit!
-xgb_eth_eval = evaluate!(eth_xgb, resampling=cv, measure = [rms, l1, l2])
-xgb_eth_hat = MLJ.predict(eth_xgb, X_df)
-xgb_eth_rsq = RSquared()(xgb_eth_hat, eth)
-
-function predict_conc(x, model)
-    reshaped_x = reshape(x, :, 2)
-    table_x = Tables.table(reshaped_x)
-    df = DataFrame(table_x)
-    
-    MLJ.predict_mean(model, df)
-end
-
-function predict_lact(x)
-    predict_conc(x, lact_lm)
-end
-
-function predict_acet(x)
-    predict_conc(x, acet_xgb)
-end
-
-function predict_prop(x)
-    predict_conc(x, prop_xgb)
-end
-
-function predict_eth(x)
-    predict_conc(x, eth_xgb)
-end
-
-using GlobalSensitivity
-bounds = [[35,40],[0,8]]
-lact_sens = gsa(predict_lact, Morris(), bounds)
-acet_sens = gsa(predict_acet, Morris(), bounds)
-prop_sens = gsa(predict_prop, Morris(), bounds)
-eth_sens = gsa(predict_eth, Morris(), bounds)
-
-sens = [lact_sens.means, acet_sens.means, prop_sens.means, eth_sens.means]
-
-x = [35.0 2.0; 36.0 2.0; 37.0 2.0; 38.0 2.0; 39 2.0; 40 2.0]
+sens_high_fig = Figure(size = (600, 400))
+ax, hm = CairoMakie.heatmap(sens_high_fig[1,1], sens_high2, axis = (xticks = (1:4, x_label), yticks = (1:2, y_label), title = "Sensitivity in mix amounts 2-8 ml"))
+Colorbar(sens_high_fig[1, 2], hm)
+save(plotsdir("sensitivity/sens_high.png"), sens_high_fig)
 
