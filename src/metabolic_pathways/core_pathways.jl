@@ -320,3 +320,21 @@ new_st = merge(st,
 		ethanol = st.ethanol + change*mass_stoic.ethanol,
 		co2 = st.co2 + change*mass_stoic.co2))
 end
+
+function aerobic_pyruvate_oxidation(st; goal = (; oxygen = 0.0))
+    stoic = (pyruvate = -1, water = -3, oxygen = -2, co2 = +3, hydrogen = +5)
+    mass_stoic = (pyruvate = stoic.pyruvate*m_pyruvate(),
+		  water = stoic.water*m_water(),
+		  oxygen = stoic.oxygen*m_oxygen(),
+		  co2 = stoic.co2*m_co2(),
+		  hydrogen = stoic.hydrogen*m_hydrogen())
+    goal.oxygen <= st.oxygen || error("Oxygen is not sufficient for this goal")
+    change = (goal.oxygen - st.oxygen)/mass_stoic.oxygen
+    abs(change*mass_stoic.pyruvate) <= st.pyruvate || error("Pyruvate is not sufficient for this goal")
+    new_st = merge(st,
+		   (oxygen = goal.oxygen,
+		    pyruvate = st.pyruvate + change*mass_stoic.pyruvate,
+		    water = st.water + change*mass_stoic.water,
+		    co2 = st.co2 + change*mass_stoic.co2,
+		    hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+end

@@ -612,6 +612,31 @@ Having defined 4 different pathways in which glucose is consumed, there is inter
 
 #+END_SRC
 
+** Aerobic consumption
+In aerobic conditions (with oxygen in the reactor), glucose goes down the glycolytic pathway, but pyruvate is not converted into any of the aforementioned products, but rather enters the Krebs cycle where it continuously produces energy, CO_{2} and hydrogen. Pyruvate is first converted to acetyl-CoA in this process (which abstracting the details of CoA can be simulated with the conversion to acetate we have written down) and then that breaks down to CO_{2} and hydrogen in the Krebs cycle. NAD^+ and FAD is required for this process and for it to be in its oxidized state all the time, this process needs to be done with oxygen. By the electron balance of these, 2 moles of oxygen are required per run of the Krebs cycle. Also 2 moles of water are necessary. Therefore, in our reaction system which abstracts the details of each pathway, it could be described as \( CH3COOH + 2 H_2O \xrightarrow{2O_2} 2 CO_{2} + 4H_2 \) where the Oxygen is written in the arrow becuase the redox reactions it participates in are hidden. Kreb's cycle operates for as long as there is oxygen in the reactor, therefore, the goal of this function will be oxygen to 0. However, if written as two reactions (pyruvate to acetate and acetate oxidation), we will get incorrect results, as we want pyruvate to acetate for as much as oxygen can be produced. Therefore, we need to combine the reactions. The implementation is shown below
+
+#+NAME: aerobic_pyruvate_oxidation
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/core_pathways.jl
+
+  function aerobic_pyruvate_oxidation(st; goal = (; oxygen = 0.0))
+      stoic = (pyruvate = -1, water = -3, oxygen = -2, co2 = +3, hydrogen = +5)
+      mass_stoic = (pyruvate = stoic.pyruvate*m_pyruvate(),
+		    water = stoic.water*m_water(),
+		    oxygen = stoic.oxygen*m_oxygen(),
+		    co2 = stoic.co2*m_co2(),
+		    hydrogen = stoic.hydrogen*m_hydrogen())
+      goal.oxygen <= st.oxygen || error("Oxygen is not sufficient for this goal")
+      change = (goal.oxygen - st.oxygen)/mass_stoic.oxygen
+      abs(change*mass_stoic.pyruvate) <= st.pyruvate || error("Pyruvate is not sufficient for this goal")
+      new_st = merge(st,
+		     (oxygen = goal.oxygen,
+		      pyruvate = st.pyruvate + change*mass_stoic.pyruvate,
+		      water = st.water + change*mass_stoic.water,
+		      co2 = st.co2 + change*mass_stoic.co2,
+		      hydrogen = st.hydrogen + change*mass_stoic.hydrogen))
+  end
+
+#+END_SRC
 
 * Acetogenic routes
 Another big part of a typical anaerobic mixed culture fermentation is acetogenesis, the process in which various materials (such as propionate, butyrate, lactate, ethanol etc.) are converted to acetate. These processes are described below.
@@ -903,4 +928,283 @@ Another common pathway studied in literature is ABE fermentation. In this, there
 			      water = acetone_st.water + butanol_st.water - acidogenic_st.water))
   end
 
+#+END_SRC
+
+* Test on experiments
+This section is about a test for the experiments we have done to see if we can validate the data. Obviously, we first need to import dependencies and our data.
+
+#+NAME: read_exp_data
+#+BEGIN_SRC julia :tangle ../scripts/metabolic_tests.jl
+
+  using DrWatson
+  @quickactivate "Masters_Thesis"
+  include(srcdir("filenames.jl"))
+  include(srcdir("metabolic_pathways", "primitives.jl"))
+  include(srcdir("metabolic_pathways", "core_pathways.jl"))
+  include(srcdir("metabolic_pathways", "compound_pathways.jl"))
+  include(srcdir("metabolic_pathways", "acetogenesis.jl"))
+  using CSV, DataFrames
+
+  # Read all the data
+  exp_35 = "10_11"
+  exp_40 = "28_11"
+  mix_amount = ["0", "1", "2", "4", "8"]
+
+  # Experiment @35 C
+  df35_0 = CSV.read(get_conc_csv(exp_35, mix_amount[1]), DataFrame)
+  df35_1 = CSV.read(get_conc_csv(exp_35, mix_amount[2]), DataFrame)
+  df35_2 = CSV.read(get_conc_csv(exp_35, mix_amount[3]), DataFrame)
+  df35_4 = CSV.read(get_conc_csv(exp_35, mix_amount[4]), DataFrame)
+  df35_8 = CSV.read(get_conc_csv(exp_35, mix_amount[5]), DataFrame)
+
+  # Experiment @40 C
+  df40_0 = CSV.read(get_conc_csv(exp_40, mix_amount[1]), DataFrame)
+  df40_1 = CSV.read(get_conc_csv(exp_40, mix_amount[2]), DataFrame)
+  df40_2 = CSV.read(get_conc_csv(exp_40, mix_amount[3]), DataFrame)
+  df40_4 = CSV.read(get_conc_csv(exp_40, mix_amount[4]), DataFrame)
+  df40_8 = CSV.read(get_conc_csv(exp_40, mix_amount[5]), DataFrame)
+
+#+END_SRC
+
+Then, we need to initialize the named tuples this framework uses instead of the data frames.
+
+#+NAME: tuple_initialization
+#+BEGIN_SRC julia :tangle ../scripts/metabolic_tests.jl
+
+  # 35 C
+  v = 0.8
+  init_st35_0 = (sucrose = df35_0.Sucrose[1], glucose = df35_0.Glucose[1],
+	      fructose = df35_0.Fructose[1], lactate = df35_0.Lactate[2],
+	      acetate = df35_0.Acetate[1], propionate = df35_0.Propionate[2],
+	      ethanol = df35_0.Ethanol[1], co2 = 0.0, hydrogen = 0.0, water = 750.0,
+	      pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+  init_mass35_0 = conc_to_mass(init_st35_0, v)
+
+  init_st35_1 = (sucrose = df35_1.Sucrose[1], glucose = df35_1.Glucose[1],
+	      fructose = df35_1.Fructose[1], lactate = df35_1.Lactate[2],
+	      acetate = df35_1.Acetate[2], propionate = df35_1.Propionate[2],
+	      ethanol = df35_1.Ethanol[1], co2 = 0.0, hydrogen = 0.0, water = 750.0,
+	      pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+  init_mass35_1 = conc_to_mass(init_st35_1, v)
+
+  init_st35_2 = (sucrose = df35_2.Sucrose[1], glucose = df35_2.Glucose[1],
+	      fructose = df35_2.Fructose[1], lactate = df35_2.Lactate[1],
+	      acetate = df35_2.Acetate[1], propionate = df35_2.Propionate[1],
+	      ethanol = df35_2.Ethanol[1], co2 = 0.0, hydrogen = 0.0, water = 750.0,
+	      pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+  init_mass35_2 = conc_to_mass(init_st35_2, v)
+
+  init_st35_4 = (sucrose = df35_4.Sucrose[1], glucose = df35_4.Glucose[1],
+	      fructose = df35_4.Fructose[1], lactate = df35_4.Lactate[1],
+	      acetate = df35_4.Acetate[2], propionate = df35_4.Propionate[1],
+	      ethanol = df35_4.Ethanol[1], co2 = 0.0, hydrogen = 0.0, water = 750.0,
+	      pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+  init_mass35_4 = conc_to_mass(init_st35_4, v)
+
+  init_st35_8 = (sucrose = df35_8.Sucrose[1], glucose = df35_8.Glucose[1],
+	      fructose = df35_8.Fructose[1], lactate = df35_8.Lactate[1],
+	      acetate = df35_8.Acetate[2], propionate = df35_8.Propionate[1],
+	      ethanol = df35_8.Ethanol[1], co2 = 0.0, hydrogen = 0.0, water = 750.0,
+	      pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+  init_mass35_8 = conc_to_mass(init_st35_8, v)
+
+  # 40C
+  v = 0.8
+  init_st40_0 = (sucrose = df40_0.Sucrose[1], glucose = df40_0.Glucose[1],
+	      fructose = df40_0.Fructose[1], lactate = df40_0.Lactate[2],
+	      acetate = df40_0.Acetate[1], propionate = df40_0.Propionate[2],
+	      ethanol = df40_0.Ethanol[1], co2 = 0.0, hydrogen = 0.0, water = 750.0,
+	      pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+  init_mass40_0 = conc_to_mass(init_st40_0, v)
+
+  init_st40_1 = (sucrose = df40_1.Sucrose[1], glucose = df40_1.Glucose[1],
+	      fructose = df40_1.Fructose[1], lactate = df40_1.Lactate[2],
+	      acetate = df40_1.Acetate[2], propionate = df40_1.Propionate[2],
+	      ethanol = df40_1.Ethanol[1], co2 = 0.0, hydrogen = 0.0, water = 750.0,
+	      pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+  init_mass40_1 = conc_to_mass(init_st40_1, v)
+
+  init_st40_2 = (sucrose = df40_2.Sucrose[1], glucose = df40_2.Glucose[1],
+	      fructose = df40_2.Fructose[1], lactate = df40_2.Lactate[1],
+	      acetate = df40_2.Acetate[1], propionate = df40_2.Propionate[1],
+	      ethanol = df40_2.Ethanol[1], co2 = 0.0, hydrogen = 0.0, water = 750.0,
+	      pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+  init_mass40_2 = conc_to_mass(init_st40_2, v)
+
+  init_st40_4 = (sucrose = df40_4.Sucrose[1], glucose = df40_4.Glucose[1],
+	      fructose = df40_4.Fructose[1], lactate = df40_4.Lactate[1],
+	      acetate = df40_4.Acetate[2], propionate = df40_4.Propionate[1],
+	      ethanol = df40_4.Ethanol[1], co2 = 0.0, hydrogen = 0.0, water = 750.0,
+	      pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+  init_mass40_4 = conc_to_mass(init_st40_4, v)
+
+  init_st40_8 = (sucrose = df40_8.Sucrose[1], glucose = df40_8.Glucose[1],
+	      fructose = df40_8.Fructose[1], lactate = df40_8.Lactate[1],
+	      acetate = df40_8.Acetate[2], propionate = df40_8.Propionate[1],
+	      ethanol = df40_8.Ethanol[1], co2 = 0.0, hydrogen = 0.0, water = 750.0,
+	      pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+  init_mass40_8 = conc_to_mass(init_st40_8, v)
+
+
+#+END_SRC
+
+#+RESULTS: tuple_initialization
+: (sucrose = 1.2456020570041368, glucose = 0.9088174478617946, fructose = 2.066122010164552, lactate = 0.6800897714442687, acetate = 0.429670080644349, propionate = 0.3521945102952011, ethanol = 0.04780181150792819, co2 = 0.0, hydrogen = 0.0, water = 600.0, pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+
+Then, we can define the compound reaction function that lists all the pathways we believe are occuring.
+
+#+NAME: final_pathway
+#+BEGIN_SRC julia :tangle ../scripts/metabolic_tests.jl
+
+  function mixed_culture_fermentation(st; gluc_goal = (; glucose = 0.0), suc_goal = (; sucrose = 0.0), lact_cons_goal = (; lactate = 0.0), fruc_goal = (; fructose = 0.0), pyr_goal = (; pyruvate = 0.0), acet_amount = 0.5, lact_amount = 0.5, het_amount = 1.0, eth_amount = 0.0, feed_oxygen = 0.0)
+      # Sucrose is hydrolyzed
+      suc_st = sucrose_hydrolysis(st, goal = suc_goal)
+
+      # Glucose goes into either glycolysis or heterolactic fermentation
+      het_goal = (; glucose = (suc_st.glucose - (suc_st.glucose - gluc_goal.glucose)*het_amount))
+      glyc_goal = (; glucose = (suc_st.glucose - (suc_st.glucose - gluc_goal.glucose)*(1-het_amount)))
+      het_st = ethanol_heterolactate(suc_st, goal = het_goal)
+      glyc_st = glycolysis(suc_st, goal = glyc_goal)
+
+      pyr_st = merge(suc_st,
+		     (glucose = gluc_goal.glucose,
+		      ethanol = het_st.ethanol,
+		      lactate = het_st.lactate,
+		      co2 = het_st.co2,
+		      pyruvate = het_st.pyruvate + glyc_st.pyruvate - suc_st.pyruvate,
+		      hydrogen = het_st.hydrogen + glyc_st.hydrogen - suc_st.hydrogen))
+
+      # Fructose is also hydrolyzed
+      fruc_st = fructolysis(pyr_st, goal = fruc_goal)
+
+      # Check if there is any oxygen in the reactor and if there is
+      # consume the according pyruvate
+      ox_st = merge(fruc_st, (; oxygen = feed_oxygen))
+      new_st = aerobic_pyruvate_oxidation(ox_st)
+
+      # Then, pyruvate is converted to the various products
+      aceteth_amount = 1 - lact_amount - acet_amount - eth_amount
+      acet_goal = (; pyruvate = (new_st.pyruvate - (new_st.pyruvate - pyr_goal.pyruvate)*acet_amount))
+      lact_prod_goal = (; pyruvate = (new_st.pyruvate - (new_st.pyruvate - pyr_goal.pyruvate)*lact_amount))
+      aceteth_goal = (; pyruvate = (new_st.pyruvate - (new_st.pyruvate - pyr_goal.pyruvate)*aceteth_amount))
+      eth_goal = (; pyruvate = (new_st.pyruvate - (new_st.pyruvate - pyr_goal.pyruvate)*eth_amount))
+
+      aceteth_st = acetate_ethanol_fermentation(new_st, goal =aceteth_goal)
+      acet_st = pyruv_to_acetate(new_st, goal = acet_goal)
+      lact_st = pyruv_to_lact(new_st, goal = lact_prod_goal)
+      eth_st = pyruv_to_ethanol(new_st, pyr_goal = eth_goal)
+
+      prod_st = merge(new_st,
+		     (pyruvate = pyr_goal.pyruvate,
+		      acetate = acet_st.acetate + aceteth_st.acetate - new_st.acetate,
+		      ethanol = aceteth_st.ethanol + eth_st.ethanol - new_st.ethanol,
+		      lactate = lact_st.lactate,
+		      co2 = acet_st.co2 + aceteth_st.co2 + eth_st.co2 - 2new_st.co2,
+		      hydrogen = acet_st.hydrogen + aceteth_st.hydrogen + lact_st.hydrogen - 2new_st.hydrogen))
+
+      prop_st = lact_to_propionate(prod_st, goal = lact_cons_goal)
+  end
+
+#+END_SRC
+
+#+RESULTS: final_pathway
+: mixed_culture_fermentation (generic function with 1 method)
+
+** Finding the true metabolic pathway
+The above function is very useful. Given all its required parameters, it returns an output state of what it believes is the effluent concentrations. What we want is to find the parameter set for which the function output matches the experimental data. This is classic parameter estimation so if formulated correctly, we can very easily solve it with the SciML tooling. First, we need a function y = f(x,p) which given an input and a parameter set, returns an output. However, we want to have knowledge of the initial and final states, so we first a generalized function that does this work and while testing we can make it more specific to have the above signature. The next few code blocks are the backend which the optimization interface will use and for that reason it will be tangled to a src file and not to scripts. The function ~mixed_culture_fermentation~ defined above is necessary for this to work so it will also be tangled to that file.
+
+#+NAME: opt_function
+#+BEGIN_SRC julia :noweb no-export :tangle ../src/metabolic_pathways/opt_interface.jl
+
+  <<final_pathway>>
+
+  function mixed_culture_optimization(init_st, final_st, p, v)
+      init_mass = conc_to_mass(init_st, v)
+      final_mass = final_st.*v
+      mixed_culture_fermentation(init_mass, suc_goal = (; sucrose = final_mass[1]), gluc_goal = (; glucose = final_mass[2]), fruc_goal = (; fructose = final_mass[3]), lact_cons_goal = (; lactate = final_mass[4]), het_amount = p[1], acet_amount = p[2], lact_amount = p[3], eth_amount = p[4], feed_oxygen = p[5])
+  end
+
+#+END_SRC
+
+#+RESULTS: opt_function
+: mixed_culture_optimization (generic function with 2 methods)
+
+This function is a generalized function that does this exact thing. It takes an initial state that needs to be of the format ~mixed_culture_fermentation~ will accept and two vectors. The first is the final state which we want to get. It will be a vector of 7 numbers with the things HPLC gives. The first 4 are given as arguments, while the other 3 will be the variables we optimize for. The other vector is a vector of 5 elements containing our parameters. The function that we will use in the final optimization will not have final_st as a parameter, but rather we will make another function that calls it with a pregiven vector. In the same logic, we can write our loss function.
+
+#+NAME: loss_function
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/opt_interface.jl
+
+  function fermentation_loss(init_st, final_st, p, v)
+      model = mixed_culture_optimization(init_st, final_st, p, v)
+
+      model_mass = [model.acetate, model.propionate, model.ethanol]
+      exp_mass = final_st[5:7].*v
+      sum(abs2, (model_mass .- exp_mass))
+  end
+
+#+END_SRC
+
+#+RESULTS: loss_function
+: fermentation_loss (generic function with 2 methods)
+
+It takes the 4 arguments of the above function, runs it and compares it with the 3 unused variables of the output state.
+
+Lastly, we want a predictor function for use after optimization. The optimization problem simply returns the parameter vector, however, what we are interested in is what the output state looks like and its loss function. This predictor function returns these 2 elements with the same signature as above.
+
+#+NAME: predictor_function
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/opt_interface.jl
+
+  function mixed_culture_predictor(init_st, final_st, p, v)
+      mass_st = mixed_culture_optimization(init_st, final_st, p, v)
+      conc_st = mass_to_conc(mass_st, v)
+
+      loss = fermentation_loss(init_st, final_st, p, v)
+      println("For the parameter set ", p, " we get the effluent \n", conc_st, " and a loss of ", loss, " with the experimental data.")
+  end
+
+#+END_SRC
+
+#+RESULTS: predictor_function
+: mixed_culture_predictor (generic function with 1 method)
+
+Now, we can test this system for a specific dataset. To do this, we will move back to the metabolic_tests.jl file, but include the optimization interface source.
+
+#+NAME: optimization_test
+#+BEGIN_SRC julia :tangle ../scripts/metabolic_tests.jl
+
+  include(srcdir("metabolic_pathways", "opt_interface.jl"))
+
+  # Define the final state that we want to use.
+  final_st35_0 = Vector(df35_0[4, 2:7])
+  push!(final_st35_0, df35_0[3,8])
+
+  # Define the specialized loss function with signature f(u, p) which is
+  # what the Optimization interface accepts and also a predictor
+  # function which is also specialized and helps us with testing.
+  loss_35_0(u, p) = fermentation_loss(init_st35_0, final_st35_0, u, 0.8)
+  predictor_35_0(u) = mixed_culture_predictor(init_st35_0, final_st35_0, u, 0.8)
+
+  using Optimization, OptimizationOptimJL
+
+  # u0 can be taken basically randomly and if its not too bad, the
+  # algorithm will converge
+  u0 = [0.85, 0.01, 0.1, 0.2, 1.5]
+
+  # The bounds are necessary as outside of some bounds,
+  # mixed_culture_fermentation will return an error due to finding an
+  # unfeasible pathway. We only want to search within the range of
+  # feasibility.
+  lbound = [0.8, 0.0, 0.00, 0.0, 0.0]
+  ubound = [1.0, 0.3, 0.3, 0.3, 1.6]
+  adtype = Optimization.AutoForwardDiff()
+
+  # Define the system both with and without AD to make sure AD is
+  # working as intended
+  optf = Optimization.OptimizationFunction(loss_35_0)
+  optf_ad = Optimization.OptimizationFunction(loss_35_0, adtype)
+
+  optprob = Optimization.OptimizationProblem(optf, u0, lb = lbound, ub = ubound)
+  optprob_ad = Optimization.OptimizationProblem(optf_ad, u0, lb = lbound, ub = ubound)
+
+  sol = solve(optprob_ad, Optim.BFGS())
 #+END_SRC
