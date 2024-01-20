@@ -230,6 +230,7 @@
 #+BEGIN_SRC julia :noweb no-export :tangle ../scripts/hypothesis_test.jl
 
   <<dependencies>>
+  include(scriptsdir("hypothesis_test_preprocessing.jl"))
 
   function manualANOVA(allData)
       nArray = length.(allData)

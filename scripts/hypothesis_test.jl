@@ -3,6 +3,7 @@ using DrWatson
 include(srcdir("filenames.jl"))
 using CSV, DataFrames, Statistics, Distributions
 
+include(scriptsdir("hypothesis_test_preprocessing.jl"))
 
 function manualANOVA(allData)
     nArray = length.(allData)
