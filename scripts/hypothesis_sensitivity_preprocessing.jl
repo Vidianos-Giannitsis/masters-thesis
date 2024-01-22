@@ -37,9 +37,6 @@ prod40_2 = map(maximum, eachcol(df40_2[:, 5:8]))
 prod40_4 = map(maximum, eachcol(df40_4[:, 5:8]))
 prod40_8 = map(maximum, eachcol(df40_8[:, 5:8]))
 
-prod45_1 = map(maximum, eachcol(df45_1[:, 5:8]))
-prod45_2 = map(maximum, eachcol(df45_2[:, 5:8]))
-
 prod_35 = hcat(prod35_0, prod35_1, prod35_2, prod35_4, prod35_8)
 prod_40 = hcat(prod40_0, prod40_1, prod40_2, prod40_4, prod40_8)
 
@@ -53,6 +50,15 @@ lact_mean_40 = prod_40[1,:]
 acet_mean_40 = prod_40[2,:]
 prop_mean_40 = prod_40[3,:]
 eth_mean_40 = prod_40[4,:]
+
+# For the sensitivity analysis, we want to compare both variables
+# simultaneously, so we group the two prod vectors.
+prod = hcat(prod35_0, prod35_1, prod35_2, prod35_4, prod35_8, prod40_0, prod40_1, prod40_2, prod40_4, prod40_8)
+
+lact = prod[1,:]
+acet = prod[2,:]
+prop = prod[3,:]
+eth = prod[4,:]
 
 input35_0 = Vector(df35_0[1, 5:8])
 input35_1 = Vector(df35_1[1, 5:8])
@@ -112,3 +118,27 @@ lact_samples_40 = [rand(lact_dist_40[i], samples) for i in 1:length(lact_mean_40
 acet_samples_40 = [rand(acet_dist_40[i], samples) for i in 1:length(acet_mean_40)]
 prop_samples_40 = [rand(prop_dist_40[i], samples) for i in 1:length(prop_mean_40)]
 eth_samples_40 = [rand(eth_dist_40[i], samples) for i in 1:length(eth_mean_40)]
+
+using Interpolations, GlobalSensitivity
+
+nodes = ([0.0, 1.0, 2.0, 4.0, 8.0], [35, 40])
+lact_itp = interpolate(nodes, reshape(lact, 5, 2), Gridded(Linear()))
+acet_itp = interpolate(nodes, reshape(acet, 5, 2), Gridded(Linear()))
+prop_itp = interpolate(nodes, reshape(prop, 5, 2), Gridded(Linear()))
+eth_itp = interpolate(nodes, reshape(eth, 5, 2), Gridded(Linear()))
+
+function lact_interp(x)
+    lact_itp(x[1], x[2])
+end
+
+function acet_interp(x)
+    acet_itp(x[1], x[2])
+end
+
+function prop_interp(x)
+    prop_itp(x[1], x[2])
+end
+
+function eth_interp(x)
+    eth_itp(x[1], x[2])
+end
