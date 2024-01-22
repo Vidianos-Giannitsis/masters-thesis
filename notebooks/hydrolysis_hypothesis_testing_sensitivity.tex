@@ -1,0 +1,726 @@
+% Created 2024-01-22 Δευ 15:12
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{import}
+\usepackage[LGR, T1]{fontenc}
+\usepackage[greek, english, american]{babel}
+\usepackage{alphabeta}
+\usepackage{esint}
+\usepackage{mathtools}
+\usepackage{esdiff}
+\usepackage{makeidx}
+\usepackage{glossaries}
+\usepackage{newfloat}
+\usepackage{minted}
+\usepackage[a4paper, margin=3cm]{geometry}
+\usepackage{chemfig}
+\usepackage{svg}
+\author{Vidianos Giannitsis}
+\date{\today}
+\title{Hypothesis testing and sensitivity analysis of Hydrolysis HPLC data}
+\hypersetup{
+ pdfauthor={Vidianos Giannitsis},
+ pdftitle={Hypothesis testing and sensitivity analysis of Hydrolysis HPLC data},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.1 (Org mode 9.6.6)}, 
+ pdflang={English}}
+\makeatletter
+\newcommand{\citeprocitem}[2]{\hyper@linkstart{cite}{citeproc_bib_item_#1}#2\hyper@linkend}
+\makeatother
+
+\usepackage[notquote]{hanging}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\begin{abstract}
+Έχουμε πάρει πολλά δεδομένα από την HPLC για διάφορες συγκεντρώσεις σε κάθε πείραμα. Ένα καλό ερώτημα το οποίο δεν έχουμε εξετάσει είναι κατά πόσο είναι στατιστικά σημαντική η προσθήκη του μιξ γενικά ή και ξεχωριστά από το ένα επίπεδο στο άλλο. Σκοπός του αρχείου αυτού είναι να εξετάσει κάτι τέτοιο με χρήση της ANOVA. Έπειτα, αν δούμε ότι η επίδραση είναι σημαντική μπορούμε να προχωρήσουμε και σε μία ανάλυση ευαισθησίας για να δούμε και ποσότικα πόσο επηρεάζει, εκτός από ποιοτικά.
+\end{abstract}
+
+\section{Dependencies}
+\label{sec:orgeaaee87}
+Αρχικά, όπως και στα άλλα notebooks, πρέπει να κάνουμε load κάποια dependencies τα οποία θα χρειαστούμε για αυτό το code base.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+using DrWatson
+@quickactivate "Masters_Thesis"
+include(srcdir("filenames.jl"))
+using CSV, DataFrames, Statistics, Distributions
+
+\end{minted}
+
+\section{Φόρτωση των δεδομένων}
+\label{sec:org5955c46}
+Έπειτα, πρέπει να διαβάσουμε τα CSVs με τα δεδομένα για να μπορέσουμε να κάνουμε την ανάλυση μας.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+# Read all the data
+exp_35 = "10_11"
+exp_40 = "28_11"
+mix_amount = ["0", "1", "2", "4", "8"]
+
+# Experiment @35 C
+df35_0 = CSV.read(get_conc_csv(exp_35, mix_amount[1]), DataFrame)
+df35_1 = CSV.read(get_conc_csv(exp_35, mix_amount[2]), DataFrame)
+df35_2 = CSV.read(get_conc_csv(exp_35, mix_amount[3]), DataFrame)
+df35_4 = CSV.read(get_conc_csv(exp_35, mix_amount[4]), DataFrame)
+df35_8 = CSV.read(get_conc_csv(exp_35, mix_amount[5]), DataFrame)
+
+# Experiment @40 C
+df40_0 = CSV.read(get_conc_csv(exp_40, mix_amount[1]), DataFrame)
+df40_1 = CSV.read(get_conc_csv(exp_40, mix_amount[2]), DataFrame)
+df40_2 = CSV.read(get_conc_csv(exp_40, mix_amount[3]), DataFrame)
+df40_4 = CSV.read(get_conc_csv(exp_40, mix_amount[4]), DataFrame)
+df40_8 = CSV.read(get_conc_csv(exp_40, mix_amount[5]), DataFrame)
+
+\end{minted}
+
+\section{Επεξεργασία πρωτογενών δεδομένων}
+\label{sec:org181cd57}
+Βέβαια, δεν θέλουμε αυτούς τους πίνακες. Αρχικά θέλουμε να συγκρίνουμε τις 5 ποσότητες σε κάθε θερμοκρασία, οπότε θέλουμε τα vector των τελικών συγκεντρώσεων κάθε ένωσης.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+# Take the maximum instead of defaulting for the last element as we
+# know ethanol is consumed so the last isn't the maximum which is the
+# one we are interested in.
+prod35_0 = map(maximum, eachcol(df35_0[:, 5:8]))
+prod35_1 = map(maximum, eachcol(df35_1[:, 5:8]))
+prod35_2 = map(maximum, eachcol(df35_2[:, 5:8]))
+prod35_4 = map(maximum, eachcol(df35_4[:, 5:8]))
+prod35_8 = map(maximum, eachcol(df35_8[:, 5:8]))
+
+prod40_0 = map(maximum, eachcol(df40_0[:, 5:8]))
+prod40_1 = map(maximum, eachcol(df40_1[:, 5:8]))
+prod40_2 = map(maximum, eachcol(df40_2[:, 5:8]))
+prod40_4 = map(maximum, eachcol(df40_4[:, 5:8]))
+prod40_8 = map(maximum, eachcol(df40_8[:, 5:8]))
+
+prod_35 = hcat(prod35_0, prod35_1, prod35_2, prod35_4, prod35_8)
+prod_40 = hcat(prod40_0, prod40_1, prod40_2, prod40_4, prod40_8)
+
+# Collect the 4 vectors which have the output variable in every condition
+lact_mean_35 = prod_35[1,:]
+acet_mean_35 = prod_35[2,:]
+prop_mean_35 = prod_35[3,:]
+eth_mean_35 = prod_35[4,:]
+
+lact_mean_40 = prod_40[1,:]
+acet_mean_40 = prod_40[2,:]
+prop_mean_40 = prod_40[3,:]
+eth_mean_40 = prod_40[4,:]
+
+# For the sensitivity analysis, we want to compare both variables
+# simultaneously, so we group the two prod vectors.
+prod = hcat(prod35_0, prod35_1, prod35_2, prod35_4, prod35_8, prod40_0, prod40_1, prod40_2, prod40_4, prod40_8)
+
+lact = prod[1,:]
+acet = prod[2,:]
+prop = prod[3,:]
+eth = prod[4,:]
+\end{minted}
+
+\section{Δημιουργία ψευδο-κατανομής των δεδομένων}
+\label{sec:org3f70d39}
+Για να κάνουμε ANOVA χρειάζεται κάθε μέτρηση να έχει ένα sample size μεγαλύτερο του 1 (και εφόσον κάνουμε στατιστική ανάλυση, τυπικά θέλουμε πάνω από 5 για στατιστικά σημαντικά αποτελέσματα). Δεν μπορούμε να κάνουμε το πείραμα τόσες φορές, οπότε χρειαζόμαστε έναν μηχανισμό για να φτιάξουμε δεδομένα.
+
+Ένα claim το οποίο δεν είναι κακό είναι ότι αν κάναμε πολλές φορές το πείραμα, τα αποτελέσματα θα ακολουθούσαν κανονική κατανομή. Οπότε, με έναν μέσο όρο και μία τυπική απόκλιση, μπορούμε να φτιάξουμε δεδομένα τα οποία θα είναι περίπου σωστά και να τρέξουμε με αυτά την ANOVA. Οι μέσοι όροι θα είναι προφανώς οι τιμές που θα έχουμε παρατηρήσει. Για τις τυπικές αποκλίσεις θέλουμε κάτι άλλο. Με βάση τα στοιχεία που έχουμε, μία εύλογη εκτίμηση είναι να πούμε πως ξέρουμε ότι στην αρχή είχαμε 5 υποτίθεται ίδια δείγματα. Οπότε όποια διαφορά έχουν οφείλεται στην τυπική απόκλιση του δείγματος. Οπότε, ας υποθέσουμε ότι το variance που έχουν αυτά θα το έχουν και τα προιόντα και ας κάνουμε κατανομές αυτές τις τυπικές αποκλίσεις.
+
+\subsection{Pre-processing}
+\label{sec:org107e70f}
+Για να πάρουμε τα δεδομένα ακολουθούμε μία παρόμοια λογική με παραπάνω και μόλις βρούμε τα διανύσματα που θέλουμε υπολογίζουμε τo standard deviation τους.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+input35_0 = Vector(df35_0[1, 5:8])
+input35_1 = Vector(df35_1[1, 5:8])
+input35_2 = Vector(df35_2[1, 5:8])
+input35_4 = Vector(df35_4[1, 5:8])
+input35_8 = Vector(df35_8[1, 5:8])
+
+input40_0 = Vector(df40_0[1, 5:8])
+input40_1 = Vector(df40_1[1, 5:8])
+input40_2 = Vector(df40_2[1, 5:8])
+input40_4 = Vector(df40_4[1, 5:8])
+input40_8 = Vector(df40_8[1, 5:8])
+
+input_35 = hcat(input35_0, input35_1, input35_2, input35_4, input35_8)
+input_40 = hcat(input40_0, input40_1, input40_2, input40_4, input40_8)
+
+# Collect the 4 vectors which have the input variables in every
+# condition
+lact_input_35 = input_35[1,:]
+acet_input_35 = input_35[2,:]
+prop_input_35 = input_35[3,:]
+eth_input_35 = input_35[4,:]
+
+lact_input_40 = input_40[1,:]
+acet_input_40 = input_40[2,:]
+prop_input_40 = input_40[3,:]
+eth_input_40 = input_40[4,:]
+
+# Calculate standard deviations of samples
+lact_std_35 = std(lact_input_35)
+acet_std_35 = std(acet_input_35)
+prop_std_35 = std(prop_input_35)
+eth_std_35 = std(eth_input_35)
+
+lact_std_40 = std(lact_input_40)
+acet_std_40 = std(acet_input_40)
+prop_std_40 = std(prop_input_40)
+eth_std_40 = std(eth_input_40)
+\end{minted}
+
+\subsection{Δημιουργία των κατανομών}
+\label{sec:org203574e}
+Έχοντας την τυπική απόκλιση και τον μέσο όρο μπορούμε να φτιάξουμε τις κατανομές. Χάριν ευκολίας, θα φτιαχτούν vectorized κατανομές.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+lact_dist_35 = [Normal(lact_mean_35[i], lact_std_35) for i in 1:length(lact_mean_35)]
+acet_dist_35 = [Normal(acet_mean_35[i], acet_std_35) for i in 1:length(acet_mean_35)]
+prop_dist_35 = [Normal(prop_mean_35[i], prop_std_35) for i in 1:length(prop_mean_35)]
+eth_dist_35 = [Normal(eth_mean_35[i], eth_std_35) for i in 1:length(eth_mean_35)]
+
+lact_dist_40 = [Normal(lact_mean_40[i], lact_std_40) for i in 1:length(lact_mean_40)]
+acet_dist_40 = [Normal(acet_mean_40[i], acet_std_40) for i in 1:length(acet_mean_40)]
+prop_dist_40 = [Normal(prop_mean_40[i], prop_std_40) for i in 1:length(prop_mean_40)]
+eth_dist_40 = [Normal(eth_mean_40[i], eth_std_40) for i in 1:length(eth_mean_40)]
+
+\end{minted}
+
+\subsection{Sampling}
+\label{sec:orgaf8d1d6}
+Έχοντας τις κατανομές, μπορούμε να κάνουμε sample έναν αριθμό από δείγματα για να τρέξουμε την ANOVA. Εφόσον έχουμε την δυνατότητα να πάρουμε όσα samples θέλουμε, μπορούμε να βάλουμε και μεγάλα νούμερα, αλλά για παράδειγμα 20 δείγματα είναι μάλλον ένα καλό νούμερο.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+samples = 20
+lact_samples_35 = [rand(lact_dist_35[i], samples) for i in 1:length(lact_mean_35)]
+acet_samples_35 = [rand(acet_dist_35[i], samples) for i in 1:length(acet_mean_35)]
+prop_samples_35 = [rand(prop_dist_35[i], samples) for i in 1:length(prop_mean_35)]
+eth_samples_35 = [rand(eth_dist_35[i], samples) for i in 1:length(eth_mean_35)]
+
+lact_samples_40 = [rand(lact_dist_40[i], samples) for i in 1:length(lact_mean_40)]
+acet_samples_40 = [rand(acet_dist_40[i], samples) for i in 1:length(acet_mean_40)]
+prop_samples_40 = [rand(prop_dist_40[i], samples) for i in 1:length(prop_mean_40)]
+eth_samples_40 = [rand(eth_dist_40[i], samples) for i in 1:length(eth_mean_40)]
+
+\end{minted}
+
+\section{ANOVA}
+\label{sec:org570fd6b}
+Έχοντας κάνει sample έχουμε τώρα κάποια διανύσματα όπου τα καθένα έχει 20 παρατηρήσεις και μπορεί να γίνει μία ANOVA για να δείξει σε ποιά από τα 8 συστήματα (4 προιόντα, 2 θερμοκρασίες) έπαιξε όντως ρόλο η προσθήκη του μιξ και σε ποιά δεν φαίνεται να έπαιξε. Αρχικά, γράφουμε ένα function που κάνει implement την ANOVA.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+<<dependencies>>
+include(scriptsdir("hypothesis_sensitivity_preprocessing.jl"))
+
+function manualANOVA(allData)
+    nArray = length.(allData)
+    d = length(nArray)
+
+    xBarTotal = mean(vcat(allData...))
+    xBarArray = mean.(allData)
+
+    ssBetween = sum( [nArray[i]*(xBarArray[i] - xBarTotal)^2 for i in 1:d] )
+    ssWithin = sum([sum([(ob - xBarArray[i])^2 for ob in allData[i]])
+                                for i in 1:d])
+    dfBetween = d-1
+    dfError = sum(nArray)-d
+
+    msBetween = ssBetween/dfBetween
+    msError = ssWithin/dfError
+    fStat = msBetween/msError
+    pval = ccdf(FDist(dfBetween,dfError),fStat)
+    return fStat, pval
+end
+
+\end{minted}
+
+και έπειτα το εφαρμόζουμε στα 8 διανύσματα που παράξαμε πριν. Το output θα είναι η τιμή του f-statistic καθώς και το p-value. Τυπικά σε μία ANOVA, αν το f-statistic είναι κοντά στο 1 δεν μπορούμε να απορρίψουμε την υπόθεση H\textsubscript{0} η οποία λέει πως δεν έπαιξε ρόλο η προσθήκη του mix αλλά έγινε τυχαία. Το p-value μας λέει με τι βεβαιότητα απορρίπτουμε ή όχι την υπόθεση.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+lact_anova_35 = manualANOVA(lact_samples_35)
+acet_anova_35 = manualANOVA(acet_samples_35)
+prop_anova_35 = manualANOVA(prop_samples_35)
+eth_anova_35 = manualANOVA(eth_samples_35)
+
+lact_anova_40 = manualANOVA(lact_samples_40)
+acet_anova_40 = manualANOVA(acet_samples_40)
+prop_anova_40 = manualANOVA(prop_samples_40)
+eth_anova_40 = manualANOVA(eth_samples_40)
+
+anova_35 = reshape([lact_anova_35..., acet_anova_35..., prop_anova_35..., eth_anova_35...], 2, 4)
+anova_40 = reshape([lact_anova_40..., acet_anova_40..., prop_anova_40..., eth_anova_40...], 2, 4)
+
+\end{minted}
+
+Από τα αποτελέσματα αυτά, είναι εμφανές πως η ποσότητα του mix που προστίθεται είναι σίγουρα σημαντική επειδή όλα τα p-values είναι πάρα πολύ χαμηλά.
+
+Μπορούμε επίσης να τα αποθηκεύσουμε σε έναν ωραίο πίνακα:
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+names = ["Lactate_35", "Acetate_35", "Propionate_35", "Ethanol_35", "Lactate_40", "Acetate_40", "Propionate_40", "Ethanol_40"]
+anova_data = hcat(anova_35, anova_40)
+
+anova_table = Tables.table(hcat(names, anova_data'), header = [:Test, :FStatistic, :pValue])
+CSV.write(datadir("exp_pro", "anova_35_40.csv"), anova_table)
+DataFrame(anova_table)
+
+\end{minted}
+
+\section{Άλλα hypothesis tests}
+\label{sec:org4bc453a}
+\subsection{ANOVA σε 2 mL και πάνω}
+\label{sec:org9f70f44}
+Από τα διαγράμματα που είχαμε κάνει, είχε παρατηρηθεί πως ενδέχεται να μην έχει νόημα να βάλουμε πάνω από 2 ml του mix. Στους 35, η συμπεριφορά που παρατηρήθηκε ήταν καθαρά αρνητική ενώ στους 40 σε πολλά φάνηκε να είναι περίπου αμελητέα αν όχι αρνητική. Οπότε, έχει νόημα να κάνουμε anova και εδώ για να δούμε τι βγάζει.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+lact_anova_35_2plus = manualANOVA(lact_samples_35[3:5])
+acet_anova_35_2plus = manualANOVA(acet_samples_35[3:5])
+prop_anova_35_2plus = manualANOVA(prop_samples_35[3:5])
+eth_anova_35_2plus = manualANOVA(eth_samples_35[3:5])
+
+lact_anova_40_2plus = manualANOVA(lact_samples_40[3:5])
+acet_anova_40_2plus = manualANOVA(acet_samples_40[3:5])
+prop_anova_40_2plus = manualANOVA(prop_samples_40[3:5])
+eth_anova_40_2plus = manualANOVA(eth_samples_40[3:5])
+
+anova_35_2plus = reshape([lact_anova_35_2plus..., acet_anova_35_2plus..., prop_anova_35_2plus..., eth_anova_35_2plus...], 2, 4)
+anova_40_2plus = reshape([lact_anova_40_2plus..., acet_anova_40_2plus..., prop_anova_40_2plus..., eth_anova_40_2plus...], 2, 4)
+
+anova_data_2plus = hcat(anova_35_2plus, anova_40_2plus)
+
+anova_table_2plus = Tables.table(hcat(names, anova_data_2plus'), header = [:Test, :FStatistic, :pValue])
+CSV.write(datadir("exp_pro", "anova_35_40_2plus.csv"), anova_table_2plus)
+DataFrame(anova_table_2plus)
+
+\end{minted}
+
+\begin{verbatim}
+2×4 Matrix{Float64}:
+ 390.101        5.21984     4.37956    145.021
+   5.51787e-34  0.00828594  0.0170094    4.38079e-23
+\end{verbatim}
+
+
+Προκύπτει πως στους 35 όλες οι μεταβολές είναι στατιστικά σημαντικές και είναι όλες μειώσεις. Οπότε σίγουρα δεν θέλουμε πάνω από 2 ml. Στους 40, η αιθανόλη μειώνεται με στατιστικά σημαντικό τρόπο ενώ το γαλακτικό αυξάνεται. Το οξικό και το προπιονικό και αυτά αυξάνονται με στατιστικά σημαντικό τρόπο, αλλά έχουν πολύ μεγαλύτερα p-values. Συγκεκριμένα το οξικό μπορούμε να απορρίψουμε την H\textsubscript{0} με confidence interval 99\% αλλά οριακά και στο προπιονικό μπορούμε με interval 95\%. Οπότε στους 40 υπάρχει επαρκής evidence για να πάμε σε πάνω από 2 ml.
+
+\subsection{T-test για 4-8 ml στους 40}
+\label{sec:org52c6662}
+Εφόσον στους 40 υπάρχει evidence για να πάμε πάνω από 2 ml, αξίζει να δούμε και αν υπάρχει evidence για να πάμε στα 8 ml ή αν δεν είναι στατιστικά σημαντικό σε σχέση με το 4.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+lact_ttest_40 = EqualVarianceTTest(lact_samples_40[4], lact_samples_40[5])
+acet_ttest_40 = EqualVarianceTTest(acet_samples_40[4], acet_samples_40[5])
+prop_ttest_40 = EqualVarianceTTest(prop_samples_40[4], prop_samples_40[5])
+eth_ttest_40 = EqualVarianceTTest(eth_samples_40[4], eth_samples_40[5])
+
+ttest_40_res = [pvalue(lact_ttest_40), pvalue(acet_ttest_40), pvalue(prop_ttest_40), pvalue(eth_ttest_40)]
+\end{minted}
+
+Τα αποτελέσματα του test αυτού δείχνουν πως η αλλαγή του οξικού και του προπιονικού δεν είναι στατιστικά σημαντική (το οξικό με μεγάλη βεβαιότητα, το προπιονικό οριακά δεν μπορεί να απορριφθεί στο 95\%) ενώ η αιθανόλη μειώνεται με στατιστικά σημαντικό τρόπο. Οπότε, αν σκεφτούμε το αυξημένο κόστος της προσθήκης μεγαλύτερης ποσότητας, αφού επηρεάζεται μόνο το γαλακτικό, δεν είναι στατιστικά σημαντική η προσθήκη 8 ml σε αντίθεση με τα 4.
+
+\subsection{ANOVA σε 2 ml και κάτω στους 35}
+\label{sec:org1a71968}
+Εφόσον στους 35 δεν έχει νόημα να πάμε πάνω από 2, αξίζει να εξεταστεί αν έχει νόημα και το 2 ή μήπως ούτε αυτό χρειάζεται και θα λειτουργούσε το ίδιο και χωρίς ένζυμα.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+lact_anova_35_2minus = manualANOVA(lact_samples_35[1:3])
+acet_anova_35_2minus = manualANOVA(acet_samples_35[1:3])
+prop_anova_35_2minus = manualANOVA(prop_samples_35[1:3])
+eth_anova_35_2minus = manualANOVA(eth_samples_35[1:3])
+
+anova_35_2minus = reshape([lact_anova_35_2minus..., acet_anova_35_2minus..., prop_anova_35_2minus..., eth_anova_35_2minus...], 2, 4)
+
+new_names = ["Lactate", "Acetate", "Propionate", "Ethanol"]
+anova_table_2minus = Tables.table(hcat(new_names, anova_35_2minus'), header = [:Test, :FStatistic, :pValue])
+CSV.write(datadir("exp_pro", "anova_35_2minus.csv"), anova_table_2minus)
+DataFrame(anova_table_2minus)
+\end{minted}
+
+Προκύπτει με πολύ μεγάλη βεβαιότητα ότι οι μεταβολές που υπάρχουν μεταξύ αυτών των 3 είναι στατιστικά σημαντικές. Βέβαια, το οξικό και το προπιονικό μειώνονται με στατιστικά σημαντικό τρόπο, δεν αυξάνονται.
+
+\subsection{Επίδραση της θερμοκρασίας}
+\label{sec:org4735d33}
+Εκτός από τα παραπάνω που έδειξαν ότι οι διαφορετικές παίζουν ρόλο και ανάλογα με το τι θέλουμε επιλέγουμε ποια θα πάρουμε, έχει νόημα να εξετάσουμε και αν είναι στατιστικά σημαντική η επίδραση της θερμοκρασίας. Για αυτό, πρέπει να κάνουμε t-test μεταξύ ίδιων ποσοτήτων στις 2 θερμοκρασίες. Ο κώδικας για αυτό είναι παρακάτω.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+# Run the hypothesis tests
+lact_temp_ttest = [UnequalVarianceTTest(lact_samples_35[i], lact_samples_40[i]) for i in 1:length(lact_samples_35)]
+acet_temp_ttest = [UnequalVarianceTTest(acet_samples_35[i], acet_samples_40[i]) for i in 1:length(acet_samples_35)]
+prop_temp_ttest = [UnequalVarianceTTest(prop_samples_35[i], prop_samples_40[i]) for i in 1:length(prop_samples_35)]
+eth_temp_ttest = [UnequalVarianceTTest(eth_samples_35[i], eth_samples_40[i]) for i in 1:length(eth_samples_35)]
+
+# Get the pvalues of each test
+lact_temp_pvalues = pvalue.(lact_temp_ttest)
+acet_temp_pvalues = pvalue.(acet_temp_ttest)
+prop_temp_pvalues = pvalue.(prop_temp_ttest)
+eth_temp_pvalues = pvalue.(eth_temp_ttest)
+
+# Format them in a nice table and write it to CSV
+temp_ttest_table = Tables.table(hcat(mix_amount, lact_temp_pvalues, acet_temp_pvalues, prop_temp_pvalues, eth_temp_pvalues), header = [:Mix_Amount, :Lactate, :Acetate, :Propionate, :Ethanol])
+CSV.write(datadir("exp_pro", "temp_ttest.csv"), temp_ttest_table)
+DataFrame(temp_ttest_table)
+\end{minted}
+
+Από τα αποτελέσματα, είναι εμφανές πως η θερμοκρασία παίζει ρόλο παντού. Αξίζει να σημειωθεί πως σε 2 τιμές του οξικού και μία του προπιονικού, ο ρόλος της θερμοκρασίας δεν είναι σίγουρος, αλλά με 95\% βεβαιότητα μπορούμε να απορρίψουμε την υπόθεση ότι δεν παίζει ρόλο παντού.
+
+\section{Τελικά συμπεράσματα από τα hypothesis tests}
+\label{sec:org984ced7}
+Στο αρχείο αυτό έγιναν διάφορα hypothesis tests με σκοπό να δούμε αν οι παραμέτροι που ελέγχουμε έχουν στατιστικά σημαντική επίδραση στην τελική συγκέντρωση των προιόντων. Σε γενικές γραμμές, οι περισσότερες παραμέτροι έχουν σημαντική επίδραση, καθώς σε ελάχιστες περιπτώσεις δεν μπορούσε να απορριφθεί η υπόθεση H\textsubscript{0}. Σε κάποιες περιπτώσεις όμως, αυτό το συμπέρασμα δεν μπορεί να βγεί με τόση βεβαιότητα.
+
+Τα τεστ που έγιναν είναι τα εξής: ANOVA μεταξύ των 5 διαφορετικών ποσοτήτων mix στις 2 δύο θερμοκρασίες και στα 4 προιόντα. ANOVA μεταξύ των ποσοτήτων 2, 4 και 8 ml και στις 2 θερμοκρασίες για να δούμε αν πραγματικά επιφέρει κάτι η προσθήκη πάνω από 2 ml. t-test μεταξύ 4 και 8 ml στους 40 (όπου είχε νόημα να αυξήσουμε πάνω από 2 ml με βάση το προηγούμενο). ANOVA μεταξύ 0, 1 και 2 ml στους 35 για να δούμε αν έχουν νόημα τα 2 ml επειδή τα παραπάνω σίγουρα δεν έχουν. t-test συγκρίνοντας τις 2 θερμοκρασίες για κάθε mix\textsubscript{amount} και ένωση.
+
+Καθώς οι περισσότερες υποθέσεις απορρίφθηκαν με μεγάλη βεβαιότητα (μεγαλύτερη από 99.99\%), παρακάτω θα σημειωθούν όσες απορρίφθηκαν με λιγότερη ή δεν μπόρεσαν να απορριφθούν.
+
+\subsection{Απόρριψη με 99\% βεβαιότητα}
+\label{sec:orga5cbaef}
+Το οξικό στους 40 για ποσότητες 2-8 ml.
+Το t-test για την θερμοκρασία στα 0 ml οξικού.
+
+\subsection{Απόρριψη με 95\% βεβαιότητα}
+\label{sec:orgbe18a9e}
+Το προπιονικό στους 40 για ποσότητες 2-8 ml.
+Το t-test για την θερμοκρασία στο 1 ml οξικό και στα 2 ml προπιονικό.
+
+\subsection{Δεν μπόρεσαν να απορριφθούν}
+\label{sec:orgeab9281}
+Το t-test για το οξικό και το προπιονικό στους 40 μεταξύ 4 και 8 ml.
+
+Οπότε, το τελικό συμπέρασμα είναι πως στους 35, υπάρχει ευαισθησία σε όλο το εύρος των ποσοτήτων που βάλαμε, αλλά στα 2 ml φαίνεται να λειτουργεί καλύτερα από ότι σε παραπάνω. Στους 40, τα 4 ml δείχνουν να έχουν την καλύτερη λειτουργία καθώς αποτελούν βελτίωση από τα 2 ml και δεν είναι στατιστικά σημαντική η βελτίωση αν πάμε στα 8 ml για 2 από τις 4 ενώσεις, ενώ η μία (αιθανόλη) μειώνεται κιόλας. Βέβαια, για τις δύο ενώσεις αυτές, η αύξηση από τα 2 στα 4 ml είναι οριακά στατιστικά σημαντική (με 95\% βεβαιότητα στο προπιονικό και 99\% στο οξικό) και αν λάβουμε υπόψην το κόστος, πιθανόν και αυτό να μην αξίζει. Από άποψη θερμοκρασίας, το οξικό στα 0 και 1 ml είναι αρκετά παρόμοιο και στις δύο θερμοκρασίες, παρόλο που με 99 και 95\% βεβαιότητα αντίστοιχα μπορούμε να πούμε πως είναι διαφορετικά. 
+
+\section{Ανάλυση Ευαισθησίας}
+\label{sec:org909b5a6}
+Έχοντας δει κάποια ποιοτικά συμπεράσματα από την ANOVA παραπάνω και γνωρίζοντας πλέον ότι σχεδόν όλες οι μεταβολές είναι στατιστικά σημαντικές, μπορούμε να προχωρήσουμε σε ποσοτικά αποτελέσματα και να δούμε πόσο επηρεάζει η κάθε παράμετρος πραγματικά. Αυτό μπορεί να γίνει με ανάλυση ευαισθησίας. Για να τρέξουμε την ανάλυση ευαισθησίας ως προς τις δύο παραμέτρους λειτουργίας, χρειαζόμαστε για κάθε ένωση μία συνάρτηση η οποία παίρνει ένα διάνυσμα των δύο μεταβλητών και δίνει μία προβλεπόμενη συγκέντρωση. Από τα πειράματα, έχουμε 10 διαφορετικά σημεία για 5 ποσότητες μιξ και 2 θερμοκρασίες. Μεταξύ των σημείων δεν έχουμε κάποιο δεδομένο, οπότε η μόνη προσέγγιση που μπορούμε να κάνουμε είναι πως συνδέουμε γραμμικά τα σημεία. Αυτό ενέχει ένα σφάλμα σίγουρα, αλλά είναι η καλύτερη δυνατή προσέγγιση που μπορεί να γίνει. Ως κομμάτι του preprocessing, θα γίνει και αυτό tangled στο ίδιο αρχείο με τα παραπάνω, καθώς χρησιμοποιεί και τα ίδια δεδομένα.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+using Interpolations, GlobalSensitivity
+
+nodes = ([0.0, 1.0, 2.0, 4.0, 8.0], [35, 40])
+lact_itp = interpolate(nodes, reshape(lact, 5, 2), Gridded(Linear()))
+acet_itp = interpolate(nodes, reshape(acet, 5, 2), Gridded(Linear()))
+prop_itp = interpolate(nodes, reshape(prop, 5, 2), Gridded(Linear()))
+eth_itp = interpolate(nodes, reshape(eth, 5, 2), Gridded(Linear()))
+
+function lact_interp(x)
+    lact_itp(x[1], x[2])
+end
+
+function acet_interp(x)
+    acet_itp(x[1], x[2])
+end
+
+function prop_interp(x)
+    prop_itp(x[1], x[2])
+end
+
+function eth_interp(x)
+    eth_itp(x[1], x[2])
+end
+
+\end{minted}
+
+Έπειτα, μπορούμε να τρέξουμε την ανάλυση ευαισθησίας σε όλη την πειραματική περιοχή ή σε κάποια subdomain της. Αρχικά, το αρχείο του sensitivity analysis πρέπει να έχει τα dependencies και να κάνει include το preprocessing.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+<<dependencies>>
+include(scriptsdir("hypothesis_sensitivity_preprocessing.jl"))
+
+\end{minted}
+
+To GlobalSensitivity.jl προσφέρει δύο είδη ανάλυσης ευαισθησίας. Το πρώτο, βασίζεται στη μέθοδο Morris, η οποία είναι μία στοχαστική μέθοδος που υπολογίζει την παράγωγο της συνάρτησης ως προς τις παραμέτρους της (το οποίο τον ορισμό της ευαισθησίας) αριθμητικά, αλλά με μεγάλα βήματα. Έτσι, δεν υπολογίζει ακριβής παραγώγους, αλλά μέσες τιμές αυτής σε μεγάλο εύρος. Με πολλές επαναλήψεις, αυτή η μέθοδος πετυχαίνει μία καλή προσέγγιση της παραγώγου. Λόγω της στοχαστικής φύσης της όμως, παρόλο που κάθε τρέξιμο της συνάρτησης έχει από μόνο του πολλές επαναλήψεις, καλό είναι να την τρέξουμε πολλές φορές και να πάρουμε ένα μέσο όρο των μέσων όρων για να έχει επαναληψιμότητα αυτό που κάνουμε. Χάριν ευκολίας για την επεξεργασία των δεδομένων αποθηκεύουμε ένα vector με τα 4 vectors ευαισθησιών (ένα για κάθε ένωση). Αυτό φαίνεται παρακάτω.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+function morris_sens_analysis(bounds)
+    sens_mean_vector = []
+    for i in 1:200
+        lact_sens = gsa(lact_interp, Morris(), bounds)
+
+        acet_sens = gsa(acet_interp, Morris(), bounds)
+
+        prop_sens = gsa(prop_interp, Morris(), bounds)
+
+        eth_sens = gsa(eth_interp, Morris(), bounds)
+
+        push!(sens_mean_vector, [lact_sens.means, acet_sens.means, prop_sens.means, eth_sens.means])
+    end
+
+    return mean(sens_mean_vector)
+end
+
+\end{minted}
+
+Η άλλη μέθοδος που χρησιμοποιείται συχνά είναι η μέθοδος Sobol. Η μέθοδος αυτή βασίζεται στην ίδια λογική με την ANOVA, ότι μπορούμε σπάσουμε την συνολική μεταβλητότητα της συνάρτησης σε διάφορους παράγοντες. Στην περίπτωση της μεθόδου Sobol, σπάμε τη μεταβλητότητα σε μεταβλητότητα λόγω της κάθε μεταβλητής ξεχωριστά και έπειτα σε αλληλεπιδράσεις τους. Στην περίπτωση των 2 μεταβλητών υπάρχουν μόνο 3 όροι, οι δύο μεταβλητές ξεχωριστά και η αλληλεπίδραση τους. Το αποτέλεσμα που δίνει η μέθοδος αυτή είναι τα Sobol indices που δείχνουν τον λόγο της μεταβλητότητας ως προς μία μεταβλητή προς την συνολική μεταβλητότητα. Στην περίπτωση μας, χρειαζόμαστε μόνο τα first order indices καθώς η αλληλεπίδραση αποτελεί το 1-το άθροισμα των άλλων δύο, αφού το άθροισμα των επιμέρους μεταβλητοτήτων πρέπει να είναι η συνολική μεταβλητότητα. Η εφαρμογή της είναι η εξής
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+function sobol_sens_analysis(bounds)
+    lact_sens = gsa(lact_interp, Sobol(), bounds, samples = 500)
+    acet_sens = gsa(acet_interp, Sobol(), bounds, samples = 500)
+    prop_sens = gsa(prop_interp, Sobol(), bounds, samples = 500)
+    eth_sens = gsa(eth_interp, Sobol(), bounds, samples = 500)
+
+    S1_res = hcat(lact_sens.S1, acet_sens.S1, prop_sens.S1, eth_sens.S1)
+end
+
+\end{minted}
+
+\subsection{Εφαρμογή της ανάλυσης ευαισθησίας}
+\label{sec:orgc57f73c}
+Έχοντας γράψει τα παραπάνω, μπορούμε να ορίσουμε διάφορα domains και να τρέξουμε σε αυτά την ανάλυση. Εκτός από το συνολικό domain, έχει ενδιαφέρον να κοιτάξουμε τις περιοχές των χαμηλών και υψηλών ποσοτήτων του mix (0 εώς 2 και 2 εώς 8) για να ενισχύσουμε περαιτέρω την υπόθεση μας ότι από 0 εώς 2 έχουμε ισχυρές θετικές επιδράσεις ενώ από 2 εώς 8 ελαφρώς θετικές ή και αρνητικές. Επίσης, έχει ενδιαφέρον να προσπαθήσουμε να δούμε την επίδραση του mix amount στα δύο επίπεδα θερμοκρασίας πιο συγκεκριμένα, καθώς μπορεί να δώσει διαφορετικά συμπεράσματα από τα παραπάνω. Αυτό το τελευταίο δεν έχει νόημα να συμπεριληφθεί στην ανάλυση Sobol, καθώς εκεί θα βγεί ότι στο domain αυτό το 99.999\% της μεταβλητότητας εξαρτάται από το mix amount ή κάτι παρόμοιο.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+sens_bounds = [[0,8],[35,40]]
+sens_bound_35 = [[0,8],[35,35.1]]
+sens_bound_40 = [[0,8],[39.9,40]]
+sens_bound_low = [[0,2],[35,40]]
+sens_bound_high = [[2, 8],[35,40]]
+
+total_sens = morris_sens_analysis(sens_bounds)
+sens_35 = morris_sens_analysis(sens_bound_35)
+sens_40 = morris_sens_analysis(sens_bound_40)
+sens_low = morris_sens_analysis(sens_bound_low)
+sens_high = morris_sens_analysis(sens_bound_high)
+
+total_sens_sobol = sobol_sens_analysis(sens_bounds)
+sens_low_sobol = sobol_sens_analysis(sens_bound_low)
+sens_high_sobol = sobol_sens_analysis(sens_bound_high)
+
+\end{minted}
+
+Έπειτα, αλλάζουμε λίγο τα δεδομένα, για να είναι πιο εύκολο να γίνουν visualized, για να τα ερμηνεύσουμε. Αυτό θα γίνει με χρήση του CairoMakie, ενός πολύ καλού visualization library.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+# For the Morris sensitivity analysis, we need one Matrix instead of
+# Vectors of vectors for each data set. Furthermore, the data from the
+# sensitivity analyses in the two temperatures, don't need to be
+# plotted separately, as its going to be one row each, compared to the
+# others being two rows (one for mix amount sensitivity and one for
+# temperature).
+total_sens2 = vcat(total_sens[1], total_sens[2], total_sens[3], total_sens[4])
+sens_35_2 = vcat(sens_35[1], sens_35[2], sens_35[3], sens_35[4])[:,1]
+sens_40_2 = vcat(sens_40[1], sens_40[2], sens_40[3], sens_40[4])[:,1]
+sens_temp = hcat(sens_35_2, sens_40_2)
+sens_low2 = vcat(sens_low[1], sens_low[2], sens_low[3], sens_low[4])
+sens_high2 = vcat(sens_high[1], sens_high[2], sens_high[3], sens_high[4])
+
+# For the Sobol data, we just want to add a column containing the
+# interaction, which for this system can be 1 - the sum of the other
+# terms.
+total_sens_sobol_data = vcat(total_sens_sobol, [1 - sum(total_sens_sobol[:, i]) for i in 1:4]')
+sens_low_sobol_data = vcat(sens_low_sobol, [1 - sum(sens_low_sobol[:, i]) for i in 1:4]')
+sens_high_sobol_data = vcat(sens_high_sobol, [1 - sum(sens_high_sobol[:, i]) for i in 1:4]')
+
+\end{minted}
+
+Πριν το visualization όμως, μπορούμε να αποθηκεύσουμε τα δεδομένα σε CSVs για εύκολο access. Τα δεδομένα θα αποθηκευτούν στα processed experimental data στο datadir.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+names = ["Mix Amount", "Temperature", "Interaction"]
+
+# Save the data of the Morris analysis
+total_sens_morris_table = Tables.table(hcat(names[1:2], total_sens2'), header = [:Variable, :Lactate, :Acetate, :Propionate, :Ethanol])
+CSV.write(datadir("exp_pro", "total_sens_morris.csv"), total_sens_morris_table)
+total_sens_morris_df = DataFrame(total_sens_morris_table)
+
+sens_low_morris_table = Tables.table(hcat(names[1:2], sens_low2'), header = [:Variable, :Lactate, :Acetate, :Propionate, :Ethanol])
+CSV.write(datadir("exp_pro", "sens_low_morris.csv"), sens_low_morris_table)
+sens_low_morris_df = DataFrame(sens_low_morris_table)
+
+sens_high_morris_table = Tables.table(hcat(names[1:2], sens_high2'), header = [:Variable, :Lactate, :Acetate, :Propionate, :Ethanol])
+CSV.write(datadir("exp_pro", "sens_high_morris.csv"), sens_high_morris_table)
+sens_high_morris_df = DataFrame(sens_high_morris_table)
+
+temp_sens_morris_table = Tables.table(hcat(["35 C", "40 C"], sens_temp'), header = [:Temperature, :Lactate, :Acetate, :Propionate, :Ethanol])
+CSV.write(datadir("exp_pro", "temp_sens_morris.csv"), temp_sens_morris_table)
+temp_sens_morris_df = DataFrame(temp_sens_morris_table)
+
+# Save the data of the Sobol analysis.
+total_sens_sobol_table = Tables.table(hcat(names, total_sens_sobol_data), header = [:Variable, :Lactate, :Acetate, :Propionate, :Ethanol])
+CSV.write(datadir("exp_pro", "total_sens_sobol.csv"), total_sens_sobol_table)
+total_sens_sobol_df = DataFrame(total_sens_sobol_table)
+
+sens_low_sobol_table = Tables.table(hcat(names, sens_low_sobol_data), header = [:Variable, :Lactate, :Acetate, :Propionate, :Ethanol])
+CSV.write(datadir("exp_pro", "low_sens_sobol.csv"), sens_low_sobol_table)
+sens_low_sobol_df = DataFrame(sens_low_sobol_table)
+
+sens_high_sobol_table = Tables.table(hcat(names, sens_high_sobol_data), header = [:Variable, :Lactate, :Acetate, :Propionate, :Ethanol])
+CSV.write(datadir("exp_pro", "high_sens_sobol.csv"), sens_high_sobol_table)
+sens_high_sobol_df = DataFrame(sens_high_sobol_table)
+
+\end{minted}
+
+Τέλος, μπορούμε να κάνουμε το visualization των δύο αναλύσεων και να δούμε τι συμπεράσματα προκύπτουν. Το Morris sensitivity θα γίνει plotted σε heatmap, το οποίο είναι ένα ωραίο representation για αυτόν τον σκοπό, ενώ το Sobol sensitivity θα γίνει plotted σε pie plot όπου δείχνει πόση από την μεταβλητότητα αφορά κάθε παράγοντα.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+using CairoMakie
+
+x_label = ["Lactate", "Acetate", "Propionate", "Ethanol"]
+y_label = ["Mix Amount", "Temperature"]
+
+# Make the Morris plots
+gs_fig = Figure(size = (600, 400))
+ax, hm = CairoMakie.heatmap(gs_fig[1,1], total_sens2, axis = (xticks = (1:4, x_label), yticks = (1:2, y_label), title = "Global Sensitivity Analysis"))
+Colorbar(gs_fig[1, 2], hm)
+save(plotsdir("sensitivity/global_morris.png"), gs_fig)
+
+sfig_temp = Figure(size = (600, 400))
+ax1, hm1 = CairoMakie.heatmap(sfig_temp[1,1], sens_temp, axis = (xticks = (1:4, x_label), yticks = (1:2, ["35 C", "40 C"]), title = "Sensitivity to mix amount in specific temperature"))
+Colorbar(sfig_temp[1, 2], hm1)
+save(plotsdir("sensitivity/temp_morris.png"), sfig_temp)
+
+sens_low_fig = Figure(size = (600, 400))
+ax, hm = CairoMakie.heatmap(sens_low_fig[1,1], sens_low2, axis = (xticks = (1:4, x_label), yticks = (1:2, y_label), title = "Sensitivity in mix amounts 0-2 ml"))
+Colorbar(sens_low_fig[1, 2], hm)
+save(plotsdir("sensitivity/morris_low.png"), sens_low_fig)
+
+sens_high_fig = Figure(size = (600, 400))
+ax, hm = CairoMakie.heatmap(sens_high_fig[1,1], sens_high2, axis = (xticks = (1:4, x_label), yticks = (1:2, y_label), title = "Sensitivity in mix amounts 2-8 ml"))
+Colorbar(sens_high_fig[1, 2], hm)
+save(plotsdir("sensitivity/morris_high.png"), sens_high_fig)
+
+# Make the Sobol plots
+colors = Makie.wong_colors()[1:3]
+
+sobol_tot_fig = Figure(size = (600, 400))
+Label(sobol_tot_fig[1,1:3], "Decomposition of Total Variance to the effect of Mix Amount, Temperature and their Interaction")
+ax1, plt = pie(sobol_tot_fig[2,1], total_sens_sobol_data[:,1], color = colors, axis = (aspect=DataAspect(), title = "Lactate"))
+ax2, plt = pie(sobol_tot_fig[2,2], total_sens_sobol_data[:,2], color = colors, axis = (aspect=DataAspect(), title = "Acetate"))
+ax3, plt = pie(sobol_tot_fig[3,1], total_sens_sobol_data[:,3], color = colors, axis = (aspect=DataAspect(), title = "Propionate"))
+ax4, plt = pie(sobol_tot_fig[3,2], total_sens_sobol_data[:,4], color = colors, axis = (aspect=DataAspect(), title = "Ethanol"))
+hidedecorations!(ax1)
+hidedecorations!(ax2)
+hidedecorations!(ax3)
+hidedecorations!(ax4)
+hidespines!(ax1)
+hidespines!(ax2)
+hidespines!(ax3)
+hidespines!(ax4)
+Legend(sobol_tot_fig[3,3], [PolyElement(color=c) for c in colors], names, framevisible=false)
+save(plotsdir("sensitivity/global_sobol.png"), sobol_tot_fig)
+
+sobol_low_fig = Figure(size = (600, 400))
+Label(sobol_low_fig[1,1:3], "Decomposition of Total Variance to the effect of Mix Amount, Temperature and their Interaction\n Results for mix amounts between 0-2 ml")
+ax1, plt = pie(sobol_low_fig[2,1], sens_low_sobol_data[:,1], color = colors, axis = (aspect=DataAspect(), title = "Lactate"))
+ax2, plt = pie(sobol_low_fig[2,2], sens_low_sobol_data[:,2], color = colors, axis = (aspect=DataAspect(), title = "Acetate"))
+ax3, plt = pie(sobol_low_fig[3,1], sens_low_sobol_data[:,3], color = colors, axis = (aspect=DataAspect(), title = "Propionate"))
+ax4, plt = pie(sobol_low_fig[3,2], sens_low_sobol_data[:,4], color = colors, axis = (aspect=DataAspect(), title = "Ethanol"))
+hidedecorations!(ax1)
+hidedecorations!(ax2)
+hidedecorations!(ax3)
+hidedecorations!(ax4)
+hidespines!(ax1)
+hidespines!(ax2)
+hidespines!(ax3)
+hidespines!(ax4)
+Legend(sobol_low_fig[3,3], [PolyElement(color=c) for c in colors], names, framevisible=false)
+save(plotsdir("sensitivity/low_sobol.png"), sobol_low_fig)
+
+sobol_high_fig = Figure(size = (600, 400))
+Label(sobol_high_fig[1,1:3], "Decomposition of Total Variance to the effect of Mix Amount, Temperature and their Interaction\n Results for mix amounts between 2-8 ml")
+ax1, plt = pie(sobol_high_fig[2,1], sens_high_sobol_data[:,1], color = colors, axis = (aspect=DataAspect(), title = "Lactate"))
+ax2, plt = pie(sobol_high_fig[2,2], sens_high_sobol_data[:,2], color = colors, axis = (aspect=DataAspect(), title = "Acetate"))
+ax3, plt = pie(sobol_high_fig[3,1], sens_high_sobol_data[:,3], color = colors, axis = (aspect=DataAspect(), title = "Propionate"))
+ax4, plt = pie(sobol_high_fig[3,2], sens_high_sobol_data[:,4], color = colors, axis = (aspect=DataAspect(), title = "Ethanol"))
+hidedecorations!(ax1)
+hidedecorations!(ax2)
+hidedecorations!(ax3)
+hidedecorations!(ax4)
+hidespines!(ax1)
+hidespines!(ax2)
+hidespines!(ax3)
+hidespines!(ax4)
+Legend(sobol_high_fig[3,3], [PolyElement(color=c) for c in colors], names, framevisible=false)
+save(plotsdir("sensitivity/high_sobol.png"), sobol_high_fig)
+
+
+\end{minted}
+
+\subsection{Αποτελέσματα}
+\label{sec:org4b91eef}
+\subsubsection{Morris}
+\label{sec:orga8982a4}
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/sensitivity/global_morris.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/sensitivity/temp_morris.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/sensitivity/morris_low.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/sensitivity/morris_high.png}
+\end{center}
+
+\subsubsection{Sobol}
+\label{sec:org4e126d9}
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/sensitivity/global_sobol.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/sensitivity/low_sobol.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/sensitivity/high_sobol.png}
+\end{center}
+
+\section{Συμπεράσματα}
+\label{sec:org65f5981}
+Έχοντας δει πως οι μεταβολές είναι στατιστικά σημαντικές από την ANOVA, η ανάλυση ευαισθησίας αυτή μας έδωσε και κάποια ποσοτικά αποτελέσματα τα οποία μας είναι χρήσιμα.
+
+Από την συνολική ανάλυση ευαισθησίας βλέπουμε πως το γαλακτικό οξύ έχει σχετικά μεγάλη εξάρτηση και από τις δύο παραμέτρους, αλλά επηρεάζεται περισσότερο από το mix amount. Το οξικό οξύ επηρεάζεται γενικά αρνητικά από το mix amount και θετικά από την θερμοκρασία, με την θερμοκρασία να είανι πολύ πιο καθοριστική στη μεταβλητότητα. Το προπιονικό φαίνεται να έχει ασθενή επίδραση και με τους δύο παράγοντες, όμως τα αποτελέσματα του είναι αρκετά διαφορετικά για τα δύο πειράματα, το οποίο μας οδηγεί στην σκέψη ότι η σημαντικότερη επίδραση είναι λόγω κάποιας αλληλεπίδρασης και δεν μπορεί να δωθεί στον έναν ή τον άλλο παράγοντα. Τέλος, η αιθανόλη έχει μία ισχυρή αρνητική επίδραση από την θερμοκρασία η οποία αποτελεί περίπου το 85\% της μεταβλητότητας της και στην συνολική ανάλυση φαίνεται να έχει αμελητέα επίδραση από την ποσότητα του mix.
+
+Εξετάζοντας την περιοχή των μικρών ποσοτήτων του mix, βλέπουμε πολύ θετικότερες επιδράσεις στην αιθανόλη και το γαλακτικό. Το γαλακτικό έχει πλέον μία εξάρτηση κατά 90\% περίπου από το mix amount δείχνοντας ότι σε αυτές τις ποσότητες, και στις δύο θερμοκρασίες κάνει perform παρόμοια. Η αιθανόλη παραμένει ισχυρά αρνητικά εξαρτούμενη από την θερμοκρασία αλλά φαίνεται περισσότερο η επίδραση του mix. Το προπιονικό αποκτά και αυτό μία σημαντικότερη εξάρτηση από το mix amount, παρόλο που ακόμη δεν είναι πολύ υψηλή (50\% της συνολικής). Τέλος, το οξικό, σε αυτή την περιοχή εξαρτάται και αυτό ισχυρά από το mix amount αλλά με αρνητικό τρόπο (το οποίο στηρίζεται στην παρατήρηση ότι ιδιαίτερα στους 35, όταν βάζουμε το mix σταματάει η οξικογένεση) ενώ η επίδραση της θερμοκρασίας σε αυτό φαίνεται λιγότερο καθώς δείξαμε ότι η επίδραση της θερμοκρασίας στα 0 και 1 ml είναι οριακά σημαντική.
+
+Στην περιοχή των μεγάλων ποσοτήτων του mix, τα αποτελέσματα συνάδουν με όσα έχουμε δείξει παραπάνω. Το οξικό, το προπιονικό και η αιθανόλη έχουν πολύ μικρή εξάρτηση από την ποσότητα του mix (μάλιστα το οξικό δείχνει να μην έχει πρακτικά καμία σε σχέση με την θερμοκρασία) και αυτή η εξάρτηση είναι και αρνητική με βάση το Morris analysis. Η εξάρτηση τους από την θερμοκρασία φαίνεται θετική για το οξικό και το προπιονικό (ειδικά του οξικού) ενώ η αιθανόλη παραμένει να έχει ισχυρή αρνητική εξάρτηση. Το γαλακτικό έχει μία θετική επίδραση από το mix amount, αλλά και αυτή δεν είναι παραπάνω από το 22\% της συνολικής του μεταβλητότητας στην περιοχή αυτή και η εξάρτηση από την θερμοκρασία είναι πιο σημαντική στην περιοχή αυτή. Οπότε, γνωρίζοντας κιόλας ότι η αύξηση της ποσότητας οδηγεί σε αύξηση του κόστους, σίγουρα δεν θα αξίζει η προσθήκη μεγαλύτερης ποσότητας από 2 ml.
+
+Τέλος, από την ανάλυση που έγινε σε συγκεκριμένη θερμοκρασία, μπορούμε να δούμε πιο συγκεκριμένα που επηρεάζει θετικά και που αρνητικά το mix. Το γαλακτικό έχει θετική εξάρτηση και στις δύο θερμοκρασίες με αυτήν στους 40 να είναι πιο ισχυρή. Το οξικό έχει μία σχετικά μεγάλη θετική εξάρτηση στους 40 και μία σχετικά μεγάλη αρνητική στους 35. Το προπιονικό δείχνει να μην έχει πολύ μεγάλες εξαρτήσεις από το mix amount σε αυτά τα subdomains, αλλά στους 40 είναι λίγο θετική και στους 35 λίγο αρνητική ενώ το ακριβώς αντίθετο δείχνει να συμβαίνει στην αιθανόλη.
+
+Οπότε, τα γενικά συμπεράσματα της μελέτης μπορούν να γραφθούν συνοπτικά ως εξής:
+\begin{itemize}
+\item Η βελτίωση κάποιων προιόντων (κυρίως του γαλακτικού) με την αύξηση του mix πάνω από 2 ml, μάλλον δεν αξίζει αν σκεφτούμε το οικονομικό αντίβαρο.
+\item Το γαλακτικό οξύ αυξάνεται αρκετά με την αύξηση και των δύο παραμέτρων.
+\item Η προσθήκη του mix στους 35 C παρεμποδίζει ισχυρά την παραγωγή οξικού οξέος, η οποία μπορεί να γίνει χωρίς το mix. Στους 40 αυτό το φαινόμενο δεν παρατηρείται, αλλά η προσθήκη του μιξ, μετά τα 2 ml έχει μικρή επίδραση και μετά τα 4 καμία.
+\item Το προπιονικό οξύ εξαρτάται μεν και από τις δύο παραμέτρους, αλλά δεν δείχνει να έχει τόσο μεγάλη αλλαγή λόγω αυτών συγκριτικά με τα άλλα προιόντα, συμπεραίνοντας ότι η συσχέτιση είναι μάλλον ασθενέστερη.
+\item Η αύξηση της θερμοκρασίας στους 40 C μειώνει σημαντικά την παραγωγή αιθανόλης. Η παραγωγικότητα εξαρτάται και από την ποσότητα του μιξ που προστίθεται, αλλά αυτή η συσχέτιση είναι πολύ ασθενέστερη.
+\item Όλα τα παραπάνω συμπεράσματα είναι στατιστικά σημαντικά με μεγάλη βεβαιότητα.
+\end{itemize}
+\end{document}
