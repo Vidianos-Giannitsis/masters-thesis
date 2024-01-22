@@ -76,11 +76,18 @@ acet_anova_35_2minus = manualANOVA(acet_samples_35[1:3])
 prop_anova_35_2minus = manualANOVA(prop_samples_35[1:3])
 eth_anova_35_2minus = manualANOVA(eth_samples_35[1:3])
 
-anova_35_2minus = reshape([lact_anova_35_2minus..., acet_anova_35_2minus..., prop_anova_35_2minus..., eth_anova_35_2minus...], 2, 4)
+lact_anova_40_2minus = manualANOVA(lact_samples_40[1:3])
+acet_anova_40_2minus = manualANOVA(acet_samples_40[1:3])
+prop_anova_40_2minus = manualANOVA(prop_samples_40[1:3])
+eth_anova_40_2minus = manualANOVA(eth_samples_40[1:3])
 
-new_names = ["Lactate", "Acetate", "Propionate", "Ethanol"]
-anova_table_2minus = Tables.table(hcat(new_names, anova_35_2minus'), header = [:Test, :FStatistic, :pValue])
-CSV.write(datadir("exp_pro", "anova_35_2minus.csv"), anova_table_2minus)
+anova_35_2minus = reshape([lact_anova_35_2minus..., acet_anova_35_2minus..., prop_anova_35_2minus..., eth_anova_35_2minus...], 2, 4)
+anova_40_2minus = reshape([lact_anova_40_2minus..., acet_anova_40_2minus..., prop_anova_40_2minus..., eth_anova_40_2minus...], 2, 4)
+
+anova_data_2minus = hcat(anova_35_2minus, anova_40_2minus)
+
+anova_table_2minus = Tables.table(hcat(names, anova_data_2minus'), header = [:Test, :FStatistic, :pValue])
+CSV.write(datadir("exp_pro", "anova_35_40_2minus.csv"), anova_table_2minus)
 DataFrame(anova_table_2minus)
 
 # Run the hypothesis tests
