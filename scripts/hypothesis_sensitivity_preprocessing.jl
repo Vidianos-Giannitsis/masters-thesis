@@ -6,6 +6,7 @@ using CSV, DataFrames, Statistics, Distributions
 # Read all the data
 exp_35 = "10_11"
 exp_40 = "28_11"
+exp_45 = "23_10"
 mix_amount = ["0", "1", "2", "4", "8"]
 
 # Experiment @35 C
@@ -21,6 +22,10 @@ df40_1 = CSV.read(get_conc_csv(exp_40, mix_amount[2]), DataFrame)
 df40_2 = CSV.read(get_conc_csv(exp_40, mix_amount[3]), DataFrame)
 df40_4 = CSV.read(get_conc_csv(exp_40, mix_amount[4]), DataFrame)
 df40_8 = CSV.read(get_conc_csv(exp_40, mix_amount[5]), DataFrame)
+
+# Experiment @45 C
+df45_1 = CSV.read(get_conc_csv(exp_45, mix_amount[2]), DataFrame)
+df45_2 = CSV.read(get_conc_csv(exp_45, mix_amount[3]), DataFrame)
 
 # Take the maximum instead of defaulting for the last element as we
 # know ethanol is consumed so the last isn't the maximum which is the
@@ -60,43 +65,47 @@ acet = prod[2,:]
 prop = prod[3,:]
 eth = prod[4,:]
 
-input35_0 = Vector(df35_0[1, 5:8])
-input35_1 = Vector(df35_1[1, 5:8])
-input35_2 = Vector(df35_2[1, 5:8])
-input35_4 = Vector(df35_4[1, 5:8])
-input35_8 = Vector(df35_8[1, 5:8])
+using Plots
 
-input40_0 = Vector(df40_0[1, 5:8])
-input40_1 = Vector(df40_1[1, 5:8])
-input40_2 = Vector(df40_2[1, 5:8])
-input40_4 = Vector(df40_4[1, 5:8])
-input40_8 = Vector(df40_8[1, 5:8])
+xtick = ["0", "1", "2", "4", "8"]
+plot_label = ["Lactate" "Acetate" "Propionate" "Ethanol"]
 
-input_35 = hcat(input35_0, input35_1, input35_2, input35_4, input35_8)
-input_40 = hcat(input40_0, input40_1, input40_2, input40_4, input40_8)
+prod_scatter_35 = scatter(1:5, [lact_mean_35 acet_mean_35 prop_mean_35 eth_mean_35],
+			  xticks = (1:5, ["0", "1", "2", "4", "8"]),
+			  xlabel = "Mix Amount (ml)", ylabel = "Concentration (g/l)",
+			  markersize = 6, label = plot_label,
+			  title = "Product Concentration by mix amount - 35 C")
+savefig(plotsdir("10_11", "final_prod_scatter_10_11.png"))
 
-# Collect the 4 vectors which have the input variables in every
-# condition
-lact_input_35 = input_35[1,:]
-acet_input_35 = input_35[2,:]
-prop_input_35 = input_35[3,:]
-eth_input_35 = input_35[4,:]
+prod_scatter_40 = scatter(1:5, [lact_mean_40 acet_mean_40 prop_mean_40 eth_mean_40],
+			  xticks = (1:5, ["0", "1", "2", "4", "8"]),
+			  xlabel = "Mix Amount (ml)", ylabel = "Concentration (g/l)",
+			  markersize = 6, label = plot_label,
+			  title = "Product Concentration by mix amount - 40 C")
+savefig(plotsdir("28_11", "final_prod_scatter_28_11.png"))
 
-lact_input_40 = input_40[1,:]
-acet_input_40 = input_40[2,:]
-prop_input_40 = input_40[3,:]
-eth_input_40 = input_40[4,:]
+prod45_1 = select(df45_1, 1, 5:8)
+prod45_2 = select(df45_2, 1, 5:8)
 
-# Calculate standard deviations of samples
-lact_std_35 = std(lact_input_35)
-acet_std_35 = std(acet_input_35)
-prop_std_35 = std(prop_input_35)
-eth_std_35 = std(eth_input_35)
+# Day 0
+d0_prod = vcat(prod45_1[2:7, 2:5], prod45_2[1:3, 2:5])
+# The first point in the first data has some very noticeable outliers
+# that will massively increase the deviation if included.
+std_d0 = std.(eachcol(d0_prod))
 
-lact_std_40 = std(lact_input_40)
-acet_std_40 = std(acet_input_40)
-prop_std_40 = std(prop_input_40)
-eth_std_40 = std(eth_input_40)
+# Day 1
+d1_prod = vcat(Vector(prod45_1[8, 2:5])', Vector(prod45_1[10, 2:5])', Vector(prod45_2[6, 2:5])')
+# The times 24 and 26 hours in the second experiment are before
+# Glucose is fully consumed and have much lower products than those in
+# the other experiment, hence there cannot be a standard deviation
+# including them. For 26 hours in the first experiment, Lactate has a
+# weird increase that is lost within 2 hours, which is considered a
+# possible outlier in this case.
+std_d1 = [std(d1_prod[:,i]) for i in 1:4]
+
+# Day 2
+
+# Day 3
 
 lact_dist_35 = [Normal(lact_mean_35[i], lact_std_35) for i in 1:length(lact_mean_35)]
 acet_dist_35 = [Normal(acet_mean_35[i], acet_std_35) for i in 1:length(acet_mean_35)]

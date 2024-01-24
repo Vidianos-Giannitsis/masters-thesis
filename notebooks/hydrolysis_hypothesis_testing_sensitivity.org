@@ -26,6 +26,7 @@
   # Read all the data
   exp_35 = "10_11"
   exp_40 = "28_11"
+  exp_45 = "23_10"
   mix_amount = ["0", "1", "2", "4", "8"]
 
   # Experiment @35 C
@@ -42,6 +43,9 @@
   df40_4 = CSV.read(get_conc_csv(exp_40, mix_amount[4]), DataFrame)
   df40_8 = CSV.read(get_conc_csv(exp_40, mix_amount[5]), DataFrame)
 
+  # Experiment @45 C
+  df45_1 = CSV.read(get_conc_csv(exp_45, mix_amount[2]), DataFrame)
+  df45_2 = CSV.read(get_conc_csv(exp_45, mix_amount[3]), DataFrame)
 #+END_SRC
 
 #+RESULTS: data_reading
@@ -115,10 +119,41 @@
  0.4238722874331631
 #+end_example
 
+* Visualization των αποτελεσμάτων αυτών
+Για να είναι πιο ευπαρουσίαστα τα αποτελέσματα της ανάλυσης, αξίζει να κάνουμε κάποια διαγράμματα που δείχνουν την τελική συγκέντρωση της κάθε ένωσης ανάλογα με το mix amount.
+
+#+NAME: prod_visualization
+#+BEGIN_SRC julia :tangle ../scripts/hypothesis_sensitivity_preprocessing.jl
+
+  using Plots
+
+  xtick = ["0", "1", "2", "4", "8"]
+  plot_label = ["Lactate" "Acetate" "Propionate" "Ethanol"]
+
+  prod_scatter_35 = scatter(1:5, [lact_mean_35 acet_mean_35 prop_mean_35 eth_mean_35],
+			    xticks = (1:5, ["0", "1", "2", "4", "8"]),
+			    xlabel = "Mix Amount (ml)", ylabel = "Concentration (g/l)",
+			    markersize = 6, label = plot_label,
+			    title = "Product Concentration by mix amount - 35 C")
+  savefig(plotsdir("10_11", "final_prod_scatter_10_11.png"))
+
+  prod_scatter_40 = scatter(1:5, [lact_mean_40 acet_mean_40 prop_mean_40 eth_mean_40],
+			    xticks = (1:5, ["0", "1", "2", "4", "8"]),
+			    xlabel = "Mix Amount (ml)", ylabel = "Concentration (g/l)",
+			    markersize = 6, label = plot_label,
+			    title = "Product Concentration by mix amount - 40 C")
+  savefig(plotsdir("28_11", "final_prod_scatter_28_11.png"))
+
+#+END_SRC
+
+[[../plots/10_11/final_prod_scatter_10_11.png]]
+
+[[../plots/28_11/final_prod_scatter_28_11.png]]
+
 * Δημιουργία ψευδο-κατανομής των δεδομένων
 Για να κάνουμε ANOVA χρειάζεται κάθε μέτρηση να έχει ένα sample size μεγαλύτερο του 1 (και εφόσον κάνουμε στατιστική ανάλυση, τυπικά θέλουμε πάνω από 5 για στατιστικά σημαντικά αποτελέσματα). Δεν μπορούμε να κάνουμε το πείραμα τόσες φορές, οπότε χρειαζόμαστε έναν μηχανισμό για να φτιάξουμε δεδομένα.
 
-Ένα claim το οποίο δεν είναι κακό είναι ότι αν κάναμε πολλές φορές το πείραμα, τα αποτελέσματα θα ακολουθούσαν κανονική κατανομή. Οπότε, με έναν μέσο όρο και μία τυπική απόκλιση, μπορούμε να φτιάξουμε δεδομένα τα οποία θα είναι περίπου σωστά και να τρέξουμε με αυτά την ANOVA. Οι μέσοι όροι θα είναι προφανώς οι τιμές που θα έχουμε παρατηρήσει. Για τις τυπικές αποκλίσεις θέλουμε κάτι άλλο. Με βάση τα στοιχεία που έχουμε, μία εύλογη εκτίμηση είναι να πούμε πως ξέρουμε ότι στην αρχή είχαμε 5 υποτίθεται ίδια δείγματα. Οπότε όποια διαφορά έχουν οφείλεται στην τυπική απόκλιση του δείγματος. Οπότε, ας υποθέσουμε ότι το variance που έχουν αυτά θα το έχουν και τα προιόντα και ας κάνουμε κατανομές αυτές τις τυπικές αποκλίσεις.
+Ένα claim το οποίο δεν είναι κακό είναι ότι αν κάναμε πολλές φορές το πείραμα, τα αποτελέσματα θα ακολουθούσαν κανονική κατανομή. Οπότε, με έναν μέσο όρο και μία τυπική απόκλιση, μπορούμε να φτιάξουμε δεδομένα τα οποία θα είναι περίπου σωστά και να τρέξουμε με αυτά την ANOVA. Οι μέσοι όροι θα είναι προφανώς οι τιμές που θα έχουμε παρατηρήσει. Για τις τυπικές αποκλίσεις θέλουμε κάτι άλλο. Από τα συγκεκριμένα πειράματα δεν μπορούμε να βγάλουμ κάπως ακριβής τυπική απόκλιση. Όμως, έχουμε το προπαρασκευαστικό πείραμα που έγινε στους 45 C στο οποίο είχαμε 2 επαναλήψεις και συχνή δειγματοληψία. Μπορούμε (με ένα σφάλμα) να πάρουμε την τυπική απόκλιση των 6 τιμών οι οποίες είναι κοντινές μεταξύ τους και να υποθέσουμε ότι μία παρόμοια τιμή θα έχει και η τυπική απόκλιση αυτών που μας ενδιαφέρουν.
 
 ** Pre-processing
 Για να πάρουμε τα δεδομένα ακολουθούμε μία παρόμοια λογική με παραπάνω και μόλις βρούμε τα διανύσματα που θέλουμε υπολογίζουμε τo standard deviation τους.
@@ -126,43 +161,28 @@
 #+NAME: input_stdev
 #+BEGIN_SRC julia :tangle ../scripts/hypothesis_sensitivity_preprocessing.jl
 
-  input35_0 = Vector(df35_0[1, 5:8])
-  input35_1 = Vector(df35_1[1, 5:8])
-  input35_2 = Vector(df35_2[1, 5:8])
-  input35_4 = Vector(df35_4[1, 5:8])
-  input35_8 = Vector(df35_8[1, 5:8])
+  prod45_1 = select(df45_1, 1, 5:8)
+  prod45_2 = select(df45_2, 1, 5:8)
 
-  input40_0 = Vector(df40_0[1, 5:8])
-  input40_1 = Vector(df40_1[1, 5:8])
-  input40_2 = Vector(df40_2[1, 5:8])
-  input40_4 = Vector(df40_4[1, 5:8])
-  input40_8 = Vector(df40_8[1, 5:8])
+  # Day 0
+  d0_prod = vcat(prod45_1[2:7, 2:5], prod45_2[1:3, 2:5])
+  # The first point in the first data has some very noticeable outliers
+  # that will massively increase the deviation if included.
+  std_d0 = std.(eachcol(d0_prod))
 
-  input_35 = hcat(input35_0, input35_1, input35_2, input35_4, input35_8)
-  input_40 = hcat(input40_0, input40_1, input40_2, input40_4, input40_8)
+  # Day 1
+  d1_prod = vcat(Vector(prod45_1[8, 2:5])', Vector(prod45_1[10, 2:5])', Vector(prod45_2[6, 2:5])')
+  # The times 24 and 26 hours in the second experiment are before
+  # Glucose is fully consumed and have much lower products than those in
+  # the other experiment, hence there cannot be a standard deviation
+  # including them. For 26 hours in the first experiment, Lactate has a
+  # weird increase that is lost within 2 hours, which is considered a
+  # possible outlier in this case.
+  std_d1 = [std(d1_prod[:,i]) for i in 1:4]
 
-  # Collect the 4 vectors which have the input variables in every
-  # condition
-  lact_input_35 = input_35[1,:]
-  acet_input_35 = input_35[2,:]
-  prop_input_35 = input_35[3,:]
-  eth_input_35 = input_35[4,:]
+  # Day 2
 
-  lact_input_40 = input_40[1,:]
-  acet_input_40 = input_40[2,:]
-  prop_input_40 = input_40[3,:]
-  eth_input_40 = input_40[4,:]
-
-  # Calculate standard deviations of samples
-  lact_std_35 = std(lact_input_35)
-  acet_std_35 = std(acet_input_35)
-  prop_std_35 = std(prop_input_35)
-  eth_std_35 = std(eth_input_35)
-
-  lact_std_40 = std(lact_input_40)
-  acet_std_40 = std(acet_input_40)
-  prop_std_40 = std(prop_input_40)
-  eth_std_40 = std(eth_input_40)
+  # Day 3
 #+END_SRC
 
 #+RESULTS: input_stdev
@@ -721,6 +741,15 @@ To GlobalSensitivity.jl προσφέρει δύο είδη ανάλυσης ευ
 
 #+END_SRC
 
+#+RESULTS: sens_data_storing
+: 3×5 DataFrame
+:  Row │ Variable     Lactate   Acetate    Propionate  Ethanol   
+:      │ Any          Any       Any        Any         Any       
+: ─────┼─────────────────────────────────────────────────────────
+:    1 │ Mix Amount   0.219438  -0.004395  0.0495616   0.0528505
+:    2 │ Temperature  0.416787  0.992211   0.859846    0.882682
+:    3 │ Interaction  0.363775  0.0121841  0.090592    0.0644679
+
 Τέλος, μπορούμε να κάνουμε το visualization των δύο αναλύσεων και να δούμε τι συμπεράσματα προκύπτουν. Το Morris sensitivity θα γίνει plotted σε heatmap, το οποίο είναι ένα ωραίο representation για αυτόν τον σκοπό, ενώ το Sobol sensitivity θα γίνει plotted σε pie plot όπου δείχνει πόση από την μεταβλητότητα αφορά κάθε παράγοντα.
 
 #+NAME: sens_plots
@@ -835,6 +864,126 @@ To GlobalSensitivity.jl προσφέρει δύο είδη ανάλυσης ευ
 
 #+ATTR_ORG: :width 800px
 [[../plots/sensitivity/high_sobol.png]]
+
+** Plotting σε tornado diagrams
+Τα tornado diagrams είναι χρήσιμα διαγράμματα στην ανάλυση ευαισθησίας καθώς δίνουν ένα πιο εύκολο στην κατανόηση look στην ευαισθησία. Το παρακάτω code block κάνει plot τα αντίστοιχα αποτελέσματα σε ένα tornado plot. Για να γίνει αυτό, κάνουμε sort τα αποτελέσματα της ευαισθησίας μαζί με τα labels τους κατ'απόλυτη τιμή αλλά δεν κάνουμε plot την απόλυτη τιμή επειδή θέλουμε να φαίνεται πότε μία επίδραση είναι αρνητική. Έπειτα, ορίζουμε δύο χρώματα (ένα για τις θετικές και ένα για τις αρνητικές επιδράσεις) και κάνουμε plot το tornado diagram με αυτά τα στοιχεία. Αυτό επαναλαμβάνεται για όλες τις αναλύσεις που κάναμε.
+
+#+NAME: tornado_visualization
+#+BEGIN_SRC julia :tangle ../scripts/hplc_sensitivity.jl
+
+  # Define the labels
+  name_matrix = ["Lactate - Mix Amount", "Acetate - Mix Amount", "Propionate - Mix Amount", "Ethanol - Mix Amount", "Lactate - Temperature", "Acetate - Temperature", "Propionate - Temperature", "Ethanol - Temperature"]
+
+  # Sort the data and their labels
+  reshaped_sens_total = reshape(total_sens2, 1:8)
+  sorted_indices_total = sortperm(abs.(reshaped_sens_total))
+
+  sorted_sens_total = reshaped_sens_total[sorted_indices_total]
+  sorted_names_total = name_matrix[sorted_indices_total]
+
+  # Define an x-range
+  xrange_total = LinRange(minimum(sorted_sens_total), maximum(sorted_sens_total), 8)
+
+  # Define colors based on the sign of sensitivity values
+  colors_total = ifelse.(sorted_sens_total .< 0, "#440154", "#DCE319")
+
+  # Create the tornado plot
+  global_tornado = bar(xrange_total, sorted_sens_total, color = colors_total,
+		       xlabel = "Sensitivity", yticks = (xrange_total, sorted_names_total),
+		       orientation = :h, legend = false,
+		       title = "Tornado Diagram for Global Sensitivity Analysis",
+		       size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+  savefig(global_tornado, plotsdir("sensitivity", "global_tornado.png"))
+
+  # Do this for the low mix amount domain
+  reshaped_sens_low = reshape(sens_low2, 1:8)
+  sorted_indices_low = sortperm(abs.(reshaped_sens_low))
+
+  sorted_sens_low = reshaped_sens_low[sorted_indices_low]
+  sorted_names_low = name_matrix[sorted_indices_low]
+
+  # Define an x-range
+  xrange_low = LinRange(minimum(sorted_sens_low), maximum(sorted_sens_low), 8)
+
+  # Define colors based on the sign of sensitivity values
+  colors_low = ifelse.(sorted_sens_low .< 0, "#440154", "#DCE319")
+
+  # Create the tornado plot
+  low_tornado = bar(xrange_low, sorted_sens_low, color = colors_low,
+		    xlabel = "Sensitivity", yticks = (xrange_low, sorted_names_low),
+		    orientation = :h, legend = false,
+		    title = "Tornado Diagram for Mix Amounts 0-2 ml",
+		    size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+  savefig(low_tornado, plotsdir("sensitivity", "tornado_low.png"))
+
+  # And the high mix amount domain
+  reshaped_sens_high = reshape(sens_high2, 1:8)
+  sorted_indices_high = sortperm(abs.(reshaped_sens_high))
+
+  sorted_sens_high = reshaped_sens_high[sorted_indices_high]
+  sorted_names_high = name_matrix[sorted_indices_high]
+
+  # Define an x-range
+  xrange_high = LinRange(minimum(sorted_sens_high), maximum(sorted_sens_high), 8)
+
+  # Define colors based on the sign of sensitivity values
+  colors_high = ifelse.(sorted_sens_high .< 0, "#440154", "#DCE319")
+
+  # Create the tornado plot
+  high_tornado = bar(xrange_high, sorted_sens_high, color = colors_high,
+		       xlabel = "Sensitivity", yticks = (xrange_high, sorted_names_high),
+		       orientation = :h, legend = false,
+		       title = "Tornado Diagram for Mix Amounts 2-8 ml",
+		       size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+  savefig(high_tornado, plotsdir("sensitivity", "tornado_high.png"))
+
+  # We also want to do a tornado plot of the sensitivity analysis
+  # performed for each temperature. Theoretically, the sensitivity we
+  # have is how each parameter affects the system on its own, but making
+  # the domain smaller (studying each temperature separately) also gave
+  # interesting results.
+
+  name_matrix2 = ["Lactate - 35 C", "Acetate - 35 C", "Propionate - 35 C", "Ethanol - 35 C", "Lactate - 40 C", "Acetate - 40 C", "Propionate - 40 C", "Ethanol - 40 C"]
+
+  # Sort the data and their labels
+  reshaped_sens_temp = reshape(sens_temp, 1:8)
+  sorted_indices_temp = sortperm(abs.(reshaped_sens_temp))
+
+  sorted_sens_temp = reshaped_sens_temp[sorted_indices_temp]
+  sorted_names_temp = name_matrix2[sorted_indices_temp]
+
+  # Define an x-range
+  xrange_temp = LinRange(minimum(sorted_sens_temp), maximum(sorted_sens_temp), 8)
+
+  # Define colors based on the sign of sensitivity values
+  colors_temp = ifelse.(sorted_sens_temp .< 0, "#440154", "#DCE319")
+
+  # Create the tornado plot
+  temp_tornado = bar(xrange_temp, sorted_sens_temp, color = colors_temp,
+		       xlabel = "Sensitivity to Mix Amount",
+		       yticks = (xrange_temp, sorted_names_temp),
+		       orientation = :h, legend = false,
+		       title = "Tornado Diagram for Discrete Temperature Ranges",
+		       size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+  savefig(temp_tornado, plotsdir("sensitivity", "temperature_tornado.png"))
+#+END_SRC
+
+#+RESULTS: tornado_visualization
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/sensitivity/temperature_tornado.png"
+
+Παρακάτω φαίνονται και τα αντίστοιχα plots
+
+#+ATTR_ORG: :width 800px
+[[../plots/sensitivity/global_tornado.png]]
+
+#+ATTR_ORG: :width 800px
+[[../plots/sensitivity/tornado_low.png]]
+
+#+ATTR_ORG: :width 800px
+[[../plots/sensitivity/tornado_high.png]]
+
+#+ATTR_ORG: :width 800px
+[[../plots/sensitivity/temperature_tornado.png]]
 
 * Συμπεράσματα
 Έχοντας δει πως οι μεταβολές είναι στατιστικά σημαντικές από την ANOVA, η ανάλυση ευαισθησίας αυτή μας έδωσε και κάποια ποσοτικά αποτελέσματα τα οποία μας είναι χρήσιμα.

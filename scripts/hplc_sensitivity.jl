@@ -178,3 +178,99 @@ hidespines!(ax3)
 hidespines!(ax4)
 Legend(sobol_high_fig[3,3], [PolyElement(color=c) for c in colors], names, framevisible=false)
 save(plotsdir("sensitivity/high_sobol.png"), sobol_high_fig)
+
+# Define the labels
+name_matrix = ["Lactate - Mix Amount", "Acetate - Mix Amount", "Propionate - Mix Amount", "Ethanol - Mix Amount", "Lactate - Temperature", "Acetate - Temperature", "Propionate - Temperature", "Ethanol - Temperature"]
+
+# Sort the data and their labels
+reshaped_sens_total = reshape(total_sens2, 1:8)
+sorted_indices_total = sortperm(abs.(reshaped_sens_total))
+
+sorted_sens_total = reshaped_sens_total[sorted_indices_total]
+sorted_names_total = name_matrix[sorted_indices_total]
+
+# Define an x-range
+xrange_total = LinRange(minimum(sorted_sens_total), maximum(sorted_sens_total), 8)
+
+# Define colors based on the sign of sensitivity values
+colors_total = ifelse.(sorted_sens_total .< 0, "#440154", "#DCE319")
+
+# Create the tornado plot
+global_tornado = bar(xrange_total, sorted_sens_total, color = colors_total,
+		     xlabel = "Sensitivity", yticks = (xrange_total, sorted_names_total),
+		     orientation = :h, legend = false,
+		     title = "Tornado Diagram for Global Sensitivity Analysis",
+		     size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+savefig(global_tornado, plotsdir("sensitivity", "global_tornado.png"))
+
+# Do this for the low mix amount domain
+reshaped_sens_low = reshape(sens_low2, 1:8)
+sorted_indices_low = sortperm(abs.(reshaped_sens_low))
+
+sorted_sens_low = reshaped_sens_low[sorted_indices_low]
+sorted_names_low = name_matrix[sorted_indices_low]
+
+# Define an x-range
+xrange_low = LinRange(minimum(sorted_sens_low), maximum(sorted_sens_low), 8)
+
+# Define colors based on the sign of sensitivity values
+colors_low = ifelse.(sorted_sens_low .< 0, "#440154", "#DCE319")
+
+# Create the tornado plot
+low_tornado = bar(xrange_low, sorted_sens_low, color = colors_low,
+		  xlabel = "Sensitivity", yticks = (xrange_low, sorted_names_low),
+		  orientation = :h, legend = false,
+		  title = "Tornado Diagram for Mix Amounts 0-2 ml",
+		  size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+savefig(low_tornado, plotsdir("sensitivity", "tornado_low.png"))
+
+# And the high mix amount domain
+reshaped_sens_high = reshape(sens_high2, 1:8)
+sorted_indices_high = sortperm(abs.(reshaped_sens_high))
+
+sorted_sens_high = reshaped_sens_high[sorted_indices_high]
+sorted_names_high = name_matrix[sorted_indices_high]
+
+# Define an x-range
+xrange_high = LinRange(minimum(sorted_sens_high), maximum(sorted_sens_high), 8)
+
+# Define colors based on the sign of sensitivity values
+colors_high = ifelse.(sorted_sens_high .< 0, "#440154", "#DCE319")
+
+# Create the tornado plot
+high_tornado = bar(xrange_high, sorted_sens_high, color = colors_high,
+		     xlabel = "Sensitivity", yticks = (xrange_high, sorted_names_high),
+		     orientation = :h, legend = false,
+		     title = "Tornado Diagram for Mix Amounts 2-8 ml",
+		     size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+savefig(high_tornado, plotsdir("sensitivity", "tornado_high.png"))
+
+# We also want to do a tornado plot of the sensitivity analysis
+# performed for each temperature. Theoretically, the sensitivity we
+# have is how each parameter affects the system on its own, but making
+# the domain smaller (studying each temperature separately) also gave
+# interesting results.
+
+name_matrix2 = ["Lactate - 35 C", "Acetate - 35 C", "Propionate - 35 C", "Ethanol - 35 C", "Lactate - 40 C", "Acetate - 40 C", "Propionate - 40 C", "Ethanol - 40 C"]
+
+# Sort the data and their labels
+reshaped_sens_temp = reshape(sens_temp, 1:8)
+sorted_indices_temp = sortperm(abs.(reshaped_sens_temp))
+
+sorted_sens_temp = reshaped_sens_temp[sorted_indices_temp]
+sorted_names_temp = name_matrix2[sorted_indices_temp]
+
+# Define an x-range
+xrange_temp = LinRange(minimum(sorted_sens_temp), maximum(sorted_sens_temp), 8)
+
+# Define colors based on the sign of sensitivity values
+colors_temp = ifelse.(sorted_sens_temp .< 0, "#440154", "#DCE319")
+
+# Create the tornado plot
+temp_tornado = bar(xrange_temp, sorted_sens_temp, color = colors_temp,
+		     xlabel = "Sensitivity to Mix Amount",
+		     yticks = (xrange_temp, sorted_names_temp),
+		     orientation = :h, legend = false,
+		     title = "Tornado Diagram for Discrete Temperature Ranges",
+		     size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+savefig(temp_tornado, plotsdir("sensitivity", "temperature_tornado.png"))
