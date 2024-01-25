@@ -84,40 +84,42 @@ prod_scatter_40 = scatter(1:5, [lact_mean_40 acet_mean_40 prop_mean_40 eth_mean_
 			  title = "Product Concentration by mix amount - 40 C")
 savefig(plotsdir("28_11", "final_prod_scatter_28_11.png"))
 
-prod45_1 = select(df45_1, 1, 5:8)
-prod45_2 = select(df45_2, 1, 5:8)
+prod45 = select(df45_1, 1, 5:8)
 
 # Day 0
-d0_prod = vcat(prod45_1[2:7, 2:5], prod45_2[1:3, 2:5])
-# The first point in the first data has some very noticeable outliers
-# that will massively increase the deviation if included.
+d0_prod = prod45[1:7, 2:5]
 std_d0 = std.(eachcol(d0_prod))
+# Corrected ethanol std
+#std_eth = std(prod45[2:7, 5])
+#std_d0[4] = std_eth
 
 # Day 1
-d1_prod = vcat(Vector(prod45_1[8, 2:5])', Vector(prod45_1[10, 2:5])', Vector(prod45_2[6, 2:5])')
-# The times 24 and 26 hours in the second experiment are before
-# Glucose is fully consumed and have much lower products than those in
-# the other experiment, hence there cannot be a standard deviation
-# including them. For 26 hours in the first experiment, Lactate has a
-# weird increase that is lost within 2 hours, which is considered a
-# possible outlier in this case.
-std_d1 = [std(d1_prod[:,i]) for i in 1:4]
+d1_prod = prod45[8:10, 2:5]
+std_d1 = std.(eachcol(d1_prod))
 
 # Day 2
+d2_prod = prod45[11:13, 2:5]
+std_d2 = std.(eachcol(d2_prod))
 
 # Day 3
+d3_prod = prod45[14:16, 2:5]
+std_d3 = std.(eachcol(d3_prod))
 
-lact_dist_35 = [Normal(lact_mean_35[i], lact_std_35) for i in 1:length(lact_mean_35)]
-acet_dist_35 = [Normal(acet_mean_35[i], acet_std_35) for i in 1:length(acet_mean_35)]
-prop_dist_35 = [Normal(prop_mean_35[i], prop_std_35) for i in 1:length(prop_mean_35)]
-eth_dist_35 = [Normal(eth_mean_35[i], eth_std_35) for i in 1:length(eth_mean_35)]
+std_final = mean([std_d0, std_d1, std_d2, std_d3])
 
-lact_dist_40 = [Normal(lact_mean_40[i], lact_std_40) for i in 1:length(lact_mean_40)]
-acet_dist_40 = [Normal(acet_mean_40[i], acet_std_40) for i in 1:length(acet_mean_40)]
-prop_dist_40 = [Normal(prop_mean_40[i], prop_std_40) for i in 1:length(prop_mean_40)]
-eth_dist_40 = [Normal(eth_mean_40[i], eth_std_40) for i in 1:length(eth_mean_40)]
+lact_dist_35 = [Normal(lact_mean_35[i], std_final[1]) for i in 1:length(lact_mean_35)]
+acet_dist_35 = [Normal(acet_mean_35[i], std_final[2]) for i in 1:length(acet_mean_35)]
+prop_dist_35 = [Normal(prop_mean_35[i], std_final[3]) for i in 1:length(prop_mean_35)]
+eth_dist_35 = [Normal(eth_mean_35[i], std_final[4]) for i in 1:length(eth_mean_35)]
 
+lact_dist_40 = [Normal(lact_mean_40[i], std_final[1]) for i in 1:length(lact_mean_40)]
+acet_dist_40 = [Normal(acet_mean_40[i], std_final[2]) for i in 1:length(acet_mean_40)]
+prop_dist_40 = [Normal(prop_mean_40[i], std_final[3]) for i in 1:length(prop_mean_40)]
+eth_dist_40 = [Normal(eth_mean_40[i], std_final[4]) for i in 1:length(eth_mean_40)]
+
+using Random
 samples = 20
+Random.seed!(1234)
 lact_samples_35 = [rand(lact_dist_35[i], samples) for i in 1:length(lact_mean_35)]
 acet_samples_35 = [rand(acet_dist_35[i], samples) for i in 1:length(acet_mean_35)]
 prop_samples_35 = [rand(prop_dist_35[i], samples) for i in 1:length(prop_mean_35)]

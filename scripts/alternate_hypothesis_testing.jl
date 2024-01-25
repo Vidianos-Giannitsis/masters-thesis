@@ -1,30 +1,54 @@
-using DrWatson
-@quickactivate "Masters_Thesis"
-include(srcdir("filenames.jl"))
-using CSV, DataFrames, Statistics, Distributions
+prod45 = select(df45_1, 1, 5:8)
 
-include(scriptsdir("hypothesis_sensitivity_preprocessing.jl"))
-using HypothesisTests
+# Day 0
+d0_prod = prod45[1:7, 2:5]
+std_d0 = std.(eachcol(d0_prod))
+# Corrected ethanol std
+std_eth = std(prod45[2:7, 5])
+std_d0[4] = std_eth
 
-function manualANOVA(allData)
-    nArray = length.(allData)
-    d = length(nArray)
+# Day 1
+d1_prod = prod45[8:10, 2:5]
+std_d1 = std.(eachcol(d1_prod))
 
-    xBarTotal = mean(vcat(allData...))
-    xBarArray = mean.(allData)
+# Day 2
+d2_prod = prod45[11:13, 2:5]
+std_d2 = std.(eachcol(d2_prod))
 
-    ssBetween = sum( [nArray[i]*(xBarArray[i] - xBarTotal)^2 for i in 1:d] )
-    ssWithin = sum([sum([(ob - xBarArray[i])^2 for ob in allData[i]])
-				for i in 1:d])
-    dfBetween = d-1
-    dfError = sum(nArray)-d
+# Day 3
+d3_prod = prod45[14:16, 2:5]
+std_d3 = std.(eachcol(d3_prod))
+# Corrected acetate std
+std_acet = std([prod45[14, 3], prod45[16, 3]])
+std_d3[2] = std_acet
 
-    msBetween = ssBetween/dfBetween
-    msError = ssWithin/dfError
-    fStat = msBetween/msError
-    pval = ccdf(FDist(dfBetween,dfError),fStat)
-    return fStat, pval
-end
+std_final = mean([std_d0, std_d1, std_d2, std_d3])
+
+lact_dist_35 = [Normal(lact_mean_35[i], std_final[1]) for i in 1:length(lact_mean_35)]
+acet_dist_35 = [Normal(acet_mean_35[i], std_final[2]) for i in 1:length(acet_mean_35)]
+prop_dist_35 = [Normal(prop_mean_35[i], std_final[3]) for i in 1:length(prop_mean_35)]
+eth_dist_35 = [Normal(eth_mean_35[i], std_final[4]) for i in 1:length(eth_mean_35)]
+
+lact_dist_40 = [Normal(lact_mean_40[i], std_final[1]) for i in 1:length(lact_mean_40)]
+acet_dist_40 = [Normal(acet_mean_40[i], std_final[2]) for i in 1:length(acet_mean_40)]
+prop_dist_40 = [Normal(prop_mean_40[i], std_final[3]) for i in 1:length(prop_mean_40)]
+eth_dist_40 = [Normal(eth_mean_40[i], std_final[4]) for i in 1:length(eth_mean_40)]
+
+
+using Random
+samples = 20
+Random.seed!(1234)
+lact_samples_35 = [rand(lact_dist_35[i], samples) for i in 1:length(lact_mean_35)]
+acet_samples_35 = [rand(acet_dist_35[i], samples) for i in 1:length(acet_mean_35)]
+prop_samples_35 = [rand(prop_dist_35[i], samples) for i in 1:length(prop_mean_35)]
+eth_samples_35 = [rand(eth_dist_35[i], samples) for i in 1:length(eth_mean_35)]
+
+lact_samples_40 = [rand(lact_dist_40[i], samples) for i in 1:length(lact_mean_40)]
+acet_samples_40 = [rand(acet_dist_40[i], samples) for i in 1:length(acet_mean_40)]
+prop_samples_40 = [rand(prop_dist_40[i], samples) for i in 1:length(prop_mean_40)]
+eth_samples_40 = [rand(eth_dist_40[i], samples) for i in 1:length(eth_mean_40)]
+
+
 
 lact_anova_35 = manualANOVA(lact_samples_35)
 acet_anova_35 = manualANOVA(acet_samples_35)
@@ -39,12 +63,14 @@ eth_anova_40 = manualANOVA(eth_samples_40)
 anova_35 = reshape([lact_anova_35..., acet_anova_35..., prop_anova_35..., eth_anova_35...], 2, 4)
 anova_40 = reshape([lact_anova_40..., acet_anova_40..., prop_anova_40..., eth_anova_40...], 2, 4)
 
+
 names = ["Lactate_35", "Acetate_35", "Propionate_35", "Ethanol_35", "Lactate_40", "Acetate_40", "Propionate_40", "Ethanol_40"]
 anova_data = hcat(anova_35, anova_40)
 
 anova_table = Tables.table(hcat(names, anova_data'), header = [:Test, :FStatistic, :pValue])
 CSV.write(datadir("exp_pro", "anova_35_40.csv"), anova_table)
 DataFrame(anova_table)
+
 
 lact_anova_35_2plus = manualANOVA(lact_samples_35[3:5])
 acet_anova_35_2plus = manualANOVA(acet_samples_35[3:5])
@@ -64,6 +90,7 @@ anova_data_2plus = hcat(anova_35_2plus, anova_40_2plus)
 anova_table_2plus = Tables.table(hcat(names, anova_data_2plus'), header = [:Test, :FStatistic, :pValue])
 CSV.write(datadir("exp_pro", "anova_35_40_2plus.csv"), anova_table_2plus)
 DataFrame(anova_table_2plus)
+
 
 lact_ttest_40 = EqualVarianceTTest(lact_samples_40[4], lact_samples_40[5])
 acet_ttest_40 = EqualVarianceTTest(acet_samples_40[4], acet_samples_40[5])
@@ -90,6 +117,7 @@ anova_data_2minus = hcat(anova_35_2minus, anova_40_2minus)
 anova_table_2minus = Tables.table(hcat(names, anova_data_2minus'), header = [:Test, :FStatistic, :pValue])
 CSV.write(datadir("exp_pro", "anova_35_40_2minus.csv"), anova_table_2minus)
 DataFrame(anova_table_2minus)
+
 
 # Run the hypothesis tests
 lact_temp_ttest = [EqualVarianceTTest(lact_samples_35[i], lact_samples_40[i]) for i in 1:length(lact_samples_35)]
