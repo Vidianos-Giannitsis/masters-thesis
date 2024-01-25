@@ -572,7 +572,7 @@
 Επειδή αυτό θα τοποθετηθεί σε διαφορετικά script file για λόγους οργάνωσης, αρχικά κάνουμε load όλα τα dependencies.
 
 #+NAME: alternate_deps
-#+BEGIN_SRC julia :noweb no-export ../scripts/alternative_hypothesis_testing.jl
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/alternative_hypothesis_testing.jl
 
   <<dependencies>>
   <<data_reading>>
@@ -620,7 +620,7 @@
 Έπειτα, κάνουμε sampling και τρέχουμε όλους τους ελέγχους υποθέσεων με το convenience block που ορίστηκε παραπάνω
 
 #+NAME: alternate_hypothesis_tests
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/alternate_hypothesis_testing.jl
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/alternative_hypothesis_testing.jl
 
   <<alternate_stdev>>
   <<distribution_definitions>>
