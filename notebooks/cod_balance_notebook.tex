@@ -1,4 +1,4 @@
-% Created 2023-12-07 Πεμ 17:14
+% Created 2024-01-25 Πεμ 16:10
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -51,9 +51,8 @@
 Η ανάλυση COD είναι μία ανάλυση που μετράει την συνολική οργανική ύλη μίας ένωσης με βάση το πόσο οξυγόνο θέλει για να οξειδωθεί πλήρως. Η ανάλυση της HPLC μετράει την συγκέντρωση για συγκεκριμένα χημικά είδη. Συγκρίνοντας τα δεδομένα των δύο αναλύσεων μπορούμε να δούμε πόση από την οργανική ύλη που μπορεί να υπάρχει μετράει όντως η HPLC και πόση είναι άλλες, άγνωστες ενώσεις. Βέβαια, λόγω των μεγάλων αραιώσεων που απαιτούνται για να μετρηθεί το COD, πολλές φορές δεν έχει ικανοποιητική ακρίβεια, το οποίο μπορεί να δημιουργήσει προβλήματα στην σύγκριση αυτή. Το αρχείο αυτό αποτελεί ένα literate document που επεξηγεί την διαδικασία αυτή αναλυτικά και δείχνει τα αποτελέσματα της, ενώ μπορεί να κάνει tangle τον κώδικα που αναφέρεται στα κατάλληλα scripts ή να τον κάνει weave σε ένα pdf. Αξίζει να αναφερθεί πως γίνεται έντονη named code blocks τα οποία βοηθάνε στο να τρέξουμε πολλές φορές το ίδιο code block με βάση του noweb syntax που προσφέρει το org-mode. Καθώς το όνομα του code block δεν γίνεται weaved, θα υπάρχει με bold το όνομα πριν ακριβώς από κάθε code block, ώστε να μπορεί να κατανοηθεί και πότε κάποιο γίνεται inserted σε άλλα.
 \end{abstract}
 
-\pagebreak
 \section{Dependencies}
-\label{sec:orge0e0952}
+\label{sec:orgbc5cbdc}
 Καθώς το project αυτό είναι δομημένο με το πακέτο DrWatson της Julia για να κάνει facilitate reproducibility, πρέπει σε όλα τα αρχεία να υπάρχουν τα lines που ενεργοποιούν το DrWatson και πηγαίνουν στο κατάλληλο project. Έπειτα, είναι επίσης απαραίτητο να κάνουμε include κάποια functions για την ανάλυση των δεδομένων το οποίο υπάρχει στο src directory και είναι amply documented εκεί.
 
 \textbf{dependencies}
@@ -65,7 +64,7 @@ include(srcdir("filenames.jl"))
 \end{minted}
 
 \section{Data Reading and Processing}
-\label{sec:orgdfdd3f8}
+\label{sec:org5a6eb75}
 Αρχικά πρέπει να διαβάσουμε τα δεδομένα των δύο αναλύσεων από τα CSV τους. Θα υποθέσουμε πως τα δεδομένα της HPLC είναι ήδη επεξεργασμένα και απλώς θα διαβάσουμε τα csv με τις συγκεντρώσεις. Για να παραχθούν αυτά, μπορούμε να κάνουμε refer στο αντίστοιχο \href{./hplc\_analysis\_notebook.org}{notebook}, στο οποίο εξηγείται και περισσότερο τι πειράματα έχουν γίνει και πως τα διαχειριζόμαστε. To COD είναι έτοιμο στην processed μορφή του για τα πειράματα στις 10 και 28 Νοεμβρίου ενώ για το αρχικό πείραμα της κινητικής, υπάρχει μόνο ένας πίνακας με διάφορες πληροφορίες συμπεριλαμβανομένου της απορρόφησης του COD, οπότε απαιτείται ένα παραπάνω processing step εκεί.
 
 Αρχικά θα γραφεί το code block που κάνει το generic processing των δεδομένων και βασίζεται στο variable date και μετά θα γραφούν τα blocks που το τρέχουν για τις διαφορετικές ημερομηνίες. Εκτός από να διαβάσουμε τα δεδομένα της HPLC, πρέπει να κάνουμε extract μόνο την πρώτη και την τελευταία μέρα επειδή αυτές υπάρχουν στο COD. Έπειτα, για να έχουμε συγκρίσιμα μεγέθη, υπολογίζουμε το COD-eq κάθε ένωσης και κάνουμε τις μετατροπές. Αυτό φαίνεται παρακάτω. 
@@ -118,7 +117,7 @@ cod72_error = cod72_meas - cod72_theor
 \end{minted}
 
 \section{Plotting}
-\label{sec:org31b6bac}
+\label{sec:org993e69d}
 Με αυτά τα δεδομένα, μπορούμε να κάνουμε τα συγκριτικά plots μεταξύ των δύο.
 
 \textbf{cod\textsubscript{comp}\textsubscript{plots}}
@@ -147,7 +146,7 @@ savefig(cod_plot, get_plot_name("cod", date, plot_type))
 \end{minted}
 
 \section{Αποτελέσματα για το πείραμα 10/11}
-\label{sec:org18fdf75}
+\label{sec:org5d405a5}
 Έχοντας τα παραπάνω code blocks, μπορούμε ορίζοντας το date και τρέχοντας τα να παράγουμε τα απαιτούμενα plots. Το συγκεντρωτικό plot φαίνεται παρακάτω. Επίσης, αυτό ακριβώς είναι και αυτό που θέλουμε να γίνει tangled, μόλις φυσικά κάνουμε tangle τα dependencies.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -169,7 +168,7 @@ date = "10_11"
 \end{figure}
 
 \section{Αποτελέσματα για το πείραμα 28/11}
-\label{sec:orgf12165a}
+\label{sec:org9fa10d9}
 Ομοίως, μπορούμε αλλάζοντας το date να τρέξουμε και το πείραμα της 28/11 χωρίς καμία πρακτική αλλαγή στον κώδικα.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -191,11 +190,11 @@ date = "28_11"
 \end{figure}
 
 \section{Πείραμα 23/10}
-\label{sec:org8a0a4e3}
+\label{sec:orge1a3844}
 Στο πείραμα αυτό υπήρχε καθημερινή μέτρηση του COD, εκτός από την τελευταία μέρα που ήταν μετά το σαββατοκύριακο οπότε έχει νόημα να γίνει σύγκριση σε όλα τα διαθέσιμα σημεία.
 
 \subsection{HPLC Data}
-\label{sec:orgdbc83f5}
+\label{sec:orgcd6d45e}
 Αρχικά διαβάζουμε τα δεδομένα της HPLC και κάνουμε τις μετατροπές σε COD-eq.
 
 \textbf{hplc\textsubscript{data}\textsubscript{processing}\textsubscript{23}\textsubscript{10}}
@@ -218,7 +217,7 @@ cod_2_theor = [sum(Vector(df2_conc[i, :]).*cod_yields) for i in 1:15]
 \end{minted}
 
 \subsection{COD Data}
-\label{sec:org254ebf5}
+\label{sec:orgb53dd91}
 Έπειτα, κάνουμε την επεξεργασία του COD data, το οποίο για αυτό το πείραμα δεν υπήρχε διαθέσιμο σε συγκέντρωση αλλά μόνο σε απορρόφηση. Όμως ο κώδικας είναι πολύ compact λόγω του helper function \texttt{process\_cod\_data} που κάνει την μετατροπή μόνο του.
 
 \textbf{cod\textsubscript{data}\textsubscript{processing}\textsubscript{23}\textsubscript{10}}
@@ -232,7 +231,7 @@ cod_2_error = cod_2_meas - cod_2_theor
 \end{minted}
 
 \subsection{Plotting}
-\label{sec:org962ee42}
+\label{sec:orga7d55cc}
 Τέλος, μπορούν να γίνουν τα plots για αυτό το πείραμα που λόγω του πλήθους των στοιχείων έχει νόημα μόνο να είναι σε scatter plot.
 
 \textbf{cod\textsubscript{balance}\textsubscript{plots}\textsubscript{23}\textsubscript{10}}
@@ -257,7 +256,7 @@ savefig(cod_plot, get_plot_name("cod", date, plot_type))
 \end{minted}
 
 \subsection{Τελικά code blocks}
-\label{sec:orgd8b475a}
+\label{sec:org3e4db11}
 Έπειτα, βάζουμε το τελικό code block που με χρήση του noweb syntax θα κάνει tangle στα script files.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}

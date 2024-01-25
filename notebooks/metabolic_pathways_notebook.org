@@ -1,5 +1,29 @@
 #+TITLE: Notebook for metabolic pathway prediction
 
+* Table of Contents                                            :TOC:noexport:
+- [[#description-of-the-core-concepts][Description of the core concepts]]
+- [[#primitives][Primitives]]
+  - [[#molar-mass-definition][Molar mass definition]]
+  - [[#molar-mass-of-substances-used][Molar mass of substances used]]
+  - [[#concentration-to-mass][Concentration to mass]]
+- [[#core-pathways][Core pathways]]
+  - [[#initial-state][Initial state]]
+  - [[#glycolysis-definition-and-explanation][Glycolysis definition and explanation]]
+  - [[#other-sugars][Other sugars]]
+- [[#pathways-of-pyruvate-consumption][Pathways of pyruvate consumption]]
+- [[#other-pathways-stemming-from-glycolysis][Other pathways stemming from glycolysis]]
+- [[#other-pathways-for-glucose-consumption][Other pathways for glucose consumption]]
+  - [[#heterolactic-fermentation][Heterolactic fermentation]]
+  - [[#bifidus-fermentation][Bifidus fermentation]]
+  - [[#ethanol-fermentation][Ethanol fermentation]]
+  - [[#glucose-consumption][Glucose consumption]]
+  - [[#aerobic-consumption][Aerobic consumption]]
+- [[#acetogenic-routes][Acetogenic routes]]
+- [[#common-fermentative-pathways][Common fermentative pathways]]
+  - [[#abe-fermentation][ABE Fermentation]]
+- [[#test-on-experiments][Test on experiments]]
+  - [[#finding-the-true-metabolic-pathway][Finding the true metabolic pathway]]
+
 * Description of the core concepts
 This notebook is about a personal project of mine, which is mostly done as a learning experience in Julia, but if succesful can have application in my thesis (hence why it is in this directory). The idea is that since we know from literature every pathway a mixed culture fermentation can follow, if we have data for the input and output of either a continuous (in steady state) or batch reactor, we can try to find which pathways were followed and to what extent in each case.
 
