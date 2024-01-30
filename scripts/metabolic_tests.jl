@@ -133,54 +133,98 @@ function mixed_culture_fermentation(st; gluc_goal = (; glucose = 0.0), suc_goal 
     aceteth_goal = (; pyruvate = (new_st.pyruvate - (new_st.pyruvate - pyr_goal.pyruvate)*aceteth_amount))
     eth_goal = (; pyruvate = (new_st.pyruvate - (new_st.pyruvate - pyr_goal.pyruvate)*eth_amount))
 
-    aceteth_st = acetate_ethanol_fermentation(new_st, goal =aceteth_goal)
+    # We know that hydrogen will be produced by the reaction producing
+    # acetate and consumed by the ones producing lactate and
+    # ethanol. We also know that in some cases the fructolytic
+    # hydrogen (which is the only hydrogen that exists in `new_st`)
+    # may not be enough. For this reason, we precompute the hydrogen
+    # that will be produced.
     acet_st = pyruv_to_acetate(new_st, goal = acet_goal)
-    lact_st = pyruv_to_lact(new_st, goal = lact_prod_goal)
-    eth_st = pyruv_to_ethanol(new_st, pyr_goal = eth_goal)
+    # Aceteth can also be computed here as its hydrogen neutral (one
+    # reaction produces and one consumes) so its results will be the
+    # same in either state.
+    aceteth_st = acetate_ethanol_fermentation(new_st, goal = aceteth_goal)
 
+    hyd_st = merge(new_st, (; hydrogen = acet_st.hydrogen))
+
+    # Then compute the other 2 states with this hyd_st as the input.
+    lact_st = pyruv_to_lact(hyd_st, goal = lact_prod_goal)
+    eth_st = pyruv_to_ethanol(hyd_st, pyr_goal = eth_goal)
+
+    # Then merge the 4 states with the initial one, taking care to
+    # compute the correct hydrogen state.
     prod_st = merge(new_st,
 		   (pyruvate = pyr_goal.pyruvate,
 		    acetate = acet_st.acetate + aceteth_st.acetate - new_st.acetate,
 		    ethanol = aceteth_st.ethanol + eth_st.ethanol - new_st.ethanol,
 		    lactate = lact_st.lactate,
 		    co2 = acet_st.co2 + aceteth_st.co2 + eth_st.co2 - 2new_st.co2,
-		    hydrogen = acet_st.hydrogen + aceteth_st.hydrogen + lact_st.hydrogen - 2new_st.hydrogen))
+		    hydrogen = lact_st.hydrogen + eth_st.hydrogen - hyd_st.hydrogen))
+
+    # With this trick, we have circumvented the problem that hydrogen
+    # may not be sufficient for all reactions if one doesn't recognize
+    # the changes of the other (which is necessary to write the fluxes
+    # this way) but have the same results as if all of them happened
+    # at the same time.
 
     prop_st = lact_to_propionate(prod_st, goal = lact_cons_goal)
 end
 
 include(srcdir("metabolic_pathways", "opt_interface.jl"))
 
-# Define the final state that we want to use.
-final_st35_0 = Vector(df35_0[4, 2:7])
-push!(final_st35_0, df35_0[3,8])
-
 # Define the specialized loss function with signature f(u, p) which is
 # what the Optimization interface accepts and also a predictor
 # function which is also specialized and helps us with testing.
-loss_35_0(u, p) = fermentation_loss(init_st35_0, final_st35_0, u, 0.8)
-predictor_35_0(u) = mixed_culture_predictor(init_st35_0, final_st35_0, u, 0.8)
+loss_35_0(u, p) = fermentation_loss(init_st35_0, df35_0, u, 0.8)
+predictor_35_0(u) = mixed_culture_predictor(init_st35_0, df35_0, u, 0.8)
 
 using Optimization, OptimizationOptimJL
 
 # u0 can be taken basically randomly and if its not too bad, the
-# algorithm will converge
-u0 = [0.85, 0.01, 0.1, 0.2, 1.5]
+# algorithm will converge.
+u0 = [0.89, 0.12, 0.09, 0.18, 0.86]
 
-# The bounds are necessary as outside of some bounds,
-# mixed_culture_fermentation will return an error due to finding an
-# unfeasible pathway. We only want to search within the range of
-# feasibility.
+# The bounds were originally necessary, as the system couldn't
+# converge outside of a very specific domain due to errors popping up,
+# but after introducing error handling and saying that we should
+# handle what would be an error by just attributing a high loss to it,
+# this isn't necessary. In this first demonstrative example however,
+# these bounds are kept to show that the problem with and without
+# bounds gives very similar results.
 lbound = [0.8, 0.0, 0.00, 0.0, 0.0]
-ubound = [1.0, 0.3, 0.3, 0.3, 1.6]
-adtype = Optimization.AutoForwardDiff()
+ubound = [1.0, 0.3, 0.3, 0.6, 2.0]
 
-# Define the system both with and without AD to make sure AD is
-# working as intended
-optf = Optimization.OptimizationFunction(loss_35_0)
-optf_ad = Optimization.OptimizationFunction(loss_35_0, adtype)
+adtype = Optimization.AutoForwardDiff()
+optf = Optimization.OptimizationFunction(loss_35_0, adtype)
 
 optprob = Optimization.OptimizationProblem(optf, u0, lb = lbound, ub = ubound)
-optprob_ad = Optimization.OptimizationProblem(optf_ad, u0, lb = lbound, ub = ubound)
 
-sol = solve(optprob_ad, Optim.BFGS())
+sol1 = solve(optprob, Optim.BFGS())
+predictor_35_0(sol1.u)
+
+# After adding error handling to the loss function, the optimizer will
+# reach the correct solution even without bounds and will not error
+# out in them.
+opt_unbound = Optimization.OptimizationProblem(optf, u0)
+
+# An interesting problem is that if this is ran with the above u0, it
+# fails to find the optimum. However, if a new u0 is defined, which is
+# closer to the solution of the bounded optimization problem, the
+# system will indeed converge. This shows that the optimizer without
+# bounds is more sensitive to initial conditions and care should be
+# taken to get a good result.
+sol2 = solve(opt_unbound, Optim.BFGS())
+# Returns failure
+
+# Rerun the problem with a slightly dislocated version of sol1
+new_prob = Optimization.OptimizationProblem(optf, sol1.u .+ 0.1.*rand())
+sol3 = solve(new_prob, Optim.BFGS())
+# Converges properly
+
+# Note that this isn't the exact same solution as sol1 (which is
+# expected as we are studying a very complex system which is very
+# likely to have multiple local minima), but since both have a very
+# small loss function and also are not far from each other, either one
+# can be accepted as correct.
+
+predictor_35_0(sol3.u)

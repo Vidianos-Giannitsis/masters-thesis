@@ -22,7 +22,9 @@
 - [[#common-fermentative-pathways][Common fermentative pathways]]
   - [[#abe-fermentation][ABE Fermentation]]
 - [[#test-on-experiments][Test on experiments]]
+  - [[#parameterized-final-metabolic-pathway][Parameterized final metabolic pathway]]
   - [[#finding-the-true-metabolic-pathway][Finding the true metabolic pathway]]
+- [[#running-the-optimization-routine-for-the-other-9-experiments][Running the optimization routine for the other 9 experiments]]
 
 * Description of the core concepts
 This notebook is about a personal project of mine, which is mostly done as a learning experience in Julia, but if succesful can have application in my thesis (hence why it is in this directory). The idea is that since we know from literature every pathway a mixed culture fermentation can follow, if we have data for the input and output of either a continuous (in steady state) or batch reactor, we can try to find which pathways were followed and to what extent in each case.
@@ -1075,6 +1077,7 @@ Then, we need to initialize the named tuples this framework uses instead of the 
 #+RESULTS: tuple_initialization
 : (sucrose = 1.2456020570041368, glucose = 0.9088174478617946, fructose = 2.066122010164552, lactate = 0.6800897714442687, acetate = 0.429670080644349, propionate = 0.3521945102952011, ethanol = 0.04780181150792819, co2 = 0.0, hydrogen = 0.0, water = 600.0, pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
 
+** Parameterized final metabolic pathway
 Then, we can define the compound reaction function that lists all the pathways we believe are occuring.
 
 #+NAME: final_pathway
@@ -1113,18 +1116,39 @@ Then, we can define the compound reaction function that lists all the pathways w
       aceteth_goal = (; pyruvate = (new_st.pyruvate - (new_st.pyruvate - pyr_goal.pyruvate)*aceteth_amount))
       eth_goal = (; pyruvate = (new_st.pyruvate - (new_st.pyruvate - pyr_goal.pyruvate)*eth_amount))
 
-      aceteth_st = acetate_ethanol_fermentation(new_st, goal =aceteth_goal)
+      # We know that hydrogen will be produced by the reaction producing
+      # acetate and consumed by the ones producing lactate and
+      # ethanol. We also know that in some cases the fructolytic
+      # hydrogen (which is the only hydrogen that exists in `new_st`)
+      # may not be enough. For this reason, we precompute the hydrogen
+      # that will be produced.
       acet_st = pyruv_to_acetate(new_st, goal = acet_goal)
-      lact_st = pyruv_to_lact(new_st, goal = lact_prod_goal)
-      eth_st = pyruv_to_ethanol(new_st, pyr_goal = eth_goal)
+      # Aceteth can also be computed here as its hydrogen neutral (one
+      # reaction produces and one consumes) so its results will be the
+      # same in either state.
+      aceteth_st = acetate_ethanol_fermentation(new_st, goal = aceteth_goal)
 
+      hyd_st = merge(new_st, (; hydrogen = acet_st.hydrogen))
+
+      # Then compute the other 2 states with this hyd_st as the input.
+      lact_st = pyruv_to_lact(hyd_st, goal = lact_prod_goal)
+      eth_st = pyruv_to_ethanol(hyd_st, pyr_goal = eth_goal)
+
+      # Then merge the 4 states with the initial one, taking care to
+      # compute the correct hydrogen state.
       prod_st = merge(new_st,
 		     (pyruvate = pyr_goal.pyruvate,
 		      acetate = acet_st.acetate + aceteth_st.acetate - new_st.acetate,
 		      ethanol = aceteth_st.ethanol + eth_st.ethanol - new_st.ethanol,
 		      lactate = lact_st.lactate,
 		      co2 = acet_st.co2 + aceteth_st.co2 + eth_st.co2 - 2new_st.co2,
-		      hydrogen = acet_st.hydrogen + aceteth_st.hydrogen + lact_st.hydrogen - 2new_st.hydrogen))
+		      hydrogen = lact_st.hydrogen + eth_st.hydrogen - hyd_st.hydrogen))
+
+      # With this trick, we have circumvented the problem that hydrogen
+      # may not be sufficient for all reactions if one doesn't recognize
+      # the changes of the other (which is necessary to write the fluxes
+      # this way) but have the same results as if all of them happened
+      # at the same time.
 
       prop_st = lact_to_propionate(prod_st, goal = lact_cons_goal)
   end
@@ -1135,15 +1159,17 @@ Then, we can define the compound reaction function that lists all the pathways w
 : mixed_culture_fermentation (generic function with 1 method)
 
 ** Finding the true metabolic pathway
-The above function is very useful. Given all its required parameters, it returns an output state of what it believes is the effluent concentrations. What we want is to find the parameter set for which the function output matches the experimental data. This is classic parameter estimation so if formulated correctly, we can very easily solve it with the SciML tooling. First, we need a function y = f(x,p) which given an input and a parameter set, returns an output. However, we want to have knowledge of the initial and final states, so we first a generalized function that does this work and while testing we can make it more specific to have the above signature. The next few code blocks are the backend which the optimization interface will use and for that reason it will be tangled to a src file and not to scripts. The function ~mixed_culture_fermentation~ defined above is necessary for this to work so it will also be tangled to that file.
+The above function is very useful. Given all its required parameters, it returns an output state of what it believes is the effluent concentrations. However, randomly trying parameters until our system starts looking correct isn't a good approach. What we want is to find the parameter set for which the function output matches the experimental data as much as possible, which can be formulated as a parameter estimation problem, which we can very easily solve with the SciML tooling. First, we need a function y = f(x,p) which given an input and a parameter set, returns an output. However, we want to have knowledge of the initial and final states, so we first a generalized function that does this work and while testing we can make it more specific to have the above signature. The next few code blocks are the backend which the optimization interface will use and for that reason it will be tangled to a src file and not to scripts. The function ~mixed_culture_fermentation~ defined above is necessary for this to work so it will also be tangled to that file.
 
+*** Generic optimization function
 #+NAME: opt_function
 #+BEGIN_SRC julia :noweb no-export :tangle ../src/metabolic_pathways/opt_interface.jl
 
   <<final_pathway>>
 
-  function mixed_culture_optimization(init_st, final_st, p, v)
+  function mixed_culture_optimization(init_st, df, p, v)
       init_mass = conc_to_mass(init_st, v)
+      final_st = Vector(df[4, 2:8])
       final_mass = final_st.*v
       mixed_culture_fermentation(init_mass, suc_goal = (; sucrose = final_mass[1]), gluc_goal = (; glucose = final_mass[2]), fruc_goal = (; fructose = final_mass[3]), lact_cons_goal = (; lactate = final_mass[4]), het_amount = p[1], acet_amount = p[2], lact_amount = p[3], eth_amount = p[4], feed_oxygen = p[5])
   end
@@ -1151,38 +1177,78 @@ The above function is very useful. Given all its required parameters, it returns
 #+END_SRC
 
 #+RESULTS: opt_function
-: mixed_culture_optimization (generic function with 2 methods)
+: mixed_culture_optimization (generic function with 1 method)
 
-This function is a generalized function that does this exact thing. It takes an initial state that needs to be of the format ~mixed_culture_fermentation~ will accept and two vectors. The first is the final state which we want to get. It will be a vector of 7 numbers with the things HPLC gives. The first 4 are given as arguments, while the other 3 will be the variables we optimize for. The other vector is a vector of 5 elements containing our parameters. The function that we will use in the final optimization will not have final_st as a parameter, but rather we will make another function that calls it with a pregiven vector. In the same logic, we can write our loss function.
+This function is a generalized function that does this exact thing. It takes an initial state that needs to be of the format ~mixed_culture_fermentation~ will accept, a dataframe whose first column is time and then has 7 other columns with the products and which has 4 rows, and a vector. The vector is one of 5 elements containing our parameters. The function that we will use in the final optimization will not have the dataframe as a parameter, but rather we will wrap that part inside a closure. In the same logic, we can write our loss function.
+
+*** Calculating the loss of our experiments
+However, before writing the loss function, one problem can be noted. Ethanol reaches a maximum during either 24 or 48 hours and after that starts decreasing. The decrease is easily explainable if we consider acetogenic reactions for it. The above does not consider them, so training on that data means overestimating the other acetogenic fluxes and having to train on ethanol that is not the final condition. Therefore, we need a function that takes the initial state and the dataframe containing final as well as intermediate states and returns how much acetogenesis changes each of the three variables we are training on. This is necessary as if we add the acetogenic reaction above, we risk never finding the maximum ethanol and the system predicting that ethanol acetogenesis happens only to a very small degree. For this reason we use this correction.
+
+#+NAME: acetogenic_loss
+#+BEGIN_SRC julia :tangle ../src/metabolic_pathways/opt_interface.jl
+
+  function acetogenic_loss(init_st, df, v)
+      eth_st = merge(init_st, (; ethanol = maximum(df[:, 8])))
+      mass_st = conc_to_mass(eth_st, v)
+      final_st = Vector(df[4, 2:8]).*v
+      reaction = ethanol_to_acetate(mass_st, goal = (; ethanol = final_st[7]))
+      acet_diff = mass_st.acetate - reaction.acetate
+      prop_diff = mass_st.propionate - reaction.propionate
+      eth_diff = mass_st.ethanol - reaction.ethanol
+
+      return [acet_diff, prop_diff, eth_diff]
+  end
+#+END_SRC
+
+#+RESULTS: acetogenic_loss
+: acetogenic_loss (generic function with 2 methods)
+
+This function will return a vector containing the difference in acetate, propionate and ethanol before and after ethanol acetogenesis. Propionate is obviously 0, but is added so we can directly add these to the final state. By subtracting initial from final, we get a positive one for ethanol and a negative one for acetate. This means, that we can get the final state from the dataframe (and not worry about getting ethanol at its peak), add to the final ethanol what was there before acetogenesis and remove from acetate what the acetogenic reaction will yield. This way, we can train on the data prior to acetogenesis and know that after it, we will get the final effluent.
+
+However, this still has a problem. All the underlying functions that this system uses have rather verbose errors that inform you if you're about to select a parameter set that will yield an impossible reaction (a reactant's mass falling below 0). This is very useful while testing things to know where your limits are. However, in an optimization setting it is impractical and forces us to bound our optimization problem in an area where it will hopefully not error. For this reason, if ~fermentation_loss_calculator~ (which is the underlying function calculating the loss) returns any error (no need to check which reactant is not enough if there is at least 1), the loss will be 1 (which in an optimization setting is a value very far from 0). This allows the optimizer to run in a setting without boundaries, because if it goes beyond what is feasible, the optimizer will see a very high loss and will move in the opposite direction. This allows for convergence even through errors.
 
 #+NAME: loss_function
 #+BEGIN_SRC julia :tangle ../src/metabolic_pathways/opt_interface.jl
 
-  function fermentation_loss(init_st, final_st, p, v)
-      model = mixed_culture_optimization(init_st, final_st, p, v)
+  function fermentation_loss_calculator(init_st, df, p, v)
+      model = mixed_culture_optimization(init_st, df, p, v)
+      final_st = Vector(df[4, 2:8])
 
       model_mass = [model.acetate, model.propionate, model.ethanol]
       exp_mass = final_st[5:7].*v
-      sum(abs2, (model_mass .- exp_mass))
+      exp_corrected = exp_mass .+ acetogenic_loss(init_st, df, v)
+      sum(abs2, (model_mass .- exp_corrected))
+  end
+
+  # This function handles exceptions in the calculation of the
+  # fermentation loss by saying if it errored, it has a high loss,
+  # meaning it will not be selected.
+  function fermentation_loss(init_st, df, p, v)
+      try
+	  fermentation_loss_calculator(init_st, df, p, v)
+      catch
+	  1.0
+      end
   end
 
 #+END_SRC
 
 #+RESULTS: loss_function
-: fermentation_loss (generic function with 2 methods)
+: fermentation_loss (generic function with 1 method)
 
-It takes the 4 arguments of the above function, runs it and compares it with the 3 unused variables of the output state.
-
-Lastly, we want a predictor function for use after optimization. The optimization problem simply returns the parameter vector, however, what we are interested in is what the output state looks like and its loss function. This predictor function returns these 2 elements with the same signature as above.
+*** Defining a predictor function for the optimization
+Lastly, we want a predictor function for use after optimization. The optimization problem simply returns the parameter vector, however, what we are interested in is what the output state looks like and its loss, besides the parameters. Using the same signature as above (initial_state being a named Tuple, df being a data frame, p being the parameter vector and v being volume) this predictor function returns that verbosely that the parameter set p, which it is given gives an effluent with these concentrations which when compared with experimental data gives this loss.
 
 #+NAME: predictor_function
 #+BEGIN_SRC julia :tangle ../src/metabolic_pathways/opt_interface.jl
 
-  function mixed_culture_predictor(init_st, final_st, p, v)
-      mass_st = mixed_culture_optimization(init_st, final_st, p, v)
-      conc_st = mass_to_conc(mass_st, v)
+  function mixed_culture_predictor(init_st, df, p, v)
+      mass_st = mixed_culture_optimization(init_st, df, p, v)
 
-      loss = fermentation_loss(init_st, final_st, p, v)
+      loss = fermentation_loss(init_st, df, p, v)
+
+      acet_st = ethanol_to_acetate(mass_st, goal = (; ethanol = df[4, 8]*v))
+      conc_st = mass_to_conc(acet_st, v)
       println("For the parameter set ", p, " we get the effluent \n", conc_st, " and a loss of ", loss, " with the experimental data.")
   end
 
@@ -1191,44 +1257,304 @@ Lastly, we want a predictor function for use after optimization. The optimizatio
 #+RESULTS: predictor_function
 : mixed_culture_predictor (generic function with 1 method)
 
+*** Testing on a specific dataset
 Now, we can test this system for a specific dataset. To do this, we will move back to the metabolic_tests.jl file, but include the optimization interface source.
+
+Firstly, we need to specialize the loss and predictor to our specific dataset. We know the initial state, we know the dataframe we extract data from and we know that volume is 0.8 L. Note that to be consistent with the optimization interface of SciML, what we consider our problem's parameters (aka the things we are optimizing for) is the ~u~ vector while the ~p~ vector here signifies any known parameters of the model which we are not trying to estimate. There are none of these in our model (as we consider every parameter unknown) but there are many examples where this p is used and for that reason it is mandatory for the interface to work.
 
 #+NAME: optimization_test
 #+BEGIN_SRC julia :tangle ../scripts/metabolic_tests.jl
 
   include(srcdir("metabolic_pathways", "opt_interface.jl"))
 
-  # Define the final state that we want to use.
-  final_st35_0 = Vector(df35_0[4, 2:7])
-  push!(final_st35_0, df35_0[3,8])
-
   # Define the specialized loss function with signature f(u, p) which is
   # what the Optimization interface accepts and also a predictor
   # function which is also specialized and helps us with testing.
-  loss_35_0(u, p) = fermentation_loss(init_st35_0, final_st35_0, u, 0.8)
-  predictor_35_0(u) = mixed_culture_predictor(init_st35_0, final_st35_0, u, 0.8)
+  loss_35_0(u, p) = fermentation_loss(init_st35_0, df35_0, u, 0.8)
+  predictor_35_0(u) = mixed_culture_predictor(init_st35_0, df35_0, u, 0.8)
 
   using Optimization, OptimizationOptimJL
 
   # u0 can be taken basically randomly and if its not too bad, the
-  # algorithm will converge
-  u0 = [0.85, 0.01, 0.1, 0.2, 1.5]
+  # algorithm will converge.
+  u0 = [0.89, 0.12, 0.09, 0.18, 0.86]
 
-  # The bounds are necessary as outside of some bounds,
-  # mixed_culture_fermentation will return an error due to finding an
-  # unfeasible pathway. We only want to search within the range of
-  # feasibility.
+  # The bounds were originally necessary, as the system couldn't
+  # converge outside of a very specific domain due to errors popping up,
+  # but after introducing error handling and saying that we should
+  # handle what would be an error by just attributing a high loss to it,
+  # this isn't necessary. In this first demonstrative example however,
+  # these bounds are kept to show that the problem with and without
+  # bounds gives very similar results.
   lbound = [0.8, 0.0, 0.00, 0.0, 0.0]
-  ubound = [1.0, 0.3, 0.3, 0.3, 1.6]
-  adtype = Optimization.AutoForwardDiff()
+  ubound = [1.0, 0.3, 0.3, 0.6, 2.0]
 
-  # Define the system both with and without AD to make sure AD is
-  # working as intended
-  optf = Optimization.OptimizationFunction(loss_35_0)
-  optf_ad = Optimization.OptimizationFunction(loss_35_0, adtype)
+  adtype = Optimization.AutoForwardDiff()
+  optf = Optimization.OptimizationFunction(loss_35_0, adtype)
 
   optprob = Optimization.OptimizationProblem(optf, u0, lb = lbound, ub = ubound)
-  optprob_ad = Optimization.OptimizationProblem(optf_ad, u0, lb = lbound, ub = ubound)
 
-  sol = solve(optprob_ad, Optim.BFGS())
+  sol1 = solve(optprob, Optim.BFGS())
+  predictor_35_0(sol1.u)
+
+  # After adding error handling to the loss function, the optimizer will
+  # reach the correct solution even without bounds and will not error
+  # out in them.
+  opt_unbound = Optimization.OptimizationProblem(optf, u0)
+
+  # An interesting problem is that if this is ran with the above u0, it
+  # fails to find the optimum. However, if a new u0 is defined, which is
+  # closer to the solution of the bounded optimization problem, the
+  # system will indeed converge. This shows that the optimizer without
+  # bounds is more sensitive to initial conditions and care should be
+  # taken to get a good result.
+  sol2 = solve(opt_unbound, Optim.BFGS())
+  # Returns failure
+
+  # Rerun the problem with a slightly dislocated version of sol1
+  new_prob = Optimization.OptimizationProblem(optf, sol1.u .+ 0.1.*rand())
+  sol3 = solve(new_prob, Optim.BFGS())
+  # Converges properly
+
+  # Note that this isn't the exact same solution as sol1 (which is
+  # expected as we are studying a very complex system which is very
+  # likely to have multiple local minima), but since both have a very
+  # small loss function and also are not far from each other, either one
+  # can be accepted as correct.
+
+  predictor_35_0(sol3.u)
 #+END_SRC
+
+#+RESULTS: optimization_test
+: For the parameter set [0.8522911885236557, 0.010016639769404763, 0.19675408375133674, 0.5896492286155799, 1.1517112172093666] we get the effluent 
+: (sucrose = 0.0, glucose = 0.0, fructose = 0.5698409419388468, lactate = 1.41121069870574, acetate = 0.9977001860043982, propionate = 0.6902132250514903, ethanol = 0.6578151430375364, co2 = 4.292157076536604, hydrogen = 0.2916445262905078, water = 748.5772823983715, pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0, oxygen = 0.0) and a loss of 4.3738513920753965e-18 with the experimental data.
+: For the parameter set [0.8529470058924152, 0.011958596731649293, 0.19638460326507223, 0.5916882137767437, 1.1517112172192296] we get the effluent 
+: (sucrose = 0.0, glucose = 0.0, fructose = 0.5698409419388468, lactate = 1.41121069870574, acetate = 0.9977001859809786, propionate = 0.6902132250661184, ethanol = 0.6578151430375364, co2 = 4.292494613061103, hydrogen = 0.29164452629086274, water = 748.5772823978351, pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0, oxygen = 0.0) and a loss of 1.7311763576329616e-18 with the experimental data.
+
+The conclusion from the above study is that an unbounded optimization problem of this sort is very likely to converge to a good result, if given proper initial conditions, but in the case it is having difficulties to coverge, bounding it to a smaller domain helps a lot with convergence.
+
+A very likely for difficulty of convergence is that the system gets multiple "illegal" parameter sets in a row (which all have a high loss) and as such it thinks it can't improve the system any more and gives the failure. Bounding it in an area where it is much less likely to hit errors (or starting from a good initial condition) guarantee convergence.
+
+It should also be noted that a crude test was ran to check if a global optimizer like ParticleSwarm or a Genetic Algorithm can outperform BFGS. In general, global optimizers perform very well in some problems where they find the global minimum which has a loss than any other local minimum, but in the case of very complex optimization problems, they may be outperformed by algorithms that very efficiently find local minima. Due to the very low loss of the BFGS examples, it was expected that it's hard to outperform this. However, the test was done and these algorithms either didn't converge or converged to worse minima than BFGS, so this guess is probably the best we can make.
+
+* Running the optimization routine for the other 9 experiments
+After doing a test, we can now easily expand it to all experiments.
+
+#+NAME: exp_35_1
+#+BEGIN_SRC julia
+
+  loss_35_1(u, p) = fermentation_loss(init_st35_1, df35_1, u, 0.8)
+  predictor_35_1(u) = mixed_culture_predictor(init_st35_1, df35_1, u, 0.8)
+
+  # First, let's try to solve an unbounded optimization problem using
+  # the solution of the above as the initial condition.
+  optf_35_1 = OptimizationFunction(loss_35_1, adtype)
+  optprob_35_1 = OptimizationProblem(optf_35_1, sol1.u)
+
+  sol35_1 = solve(optprob_35_1, Optim.BFGS())
+#+END_SRC
+
+#+RESULTS: exp_35_1
+: retcode: Success
+: u: 5-element Vector{Float64}:
+:  0.8416447538491477
+:  0.3756171533211556
+:  0.10400937051757815
+:  0.3086810188403601
+:  1.565520103342531
+
+Doesn't converge with what I tried so far, may need more work.
+#+NAME: exp_35_2
+#+BEGIN_SRC julia
+
+  loss_35_2(u, p) = fermentation_loss(init_st35_2, df35_2, u, 0.8)
+  predictor_35_2(u) = mixed_culture_predictor(init_st35_2, df35_2, u, 0.8)
+
+  u0 = [0.85, 1e-5, 0.3, 0.5, 1.6]
+  lbound = [0.6, 0.0, 0.0, 0.0, 1.5]
+  ubound = [1.0, 0.05, 0.5, 0.9, 1.8]
+
+  optf_35_2 = OptimizationFunction(loss_35_2, adtype)
+  optprob_35_2 = OptimizationProblem(optf_35_2, u0, lb = lbound, ub = ubound)
+
+  sol35_2 = solve(optprob_35_2, Optim.BFGS())
+#+END_SRC
+
+If ethanol goes to acetate when consumed and nothing else becomes acetate, it is still too large, which cause convergence problems in both this and the 8 ml one. However, if we do the little trick of replacing the final ethanol with the max, we can get perfect convergence. What this does essentially is circumvent acetogenesis because these 3 systems are in conditions where acetogenesis is not favoured. Ethanol is still consumed however, while leads us to the question of what could be consuming ethanol if not acetogens.
+#+NAME: exp_35_4
+#+BEGIN_SRC julia
+
+  df35_4[4, 8] = df35_4[3, 8]
+  loss_35_4(u, p) = fermentation_loss(init_st35_4, df35_4, u, 0.8)
+  predictor_35_4(u) = mixed_culture_predictor(init_st35_4, df35_4, u, 0.8)
+
+  u0 = [0.85, 1e-5, 0.3, 0.5, 1.3]
+  lbound = [0.6, 0.0, 0.0, 0.0, 1.0]
+  ubound = [1.0, 0.05, 0.5, 0.9, 1.8]
+
+  optf_35_4 = OptimizationFunction(loss_35_4, adtype)
+  optprob_35_4 = OptimizationProblem(optf_35_4, u0, lb = lbound, ub = ubound)
+
+  sol35_4 = solve(optprob_35_4, Optim.BFGS())
+#+END_SRC
+
+#+RESULTS: exp_35_4
+: retcode: Success
+: u: 5-element Vector{Float64}:
+:  0.7204567048845205
+:  0.02358710953122682
+:  0.12353465276749778
+:  0.7306294220795058
+:  1.3827795632743047
+
+#+NAME: exp_35_8
+#+BEGIN_SRC julia
+
+  df35_8[4, 8] = df35_8[2, 8]
+  loss_35_8(u, p) = fermentation_loss(init_st35_8, df35_8, u, 0.8)
+  predictor_35_8(u) = mixed_culture_predictor(init_st35_8, df35_8, u, 0.8)
+
+  u0 = [0.85, 1e-5, 0.3, 0.5, 1.3]
+  lbound = [0.6, 0.0, 0.0, 0.0, 1.0]
+  ubound = [1.0, 0.05, 0.5, 0.9, 1.8]
+
+  optf_35_8 = OptimizationFunction(loss_35_8, adtype)
+  optprob_35_8 = OptimizationProblem(optf_35_8, u0, lb= lbound, ub = ubound)
+
+  sol35_8 = solve(optprob_35_8, Optim.BFGS())
+#+END_SRC
+
+#+RESULTS: exp_35_8
+: retcode: Success
+: u: 5-element Vector{Float64}:
+:  0.8357030960301777
+:  0.023904958571613472
+:  0.18990019981849252
+:  0.5898812306251663
+:  1.1903514568271203
+
+#+NAME: exp_40_0
+#+BEGIN_SRC julia
+
+  loss_40_0(u, p) = fermentation_loss(init_st40_0, df40_0, u, 0.8)
+  predictor_40_0(u) = mixed_culture_predictor(init_st40_0, df40_0, u, 0.8)
+
+  u0 = [0.85, 0.16, 0.1, 1e-5, 0.3]
+  lbound = [0.8, 0.0, 0.0, 0.0, 0.0]
+  ubound = [1.0, 0.3, 0.3, 0.1, 1.0]
+
+  optf_40_0 = OptimizationFunction(loss_40_0, adtype)
+  optprob_40_0 = OptimizationProblem(optf_40_0, u0, lb = lbound, ub = ubound)
+
+  sol40_0 = solve(optprob_40_0, Optim.BFGS())
+#+END_SRC
+
+#+RESULTS: exp_40_0
+: retcode: Success
+: u: 5-element Vector{Float64}:
+:  0.8256910842322117
+:  0.28152564106697336
+:  0.060235085862184394
+:  0.01600376015947915
+:  0.47081194872942334
+
+#+NAME: exp_40_1
+#+BEGIN_SRC julia
+
+  loss_40_1(u, p) = fermentation_loss(init_st40_1, df40_1, u, 0.8)
+  predictor_40_1(u) = mixed_culture_predictor(init_st40_1, df40_1, u, 0.8)
+
+  u0 = [0.89, 0.16, 0.1, 0.1, 0.3]
+  lbound = [0.8, 0.0, 0.0, 0.0, 0.0]
+  ubound = [1.0, 0.5, 0.5, 0.3, 1.5]
+
+  optf_40_1 = OptimizationFunction(loss_40_1, adtype)
+  optprob_40_1 = OptimizationProblem(optf_40_1, u0, lb = lbound, ub = ubound)
+
+  sol40_1 = solve(optprob_40_1, Optim.BFGS())
+#+END_SRC
+
+#+RESULTS: exp_40_1
+: retcode: Success
+: u: 5-element Vector{Float64}:
+:  0.8151164910171266
+:  0.4760034761169193
+:  0.41813720146861383
+:  0.02301220468762658
+:  1.3072081152868809
+
+#+NAME: exp_40_2
+#+BEGIN_SRC julia
+
+  loss_40_2(u, p) = fermentation_loss(init_st40_2, df40_2, u, 0.8)
+  predictor_40_2(u) = mixed_culture_predictor(init_st40_2, df40_2, u, 0.8)
+
+  u0 = [0.85, 0.45, 0.5, 0.03, 1.0]
+  lbound = [0.8, 0.0, 0.0, 0.0, 0.0]
+  ubound = [1.0, 0.5, 0.6, 0.3, 1.5]
+
+  optf_40_2 = OptimizationFunction(loss_40_2, adtype)
+  optprob_40_2 = OptimizationProblem(optf_40_2, u0, lb = lbound, ub = ubound)
+
+  sol40_2 = solve(optprob_40_2, Optim.BFGS())
+#+END_SRC
+
+#+RESULTS: exp_40_2
+: retcode: Success
+: u: 5-element Vector{Float64}:
+:  0.8787543062367564
+:  0.37694871502126504
+:  0.5150118997259585
+:  0.09629679880937857
+:  0.7990511201741595
+
+#+NAME: exp_40_4
+#+BEGIN_SRC julia
+
+  loss_40_4(u, p) = fermentation_loss(init_st40_4, df40_4, u, 0.8)
+  predictor_40_4(u) = mixed_culture_predictor(init_st40_4, df40_4, u, 0.8)
+
+  u0 = [0.85, 0.45, 0.50, 0.03, 1.0]
+  lbound = [0.8, 0.0, 0.0, 0.0, 0.0]
+  ubound = [1.0, 0.5, 0.6, 0.3, 1.5]
+
+  optf_40_4 = OptimizationFunction(loss_40_4, adtype)
+  optprob_40_4 = OptimizationProblem(optf_40_4, u0, lb = lbound, ub = ubound)
+
+  sol40_4 = solve(optprob_40_4, Optim.BFGS())
+#+END_SRC
+
+#+RESULTS: exp_40_4
+: retcode: Success
+: u: 5-element Vector{Float64}:
+:  0.8071982555587044
+:  0.4903277346669905
+:  0.49036012306288185
+:  0.009532470719328907
+:  1.266797414186493
+
+#+NAME: exp_40_8
+#+BEGIN_SRC julia
+
+  loss_40_8(u, p) = fermentation_loss(init_st40_8, df40_8, u, 0.8)
+  predictor_40_8(u) = mixed_culture_predictor(init_st40_8, df40_8, u, 0.8)
+
+  u0 = [0.85, 0.3, 0.50, 0.03, 0.8]
+  lbound = [0.7, 0.0, 0.0, 0.0, 0.0]
+  ubound = [1.0, 0.4, 0.7, 0.3, 1.5]
+
+  optf_40_8 = OptimizationFunction(loss_40_8, adtype)
+  optprob_40_8 = OptimizationProblem(optf_40_8, u0, lb = lbound, ub = ubound)
+
+  sol40_8 = solve(optprob_40_8, Optim.BFGS())
+#+END_SRC
+
+#+RESULTS: exp_40_8
+: retcode: Success
+: u: 5-element Vector{Float64}:
+:  0.7040720317861947
+:  0.39670059826916304
+:  0.5704193684634057
+:  0.0032933880109850457
+:  0.9993243340672121
+
