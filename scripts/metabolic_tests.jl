@@ -199,8 +199,8 @@ optf = Optimization.OptimizationFunction(loss_35_0, adtype)
 
 optprob = Optimization.OptimizationProblem(optf, u0, lb = lbound, ub = ubound)
 
-sol1 = solve(optprob, Optim.BFGS())
-predictor_35_0(sol1.u)
+sol35_0 = solve(optprob, Optim.BFGS())
+predictor_35_0(sol35_0.u)
 
 # After adding error handling to the loss function, the optimizer will
 # reach the correct solution even without bounds and will not error
@@ -228,3 +228,144 @@ sol3 = solve(new_prob, Optim.BFGS())
 # can be accepted as correct.
 
 predictor_35_0(sol3.u)
+
+loss_35_1(u, p) = fermentation_loss(init_st35_1, df35_1, u, 0.8)
+predictor_35_1(u) = mixed_culture_predictor(init_st35_1, df35_1, u, 0.8)
+
+# First, let's try to solve an unbounded optimization problem using
+# the solution of the above as the initial condition.
+optf_35_1 = OptimizationFunction(loss_35_1, adtype)
+optprob_35_1 = OptimizationProblem(optf_35_1, sol1.u)
+
+sol35_1 = solve(optprob_35_1, Optim.BFGS())
+
+loss_35_2(u, p) = fermentation_loss(init_st35_2, df35_2, u, 0.8)
+predictor_35_2(u) = mixed_culture_predictor(init_st35_2, df35_2, u, 0.8)
+
+u0 = [0.85, 1e-5, 0.3, 0.5, 1.6]
+lbound = [0.6, 0.0, 0.0, 0.0, 1.5]
+ubound = [1.0, 0.05, 0.5, 0.9, 1.8]
+
+optf_35_2 = OptimizationFunction(loss_35_2, adtype)
+optprob_35_2 = OptimizationProblem(optf_35_2, u0, lb = lbound, ub = ubound)
+
+sol35_2 = solve(optprob_35_2, Optim.BFGS())
+
+df35_4[4, 8] = df35_4[3, 8]
+loss_35_4(u, p) = fermentation_loss(init_st35_4, df35_4, u, 0.8)
+predictor_35_4(u) = mixed_culture_predictor(init_st35_4, df35_4, u, 0.8)
+
+u0 = [0.85, 1e-5, 0.3, 0.5, 1.3]
+lbound = [0.6, 0.0, 0.0, 0.0, 1.0]
+ubound = [1.0, 0.05, 0.5, 0.9, 1.8]
+
+optf_35_4 = OptimizationFunction(loss_35_4, adtype)
+optprob_35_4 = OptimizationProblem(optf_35_4, u0, lb = lbound, ub = ubound)
+
+sol35_4 = solve(optprob_35_4, Optim.BFGS())
+
+df35_8[4, 8] = df35_8[2, 8]
+loss_35_8(u, p) = fermentation_loss(init_st35_8, df35_8, u, 0.8)
+predictor_35_8(u) = mixed_culture_predictor(init_st35_8, df35_8, u, 0.8)
+
+u0 = [0.85, 1e-5, 0.3, 0.5, 1.3]
+lbound = [0.6, 0.0, 0.0, 0.0, 1.0]
+ubound = [1.0, 0.05, 0.5, 0.9, 1.8]
+
+optf_35_8 = OptimizationFunction(loss_35_8, adtype)
+optprob_35_8 = OptimizationProblem(optf_35_8, u0, lb= lbound, ub = ubound)
+
+sol35_8 = solve(optprob_35_8, Optim.BFGS())
+
+loss_40_0(u, p) = fermentation_loss(init_st40_0, df40_0, u, 0.8)
+predictor_40_0(u) = mixed_culture_predictor(init_st40_0, df40_0, u, 0.8)
+
+u0 = [0.85, 0.16, 0.1, 1e-5, 0.3]
+lbound = [0.8, 0.0, 0.0, 0.0, 0.0]
+ubound = [1.0, 0.3, 0.3, 0.1, 1.0]
+
+optf_40_0 = OptimizationFunction(loss_40_0, adtype)
+optprob_40_0 = OptimizationProblem(optf_40_0, u0, lb = lbound, ub = ubound)
+
+sol40_0 = solve(optprob_40_0, Optim.BFGS())
+
+loss_40_1(u, p) = fermentation_loss(init_st40_1, df40_1, u, 0.8)
+predictor_40_1(u) = mixed_culture_predictor(init_st40_1, df40_1, u, 0.8)
+
+u0 = [0.89, 0.16, 0.1, 0.1, 0.3]
+lbound = [0.8, 0.0, 0.0, 0.0, 0.0]
+ubound = [1.0, 0.5, 0.5, 0.3, 1.5]
+
+optf_40_1 = OptimizationFunction(loss_40_1, adtype)
+optprob_40_1 = OptimizationProblem(optf_40_1, u0, lb = lbound, ub = ubound)
+
+sol40_1 = solve(optprob_40_1, Optim.BFGS())
+
+loss_40_2(u, p) = fermentation_loss(init_st40_2, df40_2, u, 0.8)
+predictor_40_2(u) = mixed_culture_predictor(init_st40_2, df40_2, u, 0.8)
+
+u0 = [0.85, 0.45, 0.5, 0.03, 1.0]
+lbound = [0.8, 0.0, 0.0, 0.0, 0.0]
+ubound = [1.0, 0.5, 0.6, 0.3, 1.5]
+
+optf_40_2 = OptimizationFunction(loss_40_2, adtype)
+optprob_40_2 = OptimizationProblem(optf_40_2, u0, lb = lbound, ub = ubound)
+
+sol40_2 = solve(optprob_40_2, Optim.BFGS())
+
+loss_40_4(u, p) = fermentation_loss(init_st40_4, df40_4, u, 0.8)
+predictor_40_4(u) = mixed_culture_predictor(init_st40_4, df40_4, u, 0.8)
+
+u0 = [0.85, 0.45, 0.50, 0.03, 1.0]
+lbound = [0.8, 0.0, 0.0, 0.0, 0.0]
+ubound = [1.0, 0.5, 0.6, 0.3, 1.5]
+
+optf_40_4 = OptimizationFunction(loss_40_4, adtype)
+optprob_40_4 = OptimizationProblem(optf_40_4, u0, lb = lbound, ub = ubound)
+
+sol40_4 = solve(optprob_40_4, Optim.BFGS())
+
+loss_40_8(u, p) = fermentation_loss(init_st40_8, df40_8, u, 0.8)
+predictor_40_8(u) = mixed_culture_predictor(init_st40_8, df40_8, u, 0.8)
+
+u0 = [0.85, 0.3, 0.50, 0.03, 0.8]
+lbound = [0.7, 0.0, 0.0, 0.0, 0.0]
+ubound = [1.0, 0.4, 0.7, 0.3, 1.5]
+
+optf_40_8 = OptimizationFunction(loss_40_8, adtype)
+optprob_40_8 = OptimizationProblem(optf_40_8, u0, lb = lbound, ub = ubound)
+
+sol40_8 = solve(optprob_40_8, Optim.BFGS())
+
+components = ["init_st", "df", "sol"]
+temp = ["35", "40"]
+mix_amount = ["0", "1", "2", "4", "8"]
+v = 0.8
+
+var_names = String[]
+for comp in components
+    for T in temp
+	for amount in mix_amount
+	    push!(var_names, comp*T*"_"*amount)
+	end
+    end
+end
+
+symbol_vars = reshape(Symbol.(var_names), 10, 3)
+
+v_array = Symbol[]
+[push!(v_array, :v) for i in 1:10]
+
+final_symbols = hcat(symbol_vars, v_array)
+
+key_names = String[]
+for T in temp
+    for amount in mix_amount
+	push!(key_names, T*"_"*amount)
+    end
+end
+
+dict_signature = Dict([(key_names[i], final_symbols[i, :]) for i in 1:10])
+evaled_dict = Dict([(key_names[i], eval.(final_symbols[i, :])) for i in 1:10])
+
+wsave(datadir("simulations", "metabolic_pathways.jld2"), evaled_dict)
