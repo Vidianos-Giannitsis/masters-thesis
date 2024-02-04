@@ -25,6 +25,19 @@
   - [[#parameterized-final-metabolic-pathway][Parameterized final metabolic pathway]]
   - [[#finding-the-true-metabolic-pathway][Finding the true metabolic pathway]]
 - [[#running-the-optimization-routine-for-the-other-9-experiments][Running the optimization routine for the other 9 experiments]]
+- [[#saving-the-optimization-results][Saving the optimization results]]
+- [[#result-analysis][Result analysis]]
+  - [[#finding-the-various-fluxes][Finding the various fluxes]]
+  - [[#constructing-the-table-containing-all-the-fluxes][Constructing the table containing all the fluxes]]
+  - [[#graph-networks][Graph Networks]]
+- [[#performing-the-result-analysis-on-each-dataset][Performing the result analysis on each dataset]]
+  - [[#generate-the-necessary-tables][Generate the necessary tables]]
+  - [[#create-the-graphs][Create the graphs]]
+- [[#shifts-in-metabolic-reactions-from-changing-parameters][Shifts in metabolic reactions from changing parameters]]
+  - [[#amount-of-glucose-consumed-in-heterolactic-fermentation][Amount of glucose consumed in heterolactic fermentation]]
+  - [[#amount-of-lactate-consumed-for-propionate-production][Amount of lactate consumed for propionate production]]
+  - [[#pyruvate-flux-pie-plots][Pyruvate Flux Pie Plots]]
+- [[#general-conclusions-of-the-study][General conclusions of the study]]
 
 * Description of the core concepts
 This notebook is about a personal project of mine, which is mostly done as a learning experience in Julia, but if succesful can have application in my thesis (hence why it is in this directory). The idea is that since we know from literature every pathway a mixed culture fermentation can follow, if we have data for the input and output of either a continuous (in steady state) or batch reactor, we can try to find which pathways were followed and to what extent in each case.
