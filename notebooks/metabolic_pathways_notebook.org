@@ -1377,16 +1377,18 @@ After doing a test, we can now easily expand it to all experiments.
 :  0.28748338216072306
 :  1.5655201036313495
 
-Doesn't converge with what I tried so far, may need more work.
+For the rest of the experiments in 35 C, experimentally we noticed that acetogenesis cannot occur. Notably, acetate either doesn't increase or even decreases in the final day of the experience. Therefore, if the final ethanol isn't the maximum ethanol, the system assumes it goes to acetate when consumed. In these cases, even if nothing else becomes acetate, it will still be too large, which cause convergence problems. However, if we do the trick of replacing the final ethanol with the max, we can get perfect convergence. What this does essentially is circumvent acetogenesis because these 3 systems are in conditions where acetogenesis is not favoured. Ethanol is still consumed however, while leads us to the question of what could be consuming ethanol if not acetogens. This probably requires a more in-depth look at literature, because the most commonly mentioned is just this reaction.
+
 #+NAME: exp_35_2
 #+BEGIN_SRC julia :tangle ../scripts/metabolic_tests.jl
 
+  df35_2[4, 8] = df35_2[3, 8]
   loss_35_2(u, p) = fermentation_loss(init_st35_2, df35_2, u, 0.8)
   predictor_35_2(u) = mixed_culture_predictor(init_st35_2, df35_2, u, 0.8)
 
-  u0 = [0.85, 1e-5, 0.3, 0.5, 1.6]
-  lbound = [0.6, 0.0, 0.0, 0.0, 1.5]
-  ubound = [1.0, 0.05, 0.5, 0.9, 1.8]
+  u0 = [0.85, 1e-5, 0.2, 0.79, 1.2]
+  lbound = [0.6, 0.0, 0.0, 0.0, 0.0]
+  ubound = [1.0, 0.05, 0.5, 0.99, 1.8]
 
   optf_35_2 = OptimizationFunction(loss_35_2, adtype)
   optprob_35_2 = OptimizationProblem(optf_35_2, u0, lb = lbound, ub = ubound)
@@ -1397,13 +1399,12 @@ Doesn't converge with what I tried so far, may need more work.
 #+RESULTS: exp_35_2
 : retcode: Success
 : u: 5-element Vector{Float64}:
-:  0.8625408862511635
-:  3.104291186899071e-6
-:  0.34532387445207285
-:  0.6546730212567405
-:  1.5471780916849764
+:  0.7944779839812038
+:  0.024420561544223476
+:  0.262668992154807
+:  0.687522094840959
+:  1.409444076728566
 
-If ethanol goes to acetate when consumed and nothing else becomes acetate, it is still too large, which cause convergence problems in both this and the 8 ml one. However, if we do the little trick of replacing the final ethanol with the max, we can get perfect convergence. What this does essentially is circumvent acetogenesis because these 3 systems are in conditions where acetogenesis is not favoured. Ethanol is still consumed however, while leads us to the question of what could be consuming ethanol if not acetogens.
 #+NAME: exp_35_4
 #+BEGIN_SRC julia :tangle ../scripts/metabolic_tests.jl
 
@@ -1625,19 +1626,6 @@ In the format everything is written, concatenating init_st, df and sol with the 
 #+END_SRC
 
 #+RESULTS: save_optim
-#+begin_example
-Dict{String, Vector{Symbol}} with 10 entries:
-  "35_4" => [:init_st35_4, :df35_4, :sol35_4, :v]
-  "40_0" => [:init_st40_0, :df40_0, :sol40_0, :v]
-  "40_1" => [:init_st40_1, :df40_1, :sol40_1, :v]
-  "35_8" => [:init_st35_8, :df35_8, :sol35_8, :v]
-  "40_2" => [:init_st40_2, :df40_2, :sol40_2, :v]
-  "35_1" => [:init_st35_1, :df35_1, :sol35_1, :v]
-  "40_4" => [:init_st40_4, :df40_4, :sol40_4, :v]
-  "35_2" => [:init_st35_2, :df35_2, :sol35_2, :v]
-  "40_8" => [:init_st40_8, :df40_8, :sol40_8, :v]
-  "35_0" => [:init_st35_0, :df35_0, :sol35_0, :v]
-#+end_example
 
 The above code block collects the variable names of the initial state, dataframe, optimization solution and volume (which is the signature all optimization functions use) and saves it in a dictionary. Then, it saves the dictionary into a file. Now, instead of reading the raw data and running through the optimization interface again, we can simply read this file and have all the data necessary to analyze the results.
 
@@ -2084,7 +2072,7 @@ Below are three functions which are used to create the graph plot using Makie. T
       concs = vcat(max_concentrations(st, df, p, v), 1.3)
 
       viridis = ["#440154", "#481567", "#482677", "#453781", "#404788", "#39568C", "#33638D", "#2D708E", "#287D8E", "#238A8D", "#1F968B", "#20A387", "#29AF7F", "#3CBB75", "#55C667", "#73D055", "#95D840", "#B8DE29", "#DCE319", "#FDE725"]
-      grey_shades = ["#FFFFFF", "#F8F8F8", "#F5F5F5", "#F0F0F0", "#E8E8E8", "#E0E0E0", "#DCDCDC", "#505050", "#202020", "#101010", "#000000"]
+      grey_shades = ["#FFFFFF", "#F8F8F8", "#F5F5F5", "#E8E8E8", "#E0E0E0", "#DCDCDC", "#505050", "#202020", "#101010", "#000000"]
       cmap_range = (0.4, 3.2)
       node_range = LinRange(0.4, 3.2, 20)
       font_range = LinRange(0.4, 3.2, 10)
@@ -2217,6 +2205,12 @@ The above code for result analysis creates a lot of useful to have tables. I wan
   CSV.write(datadir("simulations", "flux_tables", "readable_flux_table35_1.csv"), readflux35_1)
   CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table35_1.csv"), absflux35_1)
 
+  rflux35_2, cflux35_2, readflux35_2, absflux35_2 = generate_flux_tables(st35_2, df35_2, p35_2, v)
+  CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table35_2.csv"), rflux35_2)
+  CSV.write(datadir("simulations", "flux_tables", "complete_flux_table35_2.csv"), cflux35_2)
+  CSV.write(datadir("simulations", "flux_tables", "readable_flux_table35_2.csv"), readflux35_2)
+  CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table35_2.csv"), absflux35_2)
+
   rflux35_4, cflux35_4, readflux35_4, absflux35_4 = generate_flux_tables(st35_4, df35_4, p35_4, v)
   CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table35_4.csv"), rflux35_4)
   CSV.write(datadir("simulations", "flux_tables", "complete_flux_table35_4.csv"), cflux35_4)
@@ -2273,6 +2267,8 @@ The tables are useful to log the results and be able to revisit them at any poin
   save(plotsdir("metabolic_results", "35_0.png"), f35_0)
   f35_1 = generate_metabolic_graph(st35_1, df35_1, p35_1, v, T = "35 C", mix = "1 ml")
   save(plotsdir("metabolic_results", "35_1.png"), f35_1)
+  f35_2 = generate_metabolic_graph(st35_2, df35_2, p35_2, v, T = "35 C", mix = "2 ml")
+  save(plotsdir("metabolic_results", "35_2.png"), f35_2)
   f35_4 = generate_metabolic_graph(st35_4, df35_4, p35_4, v, T = "35 C", mix = "4 ml")
   save(plotsdir("metabolic_results", "35_4.png"), f35_4)
   f35_8 = generate_metabolic_graph(st35_8, df35_8, p35_8, v, T = "35 C", mix = "8 ml")
@@ -2296,9 +2292,11 @@ The tables are useful to log the results and be able to revisit them at any poin
 * Shifts in metabolic reactions from changing parameters
 Having all this, we can conclude how the metabolic pathways change by varying a parameter.
 
-35 C: Increasing the mix amount significantly inhibits acetogenic pathways (the main indication for this is ethanol to acetate which is seen to a large extent in 0 and 1 ml but vanishes after, but also pyruvate to acetate has a very small rate in anything but 1 ml) while promoting reducing reactions such as pyruvate to lactate (direct reduction) and ethanol (reduction of Acetyl-CoA, produced from pyruvate). Also, Fructose is consumed more effectively. This indicates that heterolactic fermentation is carried by the indigenous microorganisms of the FW (as its flux doesn't increase with mix amount) but this group of microorganisms isn't inhibited by the microorganisms we insert (seen by the small decreases in heterolactate flux). The reduction of the readily available lactate to propionate also seems to be done by the indigenous microorganisms for the same reason. Lactate gets very high amounts in high mix amounts as both groups of microorganisms are capable of producing significant amount of lactate. The other reactions don't seem significantly affected.
+35 C: Increasing the mix amount significantly inhibits acetogenic pathways (the main indication for this is ethanol to acetate which is seen to a large extent in 0 and 1 ml but vanishes after, but also pyruvate to acetate has a very small rate in anything but 1 ml) and to a lesser extent inhibits propionate production while promoting reducing reactions such as pyruvate to lactate (direct reduction) and ethanol (reduction of Acetyl-CoA, produced from pyruvate). Also, Fructose is consumed more effectively. This indicates that heterolactic fermentation is carried by the indigenous microorganisms of the FW (as its flux doesn't increase with mix amount) but this group of microorganisms isn't inhibited by the microorganisms we insert (seen by the small decreases in heterolactate flux). Lactate gets very high amounts in high mix amounts as both groups of microorganisms are capable of producing significant amount of lactate. The other reactions don't seem significantly affected. A detail that should be noted is that by using this flux-based analysis process which gets relative values and doesn't care as much about the differences between initial conditions, we see that the experiments at 2 ml and 8 ml yield almost identical results. The main difference is that there is a flux of 10% of pyruvate going to acetate-ethanol type fermentation instead of pure ethanol (which is reflected by the fact that slightly more acetate is produced at 8 ml), but besides that, which is a minor change, the two have many similarities. This is very nicely indicated in the graph where none of the arrow color changes, but all the node color changes because the experiment at 2 ml had more sugars. This was also noticed when we did the yield plots which compared total products with total sugars and these two experiments gave the same results. Curiously, 4 ml yields worse results than both, but these show even further that increasing the max amount from 2 to 8 ml does nothing.
 
-40 C: Heterolactic fermentation and lactate reduction to propionate seem to be stagnant with mix amount again, strengthening the hypothesis that they are done by the indigenous microorganisms. Other pathways that produce ethanol however are inhibited here due to temperature and independently of mix amount. At 0 ml (indigenous) acetate production is mainly done together with ethanol (acetate-ethanol type fermentation) showing that pathway having the largest flux of anaerobic pyruvate consumption, so that pathway has some ethanol (although still not much). Once we add the other microorganisms, this pathway is strongly inhibited with ethanol being produced only from heterolactate and acetate being produced without co-products and at an increased flux. The reduction of pyruvate to lactate is also promoted, strengthening the hypothesis that the microorganisms we add are controling its rate. Acetogenesis also seems promoted but not significantly due to the small amounts of ethanol that are produced.
+40 C: Heterolactic fermentation seems to be stagnant with mix amount again, strengthening the hypothesis that it is done by the indigenous microorganisms. Other pathways that produce ethanol however are inhibited here due to temperature and independently of mix amount. At 0 ml (indigenous) acetate production is mainly done together with ethanol (acetate-ethanol type fermentation) showing that pathway having the largest flux of anaerobic pyruvate consumption, so that pathway has some ethanol (although still not much). Once we add the other microorganisms, this pathway is strongly inhibited with ethanol being produced only from heterolactate and acetate being produced without co-products and at an increased flux. The reduction of pyruvate to lactate is also promoted, strengthening the hypothesis that the microorganisms we add are controling its rate. Acetogenesis also seems promoted but not significantly due to the small amounts of ethanol that are produced. Lactate's reduction to propionate seems almost identical in all mix amounts besides 0 ml, where it is lowered. If not for that, it would be trivial to assert that the indigenous microorganisms are the one producing propionate (which is supported by the fact that at 35 C the ones we add inhibit the reaction hence cannot be the ones catalyzing it), but this image assumes that adding the mix "activated" the reaction. One possible explanation however is that the experiment at 40 C and 0 ml mix had significantly less sugars than any other experiment which may mean that the lower flux is indicative of this behaviour.
+
+One last thing that we notice is the relationship between ethanol and acetate. As mentioned above, in 35 C, acetate is inhibited while in 40 C ethanol is. In the assumed reaction system (which is based on literature), these two can be produced from pyruvate either separately or together. The acetate-ethanol type fermentation is notably a very important pathway in low pH and based on the results, the indigenous microorganisms, albeit capable of all 3 routes, cannot produce ethanol outside of this pathway in 40 C and cannot produce acetate outside of it at 35 C as their fluxes tend to 0 in these cases but are significant in the other temperature. This is no longer true if we add the mix. Acetate is produced at a decent rate at 1 ml mix at 35 C indicating that the pathway has been activated but not yet inhibited and small amounts of pure ethanol fermentation are seen at 1 and 2 ml mix at 40 C, although that inhibition appears to be stronger than that of acetate.
 
 Some of these are visible if you look at the graph networks or the matrices generated above, but although the graph visualization is very nice and indicative, we don't want to have to show 9 identical looking graphs with only the colors changing, so we want some more fine-tuned graphs to be able to better summarize some results. These are shown below.
 
@@ -2308,9 +2306,9 @@ The glucose being consumed in heterolactic fermentation is the majority of the t
 #+NAME: het_bar_plot
 #+BEGIN_SRC julia :tangle ../scripts/metabolism_result_analysis.jl
 
-  gluc_fluxes = [p35_0[1], p35_1[1], p35_4[1], p35_8[1], p40_0[1], p40_1[1], p40_2[1], p40_4[1], p40_8[1]]
+  gluc_fluxes = [p35_0[1], p35_1[1], p35_2[1], p35_4[1], p35_8[1], p40_0[1], p40_1[1], p40_2[1], p40_4[1], p40_8[1]]
   x = 1:length(gluc_fluxes)
-  ticklabels = ["35 C\n 0 ml", "35 C\n 1 ml", "35 C\n 4 ml", "35 C\n 8 ml", "40 C\n 0 ml", "40 C\n 1 ml", "40 C\n 2 ml", "40 C\n 4 ml", "40 C\n 8 ml"]
+  ticklabels = ["35 C\n 0 ml", "35 C\n 1 ml", "35 C\n 2 ml", "35 C\n 4 ml", "35 C\n 8 ml", "40 C\n 0 ml", "40 C\n 1 ml", "40 C\n 2 ml", "40 C\n 4 ml", "40 C\n 8 ml"]
 
   het_plot = barplot(x, gluc_fluxes,
 		     axis = (xticks = (x, ticklabels),
@@ -2322,16 +2320,20 @@ The glucose being consumed in heterolactic fermentation is the majority of the t
 #+RESULTS: het_bar_plot
 : CairoMakie.Screen{IMAGE}
 
-In this plot it is evident that 6-9 lie in the range of 80-85% (practically equal), one diverges slightly at 0.89 and the others are close to 70%. This shows that the only divergences are small and could be more attributed to randomness. Therefore, the microorganisms we add can't control this reaction's flux and changing the temperature between 35 and 40 C can't control this either.
+#+ATTR_ORG: :width 800px
+[[../plots/metabolic_results/heterolactate_flux.png]]
+
+In this plot it is evident that 8/10 are at 80% or just above it (40 C/2 ml is slightly higher but not by too much) and then 2 diverge a bit by being lower, but even then, not by a very large extent. The standard deviation of the ten observations is only 0.05 which is definitely low enough to be called randomnes.
 
 ** Amount of lactate consumed for propionate production
-From looking at the data, the same conclusion can be said for propionate production. We can create a very similar looking plot for the amount of lactate going to propionate.
+Propionate production shows signs of inhibition at 35 C (although to a lesser extent compared to acetate) and shows stagnation at 40 C after 1 ml. These are both plotted to indicate these.
 
 #+NAME: julia
 #+BEGIN_SRC julia :tangle ../scripts/metabolism_result_analysis.jl
 
   lact_cons35_0 = lactate_dist(st35_0, df35_0, p35_0, v)[3]
   lact_cons35_1 = lactate_dist(st35_1, df35_1, p35_1, v)[3]
+  lact_cons35_2 = lactate_dist(st35_2, df35_2, p35_2, v)[3]
   lact_cons35_4 = lactate_dist(st35_4, df35_4, p35_4, v)[3]
   lact_cons35_8 = lactate_dist(st35_8, df35_8, p35_8, v)[3]
 
@@ -2341,18 +2343,28 @@ From looking at the data, the same conclusion can be said for propionate product
   lact_cons40_4 = lactate_dist(st40_4, df40_4, p40_4, v)[3]
   lact_cons40_8 = lactate_dist(st40_8, df40_8, p40_8, v)[3]
 
-  lact_fluxes = abs.([lact_cons35_0, lact_cons35_1, lact_cons35_4, lact_cons35_8, lact_cons40_0, lact_cons40_1, lact_cons40_2, lact_cons40_4, lact_cons40_8])
+  lact_fluxes = abs.([lact_cons35_0, lact_cons35_1, lact_cons35_2, lact_cons35_4, lact_cons35_8, lact_cons40_0, lact_cons40_1, lact_cons40_2, lact_cons40_4, lact_cons40_8])
 
-  prop_plot = barplot(x, lact_fluxes,
-		      axis = (xticks = (x, ticklabels),
-			      title = "% of Lactate Reduced to Propionate"))
-  save(plotsdir("metabolic_results", "propionate_flux.png"), prop_plot)
+  prop_35_p = barplot(x[1:5], lact_fluxes[1:5],
+		      axis = (xticks = (x[1:5], ticklabels[1:5]),
+			      title = "% of Lactate Reduced to Propionate - 35 C"))
+
+  prop_40_p = barplot(x[6:10], lact_fluxes[6:10],
+		      axis = (xticks = (x[6:10], ticklabels[6:10]),
+			      title = "% of Lactate Reduced to Propionate - 40 C"))
+
+  save(plotsdir("metabolic_results", "propionate_flux_35.png"), prop_35_p)
+  save(plotsdir("metabolic_results", "propionate_flux_40.png"), prop_40_p)
 #+END_SRC
 
 #+RESULTS: julia
 : CairoMakie.Screen{IMAGE}
 
-Again, there are 3 visible outliers. In two of the three cases (35_4, 35_8) the total produced propionate is much less than what it is in most other cases, so naturally, this flux is less. An assumption could be made that adding the microorganisms of the mix inhibits the reduction of lactate to propionate, however, the one with the higher mix amount has near double the propionate flux (and in absolute numbers 0.15 g/l instead of 0.1). This indicates that it likely isn't a fault of these microorganisms, however, seeing that the one with 8 ml has worse performance than 0 and 1 ml means that these microorganisms having a small adverse effect on this reaction isn't out of the table.
+#+ATTR_ORG: :width 600px
+[[../plots/metabolic_results/propionate_flux_35.png]]
+
+#+ATTR_ORG: :width 600px
+[[../plots/metabolic_results/propionate_flux_40.png]]
 
 ** Pyruvate Flux Pie Plots
 One of the things that we want to indicate is that acetate and ethanol fermentations act competitively between the two temperatures (meaning that one is strongly inhibited and the other strongly produced). But an interesting point (which is due to the indigenous microorganisms as it appears most evidently at 0 ml) is that if the inhibited one were to be produced, it would be produced in acetate/ethanol type fermentation, which is the 1:1 ratio fermentation producing both.  
@@ -2362,6 +2374,7 @@ One of the things that we want to indicate is that acetate and ethanol fermentat
 
   pyr35_0 = pyruvate_cons_dist(st35_0, df35_0, p35_0, v)
   pyr35_1 = pyruvate_cons_dist(st35_1, df35_1, p35_1, v)
+  pyr35_2 = pyruvate_cons_dist(st35_2, df35_2, p35_2, v)
   pyr35_4 = pyruvate_cons_dist(st35_4, df35_4, p35_4, v)
   pyr35_8 = pyruvate_cons_dist(st35_8, df35_8, p35_8, v)
 
@@ -2391,38 +2404,61 @@ One of the things that we want to indicate is that acetate and ethanol fermentat
 
   ax1, plt = pie(pyr_flux_f[3,1], pyr35_0, color = colors, axis = (aspect=DataAspect(), title = "0 ml", titlesize = 20))
   ax2, plt = pie(pyr_flux_f[3,2], pyr35_1, color = colors, axis = (aspect=DataAspect(), title = "1 ml", titlesize = 20))
-  ax3, plt = pie(pyr_flux_f[4,1], pyr35_4, color = colors, axis = (aspect=DataAspect(), title = "4 ml", titlesize = 20))
-  ax4, plt = pie(pyr_flux_f[4,2], pyr35_8, color = colors, axis = (aspect=DataAspect(), title = "8 ml", titlesize = 20))
+  ax3, plt = pie(pyr_flux_f[3,3], pyr35_2, color = colors, axis = (aspect=DataAspect(), title = "2 ml", titlesize = 20))
+  ax4, plt = pie(pyr_flux_f[4,1], pyr35_4, color = colors, axis = (aspect=DataAspect(), title = "4 ml", titlesize = 20))
+  ax5, plt = pie(pyr_flux_f[4,2], pyr35_8, color = colors, axis = (aspect=DataAspect(), title = "8 ml", titlesize = 20))
   hidedecorations!(ax1)
   hidedecorations!(ax2)
   hidedecorations!(ax3)
   hidedecorations!(ax4)
+  hidedecorations!(ax5)
   hidespines!(ax1)
   hidespines!(ax2)
   hidespines!(ax3)
   hidespines!(ax4)
-  Legend(pyr_flux_f[3:4,3], [PolyElement(color=c) for c in colors], labels, framevisible=false, labelsize = 22)
+  hidespines!(ax5)
+  Legend(pyr_flux_f[4:6,3], [PolyElement(color=c) for c in colors], labels, framevisible=false, labelsize = 22)
 
   Label(pyr_flux_f[5, 1:3], "Temperature = 40 C", fontsize= 25)
 
-  ax5, plt = pie(pyr_flux_f[6,1], pyr40_0, color = colors, axis = (aspect=DataAspect(), title = "0 ml", titlesize = 20))
-  ax6, plt = pie(pyr_flux_f[6,2], pyr40_1, color = colors, axis = (aspect=DataAspect(), title = "1 ml", titlesize = 20))
-  ax7, plt = pie(pyr_flux_f[6,3], pyr40_2, color = colors, axis = (aspect=DataAspect(), title = "2 ml", titlesize = 20))
-  ax8, plt = pie(pyr_flux_f[7,1], pyr40_4, color = colors, axis = (aspect=DataAspect(), title = "4 ml", titlesize = 20))
-  ax9, plt = pie(pyr_flux_f[7,2], pyr40_8, color = colors, axis = (aspect=DataAspect(), title = "8 ml", titlesize = 20))
+  ax6, plt = pie(pyr_flux_f[6,1], pyr40_0, color = colors, axis = (aspect=DataAspect(), title = "0 ml", titlesize = 20))
+  ax7, plt = pie(pyr_flux_f[6,2], pyr40_1, color = colors, axis = (aspect=DataAspect(), title = "1 ml", titlesize = 20))
+  ax8, plt = pie(pyr_flux_f[7,1], pyr40_2, color = colors, axis = (aspect=DataAspect(), title = "2 ml", titlesize = 20))
+  ax9, plt = pie(pyr_flux_f[7,2], pyr40_4, color = colors, axis = (aspect=DataAspect(), title = "4 ml", titlesize = 20))
+  ax10, plt = pie(pyr_flux_f[7,3], pyr40_8, color = colors, axis = (aspect=DataAspect(), title = "8 ml", titlesize = 20))
   hidedecorations!(ax5)
   hidedecorations!(ax6)
   hidedecorations!(ax7)
   hidedecorations!(ax8)
   hidedecorations!(ax9)
+  hidedecorations!(ax10)
   hidespines!(ax5)
   hidespines!(ax6)
   hidespines!(ax7)
   hidespines!(ax8)
   hidespines!(ax9)
+  hidespines!(ax10)
 
   save(plotsdir("metabolic_results", "pyr_flux_tot.png"), pyr_flux_f)
 #+END_SRC
 
 #+RESULTS: pyr_pie_plots
 : CairoMakie.Screen{IMAGE}
+
+#+ATTR_ORG: :width 600px
+[[../plots/metabolic_results/pyr_flux_ind.png]]
+
+#+ATTR_ORG: :width 900px
+[[../plots/metabolic_results/pyr_flux_tot.png]]
+
+* General conclusions of the study
+After doing all the above work, we have basically concluded this project with some conclusions. Using information from literature about the possible pathways followed by our reaction system, we designed an infrastructure that with knowledge of to what extent each reaction was done, can predict the reactor effluent. The backwards problem of this formulation is that knowing the effluent of our reactor system we can predict to what extent each reaction was done. This backwards problem can easily be solved with the SciML tooling if formulated properly in Julia. With a robust local optimization method, we can bring the loss down to 1e-16/1e-20 in every case meaning a perfect prediction of the effluent. Having the results of this, we can design the metabolic pathway matrix which shows to which extent each compound is produced/consumed by each reaction, a very useful tool for this problem. From that matrix, we can draw our conclusions, as well as use visualization tools to support them.
+
+The metabolic network graph created is a very nice image that contains a lot of information about our system all packed into one image. It is a very convenient representation of the results of this process without too many details. Other visualizations of the entire system are not necessary. However, more specific images are used to support some of the conclusions below.
+
+The indigenous microorganisms can catalyze all 10 of the reactions we defined. However, the microorganisms contained in the mix only control some of them. Sucrose and Glucose are both consumed very fast in every case so it is very hard to assess if hydrolysis of sucrose and glycolysis are affected by the ones in the mix.
+Heterolactic fermentation seems to only be done by the indigenous microorganisms as the ones we add seem to not affect its flux a significant amount. Fructolysis is definitely augmented by adding the mix as especially in 35 C, there remains Fructose in 72h, but is fully consumed if we add enough of the mix. Propionate production seems to be slightly affected by mix amount (especially in 35 C) but not significantly in any case so it's probably also done by the indigenous microorganisms (a plot indicating results for propionate in specific has been created) while the rest of the anaerobic metabolic reactions are definitely heavily affected by the prescence of the microorganisms in the mix.
+
+One of the most important things we indicate (which however can be seen even without this analysis, but this gives us much more details on it) is the relationship between ethanol and acetate. It can very easily be noticed that in 35 C, acetate is inhibited while in 40 C ethanol is. In the assumed reaction system (which is based on literature), these two can be produced from pyruvate either separately or together. The acetate-ethanol type fermentation is notably a very important pathway in low pH and based on the results, the indigenous microorganisms, albeit capable of all 3 routes, cannot produce ethanol outside of this pathway in 40 C and cannot produce acetate outside of it at 35 C as their fluxes tend to 0 in these cases but are significant in the other temperature. This is no longer true if we add the mix. Acetate is produced at a decent rate at 1 ml mix at 35 C indicating that the pathway has been activated but not yet inhibited and small amounts of pure ethanol fermentation are seen at 1 and 2 ml mix at 40 C, although that inhibition appears to be stronger than that of acetate. However, it is interesting to see how the flux changes because one or the other isn't there.
+
+In 35 C, most of the pyruvate flux can be attributed to ethanol production and then to lactate. However, when we go to 40 C, not all the flux of ethanol becomes acetate. It is separated between both acetate and lactate that are increased when ethanol isn't produced. And, the lactate at 40 C is higher than that at 35 C. This indicates that while the end products which are inhibited are ethanol and acetate depending on the temperature, it is not those 2 that are competing mainly, but ethanol and lactate. Assuming that flux can go into any of the three products, at 35 C, any flux that would go to acetate goes to ethanol due to its inhibition and that is because ethanol is more favoured than lactate as the reducing product of the process. Lactate flux also goes to ethanol in some conditions as seen for example in "35_4". At 40 C, ethanol is inhibited so lactate takes over its flux. However, to have enough reducing potential, the acetate production pathway (which is oxidative) gets a large flux as well. In the previous case, ethanol didn't necessarily need to be paired with acetate because ethanol from pyruvate is a product of Acetyl-CoA, meaning it has already gotten the reductive potential acetate could provide. The acetate-ethanol paired pathway is feasible because the conversion of Acetyl-CoA to acetate is generally very energy feasible so even if we don't want acetate, it will be found as a co-product of ethanol. However, the conditions in the experiments from 2 ml and above at 35 C seem to inhibit acetate and therefore we see very large fluxes of ethanol produced without acetate.

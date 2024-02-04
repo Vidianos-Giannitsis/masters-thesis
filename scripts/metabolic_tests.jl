@@ -239,12 +239,13 @@ optprob_35_1 = OptimizationProblem(optf_35_1, sol35_0.u)
 
 sol35_1 = solve(optprob_35_1, Optim.BFGS())
 
+df35_2[4, 8] = df35_2[3, 8]
 loss_35_2(u, p) = fermentation_loss(init_st35_2, df35_2, u, 0.8)
 predictor_35_2(u) = mixed_culture_predictor(init_st35_2, df35_2, u, 0.8)
 
-u0 = [0.85, 1e-5, 0.3, 0.5, 1.6]
-lbound = [0.6, 0.0, 0.0, 0.0, 1.5]
-ubound = [1.0, 0.05, 0.5, 0.9, 1.8]
+u0 = [0.85, 1e-5, 0.2, 0.79, 1.2]
+lbound = [0.6, 0.0, 0.0, 0.0, 0.0]
+ubound = [1.0, 0.05, 0.5, 0.99, 1.8]
 
 optf_35_2 = OptimizationFunction(loss_35_2, adtype)
 optprob_35_2 = OptimizationProblem(optf_35_2, u0, lb = lbound, ub = ubound)
