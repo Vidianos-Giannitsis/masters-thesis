@@ -310,7 +310,7 @@ function get_metabolic_graph_attrs(st, df, p, v)
     concs = vcat(max_concentrations(st, df, p, v), 1.3)
 
     viridis = ["#440154", "#481567", "#482677", "#453781", "#404788", "#39568C", "#33638D", "#2D708E", "#287D8E", "#238A8D", "#1F968B", "#20A387", "#29AF7F", "#3CBB75", "#55C667", "#73D055", "#95D840", "#B8DE29", "#DCE319", "#FDE725"]
-    grey_shades = ["#FFFFFF", "#F8F8F8", "#F5F5F5", "#F0F0F0", "#E8E8E8", "#E0E0E0", "#DCDCDC", "#505050", "#202020", "#101010", "#000000"]
+    grey_shades = ["#FFFFFF", "#F8F8F8", "#F5F5F5", "#E8E8E8", "#E0E0E0", "#DCDCDC", "#505050", "#202020", "#101010", "#000000"]
     cmap_range = (0.4, 3.2)
     node_range = LinRange(0.4, 3.2, 20)
     font_range = LinRange(0.4, 3.2, 10)

@@ -47,6 +47,12 @@ CSV.write(datadir("simulations", "flux_tables", "complete_flux_table35_1.csv"), 
 CSV.write(datadir("simulations", "flux_tables", "readable_flux_table35_1.csv"), readflux35_1)
 CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table35_1.csv"), absflux35_1)
 
+rflux35_2, cflux35_2, readflux35_2, absflux35_2 = generate_flux_tables(st35_2, df35_2, p35_2, v)
+CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table35_2.csv"), rflux35_2)
+CSV.write(datadir("simulations", "flux_tables", "complete_flux_table35_2.csv"), cflux35_2)
+CSV.write(datadir("simulations", "flux_tables", "readable_flux_table35_2.csv"), readflux35_2)
+CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table35_2.csv"), absflux35_2)
+
 rflux35_4, cflux35_4, readflux35_4, absflux35_4 = generate_flux_tables(st35_4, df35_4, p35_4, v)
 CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table35_4.csv"), rflux35_4)
 CSV.write(datadir("simulations", "flux_tables", "complete_flux_table35_4.csv"), cflux35_4)
@@ -93,6 +99,8 @@ f35_0 = generate_metabolic_graph(st35_0, df35_0, p35_0, v, T = "35 C", mix = "0 
 save(plotsdir("metabolic_results", "35_0.png"), f35_0)
 f35_1 = generate_metabolic_graph(st35_1, df35_1, p35_1, v, T = "35 C", mix = "1 ml")
 save(plotsdir("metabolic_results", "35_1.png"), f35_1)
+f35_2 = generate_metabolic_graph(st35_2, df35_2, p35_2, v, T = "35 C", mix = "2 ml")
+save(plotsdir("metabolic_results", "35_2.png"), f35_2)
 f35_4 = generate_metabolic_graph(st35_4, df35_4, p35_4, v, T = "35 C", mix = "4 ml")
 save(plotsdir("metabolic_results", "35_4.png"), f35_4)
 f35_8 = generate_metabolic_graph(st35_8, df35_8, p35_8, v, T = "35 C", mix = "8 ml")
@@ -109,9 +117,9 @@ save(plotsdir("metabolic_results", "40_4.png"), f40_4)
 f40_8 = generate_metabolic_graph(st40_8, df40_8, p40_8, v, T = "40 C", mix = "8 ml")
 save(plotsdir("metabolic_results", "40_8.png"), f40_8)
 
-gluc_fluxes = [p35_0[1], p35_1[1], p35_4[1], p35_8[1], p40_0[1], p40_1[1], p40_2[1], p40_4[1], p40_8[1]]
+gluc_fluxes = [p35_0[1], p35_1[1], p35_2[1], p35_4[1], p35_8[1], p40_0[1], p40_1[1], p40_2[1], p40_4[1], p40_8[1]]
 x = 1:length(gluc_fluxes)
-ticklabels = ["35 C\n 0 ml", "35 C\n 1 ml", "35 C\n 4 ml", "35 C\n 8 ml", "40 C\n 0 ml", "40 C\n 1 ml", "40 C\n 2 ml", "40 C\n 4 ml", "40 C\n 8 ml"]
+ticklabels = ["35 C\n 0 ml", "35 C\n 1 ml", "35 C\n 2 ml", "35 C\n 4 ml", "35 C\n 8 ml", "40 C\n 0 ml", "40 C\n 1 ml", "40 C\n 2 ml", "40 C\n 4 ml", "40 C\n 8 ml"]
 
 het_plot = barplot(x, gluc_fluxes,
 		   axis = (xticks = (x, ticklabels),
@@ -121,6 +129,7 @@ save(plotsdir("metabolic_results", "heterolactate_flux.png"), het_plot)
 
 lact_cons35_0 = lactate_dist(st35_0, df35_0, p35_0, v)[3]
 lact_cons35_1 = lactate_dist(st35_1, df35_1, p35_1, v)[3]
+lact_cons35_2 = lactate_dist(st35_2, df35_2, p35_2, v)[3]
 lact_cons35_4 = lactate_dist(st35_4, df35_4, p35_4, v)[3]
 lact_cons35_8 = lactate_dist(st35_8, df35_8, p35_8, v)[3]
 
@@ -130,15 +139,22 @@ lact_cons40_2 = lactate_dist(st40_2, df40_2, p40_2, v)[3]
 lact_cons40_4 = lactate_dist(st40_4, df40_4, p40_4, v)[3]
 lact_cons40_8 = lactate_dist(st40_8, df40_8, p40_8, v)[3]
 
-lact_fluxes = abs.([lact_cons35_0, lact_cons35_1, lact_cons35_4, lact_cons35_8, lact_cons40_0, lact_cons40_1, lact_cons40_2, lact_cons40_4, lact_cons40_8])
+lact_fluxes = abs.([lact_cons35_0, lact_cons35_1, lact_cons35_2, lact_cons35_4, lact_cons35_8, lact_cons40_0, lact_cons40_1, lact_cons40_2, lact_cons40_4, lact_cons40_8])
 
-prop_plot = barplot(x, lact_fluxes,
-		    axis = (xticks = (x, ticklabels),
-			    title = "% of Lactate Reduced to Propionate"))
-save(plotsdir("metabolic_results", "propionate_flux.png"), prop_plot)
+prop_35_p = barplot(x[1:5], lact_fluxes[1:5],
+		    axis = (xticks = (x[1:5], ticklabels[1:5]),
+			    title = "% of Lactate Reduced to Propionate - 35 C"))
+
+prop_40_p = barplot(x[6:10], lact_fluxes[6:10],
+		    axis = (xticks = (x[6:10], ticklabels[6:10]),
+			    title = "% of Lactate Reduced to Propionate - 40 C"))
+
+save(plotsdir("metabolic_results", "propionate_flux_35.png"), prop_35_p)
+save(plotsdir("metabolic_results", "propionate_flux_40.png"), prop_40_p)
 
 pyr35_0 = pyruvate_cons_dist(st35_0, df35_0, p35_0, v)
 pyr35_1 = pyruvate_cons_dist(st35_1, df35_1, p35_1, v)
+pyr35_2 = pyruvate_cons_dist(st35_2, df35_2, p35_2, v)
 pyr35_4 = pyruvate_cons_dist(st35_4, df35_4, p35_4, v)
 pyr35_8 = pyruvate_cons_dist(st35_8, df35_8, p35_8, v)
 
@@ -168,34 +184,39 @@ Label(pyr_flux_f[2, 1:3], "Temperature = 35 C", fontsize = 25)
 
 ax1, plt = pie(pyr_flux_f[3,1], pyr35_0, color = colors, axis = (aspect=DataAspect(), title = "0 ml", titlesize = 20))
 ax2, plt = pie(pyr_flux_f[3,2], pyr35_1, color = colors, axis = (aspect=DataAspect(), title = "1 ml", titlesize = 20))
-ax3, plt = pie(pyr_flux_f[4,1], pyr35_4, color = colors, axis = (aspect=DataAspect(), title = "4 ml", titlesize = 20))
-ax4, plt = pie(pyr_flux_f[4,2], pyr35_8, color = colors, axis = (aspect=DataAspect(), title = "8 ml", titlesize = 20))
+ax3, plt = pie(pyr_flux_f[3,3], pyr35_2, color = colors, axis = (aspect=DataAspect(), title = "2 ml", titlesize = 20))
+ax4, plt = pie(pyr_flux_f[4,1], pyr35_4, color = colors, axis = (aspect=DataAspect(), title = "4 ml", titlesize = 20))
+ax5, plt = pie(pyr_flux_f[4,2], pyr35_8, color = colors, axis = (aspect=DataAspect(), title = "8 ml", titlesize = 20))
 hidedecorations!(ax1)
 hidedecorations!(ax2)
 hidedecorations!(ax3)
 hidedecorations!(ax4)
+hidedecorations!(ax5)
 hidespines!(ax1)
 hidespines!(ax2)
 hidespines!(ax3)
 hidespines!(ax4)
-Legend(pyr_flux_f[3:4,3], [PolyElement(color=c) for c in colors], labels, framevisible=false, labelsize = 22)
+hidespines!(ax5)
+Legend(pyr_flux_f[4:6,3], [PolyElement(color=c) for c in colors], labels, framevisible=false, labelsize = 22)
 
 Label(pyr_flux_f[5, 1:3], "Temperature = 40 C", fontsize= 25)
 
-ax5, plt = pie(pyr_flux_f[6,1], pyr40_0, color = colors, axis = (aspect=DataAspect(), title = "0 ml", titlesize = 20))
-ax6, plt = pie(pyr_flux_f[6,2], pyr40_1, color = colors, axis = (aspect=DataAspect(), title = "1 ml", titlesize = 20))
-ax7, plt = pie(pyr_flux_f[6,3], pyr40_2, color = colors, axis = (aspect=DataAspect(), title = "2 ml", titlesize = 20))
-ax8, plt = pie(pyr_flux_f[7,1], pyr40_4, color = colors, axis = (aspect=DataAspect(), title = "4 ml", titlesize = 20))
-ax9, plt = pie(pyr_flux_f[7,2], pyr40_8, color = colors, axis = (aspect=DataAspect(), title = "8 ml", titlesize = 20))
+ax6, plt = pie(pyr_flux_f[6,1], pyr40_0, color = colors, axis = (aspect=DataAspect(), title = "0 ml", titlesize = 20))
+ax7, plt = pie(pyr_flux_f[6,2], pyr40_1, color = colors, axis = (aspect=DataAspect(), title = "1 ml", titlesize = 20))
+ax8, plt = pie(pyr_flux_f[7,1], pyr40_2, color = colors, axis = (aspect=DataAspect(), title = "2 ml", titlesize = 20))
+ax9, plt = pie(pyr_flux_f[7,2], pyr40_4, color = colors, axis = (aspect=DataAspect(), title = "4 ml", titlesize = 20))
+ax10, plt = pie(pyr_flux_f[7,3], pyr40_8, color = colors, axis = (aspect=DataAspect(), title = "8 ml", titlesize = 20))
 hidedecorations!(ax5)
 hidedecorations!(ax6)
 hidedecorations!(ax7)
 hidedecorations!(ax8)
 hidedecorations!(ax9)
+hidedecorations!(ax10)
 hidespines!(ax5)
 hidespines!(ax6)
 hidespines!(ax7)
 hidespines!(ax8)
 hidespines!(ax9)
+hidespines!(ax10)
 
 save(plotsdir("metabolic_results", "pyr_flux_tot.png"), pyr_flux_f)
