@@ -959,7 +959,7 @@ Another common pathway studied in literature is ABE fermentation. In this, there
 * Test on experiments
 This section is about a test for the experiments we have done to see if we can validate the data. Obviously, we first need to import dependencies and our data.
 
-#+NAME: read_exp_data
+#+NAME: exp_data_deps
 #+BEGIN_SRC julia :tangle ../scripts/metabolic_tests.jl
 
   using DrWatson
@@ -971,6 +971,9 @@ This section is about a test for the experiments we have done to see if we can v
   include(srcdir("metabolic_pathways", "acetogenesis.jl"))
   using CSV, DataFrames
 
+#+END_SRC
+
+#+BEGIN_SRC julia :tangle ../scripts/metabolic_tests.jl
   # Read all the data
   exp_35 = "10_11"
   exp_40 = "28_11"
@@ -991,6 +994,17 @@ This section is about a test for the experiments we have done to see if we can v
   df40_8 = CSV.read(get_conc_csv(exp_40, mix_amount[5]), DataFrame)
 
 #+END_SRC
+
+#+RESULTS:
+: 4×10 DataFrame
+:  Row │ Time   Sucrose    Glucose  Fructose   Lactate   Acetate   Propionate  E ⋯
+:      │ Int64  Float64    Float64  Float64    Float64   Float64   Float64     F ⋯
+: ─────┼──────────────────────────────────────────────────────────────────────────
+:    1 │     0  1.557      1.13602  2.58265    0.850112  0.540769    0.440243  0 ⋯
+:    2 │    24  0.0304375  0.0      1.61717    1.07473   0.537088    0.436677  0
+:    3 │    48  0.0        0.0      1.29581    1.17961   0.758998    0.533463  0
+:    4 │    72  0.0        0.0      0.0464546  2.32479   1.11994     0.77837   0
+:                                                                3 columns omitted
 
 Then, we need to initialize the named tuples this framework uses instead of the data frames.
 
@@ -1349,7 +1363,7 @@ After doing a test, we can now easily expand it to all experiments.
   # First, let's try to solve an unbounded optimization problem using
   # the solution of the above as the initial condition.
   optf_35_1 = OptimizationFunction(loss_35_1, adtype)
-  optprob_35_1 = OptimizationProblem(optf_35_1, sol1.u)
+  optprob_35_1 = OptimizationProblem(optf_35_1, sol35_0.u)
 
   sol35_1 = solve(optprob_35_1, Optim.BFGS())
 #+END_SRC
@@ -1379,6 +1393,15 @@ Doesn't converge with what I tried so far, may need more work.
 
   sol35_2 = solve(optprob_35_2, Optim.BFGS())
 #+END_SRC
+
+#+RESULTS: exp_35_2
+: retcode: Success
+: u: 5-element Vector{Float64}:
+:  0.8625408862511635
+:  3.104291186899071e-6
+:  0.34532387445207285
+:  0.6546730212567405
+:  1.5471780916849764
 
 If ethanol goes to acetate when consumed and nothing else becomes acetate, it is still too large, which cause convergence problems in both this and the 8 ml one. However, if we do the little trick of replacing the final ethanol with the max, we can get perfect convergence. What this does essentially is circumvent acetogenesis because these 3 systems are in conditions where acetogenesis is not favoured. Ethanol is still consumed however, while leads us to the question of what could be consuming ethanol if not acetogens.
 #+NAME: exp_35_4
@@ -1592,8 +1615,10 @@ In the format everything is written, concatenating init_st, df and sol with the 
       end
   end
 
-  dict_signature = Dict([(key_names[i], final_symbols[i, :]) for i in 1:10])
-  evaled_dict = Dict([(key_names[i], eval.(final_symbols[i, :])) for i in 1:10])
+  final_values = eval.(final_symbols)
+  [final_values[i, 3] = final_values[i, 3].u for i in 1:10]
+
+  evaled_dict = Dict([(key_names[i], final_values[i, :]) for i in 1:10])
 
   wsave(datadir("simulations", "metabolic_pathways.jld2"), evaled_dict)
 
@@ -1624,8 +1649,12 @@ But before calculating anything, we need to define some dependencies.
 #+NAME: deps
 #+BEGIN_SRC julia :tangle ../src/metabolic_pathways/metabolism_results.jl
 
-  using DataFrames, SparseArrays, Tables
-  include(srcdir("metabolic_pathways"))
+  using CSV, DataFrames, SparseArrays, Tables
+  include(srcdir("metabolic_pathways", "primitives.jl"))
+  include(srcdir("metabolic_pathways", "core_pathways.jl"))
+  include(srcdir("metabolic_pathways", "compound_pathways.jl"))
+  include(srcdir("metabolic_pathways", "acetogenesis.jl"))
+  include(srcdir("metabolic_pathways", "opt_interface.jl"))
 #+END_SRC
 
 ** Finding the various fluxes
@@ -1834,7 +1863,7 @@ Acetate is the simplest. We know the total acetate so if we find how much was pr
 #+END_SRC
 
 #+RESULTS: product_dist
-: ethanol_dist (generic function with 1 method)
+: propionate_dist (generic function with 1 method)
 
 ** Constructing the table containing all the fluxes
 With these, we can construct a table of how the fluxes are after each reaction. We start with the initial state and move to sucrose hydrolysis (R1), glycolysis/fructolysis (R2), heterolactic fermentation (R3), pyruvate oxidation (R4), acetate fermentation (R5), lactate type fermentation (R6), ethanol fermentation (R7), acetate ethanol type fermentation (R8), lactate reduction to propionate (R9), ethanol acetogenesis (R10) and concluding at what is the final state. This will be for the 8 most important compounds, Sucrose, Glucose, Fructose, Pyruvate, Lactate, Acetate, Propionate and Ethanol. The initial state can be calculated as 1 - sum(production). These are shown in the next block.
@@ -1935,7 +1964,7 @@ Then, put these in one table.
 #+RESULTS: complete_flux_table
 : complete_fluxes (generic function with 1 method)
 
-This will result in a sparse array with all the reaction fluxes. For reading this, it would be much more convenient to have the column and row names. This has some practical issues if we want just the numbers, which is why it will be made into another function, but for readability it is very important.
+This will result in a sparse array with all the reaction fluxes. For reading this, it would be much more convenient to have the column and row names. This has some practical issues if we want just the numbers, which is why it will be made into another function, but for readability it is very important. Note that this is saved as a Tables.table, because this is the most useful format for sth like this. For interactive readability, wrap it in a DataFrame.
 
 #+NAME: flux_table_export
 #+BEGIN_SRC julia :tangle ../src/metabolic_pathways/metabolism_results.jl
@@ -1943,9 +1972,10 @@ This will result in a sparse array with all the reaction fluxes. For reading thi
   function readable_flux_table(st, df, p, v)
       flux_table = complete_fluxes(st, df, p, v)
       row_names = ["Sucrose", "Glucose", "Fructose", "Pyruvate", "Lactate", "Acetate", "Propionate", "Ethanol"]
-      column_names = reshape(["Comp", "Init", "SucHyd", "Glycolysis", "Heterolact", "PyrOx", "Acet", "Lact", "Eth", "Aceteth", "Prop", "Acetogenesis", "Final"], 1, 13)
 
-      vcat(column_names, hcat(row_names, flux_table))
+      readflux = hcat(row_names, flux_table)
+
+      Tables.table(readflux, header = [:Comp, :Init, :SucHyd, :Glycolysis, :Heterolact, :PyrOx, :Acet, :Lact, :Eth, :Aceteth, :Prop, :Acetogenesis, :Final])
   end
 
 #+END_SRC
@@ -2029,6 +2059,9 @@ Another useful table we can make is one that isn't proportionate but rather abso
 : absolute_flux_table (generic function with 1 method)
 
 ** Graph Networks
+All the above analysis very useful and the matrices created by it have a lot of significance. But, in reality, when presenting results, bare tables are not a very good representation. The best way to show results is typically some kind of visual tool. In the case of metabolic networks, a commonly employed method is using directed graphs. A directed graph shows how material flows from one compound to the other both qualitatively and quantitatively as the nodes (indicating the compounds) and the edges (indicating the pathways) can both be named for qualitative descriptions and can be colored to show qualitative descriptions (using the viridis color map for example).
+
+Below are three functions which are used to create the graph plot using Makie. The first generates the graph indicating which pathways are feasible and their names. The second, generates the quantitative attributes. It gets the concentrations of the compounds and their fluxes from previously defined functions and using the 20 colors of the viridis color map, tries to create a color scaling to the given vectors. For readability, the same is done with the font colors but using shades of grey, as the darkest colors need light fonts and the lightest need dark fonts. It returns these attributes to be used in the plot. Finally the third function does the plotting using the generated graph with its qualitative and quantitative characteristics. It also configures other plot attributes for the optimal (in my opinion) look of the graph plot as well as insert some explanatory labels for the plot to be more easily understandable. The result is great, indicating why an image is worth a thousand words.
 
 #+NAME: graph
 #+BEGIN_SRC julia :tangle ../src/metabolic_pathways/metabolism_results.jl
@@ -2042,39 +2075,354 @@ Another useful table we can make is one that isn't proportionate but rather abso
       G = DiGraph(9)
       [add_edge!(G, source[i], destination[i]) for i in 1:length(source)]
       labels = ["Sucrose", "Glucose", "Fructose", "Pyruvate", "Lactate", "Acetate", "Propionate", "Ethanol", "Kreb's\n Cycle"]
-      edgelab = ["Hydrolysis", "Hydrolysis", "Glycolysis", "Heterolactic", "Heterolactic", "Fructolysis", "Reduction", "Acetate/Acetate-Ethanol type", "Ethanol/Acetate-Ethanol type", "Oxidation", "Reduction", "Acetogenesis"]
+      edgelab = ["Hydrolysis", "Hydrolysis", "Glycolysis", "Heterolactic", "Heterolactic", "Fructolysis", "Reduction", "Acetate/Acetate-Ethanol", "Ethanol/Acetate-Ethanol", "Oxidation", "Reduction", "Acetogenesis"]
 
       return(G, labels, edgelab)
   end
 
   function get_metabolic_graph_attrs(st, df, p, v)
-      concs = vcat(max_concentrations(st, df, p, v), 0.9)
-      w_matrix = hcat(sortperm(concs), Vector(LinRange(30, 60, 9)))
-      inds = [findall(x -> x==i, w_matrix[:, 1]) for i in 1.0:9.0]
-      node_w = reduce(vcat, transpose.([w_matrix[inds[i], 2] for i in 1:9]))[:, 1]
+      concs = vcat(max_concentrations(st, df, p, v), 1.3)
+
+      viridis = ["#440154", "#481567", "#482677", "#453781", "#404788", "#39568C", "#33638D", "#2D708E", "#287D8E", "#238A8D", "#1F968B", "#20A387", "#29AF7F", "#3CBB75", "#55C667", "#73D055", "#95D840", "#B8DE29", "#DCE319", "#FDE725"]
+      grey_shades = ["#FFFFFF", "#F8F8F8", "#F5F5F5", "#F0F0F0", "#E8E8E8", "#E0E0E0", "#DCDCDC", "#505050", "#202020", "#101010", "#000000"]
+      cmap_range = (0.4, 3.2)
+      node_range = LinRange(0.4, 3.2, 20)
+      font_range = LinRange(0.4, 3.2, 10)
+      nodecol = viridis[[argmin(abs.(concs[i] .- node_range)) for i in 1:9]]
+      nodefont = grey_shades[[argmin(abs.(concs[i] .- font_range)) for i in 1:9]]
 
       pyr_percent = sugar_consumption_metabolism(st, df, p, v, pyr_flux = 1)
       reactflux = reaction_fluxes(st, df, p, v)
 
       edge_w = [reactflux[2,1], reactflux[3,1], pyr_percent[1], reactflux[5, 3], reactflux[8,3], pyr_percent[2], -reactflux[4,4], reactflux[6,5]+reactflux[6, 8], reactflux[5, 6], reactflux[8, 7]+reactflux[8, 8], reactflux[7, 9], reactflux[6, 10]]
-      col_grad = ["#440154", "#481567", "#482677", "#453781", "#404788", "#39568C", "#33638D", "#2D708E", "#287D8E", "#238A8D", "#1F968B", "#20A387", "#29AF7F", "#3CBB75", "#55C667", "#73D055", "#95D840", "#B8DE29", "#DCE319", "#FDE725"]
-      edgecol = col_grad[[argmin(abs.(edge_w[i] .- col_range)) for i in 1:12]]
+      edge_range = LinRange(0, 1, 20)
+      edgecol = viridis[[argmin(abs.(edge_w[i] .- edge_range)) for i in 1:12]]
 
-      return(node_w, edgecol, col_grad)
+      return(nodecol, nodefont, edgecol, cmap_range)
   end
 
-  function generate_metabolic_graph(st, df, p, v)
+  function generate_metabolic_graph(st, df, p, v; T = -1, mix = -1)
       graph, node_lab, edge_lab = generic_metabolic_graph()
-      node_w, edge_w, col_grad = get_metabolic_graph_attrs(st, df, p, v)
-    
-      fig = Figure(size = (900, 600))
-      ax, pl = GraphMakie.graphplot(fig[1,1], graph, ilabels = node_lab, elabels = edge_lab, edge_color = edge_w, edge_width = 4, arrow_size = 20, arrow_shift = :end, node_color = "#238A8D", curve_distance = -.2, curve_distance_usage = true, elabels_fontsize = 12, elabels_distance = -9, node_size = node_w, ilabels_fontsize = 12)
+      nodecol, nodefont, edgecol, cmap_range = get_metabolic_graph_attrs(st, df, p, v)
+
+      fig = Figure(size = (1200, 800))
+      Label(fig[1, 2:3], "Metabolic Pathway Graph", fontsize = 28, font = :bold)
+      ax, pl = GraphMakie.graphplot(fig[2:3,2:3], graph, ilabels = node_lab, elabels = edge_lab, edge_color = edgecol, node_color = nodecol, edge_width = 4, arrow_size = 20, arrow_shift = :end, curve_distance = -.2, curve_distance_usage = true, elabels_fontsize = 15, elabels_distance = -8, ilabels_fontsize = 16, ilabels_color = nodefont, node_size = 70)
       hidedecorations!(ax); hidespines!(ax)
-      Colorbar(fig[1, 2], colormap = col_grad)
+      Colorbar(fig[2,1], colormap = :viridis, limits = cmap_range, ticklabelsize = 16, ticks = round.(LinRange(cmap_range[1], cmap_range[2], 10), digits = 1))
+      Colorbar(fig[2,4], colormap = :viridis, limits = (0, 100), ticklabelsize = 16, ticks = 0:10:100)
+
+      Label(fig[3,1], "Node\n Colormap\n (g/l)", fontsize = 18)
+      Label(fig[3,4], "Edge\n Colormap\n (%)", fontsize = 18)
+
+      Label(fig[4,2:3], "The color of the nodes indicates the maximum\n concentration of the compound, according to the left colorbar.\n The color of the edges indicates how much of the product node was produced\n from the reaction that edge is representing, according to the right colorbar.", fontsize = 20)
+
+      if T != -1 && mix != -1
+	  Label(fig[4, 1], "Temp = "*T*"\nMix = "*mix, fontsize = 20)
+      end
 
       return fig
   end
 #+END_SRC
 
 #+RESULTS: graph
-: Colorbar()
+: generate_metabolic_graph (generic function with 1 method)
+
+*** Sample result
+#+ATTR_ORG: :width 900px
+[[../plots/metabolic_results/35_0.png]]
+
+* Performing the result analysis on each dataset
+This section has the goal of loading the jld2 file saved above and initializing all the necessary variables to do the result analysis (meaning generate the needed tables and plots). The majority of dependencies are in ~metabolism_results.jl~. DrWatson and JLD2 which are needed are not however.
+
+#+NAME: res_analysis_deps
+#+BEGIN_SRC julia :tangle ../scripts/metabolism_result_analysis.jl
+
+  using DrWatson
+  @quickactivate "Masters_Thesis"
+  using JLD2
+  include(srcdir("metabolic_pathways", "metabolism_results.jl"))
+#+END_SRC
+
+After dependencies, we can unpack the results.
+
+#+NAME: result_extraction
+#+BEGIN_SRC julia :tangle ../scripts/metabolism_result_analysis.jl
+
+  data_dir = wload(datadir("simulations", "metabolic_pathways.jld2"))
+
+  st35_0, df35_0, p35_0, v = data_dir["35_0"]
+  st35_1, df35_1, p35_1, v = data_dir["35_1"]
+  st35_2, df35_2, p35_2, v = data_dir["35_2"]
+  st35_4, df35_4, p35_4, v = data_dir["35_4"]
+  st35_8, df35_8, p35_8, v = data_dir["35_8"]
+
+  st40_0, df40_0, p40_0, v = data_dir["40_0"]
+  st40_1, df40_1, p40_1, v = data_dir["40_1"]
+  st40_2, df40_2, p40_2, v = data_dir["40_2"]
+  st40_4, df40_4, p40_4, v = data_dir["40_4"]
+  st40_8, df40_8, p40_8, v = data_dir["40_8"]
+#+END_SRC
+
+#+RESULTS: result_extraction
+#+begin_example
+4-element Vector{Any}:
+  (sucrose = 1.557002571255171, glucose = 1.1360218098272432, fructose = 2.58265251270569, lactate = 0.8501122143053359, acetate = 0.5370876008054362, propionate = 0.4402431378690014, ethanol = 0.059752264384910235, co2 = 0.0, hydrogen = 0.0, water = 750.0, pyruvate = 0.0, succinate = 0.0, acetaldehyde = 0.0)
+  4×10 DataFrame
+ Row │ Time   Sucrose    Glucose  Fructose   Lactate   Acetate   Propionate  E ⋯
+     │ Int64  Float64    Float64  Float64    Float64   Float64   Float64     F ⋯
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │     0  1.557      1.13602  2.58265    0.850112  0.540769    0.440243  0 ⋯
+   2 │    24  0.0304375  0.0      1.61717    1.07473   0.537088    0.436677  0
+   3 │    48  0.0        0.0      1.29581    1.17961   0.758998    0.533463  0
+   4 │    72  0.0        0.0      0.0464546  2.32479   1.11994     0.77837   0
+                                                               3 columns omitted
+  [0.7040720317861947, 0.39670059826916304, 0.5704193684634057, 0.0032933880109850457, 0.9993243340672121]
+ 0.8
+#+end_example
+
+** Generate the necessary tables
+The above code for result analysis creates a lot of useful to have tables. I want to save 4 different table formats for each experiment. These are: The reaction flux table, the flux table containing the reactions as well as initial and final state, the "readable" flux table containing the labels of each column and row and the absolute flux table which is not normalized in (0, 1) but in the absolute concentration values measured. For simplicity, a helper function will be defined which runs all 4 and return the 4 tables and then only one function needs to be ran for each experiment.
+
+#+NAME: table_generation
+#+BEGIN_SRC julia :tangle ../scripts/metabolism_result_analysis.jl
+
+  # Convenience code wrapping the process
+  function generate_flux_tables(st, df, p, v)
+      rflux = reaction_fluxes(st, df, p, v)
+      cflux = complete_fluxes(st, df, p, v)
+      readflux = readable_flux_table(st, df, p, v)
+      absflux = absolute_flux_table(st, df, p, v)
+
+      rflux_t = Tables.table(rflux, header = [:SucHyd, :Glycolysis, :Heterolact, :PyrOx, :Acet, :Lact, :Eth, :Aceteth, :Prop, :Acetogenesis])
+      cflux_t = Tables.table(cflux, header = [:Init, :SucHyd, :Glycolysis, :Heterolact, :PyrOx, :Acet, :Lact, :Eth, :Aceteth, :Prop, :Acetogenesis, :Final])
+      absflux_t = Tables.table(absflux, header = [:Init, :SucHyd, :Glycolysis, :Heterolact, :PyrOx, :Acet, :Lact, :Eth, :Aceteth, :Prop, :Acetogenesis, :Final])
+
+      # The readable flux table already has headers so that process
+      # isn't necessary for it.
+      return rflux_t, cflux_t, readflux, absflux_t
+  end
+
+  # Example generation of the tables
+  rflux35_0, cflux35_0, readflux35_0, absflux35_0 = generate_flux_tables(st35_0, df35_0, p35_0, v)
+  CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table35_0.csv"), rflux35_0)
+  CSV.write(datadir("simulations", "flux_tables", "complete_flux_table35_0.csv"), cflux35_0)
+  CSV.write(datadir("simulations", "flux_tables", "readable_flux_table35_0.csv"), readflux35_0)
+  CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table35_0.csv"), absflux35_0)
+
+  # Doing it for the rest of the datasets.
+  rflux35_1, cflux35_1, readflux35_1, absflux35_1 = generate_flux_tables(st35_1, df35_1, p35_1, v)
+  CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table35_1.csv"), rflux35_1)
+  CSV.write(datadir("simulations", "flux_tables", "complete_flux_table35_1.csv"), cflux35_1)
+  CSV.write(datadir("simulations", "flux_tables", "readable_flux_table35_1.csv"), readflux35_1)
+  CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table35_1.csv"), absflux35_1)
+
+  rflux35_4, cflux35_4, readflux35_4, absflux35_4 = generate_flux_tables(st35_4, df35_4, p35_4, v)
+  CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table35_4.csv"), rflux35_4)
+  CSV.write(datadir("simulations", "flux_tables", "complete_flux_table35_4.csv"), cflux35_4)
+  CSV.write(datadir("simulations", "flux_tables", "readable_flux_table35_4.csv"), readflux35_4)
+  CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table35_4.csv"), absflux35_4)
+
+  rflux35_8, cflux35_8, readflux35_8, absflux35_8 = generate_flux_tables(st35_8, df35_8, p35_8, v)
+  CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table35_8.csv"), rflux35_8)
+  CSV.write(datadir("simulations", "flux_tables", "complete_flux_table35_8.csv"), cflux35_8)
+  CSV.write(datadir("simulations", "flux_tables", "readable_flux_table35_8.csv"), readflux35_8)
+  CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table35_8.csv"), absflux35_8)
+
+  rflux40_0, cflux40_0, readflux40_0, absflux40_0 = generate_flux_tables(st40_0, df40_0, p40_0, v)
+  CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table40_0.csv"), rflux40_0)
+  CSV.write(datadir("simulations", "flux_tables", "complete_flux_table40_0.csv"), cflux40_0)
+  CSV.write(datadir("simulations", "flux_tables", "readable_flux_table40_0.csv"), readflux40_0)
+  CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table40_0.csv"), absflux40_0)
+
+  rflux40_1, cflux40_1, readflux40_1, absflux40_1 = generate_flux_tables(st40_1, df40_1, p40_1, v)
+  CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table40_1.csv"), rflux40_1)
+  CSV.write(datadir("simulations", "flux_tables", "complete_flux_table40_1.csv"), cflux40_1)
+  CSV.write(datadir("simulations", "flux_tables", "readable_flux_table40_1.csv"), readflux40_1)
+  CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table40_1.csv"), absflux40_1)
+
+  rflux40_2, cflux40_2, readflux40_2, absflux40_2 = generate_flux_tables(st40_2, df40_2, p40_2, v)
+  CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table40_2.csv"), rflux40_2)
+  CSV.write(datadir("simulations", "flux_tables", "complete_flux_table40_2.csv"), cflux40_2)
+  CSV.write(datadir("simulations", "flux_tables", "readable_flux_table40_2.csv"), readflux40_2)
+  CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table40_2.csv"), absflux40_2)
+
+  rflux40_4, cflux40_4, readflux40_4, absflux40_4 = generate_flux_tables(st40_4, df40_4, p40_4, v)
+  CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table40_4.csv"), rflux40_4)
+  CSV.write(datadir("simulations", "flux_tables", "complete_flux_table40_4.csv"), cflux40_4)
+  CSV.write(datadir("simulations", "flux_tables", "readable_flux_table40_4.csv"), readflux40_4)
+  CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table40_4.csv"), absflux40_4)
+
+  rflux40_8, cflux40_8, readflux40_8, absflux40_8 = generate_flux_tables(st40_8, df40_8, p40_8, v)
+  CSV.write(datadir("simulations", "flux_tables", "reaction_flux_table40_8.csv"), rflux40_8)
+  CSV.write(datadir("simulations", "flux_tables", "complete_flux_table40_8.csv"), cflux40_8)
+  CSV.write(datadir("simulations", "flux_tables", "readable_flux_table40_8.csv"), readflux40_8)
+  CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table40_8.csv"), absflux40_8)
+#+END_SRC
+
+#+RESULTS: table_generation
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/data/simulations/flux_tables/absolute_flux_table40_8.csv"
+
+** Create the graphs
+The tables are useful to log the results and be able to revisit them at any point. But, they are not very easy to read. For this reason, the graph function were created because the graphs offer a powerful visualization technique of the table data. This code block generates these.
+
+#+NAME: graph_creation
+#+BEGIN_SRC julia :tangle ../scripts/metabolism_result_analysis.jl
+
+  f35_0 = generate_metabolic_graph(st35_0, df35_0, p35_0, v, T = "35 C", mix = "0 ml")
+  save(plotsdir("metabolic_results", "35_0.png"), f35_0)
+  f35_1 = generate_metabolic_graph(st35_1, df35_1, p35_1, v, T = "35 C", mix = "1 ml")
+  save(plotsdir("metabolic_results", "35_1.png"), f35_1)
+  f35_4 = generate_metabolic_graph(st35_4, df35_4, p35_4, v, T = "35 C", mix = "4 ml")
+  save(plotsdir("metabolic_results", "35_4.png"), f35_4)
+  f35_8 = generate_metabolic_graph(st35_8, df35_8, p35_8, v, T = "35 C", mix = "8 ml")
+  save(plotsdir("metabolic_results", "35_8.png"), f35_8)
+
+  f40_0 = generate_metabolic_graph(st40_0, df40_0, p40_0, v, T = "40 C", mix = "0 ml")
+  save(plotsdir("metabolic_results", "40_0.png"), f40_0)
+  f40_1 = generate_metabolic_graph(st40_1, df40_1, p40_1, v, T = "40 C", mix = "1 ml")
+  save(plotsdir("metabolic_results", "40_1.png"), f40_1)
+  f40_2 = generate_metabolic_graph(st40_2, df40_2, p40_2, v, T = "40 C", mix = "2 ml")
+  save(plotsdir("metabolic_results", "40_2.png"), f40_2)
+  f40_4 = generate_metabolic_graph(st40_4, df40_4, p40_4, v, T = "40 C", mix = "4 ml")
+  save(plotsdir("metabolic_results", "40_4.png"), f40_4)
+  f40_8 = generate_metabolic_graph(st40_8, df40_8, p40_8, v, T = "40 C", mix = "8 ml")
+  save(plotsdir("metabolic_results", "40_8.png"), f40_8)
+#+END_SRC
+
+#+RESULTS: graph_creation
+: CairoMakie.Screen{IMAGE}
+
+* Shifts in metabolic reactions from changing parameters
+Having all this, we can conclude how the metabolic pathways change by varying a parameter.
+
+35 C: Increasing the mix amount significantly inhibits acetogenic pathways (the main indication for this is ethanol to acetate which is seen to a large extent in 0 and 1 ml but vanishes after, but also pyruvate to acetate has a very small rate in anything but 1 ml) while promoting reducing reactions such as pyruvate to lactate (direct reduction) and ethanol (reduction of Acetyl-CoA, produced from pyruvate). Also, Fructose is consumed more effectively. This indicates that heterolactic fermentation is carried by the indigenous microorganisms of the FW (as its flux doesn't increase with mix amount) but this group of microorganisms isn't inhibited by the microorganisms we insert (seen by the small decreases in heterolactate flux). The reduction of the readily available lactate to propionate also seems to be done by the indigenous microorganisms for the same reason. Lactate gets very high amounts in high mix amounts as both groups of microorganisms are capable of producing significant amount of lactate. The other reactions don't seem significantly affected.
+
+40 C: Heterolactic fermentation and lactate reduction to propionate seem to be stagnant with mix amount again, strengthening the hypothesis that they are done by the indigenous microorganisms. Other pathways that produce ethanol however are inhibited here due to temperature and independently of mix amount. At 0 ml (indigenous) acetate production is mainly done together with ethanol (acetate-ethanol type fermentation) showing that pathway having the largest flux of anaerobic pyruvate consumption, so that pathway has some ethanol (although still not much). Once we add the other microorganisms, this pathway is strongly inhibited with ethanol being produced only from heterolactate and acetate being produced without co-products and at an increased flux. The reduction of pyruvate to lactate is also promoted, strengthening the hypothesis that the microorganisms we add are controling its rate. Acetogenesis also seems promoted but not significantly due to the small amounts of ethanol that are produced.
+
+Some of these are visible if you look at the graph networks or the matrices generated above, but although the graph visualization is very nice and indicative, we don't want to have to show 9 identical looking graphs with only the colors changing, so we want some more fine-tuned graphs to be able to better summarize some results. These are shown below.
+
+** Amount of glucose consumed in heterolactic fermentation
+The glucose being consumed in heterolactic fermentation is the majority of the total glucose and it's flux is very similar in all experiments, with its changes not being able to be attributed to the mix. Therefore, I believe it is done by the indigenous microorganisms. To indicate this better, we can plot how it changes in the various experiments. A bar plot is the ideal way to do this.
+
+#+NAME: het_bar_plot
+#+BEGIN_SRC julia :tangle ../scripts/metabolism_result_analysis.jl
+
+  gluc_fluxes = [p35_0[1], p35_1[1], p35_4[1], p35_8[1], p40_0[1], p40_1[1], p40_2[1], p40_4[1], p40_8[1]]
+  x = 1:length(gluc_fluxes)
+  ticklabels = ["35 C\n 0 ml", "35 C\n 1 ml", "35 C\n 4 ml", "35 C\n 8 ml", "40 C\n 0 ml", "40 C\n 1 ml", "40 C\n 2 ml", "40 C\n 4 ml", "40 C\n 8 ml"]
+
+  het_plot = barplot(x, gluc_fluxes,
+		     axis = (xticks = (x, ticklabels),
+			     title = "% of Glucose Consumed in Heterolactic Fermentation",
+			     limits = (nothing, (0.0, 0.9))))
+  save(plotsdir("metabolic_results", "heterolactate_flux.png"), het_plot)
+#+END_SRC
+
+#+RESULTS: het_bar_plot
+: CairoMakie.Screen{IMAGE}
+
+In this plot it is evident that 6-9 lie in the range of 80-85% (practically equal), one diverges slightly at 0.89 and the others are close to 70%. This shows that the only divergences are small and could be more attributed to randomness. Therefore, the microorganisms we add can't control this reaction's flux and changing the temperature between 35 and 40 C can't control this either.
+
+** Amount of lactate consumed for propionate production
+From looking at the data, the same conclusion can be said for propionate production. We can create a very similar looking plot for the amount of lactate going to propionate.
+
+#+NAME: julia
+#+BEGIN_SRC julia :tangle ../scripts/metabolism_result_analysis.jl
+
+  lact_cons35_0 = lactate_dist(st35_0, df35_0, p35_0, v)[3]
+  lact_cons35_1 = lactate_dist(st35_1, df35_1, p35_1, v)[3]
+  lact_cons35_4 = lactate_dist(st35_4, df35_4, p35_4, v)[3]
+  lact_cons35_8 = lactate_dist(st35_8, df35_8, p35_8, v)[3]
+
+  lact_cons40_0 = lactate_dist(st40_0, df40_0, p40_0, v)[3]
+  lact_cons40_1 = lactate_dist(st40_1, df40_1, p40_1, v)[3]
+  lact_cons40_2 = lactate_dist(st40_2, df40_2, p40_2, v)[3]
+  lact_cons40_4 = lactate_dist(st40_4, df40_4, p40_4, v)[3]
+  lact_cons40_8 = lactate_dist(st40_8, df40_8, p40_8, v)[3]
+
+  lact_fluxes = abs.([lact_cons35_0, lact_cons35_1, lact_cons35_4, lact_cons35_8, lact_cons40_0, lact_cons40_1, lact_cons40_2, lact_cons40_4, lact_cons40_8])
+
+  prop_plot = barplot(x, lact_fluxes,
+		      axis = (xticks = (x, ticklabels),
+			      title = "% of Lactate Reduced to Propionate"))
+  save(plotsdir("metabolic_results", "propionate_flux.png"), prop_plot)
+#+END_SRC
+
+#+RESULTS: julia
+: CairoMakie.Screen{IMAGE}
+
+Again, there are 3 visible outliers. In two of the three cases (35_4, 35_8) the total produced propionate is much less than what it is in most other cases, so naturally, this flux is less. An assumption could be made that adding the microorganisms of the mix inhibits the reduction of lactate to propionate, however, the one with the higher mix amount has near double the propionate flux (and in absolute numbers 0.15 g/l instead of 0.1). This indicates that it likely isn't a fault of these microorganisms, however, seeing that the one with 8 ml has worse performance than 0 and 1 ml means that these microorganisms having a small adverse effect on this reaction isn't out of the table.
+
+** Pyruvate Flux Pie Plots
+One of the things that we want to indicate is that acetate and ethanol fermentations act competitively between the two temperatures (meaning that one is strongly inhibited and the other strongly produced). But an interesting point (which is due to the indigenous microorganisms as it appears most evidently at 0 ml) is that if the inhibited one were to be produced, it would be produced in acetate/ethanol type fermentation, which is the 1:1 ratio fermentation producing both.  
+
+#+NAME: pyr_pie_plots
+#+BEGIN_SRC julia :tangle ../scripts/metabolism_result_analysis.jl
+
+  pyr35_0 = pyruvate_cons_dist(st35_0, df35_0, p35_0, v)
+  pyr35_1 = pyruvate_cons_dist(st35_1, df35_1, p35_1, v)
+  pyr35_4 = pyruvate_cons_dist(st35_4, df35_4, p35_4, v)
+  pyr35_8 = pyruvate_cons_dist(st35_8, df35_8, p35_8, v)
+
+  pyr40_0 = pyruvate_cons_dist(st40_0, df40_0, p40_0, v)
+  pyr40_1 = pyruvate_cons_dist(st40_1, df40_1, p40_1, v)
+  pyr40_2 = pyruvate_cons_dist(st40_2, df40_2, p40_2, v)
+  pyr40_4 = pyruvate_cons_dist(st40_4, df40_4, p40_4, v)
+  pyr40_8 = pyruvate_cons_dist(st40_8, df40_8, p40_8, v)
+
+  labels = ["Kreb's Cycle", "Acetate", "Lactate", "Ethanol", "Acetate/Ethanol\n type Fermentation"]
+  colors = Makie.wong_colors()[1:length(labels)]
+
+  pyr_ind_f = Figure(size=(600, 400))
+  Label(pyr_ind_f[1,1:3], "Pyruvate Flux Distribution for the \nindigenous microorganisms", fontsize = 20, font = :bold)
+  ax1, plt = pie(pyr_ind_f[2,1], pyr35_0, color = colors, axis = (aspect=DataAspect(), title = "35 C"))
+  ax2, plt = pie(pyr_ind_f[2,2], pyr40_0, color = colors, axis = (aspect=DataAspect(), title = "40 C"))
+  Legend(pyr_ind_f[2,3], [PolyElement(color=c) for c in colors], labels, framevisible=false)
+  hidedecorations!(ax1)
+  hidedecorations!(ax2)
+  hidespines!(ax1)
+  hidespines!(ax2)
+  save(plotsdir("metabolic_results", "pyr_flux_ind.png"), pyr_ind_f)
+
+  pyr_flux_f = Figure(size = (1350, 900))
+  Label(pyr_flux_f[1,1:3], "Pyruvate Flux Distribution", fontsize = 32, font = :bold)
+  Label(pyr_flux_f[2, 1:3], "Temperature = 35 C", fontsize = 25)
+
+  ax1, plt = pie(pyr_flux_f[3,1], pyr35_0, color = colors, axis = (aspect=DataAspect(), title = "0 ml", titlesize = 20))
+  ax2, plt = pie(pyr_flux_f[3,2], pyr35_1, color = colors, axis = (aspect=DataAspect(), title = "1 ml", titlesize = 20))
+  ax3, plt = pie(pyr_flux_f[4,1], pyr35_4, color = colors, axis = (aspect=DataAspect(), title = "4 ml", titlesize = 20))
+  ax4, plt = pie(pyr_flux_f[4,2], pyr35_8, color = colors, axis = (aspect=DataAspect(), title = "8 ml", titlesize = 20))
+  hidedecorations!(ax1)
+  hidedecorations!(ax2)
+  hidedecorations!(ax3)
+  hidedecorations!(ax4)
+  hidespines!(ax1)
+  hidespines!(ax2)
+  hidespines!(ax3)
+  hidespines!(ax4)
+  Legend(pyr_flux_f[3:4,3], [PolyElement(color=c) for c in colors], labels, framevisible=false, labelsize = 22)
+
+  Label(pyr_flux_f[5, 1:3], "Temperature = 40 C", fontsize= 25)
+
+  ax5, plt = pie(pyr_flux_f[6,1], pyr40_0, color = colors, axis = (aspect=DataAspect(), title = "0 ml", titlesize = 20))
+  ax6, plt = pie(pyr_flux_f[6,2], pyr40_1, color = colors, axis = (aspect=DataAspect(), title = "1 ml", titlesize = 20))
+  ax7, plt = pie(pyr_flux_f[6,3], pyr40_2, color = colors, axis = (aspect=DataAspect(), title = "2 ml", titlesize = 20))
+  ax8, plt = pie(pyr_flux_f[7,1], pyr40_4, color = colors, axis = (aspect=DataAspect(), title = "4 ml", titlesize = 20))
+  ax9, plt = pie(pyr_flux_f[7,2], pyr40_8, color = colors, axis = (aspect=DataAspect(), title = "8 ml", titlesize = 20))
+  hidedecorations!(ax5)
+  hidedecorations!(ax6)
+  hidedecorations!(ax7)
+  hidedecorations!(ax8)
+  hidedecorations!(ax9)
+  hidespines!(ax5)
+  hidespines!(ax6)
+  hidespines!(ax7)
+  hidespines!(ax8)
+  hidespines!(ax9)
+
+  save(plotsdir("metabolic_results", "pyr_flux_tot.png"), pyr_flux_f)
+#+END_SRC
+
+#+RESULTS: pyr_pie_plots
+: CairoMakie.Screen{IMAGE}
