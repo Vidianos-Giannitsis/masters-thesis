@@ -235,7 +235,7 @@ predictor_35_1(u) = mixed_culture_predictor(init_st35_1, df35_1, u, 0.8)
 # First, let's try to solve an unbounded optimization problem using
 # the solution of the above as the initial condition.
 optf_35_1 = OptimizationFunction(loss_35_1, adtype)
-optprob_35_1 = OptimizationProblem(optf_35_1, sol1.u)
+optprob_35_1 = OptimizationProblem(optf_35_1, sol35_0.u)
 
 sol35_1 = solve(optprob_35_1, Optim.BFGS())
 
@@ -365,7 +365,9 @@ for T in temp
     end
 end
 
-dict_signature = Dict([(key_names[i], final_symbols[i, :]) for i in 1:10])
-evaled_dict = Dict([(key_names[i], eval.(final_symbols[i, :])) for i in 1:10])
+final_values = eval.(final_symbols)
+[final_values[i, 3] = final_values[i, 3].u for i in 1:10]
+
+evaled_dict = Dict([(key_names[i], final_values[i, :]) for i in 1:10])
 
 wsave(datadir("simulations", "metabolic_pathways.jld2"), evaled_dict)
