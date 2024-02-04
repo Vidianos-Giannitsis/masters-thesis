@@ -1,5 +1,9 @@
-using DataFrames, SparseArrays, Tables
-include(srcdir("metabolic_pathways"))
+using CSV, DataFrames, SparseArrays, Tables
+include(srcdir("metabolic_pathways", "primitives.jl"))
+include(srcdir("metabolic_pathways", "core_pathways.jl"))
+include(srcdir("metabolic_pathways", "compound_pathways.jl"))
+include(srcdir("metabolic_pathways", "acetogenesis.jl"))
+include(srcdir("metabolic_pathways", "opt_interface.jl"))
 
 function sugar_production_metabolism(st, df, p, v)
     mass_st = conc_to_mass(st, v)
@@ -217,9 +221,10 @@ end
 function readable_flux_table(st, df, p, v)
     flux_table = complete_fluxes(st, df, p, v)
     row_names = ["Sucrose", "Glucose", "Fructose", "Pyruvate", "Lactate", "Acetate", "Propionate", "Ethanol"]
-    column_names = reshape(["Comp", "Init", "SucHyd", "Glycolysis", "Heterolact", "PyrOx", "Acet", "Lact", "Eth", "Aceteth", "Prop", "Acetogenesis", "Final"], 1, 13)
 
-    vcat(column_names, hcat(row_names, flux_table))
+    readflux = hcat(row_names, flux_table)
+
+    Tables.table(readflux, header = [:Comp, :Init, :SucHyd, :Glycolysis, :Heterolact, :PyrOx, :Acet, :Lact, :Eth, :Aceteth, :Prop, :Acetogenesis, :Final])
 end
 
 function max_concentrations(st, df, p, v)
@@ -296,35 +301,51 @@ function generic_metabolic_graph()
     G = DiGraph(9)
     [add_edge!(G, source[i], destination[i]) for i in 1:length(source)]
     labels = ["Sucrose", "Glucose", "Fructose", "Pyruvate", "Lactate", "Acetate", "Propionate", "Ethanol", "Kreb's\n Cycle"]
-    edgelab = ["Hydrolysis", "Hydrolysis", "Glycolysis", "Heterolactic", "Heterolactic", "Fructolysis", "Reduction", "Acetate/Acetate-Ethanol type", "Ethanol/Acetate-Ethanol type", "Oxidation", "Reduction", "Acetogenesis"]
+    edgelab = ["Hydrolysis", "Hydrolysis", "Glycolysis", "Heterolactic", "Heterolactic", "Fructolysis", "Reduction", "Acetate/Acetate-Ethanol", "Ethanol/Acetate-Ethanol", "Oxidation", "Reduction", "Acetogenesis"]
 
     return(G, labels, edgelab)
 end
 
 function get_metabolic_graph_attrs(st, df, p, v)
-    concs = vcat(max_concentrations(st, df, p, v), 0.9)
-    w_matrix = hcat(sortperm(concs), Vector(LinRange(30, 60, 9)))
-    inds = [findall(x -> x==i, w_matrix[:, 1]) for i in 1.0:9.0]
-    node_w = reduce(vcat, transpose.([w_matrix[inds[i], 2] for i in 1:9]))[:, 1]
+    concs = vcat(max_concentrations(st, df, p, v), 1.3)
+
+    viridis = ["#440154", "#481567", "#482677", "#453781", "#404788", "#39568C", "#33638D", "#2D708E", "#287D8E", "#238A8D", "#1F968B", "#20A387", "#29AF7F", "#3CBB75", "#55C667", "#73D055", "#95D840", "#B8DE29", "#DCE319", "#FDE725"]
+    grey_shades = ["#FFFFFF", "#F8F8F8", "#F5F5F5", "#F0F0F0", "#E8E8E8", "#E0E0E0", "#DCDCDC", "#505050", "#202020", "#101010", "#000000"]
+    cmap_range = (0.4, 3.2)
+    node_range = LinRange(0.4, 3.2, 20)
+    font_range = LinRange(0.4, 3.2, 10)
+    nodecol = viridis[[argmin(abs.(concs[i] .- node_range)) for i in 1:9]]
+    nodefont = grey_shades[[argmin(abs.(concs[i] .- font_range)) for i in 1:9]]
 
     pyr_percent = sugar_consumption_metabolism(st, df, p, v, pyr_flux = 1)
     reactflux = reaction_fluxes(st, df, p, v)
 
     edge_w = [reactflux[2,1], reactflux[3,1], pyr_percent[1], reactflux[5, 3], reactflux[8,3], pyr_percent[2], -reactflux[4,4], reactflux[6,5]+reactflux[6, 8], reactflux[5, 6], reactflux[8, 7]+reactflux[8, 8], reactflux[7, 9], reactflux[6, 10]]
-    col_grad = ["#440154", "#481567", "#482677", "#453781", "#404788", "#39568C", "#33638D", "#2D708E", "#287D8E", "#238A8D", "#1F968B", "#20A387", "#29AF7F", "#3CBB75", "#55C667", "#73D055", "#95D840", "#B8DE29", "#DCE319", "#FDE725"]
-    edgecol = col_grad[[argmin(abs.(edge_w[i] .- col_range)) for i in 1:12]]
+    edge_range = LinRange(0, 1, 20)
+    edgecol = viridis[[argmin(abs.(edge_w[i] .- edge_range)) for i in 1:12]]
 
-    return(node_w, edgecol, col_grad)
+    return(nodecol, nodefont, edgecol, cmap_range)
 end
 
-function generate_metabolic_graph(st, df, p, v)
+function generate_metabolic_graph(st, df, p, v; T = -1, mix = -1)
     graph, node_lab, edge_lab = generic_metabolic_graph()
-    node_w, edge_w, col_grad = get_metabolic_graph_attrs(st, df, p, v)
+    nodecol, nodefont, edgecol, cmap_range = get_metabolic_graph_attrs(st, df, p, v)
 
-    fig = Figure(size = (900, 600))
-    ax, pl = GraphMakie.graphplot(fig[1,1], graph, ilabels = node_lab, elabels = edge_lab, edge_color = edge_w, edge_width = 4, arrow_size = 20, arrow_shift = :end, node_color = "#238A8D", curve_distance = -.2, curve_distance_usage = true, elabels_fontsize = 12, elabels_distance = -9, node_size = node_w, ilabels_fontsize = 12)
+    fig = Figure(size = (1200, 800))
+    Label(fig[1, 2:3], "Metabolic Pathway Graph", fontsize = 28, font = :bold)
+    ax, pl = GraphMakie.graphplot(fig[2:3,2:3], graph, ilabels = node_lab, elabels = edge_lab, edge_color = edgecol, node_color = nodecol, edge_width = 4, arrow_size = 20, arrow_shift = :end, curve_distance = -.2, curve_distance_usage = true, elabels_fontsize = 15, elabels_distance = -8, ilabels_fontsize = 16, ilabels_color = nodefont, node_size = 70)
     hidedecorations!(ax); hidespines!(ax)
-    Colorbar(fig[1, 2], colormap = col_grad)
+    Colorbar(fig[2,1], colormap = :viridis, limits = cmap_range, ticklabelsize = 16, ticks = round.(LinRange(cmap_range[1], cmap_range[2], 10), digits = 1))
+    Colorbar(fig[2,4], colormap = :viridis, limits = (0, 100), ticklabelsize = 16, ticks = 0:10:100)
+
+    Label(fig[3,1], "Node\n Colormap\n (g/l)", fontsize = 18)
+    Label(fig[3,4], "Edge\n Colormap\n (%)", fontsize = 18)
+
+    Label(fig[4,2:3], "The color of the nodes indicates the maximum\n concentration of the compound, according to the left colorbar.\n The color of the edges indicates how much of the product node was produced\n from the reaction that edge is representing, according to the right colorbar.", fontsize = 20)
+
+    if T != -1 && mix != -1
+	Label(fig[4, 1], "Temp = "*T*"\nMix = "*mix, fontsize = 20)
+    end
 
     return fig
 end
