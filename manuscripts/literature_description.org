@@ -83,17 +83,17 @@
 [cite:@liDynamicsMicrobialCommunity2015] - Dynamics της μικροβιακής κοινότητας ενός single phase AD system σε φυσιολογικές συνθήκες και σε stress. Έχει πολύ ενδιαφέρον να δει κανείς ποιά είναι η αντίδραση του συστήματος στο stress.
 
 * Reading list
-[cite:@kavithaLiquefactionFoodWaste2017; @yinEnzymaticPretreatmentActivated2016] - Importance of hydrolysis/pretreatment.
-[cite:@cesaroPretreatmentMethodsImprove2014] - Review on pretreatment methods for FW treatment.
+Role of ethanol in AD sub-folder.
 
 [cite:@supapholMicrobialCommunityDynamics2011; @williamsMonitoringMethanogenicPopulation2013; @limStudyMicrobialCommunity2013] - Microbial community interaction in anaerobic digestion. The third also covers two-phase AD.
+
+[cite:@kavithaLiquefactionFoodWaste2017; @yinEnzymaticPretreatmentActivated2016] - Importance of hydrolysis/pretreatment.
+[cite:@cesaroPretreatmentMethodsImprove2014] - Review on pretreatment methods for FW treatment.
+More on the pretreatment cost folder in Zotero.
+
+Solid-state fermentation folder. Start with [cite:@aroraBioreactorsSolidState2018] which is an in-depth review of this technology, move on with others cited in it or the ones I have saved.
 
 [cite:@jiangVolatileFattyAcids2013] - Another generic VFA production from FW article.
 [cite:@franchettiEconomicEnvironmentalAnalysis2013] - LCA for AD
 [cite:@liEffectsThermalPretreatment2017] - Thermal pretreatment, two stage AD, pressure effect
-
-The effect of ethanol in AD folder, solid-state fermentation folder, maybe three stage fermentation folder, and maybe pretreatment cost folder. As much of them as deemed necessary.
-
-Τα αρχεία στα sub-folders του Multi-stage AD στο zotero, sorted ανάλογα με το topic.
-
-Ίσως κάποιο άλλο από τα άρθρα που έχω στο reading list για acidogenic SSF μπας και το κάνουμε πιο πλούσιο σε βιβλιογραφία. Επίσης, πιθανόν άρθρα αν κρίνω ότι κάποιο κομμάτι θέλει περισσότερη βιβλιογραφία για να το αιτιολογήσω. Ένα που έχω δει τώρα είναι ίσως κάποια άλλη προσπάθεια να μειώσουμε την ποσότητα ενζύμων που χρειάζονται στην υδρόλυση για μείωση του κόστους πέρα από την χρήση μιξ με μικροοργανισμούς και τους υπέρηχους. Επίσης, ψάξιμο πιθανόν για άρθρα που λένε ότι χρησιμοποιήσαν SSF λόγω του χαμηλότερου κόστους. Ίσως κάποιο από αυτά που είχα δει για αιθανόλη ή αυτά από το acidogenic, ίσως κάτι καινούργιο.
+Three-stage fermentation as a mention maybe.
