@@ -1,0 +1,99 @@
+#+TITLE: Επεξήγηση της βιβλιογραφίας
+
+Για να γράψω την εισαγωγή καλά, πρέπει να οργανώσω λίγο την βιβλιογραφία που έχω πάνω στα διάφορα θέματα που θα ασχοληθεί η διπλωματική, ώστε να μπορώ να κάνω cite κατάλληλα.
+
+* Statistics
+[cite:@ishangulyyevUnderstandingFoodLoss2019] - Κύριο άρθρο με στατιστικά που χρησιμοποιήσα στην αρχή
+
+[cite:@taheriEffectPretreatmentTechniques2021] - Έχει το στατιστικό με το carbon footprint. Γενικά μιλάει και για pretreatments αλλά χρησιμοποιεί πιο novel treatments (υπέρηχους, ηλεκτροχημικά κλπ.) και δεν θέλω να μπω σε αυτό το βάθος επειδή είναι τελείως άκυρο.
+
+* Υδρόλυση
+[cite:@maUtmostBioenergyConversion2018] - Κεντρικό άρθρο της υδρόλυσης, μιλάει για τα πλεονεκτήματα και μειονεκτήματα τις κάθε διεργασίας υδρόλυσης
+
+[cite:@hanBiohydrogenProductionEnzymatic2016] - Συγκρίνει χημική με ενζυμική υδρόλυση με κριτήριο την παραγωγή υδρογόνου.
+
+[cite:@zhangValorizationFoodWaste2020] - Τεχνοοικονομική ανάλυση για χημική vs ενζυμική υδρόλυση
+
+[cite:@liUltrasonicPretreatmentFood2019] - Βασικό άρθρο για ultrasonic pretreatment
+
+[cite:@sureshProcessIntensificationComparison2020] - Βελτιστοποίηση ενζυμικής υδρόλυσης με επιφάνειες απόκρισης και NN. Περιλαμβάνει επίσης υπέρηχους
+
+[cite:@pleissnerDirectProductionLactic2017] - Αναφέρει το υψηλό κόστος των ενζύμων και γιατί θέλουμε μικροοργανισμούς για SSF για να κάνουμε φθηνή την διεργασία. Επίσης, έχει oscillations στα σάκχαρα που είχαμε παρατηρήσει και εμείς.
+
+* Mixed culture acidogenic fermentation
+[cite:@qiaoOrientedFermentationFood2020] - Πολύ καλό review για food waste mixed culture fermentation. Έχει το πιο ωραίο σχήμα για να εξηγήσει τα μονοπάτια, αλλά μπαίνει και σε βάθος για το καθένα. Ο κύριος σκοπός των συγγραφέων είναι να απομακρυνθούμε από την μεθανογένεση λόγω προβλημάτων που έχει και να χρησιμοποιήσουμε τα VFAs ως πλατφόρμα. Για αυτό έχει και πολλές διεργασίες διαχωρισμού τους.
+
+[cite:@jonesContinuousRecoveryEnhanced2021] - Πάλι για την χρήση των VFAs ως πλατφόρμα δείχνοντας ένα ολοκληρωμένο pilot scale study και εστιάζοντας αρκετά στην ηλεκτροδιαπίδυση ως τεχνική διαχωρισμού.
+
+[cite:@daiValuableBiochemicalProduction2017] - Αναφέρει αναλυτικά όλες τα σημαντικά μεταβολικά μονοπάτια στο mixed culture fermentation, αλλά αναφέρει και βήματα όπως το pretreatment της βιομάζας και την αναβάθμιση του βιοαερίου. Αλλά κυρίως είναι ότι είναι από τις ωραίες εξηγήσεις για την διεργασία.
+
+[cite:@zhouEnhancedVolatileFatty2018a] - Άλλο ένα πολύ καλό και αναλυτικό description του mixed culture fermentation για την παραγωγή VFAs τα οποία αναφέρει πως έχουν πολλές εφαρμογές και πέρα από την αναερόβια χώνευση. Επίσης, έχει ωραίο graph και δείχνει αναλυτικά τις τελικές στοιχειομετρίες.
+
+[cite:@temudoInfluencePHOpen2007] - Μιλάει αρκετά για τους μηχανισμούς του mixed culture fermentation της γλυκόζης. Το κύριο focus είναι πως το pH μπορεί να ελέγξει την διεργασία. Παρατηρεί oscillatory behaviour σε χαμηλά pH το οποίο είδαμε και εμείς και είναι ενδιαφέρον για την ανάλυση αποτελεσμάτων ειδικά.
+
+[cite:@rodriguezModelingProductFormation2006] - Ένα πολύ ενδιαφέρον άρθρο για το modeling ενός mixed culture fermentation. Έχει πολλές ωραίες ιδέες για το πως να μοντελοποιήσεις κάτι τέτοιο και μπορούμε να το κάνουμε cite. Επίσης μετά από το πιο in-depth look σε μοντελινγκ που έκανα ίσως είναι και πιο ενδιαφέρον.
+
+[cite:@wuEffectPHEthanoltype2017] - Επίδραση του pH στην ύπαρξη ethanol-type fermentation. Μπορεί να χρησιμοποιηθεί για να αιτιολογήσει την ύπαρξη αιθανόλης στα πειράματα μας.
+
+[cite:@fengEffectPrefermentationTypes2020] - Επίδραση κάποιων ειδών fermentation (heterolactic, homolactic, butyric and mixed acid) στην απόδοση της παραγωγής μεθανίου (BMP και production rate). Πολύ ενδιαφέρον και σίγουρα μπορεί να χρησιμοποιηθεί κατά ένα βαθμό και στη δική μου μελέτη.
+
+[cite:@chenImprovingBiomethaneYield2015] - Επίδραση κάποιων ειδών fermentation (ethanol-type, butyrate, mixed acid) στην απόδοση παραγωγής μεθανίου (acidification rate και BMPs). Συμπληρωματικά του παραπάνω μπορεί να είναι πολύ χρήσιμο για να πούμε πόσο καλό ή κακό είναι το κάθε fermentation type.
+
+[cite:@fengShiftingProductSpectrum2018] - Review των διαφορετικών μονοπατιών του mixed culture acidogenic fermentation ανάλογα με το pH. Θα ήταν πολύ χρήσιμο πιο πριν, τώρα ήταν απλώς bonus info για όσα ήδη ξέρω. + ωραίο graph.
+
+[cite:@wuLacticAcidProduction2015] - Πολύ χρήσιμο άρθρο για fermentation σε χαμηλά pH με κύριο προιόν το γαλακτικό οξύ (το οποίο παρατηρούμε και εμείς σε κάποια συστήματα). Αναφέρει πως το pH 5.0 έχει καλύτερη υδρόλυση και εκτός από homo και heterofermentation με παραγωγή γαλακτικού και κάποια ποσότητα σε οξικό για την εξισορρόπηση του redox, γίνεται και bifidus fermentation καθώς τα Bifidobacterium αυξάνονται σημαντικά.
+
+[cite:@esquivel-elizondoEffectsCO2H22017] - Advantages of mixed cultures
+
+* AD πολλαπλών σταδίων - Διαφορετικοί αντιδραστήρες
+[cite:@azbarEffectProcessConfiguration2001] - Χρήσιμο άρθρο το οποίο αναφέρει κυρίως τα πλεονεκτήματα και μειονεκτήματα των διαφορετικών reactor formations στην αναερόβια χώνευση. Μιλάει για διεργασία σε 2 φάσεις, διάφορα είδη αντιδραστήρων και έχει και την θερμοδυναμική των ενδιάμεσων, το οποίο είναι καλό για να αναφέρουμε που θέλουμε να προσανατολίσουμε την αντίδραση.
+
+[cite:@ghimireReviewDarkFermentative2015] - Καλό review για dark fermentation. Μιλάει για τα VFAs ως platform και για 2-stage AD τα οποία μπορεί να είναι χρήσιμα.
+
+[cite:@jingStatisticalOptimizationSimultaneous2020] - SSF για παραγωγή υδρογόνου και optimization του. Σχετικά κοντινό σε αυτό που κάνουμε οπότε ίσως χρησιμοποιηθεί.
+
+[cite:@sekoaiValorizationVolatileFatty2021] - Ένα από τα πιο ωραίο reviews που έχω δει πάνω στο θέμα του dark fermentation. Μπορεί να είναι χρήσιμο κάπου.
+
+[cite:@zoetemeyerProductInhibitionAcid1982] - Μιλάει για τα πλεονεκτήματα του 2-stage AD.
+
+[cite:@wuPotentialityRecoveringBioresource2022] - Πολύ καλό review για 2-stage AD αλλά και πολλά άλλα στοιχεία και της χώνευσης και της υδρόλυσης τα οποία είναι χρήσιμα.
+
+[cite:@usmaniMinimizingHazardousImpact2021] - Άρθρο που είχα διαβάσει για το enzymatic pretreatment. Μιλάει για AD και έχει κάποιες χρήσιμες πληροφορίες όπως carbon footprint, πλεονεκτήματα του FW ως substrate και γιατί τα two και three stage systems είναι καλα.
+
+[cite:@wuNewMethodTwophase2016] - As close as it gets στα πειράματα που λέμε να κάνουμε εμείς. Two-phase AD με πολύ όξινο acidogenic phase το οποίο παράγει μεγάλη ποσότητα γαλακτικού και μετά UASB για μεθανογένεση. Σίγουρα πάρα πολύ χρήσιμο για ότι κάνουμε παρακάτω.
+
+* Χρησιμότητα των διάφορων μεταβολικών προιόντων για AD
+[cite:@pipynLactateEthanolIntermediates1981] - Θερμοδυναμική του γαλακτικού οξέος και της αιθανόλης ως ενδιάμεσα στην αναερόβια χώνευση, πολύ χρήσιμο.
+
+[cite:@kohnRoleThermodynamicsControlling2000] - Θερμοδυναμική ανάλυση που μπορεί να χρησιμεύσει ενώ συζητάμε την ποιότητα των ενδιαμέσων.
+
+[cite:@chengNanoscaleZerovalentIron2020] - Επίδραση του σιδήρου μηδενικού σθένους (ZVI) στην αναερόβια χώνευση. Βελτίωση της διεργασίας για υψηλή συγκέντρωση προπιονικού και γαλακτικού.
+
+[cite:@wangEffectsVolatileFatty2009] - Επίδραση των διάφορων VFAs στην μεθανογένεση. Butyrate, Ethanol = good, Propionate = bad.
+
+[cite:@pullammanappallilStablePerformanceAnaerobic2001] - Λειτουργία αντιδραστήρα σε μεγάλη συγκέντρωση προπιονικού. Ένδειξη ότι μπορεί να είναι αποτέλεσμα και όχι αίτιο της αναστολής
+
+[cite:@yuEthanolPrefermentationFood2018] - Άρθρο που λέει πως ένα ethanol prefermentation αυξάνει το buffering capability του διαλύματος, το οποίο κάνει πιο αποτελεσματικό το acidification και ευνοεί την μεθανογένεση. Επίσης βελτιώνεται η υδρόλυση. Δεν είμαι σίγουρος αν αυτό ισχύει και για την δική μας περίπτωση που τροφοδοτούμε με παραπάνω αιθανόλη, αλλά μπορεί να αναφερθεί στα πλεονεκτήματα του να υπάρχει αιθανόλη.
+
+* Άλλα σχετικά με AD
+[cite:@moonEnzymaticHydrolysisFoodWaste2011] - AD σε UASB αντιδραστήρα. Κυρίως ασχολείται με υδρόλυση, αλλά μπορώ να το χρησιμοποιήσω.
+
+[cite:@maUtmostBioenergyConversion2018] - Το πιο χρησιμοποιημένο άρθρο για την υδρόλυση. Μιλάει και για AD σε 1 ή 2 στάδια και UASB οπότε ίσως το κάνω cite και εκεί.
+
+[cite:@liDynamicsMicrobialCommunity2015] - Dynamics της μικροβιακής κοινότητας ενός single phase AD system σε φυσιολογικές συνθήκες και σε stress. Έχει πολύ ενδιαφέρον να δει κανείς ποιά είναι η αντίδραση του συστήματος στο stress.
+
+* Reading list
+[cite:@kavithaLiquefactionFoodWaste2017; @yinEnzymaticPretreatmentActivated2016] - Importance of hydrolysis/pretreatment.
+[cite:@cesaroPretreatmentMethodsImprove2014] - Review on pretreatment methods for FW treatment.
+
+[cite:@supapholMicrobialCommunityDynamics2011; @williamsMonitoringMethanogenicPopulation2013; @limStudyMicrobialCommunity2013] - Microbial community interaction in anaerobic digestion. The third also covers two-phase AD.
+
+[cite:@jiangVolatileFattyAcids2013] - Another generic VFA production from FW article.
+[cite:@franchettiEconomicEnvironmentalAnalysis2013] - LCA for AD
+[cite:@liEffectsThermalPretreatment2017] - Thermal pretreatment, two stage AD, pressure effect
+
+The effect of ethanol in AD folder, solid-state fermentation folder, maybe three stage fermentation folder, and maybe pretreatment cost folder. As much of them as deemed necessary.
+
+Τα αρχεία στα sub-folders του Multi-stage AD στο zotero, sorted ανάλογα με το topic.
+
+Ίσως κάποιο άλλο από τα άρθρα που έχω στο reading list για acidogenic SSF μπας και το κάνουμε πιο πλούσιο σε βιβλιογραφία. Επίσης, πιθανόν άρθρα αν κρίνω ότι κάποιο κομμάτι θέλει περισσότερη βιβλιογραφία για να το αιτιολογήσω. Ένα που έχω δει τώρα είναι ίσως κάποια άλλη προσπάθεια να μειώσουμε την ποσότητα ενζύμων που χρειάζονται στην υδρόλυση για μείωση του κόστους πέρα από την χρήση μιξ με μικροοργανισμούς και τους υπέρηχους. Επίσης, ψάξιμο πιθανόν για άρθρα που λένε ότι χρησιμοποιήσαν SSF λόγω του χαμηλότερου κόστους. Ίσως κάποιο από αυτά που είχα δει για αιθανόλη ή αυτά από το acidogenic, ίσως κάτι καινούργιο.
