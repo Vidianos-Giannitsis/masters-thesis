@@ -48,6 +48,8 @@
 
 [cite:@nguyenLittleBreathFresh2018] - Άλλο ένα review για το microaeration. Συμπληρωματικά αυτά τα δύο έχουν αρκετή πληροφορία. Θέλω όμως να δω και κάποια πιο συγκεκριμένα άρθρα και όχι reviews με πειραματικές διαδικασίες και αποτελέσματα.
 
+[cite:@xuOptimizationMicroaerationIntensity2014] - Case-study στην παραγωγή μεθανίου από two-phase AD με microaeration στην πρώτη φάση και χρησιμοποιώντας FW ως υπόστρωμα. Αρκετά ενδιαφέρον read.
+
 * Mixed culture acidogenic fermentation pathways - First phase
 [cite:@esquivel-elizondoEffectsCO2H22017] - Advantages of mixed cultures
 
