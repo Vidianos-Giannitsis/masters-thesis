@@ -7,8 +7,10 @@
 
 [cite:@taheriEffectPretreatmentTechniques2021] - Έχει το στατιστικό με το carbon footprint. Γενικά μιλάει και για pretreatments αλλά χρησιμοποιεί πιο novel treatments (υπέρηχους, ηλεκτροχημικά κλπ.) και δεν θέλω να μπω σε αυτό το βάθος επειδή είναι τελείως άκυρο.
 
+Όλα όσα έχω από το statista που θα χρησιμοποιηθούν κάπου.
+
 * Υδρόλυση
-[cite:@maUtmostBioenergyConversion2018] - Κεντρικό άρθρο της υδρόλυσης, μιλάει για τα πλεονεκτήματα και μειονεκτήματα τις κάθε διεργασίας υδρόλυσης
+[cite:@maUtmostBioenergyConversion2018] - Κεντρικό άρθρο της υδρόλυσης, μιλάει για τα πλεονεκτήματα και μειονεκτήματα τις κάθε διεργασίας υδρόλυσης. Επίσης όμως ασχολείται και με αναερόβια χώνευση και two-phase AD.
 
 [cite:@hanBiohydrogenProductionEnzymatic2016] - Συγκρίνει χημική με ενζυμική υδρόλυση με κριτήριο την παραγωγή υδρογόνου.
 
@@ -19,6 +21,25 @@
 [cite:@sureshProcessIntensificationComparison2020] - Βελτιστοποίηση ενζυμικής υδρόλυσης με επιφάνειες απόκρισης και NN. Περιλαμβάνει επίσης υπέρηχους
 
 [cite:@pleissnerDirectProductionLactic2017] - Αναφέρει το υψηλό κόστος των ενζύμων και γιατί θέλουμε μικροοργανισμούς για SSF για να κάνουμε φθηνή την διεργασία. Επίσης, έχει oscillations στα σάκχαρα που είχαμε παρατηρήσει και εμείς.
+
+[cite:@cesaroPretreatmentMethodsImprove2014] - Πολύ χρήσιμο review για όλες τις τεχνικές προεπεξεργασίας των food waste για την παραγωγή ενός πιο εύκολα βιοαποδομήσιμου αποβλήτου.
+
+[cite:@kavithaLiquefactionFoodWaste2017] - Σημασία του pretreatment και πως η αύξηση του liquefaction βελτιώνει σημαντικά όλα τα χαρακτηριστικά της αναερόβιας χώνευσης. Έχει αναλυτική ενεργειακή και οικονομική ανάλυση που είναι ίσως χρήσιμα.
+
+[cite:@dharTechnoeconomicEvaluationUltrasound2012] - Τεχνοοικονομική ανάλυση της προεπεξεργασίας λάσπης με θερμική τεχνική καθώς και υπέρηχους. Εξετάζει το feasibility της κάθε τεχνικής οικονομικά. Όχι τόσο κοντινό, αλλά ίσως χρήσιμο.
+
+** Solid-State Fermentation
+[cite:@aroraBioreactorsSolidState2018] - Review για βιοαντιδραστήρες για SSF. Δεν έδωσα πάρα πολύ σημασία επειδή δεν είχα καταλάβει καλά και έλεγε κυρίως για τεχνολογίες αντιδραστήρων και ελάχιστα γενικά στοιχεία για SSF, αλλά μιάς και έκανα σημειώσεις το κρατάω και μπορεί να γίνει cited κάπου.
+
+[cite:@zouValorizationFoodWaste2020] - Αρκετά αναλυτικό review article για ένα βιοδιυλιστήριο βασισμένο στα FW το οποίο παράγει βιοαιθανόλη, βιοντίζελ και βιομεθάνιο από διαφορετικά κομμάτια του FW. Προτείνει την προεπεξεργασία με in-situ produced ένζυμα μέσω SSF.
+
+[cite:@uckunkiranEnhancingHydrolysisMethane2015] - Study που συγκρίνει τα commercial ένζυμα με fungal mash produced with SSF η οποία είναι πλούσια σε υδρολυτικά ένζυμα. Συμπέρασμα ότι το fungal mash όχι μόνο είναι φθηνότερο αλλά δίνει και καλύτερα αποτελέσματα.
+
+[cite:@dossantosferreiraEnzymaticPretreatmentAnaerobic2020] - Review article πάνω στην ενζυμική υδρόλυση ως προεπεξεργασία της αναερόβιας χώνευσης. Μιλάει για co-digestion sludge και OFMSW και αναφέρει πως οι λιπάσες είναι σημαντικές επειδή τα λιπή είναι το βασικό πρόβλημα που υπάρχει με το απόβλητο αυτό. Λέει όμως πως για να αξίζει να γίνει υδρόλυση (η οποία βελτιώνει αρκετά και τον ρυθμό και το τελικό methane yield) πρέπει το κόστος της να είναι πολύ χαμηλό, κάτι που δεν έχει ισχύει σε εμπορικά ένζυμα. Για αυτό κάνει employ solid-state fermentation.
+
+[cite:@uckunkiranEnzymeProductionFood2014] - Παραγωγή ενζύμων από FW με SSF. Χρήσιμο review γενικά, όχι τόσο για αυτή τη στιγμή.
+
+[cite:@soaresReductionScumAccumulation2019] - Χρήση λιπάσων παραγμένων από SSF ως ένα φθηνό πρόσθετο στην αναερόβια χώνευση, για την καλύτερη διαχείριση αποβλήτων πλούσια σε έλαια, τα οποία δημιουργούν πρόβλημα σε άλλη περίπτωση.
 
 * AD πολλαπλών σταδίων - Διαφορετικοί αντιδραστήρες
 ** Πλεονεκτήματα του 2-phase για την μεθανογένεση
@@ -32,9 +53,12 @@
 
 [cite:@wuNewMethodTwophase2016] - As close as it gets στα πειράματα που λέμε να κάνουμε εμείς. Two-phase AD με πολύ όξινο acidogenic phase το οποίο παράγει μεγάλη ποσότητα γαλακτικού και μετά UASB για μεθανογένεση. Σίγουρα πάρα πολύ χρήσιμο για ότι κάνουμε παρακάτω.
 
-[cite:@limStudyMicrobialCommunity2013] - Microbial community analysis σε 2-phase AD και σύγκριση με single-phase. Επίσης αναφέρει ότι καταλάθος είχε λίγο αερόβιες συνθήκες στον αντιδραστήρα, όμως αυτό θεωρείται πως έπαιξε θετικό ρόλο. Για αυτό θα κάνω investigate παραπάνω αυτό το αντικείμενο
+[cite:@limStudyMicrobialCommunity2013] - Microbial community analysis σε 2-phase AD και σύγκριση με single-phase. Επίσης αναφέρει ότι καταλάθος είχε λίγο αερόβιες συνθήκες στον αντιδραστήρα, όμως αυτό θεωρείται πως έπαιξε θετικό ρόλο. Για αυτό θα κάνω investigate παραπάνω αυτό το αντικείμενο. Τα σχετικά άρθρα φαίνονται στο micro-aeration section που υπάρχει παρακάτω.
 
 [cite:@pohlandDevelopmentsAnaerobicStabilization1971] - Το original two-phase AD άρθρο. Δεν θεωρώ πως είναι ανάγκη να το διαβάσω, αλλά μπορώ να το κάνω cite ως την original ιδέα.
+
+** 3-phase
+[cite:@zhangThreestageAnaerobicDigester2017] - Άρθρο που εξετάζει την χρήση τριών φάσεων (ξεχωριστά υδρόλυση και οξεογένεση) και λέει πως προσφέρει πλεονεκτήματα όπως ακόμη καλύτερο process stability και ως αποτέλεσμα καλύτερα methane yields σε υψηλά OLRs. Δεν χρειάζεται να το αναφέρουμε σε βάθος, αλλά μπορεί να γίνει ένα build-up για αυτό στην εισαγωγή.
 
 ** Dark Fermentation
 [cite:@ghimireReviewDarkFermentative2015] - Καλό review για dark fermentation. Μιλάει για τα VFAs ως platform και για 2-stage AD τα οποία μπορεί να είναι χρήσιμα.
@@ -43,12 +67,22 @@
 
 [cite:@jingStatisticalOptimizationSimultaneous2020] - SSF για παραγωγή υδρογόνου και optimization του. Σχετικά κοντινό σε αυτό που κάνουμε οπότε ίσως χρησιμοποιηθεί.
 
-** Micro-aeration στον πρώτο αντιδραστήρα
+** Micro-aeration
 [cite:@chenReviewMicroaerationbasedAnaerobic2020] - Review για τα microaeration technologies μιλώντας αρκετά για τα πλεονεκτήματα που προσφέρουν.
 
 [cite:@nguyenLittleBreathFresh2018] - Άλλο ένα review για το microaeration. Συμπληρωματικά αυτά τα δύο έχουν αρκετή πληροφορία. Θέλω όμως να δω και κάποια πιο συγκεκριμένα άρθρα και όχι reviews με πειραματικές διαδικασίες και αποτελέσματα.
 
 [cite:@xuOptimizationMicroaerationIntensity2014] - Case-study στην παραγωγή μεθανίου από two-phase AD με microaeration στην πρώτη φάση και χρησιμοποιώντας FW ως υπόστρωμα. Αρκετά ενδιαφέρον read.
+
+[cite:@canulbacabTwoPhaseAnaerobic2020] - Effect of microaeration in two-phase AD treating FW. Notably, έχει κάποια κομμάτια που θυμίζουν πολύ τα νούμερα μας οπότε είναι καλό ως σύγκριση.
+
+[cite:@limMicrobialCommunityStructure2014; @limEnhancedHydrolysisMethane2013] - Δύο studies πάνω στο microaeration για two-phase AD κάνοντας treat FW co-digested με brown water. Το ένα δείχνει ότι το microaeration είναι πολύ θετικό για την διεργασία ως σύνολο ενώ το δεύτερο εστιάζει στην δομή της μικροβιακής κοινότητας που επικρατεί και πως εμπλουτίζεται από την παρουσία διάφορων κατηγοριών μικροοργανισμών.
+
+[cite:@bothejuOxygenEffectsAnaerobic2009] - ADM1 model με την επίδραση του οξυγόνου incorporated (ADM1-Ox). Ενδιαφέρον paper. Το extension του [cite:@bothejuOxygenEffectsAnaerobic2010] κάνει optimize την ποσότητα οξυγόνου που πρέπει να τροφοδοτηθεί σε έναν αντιδραστήρα με optimization αυτού του μοντέλου. Μπορεί να γίνει cited ως παραπάνω work στο αντικείμενο αυτό.
+
+[cite:@ramosMicroaerobicDigestionSewage2014] - Pilot-scale microaeration study με focus στο desulphurization (το οποίο πετυχαίνει πολύ καλά) και στη μελέτη της επίδρασης του οξυγόνου στη μικροβιακή κοινότητα.
+
+[cite:@tangEffectsMicroaerationPhylogenetic2004] - Πολύ αναλυτική μικροβιακή ανάλυση μίας θερμόφιλης αναερόβιας χώνευσης FW. Χρησιμοποιεί διάφορες τεχνικές για να δείξει την μικροβιακή ποικιλότητα του αντιδραστήρα και πως αυτή εξαρτάται από την προσθήκη αερισμού. Οι συγγραφείς αναφέρουν πως οι κύριοι μεθανογόνοι που μπορούν να αντέξουν σε θερμόφιλες συνθήκες και παρατηρούνται στον αντιδραστήρα αυτόν είναι οι Methanosarcina και Methanoculleus. Η προσθήκη οξυγόνου μείωσε λίγο τους Methanosarcina αλλά προκάλεσε πολύ μεγάλη αύξηση στους Methanoculleus.
 
 * Mixed culture acidogenic fermentation pathways - First phase
 [cite:@esquivel-elizondoEffectsCO2H22017] - Advantages of mixed cultures
@@ -115,28 +149,30 @@
 
 [cite:@zhuAlleviatingAcidInhibition2022] - Μία μελέτη που έδειξε πως η προεπεξεργασία με ethanol-type fermentation στο ήδη όξινο pH των food waste (πλεονέκτημα ότι δεν χρειάζεται pH control) κάνει promote το DIET-based metabolism και η προσθήκη biochar το οποίο είναι ηλεκτροχημικά ενεργό μπορεί να βελτιώσει ακόμη περισσότερο το DIET-based metabolism. Ως αποτέλεσμα, ο συνδυασμός αυτών δίνει καλύτερο βιοαέριο και μία πολύ πιο σταθερή διεργασία (καθώς το βασικό focus ήταν πως κάνει alleviate εώς ένα βαθμό τα προβλήματα του acidification λόγω γρήγορης οξικογένεσης).
 
-* Other articles for AD
-[cite:@maUtmostBioenergyConversion2018] - Το πιο χρησιμοποιημένο άρθρο για την υδρόλυση. Μιλάει και για AD σε 1 ή 2 στάδια και UASB οπότε ίσως το κάνω cite και εκεί.
+[cite:@fangSynergisticCodigestionWaste2020] - Μιλάει για co-digestion yeast και chicken manure για αναερόβια χώνευση. Αναφέρει πως η ύπαρξη της ζύμης βελτιώνει την διεργασία ως προς όχι μόνο το methane yield αλλά και όλους τους ρυθμούς των ενδιαμέσων σταδίων. Βέβαια, παίζει να μην είναι το DIET που παίζει ρόλο εδώ, αλλά κάποιο άλλο interaction καθώς μιλάει για shift σε hydrogenotrophic methanogens από acetoclastics, ενώ στο diet, οι hydrogenotrophics μειώνονται. Πιθανόν χρήσιμο άρθρο.
 
+* Microbial Community Interactions in AD
 [cite:@liDynamicsMicrobialCommunity2015] - Dynamics της μικροβιακής κοινότητας ενός single phase AD system σε φυσιολογικές συνθήκες και σε stress. Έχει πολύ ενδιαφέρον να δει κανείς ποιά είναι η αντίδραση του συστήματος στο stress.
-
-[cite:@zwieteringModelingBacterialGrowth1990] - Ορισμός του τροποποιημένου μοντέλου Gompertz το οποίο χρησιμοποιείται για modelling της μεθανογένεσης από κάποιους συγγραφείς.
 
 [cite:@supapholMicrobialCommunityDynamics2011] - Microbial community analysis ενός βιομηχανικού digester. Μπορεί να χρησιμοποιηθεί για παραπάνω citing.
 
 [cite:@williamsMonitoringMethanogenicPopulation2013] - Παρόμοιο με το παραπάνω. Βασική διαφορά ότι έκανε real-time PCR για ανάλυση του πλυθησμού κατά την διάρκεια της λειτουργίας και όχι μόνο στο τέλος του πειράματος.
 
+[cite:@tangEffectsMicroaerationPhylogenetic2004; @ramosMicroaerobicDigestionSewage2014; @limMicrobialCommunityStructure2014] - Microbial community and micro-aeration (details στο micro-aeration section)
+
+Πρακτικά όλο το DIET section ασχολείται με μικροβιακές αλληλεπιδράσεις.
+
+* Others
+[cite:@zwieteringModelingBacterialGrowth1990] - Ορισμός του τροποποιημένου μοντέλου Gompertz το οποίο χρησιμοποιείται για modelling της μεθανογένεσης από κάποιους συγγραφείς.
+
+[cite:@aphaStandardMethodsExamination2005] - Standard methods for waste and wastewater. Cited σχεδόν παντού για ορισμένες αναλύσεις όπως πχ τα στερεά.
+
+[cite:@franchettiEconomicEnvironmentalAnalysis2013] - Ανάλυση κύκλου ζωής συγκρίνοντας FW treatment σε landfill και διαφορετικά AD formations. Το συμπέρασμα ήταν πως όλα τα σενάρια αναερόβιας είναι πολύ καλύτερα από το landfilling, αλλά τα single-stage δεν είχαν αρκετή παραγωγή μεθανίου για να γίνουν economically viable. Μεταξύ των 2 two-stage treatments που προτάθηκαν (ultrasonic treatment και temperature phased AD), το ultrasonic ήταν πιο οικονομικό, οδηγώντας σε περισσότερο profit, οπότε θεωρήθηκε η καλύτερη επιλογή.
+
 * Reading list
-Micro-aeration sub-folder
+[cite:@yeImprovingStabilityEfficiency2018] - An in-depth review on AD additives for better performance and stability.
+[cite:@xuAnaerobicDigestionFood2018] - A nice review paper for Anaerobic Digestion
+[cite:@srisowmeyaCriticalConsiderationsTwostage2020] - AD review paper covering pretreatments and 2 phase processes that could be helpful for citing.
 
 Temperature-phased AD sub-folder
-
-[cite:@kavithaLiquefactionFoodWaste2017; @yinEnzymaticPretreatmentActivated2016] - Importance of hydrolysis/pretreatment.
-[cite:@cesaroPretreatmentMethodsImprove2014] - Review on pretreatment methods for FW treatment.
-More on the pretreatment cost folder in Zotero.
-
-Solid-state fermentation folder. Start with [cite:@aroraBioreactorsSolidState2018] which is an in-depth review of this technology, move on with others cited in it or the ones I have saved.
-
-[cite:@franchettiEconomicEnvironmentalAnalysis2013] - LCA for AD
-[cite:@liEffectsThermalPretreatment2017] - Thermal pretreatment, two stage AD, pressure effect
-Three-stage fermentation as a mention maybe.
+More on Three-stage fermentation if I want to build up the citations more.
