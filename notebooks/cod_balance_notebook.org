@@ -27,6 +27,7 @@
   @quickactivate "Masters_Thesis"
   include(srcdir("cod_balance.jl"))
   include(srcdir("filenames.jl"))
+  using StatsPlots
 #+END_SRC
 
 * Data Reading and Processing
@@ -81,6 +82,8 @@
   cod72_error = cod72_meas - cod72_theor
 
 #+END_SRC
+
+#+RESULTS: cod_data_extraction
 
 * Plotting
 Με αυτά τα δεδομένα, μπορούμε να κάνουμε τα συγκριτικά plots μεταξύ των δύο.
@@ -212,9 +215,9 @@
 #+NAME: cod_data_processing_23_10
 #+BEGIN_SRC julia
 
-  cod_1_meas = process_cod_data("1", date; dilution = 50)
+  cod_1_meas = process_cod_data("1", date; dilution = 50)./1000
   cod_1_error = cod_1_meas - cod_1_theor
-  cod_2_meas = process_cod_data("2", date; dilution = 50)
+  cod_2_meas = process_cod_data("2", date; dilution = 50)./1000
   cod_2_error = cod_2_meas - cod_2_theor
 
 #+END_SRC

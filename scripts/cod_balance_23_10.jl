@@ -2,6 +2,7 @@ using DrWatson
 @quickactivate "Masters_Thesis"
 include(srcdir("cod_balance.jl"))
 include(srcdir("filenames.jl"))
+using StatsPlots
 
 date = "23_10"
 df1_conc = CSV.read(get_conc_csv(date, "1"), DataFrame)
@@ -18,9 +19,9 @@ cod_1_theor = [sum(Vector(df1_conc[i, :]).*cod_yields) for i in 1:19]
 cod_2_theor = [sum(Vector(df2_conc[i, :]).*cod_yields) for i in 1:15]
 
 
-cod_1_meas = process_cod_data("1", date; dilution = 50)
+cod_1_meas = process_cod_data("1", date; dilution = 50)./1000
 cod_1_error = cod_1_meas - cod_1_theor
-cod_2_meas = process_cod_data("2", date; dilution = 50)
+cod_2_meas = process_cod_data("2", date; dilution = 50)./1000
 cod_2_error = cod_2_meas - cod_2_theor
 
 

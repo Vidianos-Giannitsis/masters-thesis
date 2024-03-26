@@ -169,10 +169,8 @@
 
 [cite:@franchettiEconomicEnvironmentalAnalysis2013] - Ανάλυση κύκλου ζωής συγκρίνοντας FW treatment σε landfill και διαφορετικά AD formations. Το συμπέρασμα ήταν πως όλα τα σενάρια αναερόβιας είναι πολύ καλύτερα από το landfilling, αλλά τα single-stage δεν είχαν αρκετή παραγωγή μεθανίου για να γίνουν economically viable. Μεταξύ των 2 two-stage treatments που προτάθηκαν (ultrasonic treatment και temperature phased AD), το ultrasonic ήταν πιο οικονομικό, οδηγώντας σε περισσότερο profit, οπότε θεωρήθηκε η καλύτερη επιλογή.
 
+[cite:@xuAnaerobicDigestionFood2018] - Ενδιαφέρον review για το AD. Μιλάει κυρίως για reactor failure και πως αυτό μπορεί να διορθωθεί προσθέτοντας trace elements, κάνοντας co-digestion ή με multi-stage AD.
+
 * Reading list
 [cite:@yeImprovingStabilityEfficiency2018] - An in-depth review on AD additives for better performance and stability.
-[cite:@xuAnaerobicDigestionFood2018] - A nice review paper for Anaerobic Digestion
 [cite:@srisowmeyaCriticalConsiderationsTwostage2020] - AD review paper covering pretreatments and 2 phase processes that could be helpful for citing.
-
-Temperature-phased AD sub-folder
-More on Three-stage fermentation if I want to build up the citations more.

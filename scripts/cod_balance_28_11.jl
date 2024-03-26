@@ -2,6 +2,7 @@ using DrWatson
 @quickactivate "Masters_Thesis"
 include(srcdir("cod_balance.jl"))
 include(srcdir("filenames.jl"))
+using StatsPlots
 
 date = "28_11"
 
