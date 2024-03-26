@@ -1,4 +1,4 @@
-using CSV, DataFrames, StatsPlots
+using CSV, DataFrames
 
 """
     cod_equiv(; C=0, H=0, O=0, N=0)
@@ -86,7 +86,7 @@ absorbance to COD taking in mind dilution. A default value of 20 is
 supplied as 1:20 dilutions are fairly common in COD.
 """
 function abs_to_cod(abs; dilution = 20)
-    cod = @. (2380.407*abs - 19.339)/dilution
+    cod = @. (2380.407*abs - 19.339)*dilution
 end
 
 """
