@@ -1,0 +1,465 @@
+#+TITLE: Αποτελέσματα Αναερόβιας Χώνευσης σε BMPs
+
+Σκοπός του αρχείου αυτού είναι η ανάλυση όλων των αποτελεσμάτων των διάφορων πειραμάτων αναερόβιας χώνευσης στην διάταξη για την εύρεση του biomethane potential. Θα αναλυθούν 3 βασικά πειράματα. Το πρώτο είναι η κινητική παραγωγής μεθανίου από οξικό οξύ, ενώ μετά θα αναλυθούν δύο πειράματα παραγωγής μεθανίου από το υδρόλυμα των αποβλήτων τροφών που παράχθηκε στο προηγούμενο στάδιο. Το αρχείο [[./hplc_analysis_notebook.org]] περιέχει τα αποτελέσματα των σχετικών πειραμάτων και αναφέρει τα πλεονεκτήματα και μειονεκτήματα τους.
+
+* Table of Contents                                           :TOC:noexport:
+- [[#dependencies][Dependencies]]
+- [[#acetate-experiment-data-reading][Acetate Experiment data reading]]
+- [[#data-processing][Data Processing]]
+- [[#acetate-experiment-processing][Acetate Experiment Processing]]
+  - [[#acetate-test-1][Acetate Test 1]]
+  - [[#acetate-test-0][Acetate Test 0]]
+  - [[#acetate-test-ac][Acetate Test Ac]]
+  - [[#acetate-test-4][Acetate Test 4]]
+  - [[#acetate-test-2][Acetate Test 2]]
+  - [[#παραγωγή-μεθανίου-χωρίς-feed-από-το-δείγμα-ac][Παραγωγή μεθανίου χωρίς feed από το δείγμα Ac]]
+  - [[#update-all-helper][Update all helper]]
+
+* Dependencies
+Στο αρχείο αυτό θα οριστούν κάποια functions για να διευκολυνθεί η ανάλυση των BMPs, τα οποία θα είναι generic και μετά θα υπάρχουν κάποια specific code blocks για την εφαρμογή σε κάθε πείραμα. Πριν ξεκινήσουμε, κάνουμε activate το DrWatson project για reproducibility. Επίσης κάνουμε load το Dates.jl που θα χρειαστεί παρακάτω, καθώς και τα CSV.jl και DataFrames.jl που είναι πάντα χρήσιμα σε tabular data.
+
+#+NAME: deps
+#+BEGIN_SRC julia
+
+  using DrWatson
+  @quickactivate "Masters_Thesis"
+  using Dates
+  using CSV, DataFrames
+
+#+END_SRC
+
+* Acetate Experiment data reading
+Τα δεδομένα της αναερόβιας χώνευσης είναι φωτογραφίες των προχωίδων της διάταξης. ΕΞετάζοντας πόσο έχει μεταβληθεί η στάθμη τους, μπορούμε να υπολογίσουμε τον παραγόμενο όγκο μεθανίου. Αλλά πρώτα, πρέπει να ξέρουμε σε τι χρόνους έγιναν sampled τα δείγματα. Όλες οι φωτογραφίες έχουν ένα timestamp το οποίο μας βοηθάει να τα διακρίνουμε. Μπορούμε να αναλύσουμε αυτά ώστε να πάρουμε τις στιγμές που βγήκαν οι φωτογραφίες. Αρχικά, παίρνουμε όλα τα filenames με ~ls~. Θα χρησιμοποιήσουμε τα flags -m και -Q για να πάρουμε comma separated output και το κάθε string να έχει double quotes.
+
+#+NAME: ls_output_acetate
+#+BEGIN_SRC sh :results output
+ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
+#+END_SRC
+
+#+RESULTS: ls_output
+#+begin_example
+"bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-57-161.jpg",
+"bandicam 2024-03-27 18-48-57-160.jpg", "bandicam 2024-03-27 18-50-57-170.jpg",
+"bandicam 2024-03-27 18-52-57-164.jpg", "bandicam 2024-03-27 18-54-57-162.jpg",
+"bandicam 2024-03-27 18-56-57-167.jpg", "bandicam 2024-03-27 18-58-57-165.jpg",
+"bandicam 2024-03-27 19-00-57-170.jpg", "bandicam 2024-03-27 19-02-57-179.jpg",
+"bandicam 2024-03-27 19-04-57-173.jpg", "bandicam 2024-03-27 19-06-57-182.jpg",
+"bandicam 2024-03-27 19-08-57-185.jpg", "bandicam 2024-03-27 19-10-57-184.jpg",
+"bandicam 2024-03-27 19-12-57-189.jpg", "bandicam 2024-03-27 19-14-57-187.jpg",
+"bandicam 2024-03-27 19-15-06-279.jpg", "bandicam 2024-03-27 19-19-06-273.jpg",
+"bandicam 2024-03-27 19-21-06-276.jpg", "bandicam 2024-03-27 19-23-06-285.jpg",
+"bandicam 2024-03-27 19-25-06-290.jpg", "bandicam 2024-03-27 19-27-06-301.jpg",
+"bandicam 2024-03-27 19-29-06-303.jpg", "bandicam 2024-03-27 19-31-06-301.jpg",
+"bandicam 2024-03-27 19-33-06-297.jpg", "bandicam 2024-03-27 19-35-06-305.jpg",
+"bandicam 2024-03-27 19-37-06-299.jpg", "bandicam 2024-03-27 19-39-06-297.jpg",
+"bandicam 2024-03-27 19-41-06-307.jpg", "bandicam 2024-03-27 19-43-06-299.jpg",
+"bandicam 2024-03-27 19-45-06-298.jpg", "bandicam 2024-03-27 19-47-06-304.jpg",
+"bandicam 2024-03-27 19-48-50-591.jpg", "bandicam 2024-03-29 12-23-36-175.jpg",
+"bandicam 2024-03-29 12-23-50-142.jpg", "bandicam 2024-03-29 12-24-50-161.jpg",
+"bandicam 2024-03-29 12-25-50-156.jpg", "bandicam 2024-03-29 12-26-50-168.jpg",
+"bandicam 2024-03-29 12-27-26-514.jpg", "bandicam 2024-03-29 12-28-26-502.jpg",
+"bandicam 2024-03-29 12-29-26-497.jpg", "bandicam 2024-03-29 12-29-39-894.jpg",
+"bandicam 2024-03-29 12-30-39-902.jpg", "bandicam 2024-03-29 12-31-39-897.jpg",
+"bandicam 2024-03-29 12-32-05-844.jpg", "bandicam 2024-03-29 12-33-05-843.jpg",
+"bandicam 2024-03-29 12-34-05-832.jpg", "bandicam 2024-03-29 12-35-05-836.jpg",
+"bandicam 2024-03-29 12-36-05-835.jpg", "bandicam 2024-03-29 12-37-05-858.jpg",
+"bandicam 2024-03-29 12-38-06-101.jpg", "bandicam 2024-03-29 12-38-47-045.jpg",
+"bandicam 2024-03-29 12-39-47-039.jpg", "bandicam 2024-03-29 12-40-47-050.jpg",
+"bandicam 2024-03-29 12-41-47-047.jpg", "bandicam 2024-03-29 12-42-47-057.jpg",
+"bandicam 2024-03-29 12-43-42-169.jpg", "bandicam 2024-03-29 12-44-41-398.jpg"
+#+end_example
+
+Πρώτα αποθηκεύουμε τα file names σε ένα vector της Julia κάνοντας copy τα shell results.
+
+#+NAME: date_saving_acetate
+#+BEGIN_SRC julia
+
+  file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-57-161.jpg",
+  "bandicam 2024-03-27 18-48-57-160.jpg", "bandicam 2024-03-27 18-50-57-170.jpg",
+  "bandicam 2024-03-27 18-52-57-164.jpg", "bandicam 2024-03-27 18-54-57-162.jpg",
+  "bandicam 2024-03-27 18-56-57-167.jpg", "bandicam 2024-03-27 18-58-57-165.jpg",
+  "bandicam 2024-03-27 19-00-57-170.jpg", "bandicam 2024-03-27 19-02-57-179.jpg",
+  "bandicam 2024-03-27 19-04-57-173.jpg", "bandicam 2024-03-27 19-06-57-182.jpg",
+  "bandicam 2024-03-27 19-08-57-185.jpg", "bandicam 2024-03-27 19-10-57-184.jpg",
+  "bandicam 2024-03-27 19-12-57-189.jpg", "bandicam 2024-03-27 19-14-57-187.jpg",
+  "bandicam 2024-03-27 19-15-06-279.jpg", "bandicam 2024-03-27 19-19-06-273.jpg",
+  "bandicam 2024-03-27 19-21-06-276.jpg", "bandicam 2024-03-27 19-23-06-285.jpg",
+  "bandicam 2024-03-27 19-25-06-290.jpg", "bandicam 2024-03-27 19-27-06-301.jpg",
+  "bandicam 2024-03-27 19-29-06-303.jpg", "bandicam 2024-03-27 19-31-06-301.jpg",
+  "bandicam 2024-03-27 19-33-06-297.jpg", "bandicam 2024-03-27 19-35-06-305.jpg",
+  "bandicam 2024-03-27 19-37-06-299.jpg", "bandicam 2024-03-27 19-39-06-297.jpg",
+  "bandicam 2024-03-27 19-41-06-307.jpg", "bandicam 2024-03-27 19-43-06-299.jpg",
+  "bandicam 2024-03-27 19-45-06-298.jpg", "bandicam 2024-03-27 19-47-06-304.jpg",
+  "bandicam 2024-03-27 19-48-50-591.jpg", "bandicam 2024-03-29 12-23-36-175.jpg",
+  "bandicam 2024-03-29 12-23-50-142.jpg", "bandicam 2024-03-29 12-24-50-161.jpg",
+  "bandicam 2024-03-29 12-25-50-156.jpg", "bandicam 2024-03-29 12-26-50-168.jpg",
+  "bandicam 2024-03-29 12-27-26-514.jpg", "bandicam 2024-03-29 12-28-26-502.jpg",
+  "bandicam 2024-03-29 12-29-26-497.jpg", "bandicam 2024-03-29 12-29-39-894.jpg",
+  "bandicam 2024-03-29 12-30-39-902.jpg", "bandicam 2024-03-29 12-31-39-897.jpg",
+  "bandicam 2024-03-29 12-32-05-844.jpg", "bandicam 2024-03-29 12-33-05-843.jpg",
+  "bandicam 2024-03-29 12-34-05-832.jpg", "bandicam 2024-03-29 12-35-05-836.jpg",
+  "bandicam 2024-03-29 12-36-05-835.jpg", "bandicam 2024-03-29 12-37-05-858.jpg",
+  "bandicam 2024-03-29 12-38-06-101.jpg", "bandicam 2024-03-29 12-38-47-045.jpg",
+  "bandicam 2024-03-29 12-39-47-039.jpg", "bandicam 2024-03-29 12-40-47-050.jpg",
+  "bandicam 2024-03-29 12-41-47-047.jpg", "bandicam 2024-03-29 12-42-47-057.jpg",
+  "bandicam 2024-03-29 12-43-42-169.jpg", "bandicam 2024-03-29 12-44-41-398.jpg"
+  ]
+
+#+END_SRC
+
+* Data Processing
+Έπειτα, μπορούμε να κάνουμε extract τις πληροφορίες που θέλουμε, με το Dates.jl package της Julia. Σε αυτό το code block, δεν θα ορίσουμε το file vector και αυτό θα υποτεθεί defined. Έτσι, δεν μπορούμε να τρέξουμε independently το block αυτό, αλλά μόνο chained σε ένα definition των files, για να μπορεί να τρέξει αντίστοιχα σε κάθε πείραμα. Επίσης, εκτός από να κάνουμε extract τα time stamps, φτιάχνουμε και ένα δεύτερο vector με time stamp dd/mm_HH:MM το οποίο είναι πιο βολικό στη χρήση για εμένα.
+
+Στη συνέχεια, ορίζουμε άλλη μία μεταβλητή η οποία δεν υπάρχει, η ~inds~. Αυτή είναι τα νούμερα στο date_vec που αντιστοιχούν σε ένα ορισμένο πείραμα. Παίρνουμε τα time stamps και στην αρχική αλλά και στην formatted μορφή για αυτό το πείραμα και μετά υπολογίζουμε τα time steps και σε δευτερόλεπτα αλλά και σε λεπτά. Η αφαίρεση δύο ~DateTime~ objects δίνει αποτέλεσμα σε ~Millisecond~, οπότε ο χρόνος σε δευτερόλεπτα διαιρεί με 1000 ~Millisecond~ ενώ σε λεπτά με 60000 ~Millisecond~. Έπειτα, ορίζουμε ένα τρίτο undefined variable το exp_meth_vol, το οποίο είναι η παραγωγή μεθανίου μεταξύ των δύο φωτογραφιών, όπως σημειώνεται σε αυτές. Για την κινητική, θέλουμε την αθροιστική παραγωγή μεθανίου, οπότε χρησιμοποιούμε την συνάρτηση ~cumsum~. Τέλος, αποθηκεύουμε όλα αυτά τα δεδομένα σε ένα table του ~Tables.jl~ interface, ώστε να μπορούμε να το κάνουμε DataFrame με headers για καλύτερο readability ή να το κάνουμε export σε csv. Για το csv export χρειαζόμαστε ένα file name. Αυτό μπορεί για άλλη μία φορά να μην οριστεί εδώ και να χρησιμοποιηθεί ως variable.
+
+#+NAME: bmp_data_processing
+#+BEGIN_SRC julia
+
+  date_vec = [DateTime(SubString(file_vec[i], 10, 32), "yyyy-mm-dd HH-MM-SS-sss") for i in 1:length(file_vec)]
+  formatted_date = [Dates.format(date_vec[i], "dd/mm_HH:MM") for i in 1:length(date_vec)]
+
+  exp_stamps = date_vec[inds]
+  exp_formatted = formatted_date[inds]
+  exp_sec = [(exp_stamps[i] - exp_stamps[1])/Millisecond(1000) for i in 1:(last(inds) - first(inds) + 1)]
+  exp_min = [(exp_stamps[i] - exp_stamps[1])/Millisecond(60000) for i in 1:(last(inds) - first(inds) + 1)]
+  exp_cum_meth_vol = cumsum(exp_meth_vol)
+
+  exp_data = Tables.table(hcat(exp_formatted, exp_sec, exp_min, exp_meth_vol, exp_cum_meth_vol), header = [:Timestamp, :Seconds, :Minutes, :Methane_Volume, :Cumulative_Methane_Volume])
+  CSV.write(datadir("exp_pro", exp_name*".csv"), exp_data)
+  exp_df = DataFrame(exp_data)
+
+#+END_SRC
+
+Εκτός όμως από αυτό, θα θέλαμε να φτιάξουμε και κάποια διαγράμματα με τα δεδομένα που παράχθηκαν, τα οποία να δείχνουν την παραγόμενη ποσότητα μεθανίου στον χρόνο. Θα είναι scatter plots καθώς αυτό είναι μάλλον το καλύτερο representation για κάτι τέτοιο. Εδώ θα εκμεταλλευτούμε τα variables που υπολογίζονται παραπάνω καθώς και 2 ακόμη, το ~sample~ και το ~source~. Το ~source~ είναι ένα απλό variable το οποίο εκφράζει αν η τροφοδοσία ήταν οξικό ή υδρόλυμα για να τα ξεχωρίζουμε πιο εύκολα. Το ~sample~ εκφράζει το νούμερο του δείγματος για να είναι πιο εύκολο το naming scheme.
+
+#+NAME: bmp_data_plotting
+#+BEGIN_SRC julia
+
+  using Plots
+
+  bmp_cumulative_scatter_sec = scatter(exp_sec, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (sec)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
+  savefig(bmp_cumulative_scatter_sec, plotsdir("BMPs", source, "cumulative_"*exp_name*"_sec.png"))
+
+  bmp_cumulative_scatter_min = scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
+  savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
+
+  bmp_scatter_sec = scatter(exp_sec, exp_meth_vol, markersize = 5, legend = false, xlabel = "Time (sec)", ylabel = "Methane Volume (mL)", title = "Methane Production from "*source*" - "*sample)
+  savefig(bmp_scatter_sec, plotsdir("BMPs", source, exp_name*"_sec.png"))
+
+  bmp_scatter_min = scatter(exp_min, exp_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Methane Volume (mL)", title = "Methane Production from "*source*" - "*sample)
+  savefig(bmp_scatter_min, plotsdir("BMPs", source, exp_name*"_min.png"))
+
+#+END_SRC
+
+Επίσης, θέλουμε να κάνουμε fit τα δεδομένα σε κάποιο κινητικό μοντέλο για την διεργασία. Το μοντέλο Gompertz είναι ένα μοντέλο που χρησιμοποιείται συχνά για kinetic modelling διεργασιών όπως η αναερόβια χώνευση, οπότε θα χρησιμοποιηθεί αυτό. Η εξίσωση που θα πρέπει να προσαρμοστεί είναι η
+\[ P(t) = P_{\max } \exp \left( - \exp \left[ \frac{R_{\max }e (λ-t)}{P_{\max }} + 1 \right] \right) \]
+όπου P(t) η παραγωγή μεθανίου την στιγμή t, P_max η μέγιστη ποσότητα μεθανίου που μπορεί να παραχθεί από το υπόστρωμα αυτό, R_max ο ειδικός ρυθμός παραγωγής μεθανίου, λ το lag time και e η σταθερά Euler. Παρακάτω φαίνεται το fit των δεδομένων στην συνάρτηση αυτή.
+
+* Acetate Experiment Processing
+Παρακάτω αναφέρονται οι δοκιμές που έγιναν με 100 μL οξικό σε κάθε δείγμα και θα χρησιμοποιηθούν πιθανόν συγκριτικά σε σχέση με τα FW.
+
+** Acetate Test 1
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (1). Notably, δεν είχε διαρροή στις 27/03, αλλά για κάποιον λόγο, στην επαναδοκιμή στις 29/03 δεν παρήγαγε μεθάνιο (τουλάχιστον στην προχοίδα). Οπότε, θα χρησιμοποιηθεί αυτό της 27/03.
+
+#+NAME: acet_test_1
+#+BEGIN_SRC julia :noweb no-export
+
+  <<date_saving_acetate>>
+
+  inds = 1:12
+  exp_meth_vol = [0, 12, 5, 3, 1.5, 1.5, 1, 1.5, 1, 0.5, 0.5, 0.5]
+  exp_name = "acet_test_1"
+  source = "Acetate"
+  sample = "Sample 1"
+
+  <<bmp_data_processing>>
+  <<bmp_data_plotting>>
+#+END_SRC
+
+#+RESULTS: acet_test_1
+#+begin_example
+12×5 DataFrame
+ Row │ Timestamp    Seconds  Minutes  Methane_Volume  Cumulative_Methane_Volum ⋯
+     │ Any          Any      Any      Any             Any                      ⋯
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │ 27/03_18:45  0.0      0.0      0.0             0.0                      ⋯
+   2 │ 27/03_18:46  61.304   1.02173  12.0            12.0
+   3 │ 27/03_18:48  181.303  3.02172  5.0             17.0
+   4 │ 27/03_18:50  301.313  5.02188  3.0             20.0
+   5 │ 27/03_18:52  421.307  7.02178  1.5             21.5                     ⋯
+   6 │ 27/03_18:54  541.305  9.02175  1.5             23.0
+   7 │ 27/03_18:56  661.31   11.0218  1.0             24.0
+   8 │ 27/03_18:58  781.308  13.0218  1.5             25.5
+   9 │ 27/03_19:00  901.313  15.0219  1.0             26.5                     ⋯
+  10 │ 27/03_19:02  1021.32  17.022   0.5             27.0
+  11 │ 27/03_19:04  1141.32  19.0219  0.5             27.5
+  12 │ 27/03_19:06  1261.33  21.0221  0.5             28.0
+                                                                1 column omitted
+#+end_example
+
+** Acetate Test 0
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (0).
+
+#+NAME: acet_test_0
+#+BEGIN_SRC julia :noweb no-export
+
+  <<date_saving_acetate>>
+
+  inds = 34:51
+  exp_meth_vol = [0, 4, 12, 7.5, 4.5, 2.5, 2.5, 4, 0.5, 2, 2, 1, 1, 1, 1, 1, 0.5, 0.5]
+  exp_name = "acet_test_0"
+  source = "Acetate"
+  sample = "Sample 0"
+
+  <<bmp_data_processing>>
+  <<bmp_data_plotting>>
+#+END_SRC
+
+#+RESULTS: acet_test_0
+#+begin_example
+18×5 DataFrame
+ Row │ Timestamp    Seconds  Minutes   Methane_Volume  Cumulative_Methane_Volu ⋯
+     │ Any          Any      Any       Any             Any                     ⋯
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │ 29/03_12:23  0.0      0.0       0.0             0.0                     ⋯
+   2 │ 29/03_12:23  13.967   0.232783  4.0             4.0
+   3 │ 29/03_12:24  73.986   1.2331    12.0            16.0
+   4 │ 29/03_12:25  133.981  2.23302   7.5             23.5
+   5 │ 29/03_12:26  193.993  3.23322   4.5             28.0                    ⋯
+   6 │ 29/03_12:27  230.339  3.83898   2.5             30.5
+   7 │ 29/03_12:28  290.327  4.83878   2.5             33.0
+   8 │ 29/03_12:29  350.322  5.8387    4.0             37.0
+  ⋮  │      ⋮          ⋮        ⋮            ⋮                     ⋮           ⋱
+  12 │ 29/03_12:32  509.669  8.49448   1.0             42.5                    ⋯
+  13 │ 29/03_12:33  569.668  9.49447   1.0             43.5
+  14 │ 29/03_12:34  629.657  10.4943   1.0             44.5
+  15 │ 29/03_12:35  689.661  11.4944   1.0             45.5
+  16 │ 29/03_12:36  749.66   12.4943   1.0             46.5                    ⋯
+  17 │ 29/03_12:37  809.683  13.4947   0.5             47.0
+  18 │ 29/03_12:38  869.926  14.4988   0.5             47.5
+                                                     1 column and 3 rows omitted
+#+end_example
+
+
+** Acetate Test Ac
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (Ac). Το δείγμα αυτό είναι αυτό που δεν θα τροφοδοτηθεί με κάποιο από τα υδρολύματα των FW αλλά θα χρησιμοποιηθεί ως blank, οπότε είναι labelled ως Acetate. Για αυτό, αξίζει να αναφερθεί πως την πρώτη πειραματική ημέρα (27/03), παρήγαγε αέριο χωρίς να τροφοδοτηθεί με κάποιο υπόστρωμα. Η κινητική αυτής της παραγωγής (η οποία δεν ξέρουμε σε τι ευθύνεται) θα αναλυθεί παρακάτω. Βέβαια, μόλις τροφοδοτήθηκε με οξικό και η παραγωγή του τελείωσε, σταμάτησε και εκείνη η παραγωγή.
+
+#+NAME: acet_test_ac
+#+BEGIN_SRC julia :noweb no-export
+
+  <<date_saving_acetate>>
+
+  inds = 38:56
+  exp_meth_vol = [0, 6.5, 5, 3, 0.5, 1.5, 1.5, 0.5, 1, 0.5, 0.5, 0.3, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05]
+  exp_name = "acet_test_ac"
+  source = "Acetate"
+  sample = "Sample Ac"
+
+  <<bmp_data_processing>>
+  <<bmp_data_plotting>>
+#+END_SRC
+
+#+RESULTS: acet_test_ac
+#+begin_example
+19×5 DataFrame
+ Row │ Timestamp    Seconds  Minutes   Methane_Volume  Cumulative_Methane_Volu ⋯
+     │ Any          Any      Any       Any             Any                     ⋯
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │ 29/03_12:26  0.0      0.0       0.0             0.0                     ⋯
+   2 │ 29/03_12:27  36.346   0.605767  6.5             6.5
+   3 │ 29/03_12:28  96.334   1.60557   5.0             11.5
+   4 │ 29/03_12:29  156.329  2.60548   3.0             14.5
+   5 │ 29/03_12:29  169.726  2.82877   0.5             15.0                    ⋯
+   6 │ 29/03_12:30  229.734  3.8289    1.5             16.5
+   7 │ 29/03_12:31  289.729  4.82882   1.5             18.0
+   8 │ 29/03_12:32  315.676  5.26127   0.5             18.5
+  ⋮  │      ⋮          ⋮        ⋮            ⋮                     ⋮           ⋱
+  13 │ 29/03_12:37  615.69   10.2615   0.2             21.0                    ⋯
+  14 │ 29/03_12:38  675.933  11.2655   0.2             21.2
+  15 │ 29/03_12:38  716.877  11.948    0.1             21.3
+  16 │ 29/03_12:39  776.871  12.9479   0.05            21.35
+  17 │ 29/03_12:40  836.882  13.948    0.05            21.4                    ⋯
+  18 │ 29/03_12:41  896.879  14.948    0.05            21.45
+  19 │ 29/03_12:42  956.889  15.9482   0.05            21.5
+                                                     1 column and 4 rows omitted
+#+end_example
+
+** Acetate Test 4
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (4).
+
+#+NAME: acet_test_4
+#+BEGIN_SRC julia :noweb no-export
+
+  <<date_saving_acetate>>
+
+  inds = 41:50
+  exp_meth_vol = [0, 4, 10, 9, 4, 5, 5, 4, 3, 3]
+  exp_name = "acet_test_4"
+  source = "Acetate"
+  sample = "Sample 4"
+
+  <<bmp_data_processing>>
+  <<bmp_data_plotting>>
+#+END_SRC
+
+#+RESULTS: acet_test_4
+#+begin_example
+10×5 DataFrame
+ Row │ Timestamp    Seconds  Minutes   Methane_Volume  Cumulative_Methane_Volu ⋯
+     │ Any          Any      Any       Any             Any                     ⋯
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │ 29/03_12:29  0.0      0.0       0               0                       ⋯
+   2 │ 29/03_12:29  13.397   0.223283  4               4
+   3 │ 29/03_12:30  73.405   1.22342   10              14
+   4 │ 29/03_12:31  133.4    2.22333   9               23
+   5 │ 29/03_12:32  159.347  2.65578   4               27                      ⋯
+   6 │ 29/03_12:33  219.346  3.65577   5               32
+   7 │ 29/03_12:34  279.335  4.65558   5               37
+   8 │ 29/03_12:35  339.339  5.65565   4               41
+   9 │ 29/03_12:36  399.338  6.65563   3               44                      ⋯
+  10 │ 29/03_12:37  459.361  7.65602   3               47
+                                                                1 column omitted
+#+end_example
+
+** Acetate Test 2
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (2).
+
+#+NAME: acet_test_2
+#+BEGIN_SRC julia :noweb no-export
+
+  <<date_saving_acetate>>
+
+  inds = 44:57
+  exp_meth_vol = [0, 4, 7, 5.5, 4.5, 2.5, 2, 1, 1, 1, 0.5, 0.5, 0.45, 0.05]
+  exp_name = "acet_test_2"
+  source = "Acetate"
+  sample = "Sample 2"
+
+  <<bmp_data_processing>>
+  <<bmp_data_plotting>>
+#+END_SRC
+
+#+RESULTS: acet_test_2
+#+begin_example
+14×5 DataFrame
+ Row │ Timestamp    Seconds  Minutes  Methane_Volume  Cumulative_Methane_Volum ⋯
+     │ Any          Any      Any      Any             Any                      ⋯
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │ 29/03_12:31  0.0      0.0      0.0             0.0                      ⋯
+   2 │ 29/03_12:32  25.947   0.43245  4.0             4.0
+   3 │ 29/03_12:33  85.946   1.43243  7.0             11.0
+   4 │ 29/03_12:34  145.935  2.43225  5.5             16.5
+   5 │ 29/03_12:35  205.939  3.43232  4.5             21.0                     ⋯
+   6 │ 29/03_12:36  265.938  4.4323   2.5             23.5
+   7 │ 29/03_12:37  325.961  5.43268  2.0             25.5
+   8 │ 29/03_12:38  386.204  6.43673  1.0             26.5
+   9 │ 29/03_12:38  427.148  7.11913  1.0             27.5                     ⋯
+  10 │ 29/03_12:39  487.142  8.11903  1.0             28.5
+  11 │ 29/03_12:40  547.153  9.11922  0.5             29.0
+  12 │ 29/03_12:41  607.15   10.1192  0.5             29.5
+  13 │ 29/03_12:42  667.16   11.1193  0.45            29.95                    ⋯
+  14 │ 29/03_12:43  722.272  12.0379  0.05            30.0
+                                                                1 column omitted
+#+end_example
+
+** Παραγωγή μεθανίου χωρίς feed από το δείγμα Ac
+Όπως προαναφέρθηκε, το δείγμα Ac παρήγαγε μεθάνιο χωρίς να τροφοδοτηθεί με κάτι για κάποιον ανεξήγητο λόγο. Καθώς έχουμε πειραματικά δεδομένα για αυτή την κατανάλωση (και μάλιστα 2 data sets), θα γίνει και μία ανάλυση για αυτό.
+
+#+NAME: no_feed_ac_1
+#+BEGIN_SRC julia :noweb no-export
+
+  <<date_saving_acetate>>
+
+  inds = 1:17
+  exp_meth_vol = [0, 9, 3, 2, 3, 3, 3, 2.5, 2.5, 2.5, 1.5, 3, 1, 1, 1.5, 0.5, 0.1]
+  exp_name = "no_feed_ac_1"
+  source = "No_Feed"
+  sample = "Sample Ac"
+
+  <<bmp_data_processing>>
+  <<bmp_data_plotting>>
+#+END_SRC
+
+#+RESULTS: no_feed_ac_1
+#+begin_example
+17×5 DataFrame
+ Row │ Timestamp    Seconds  Minutes  Methane_Volume  Cumulative_Methane_Volum ⋯
+     │ Any          Any      Any      Any             Any                      ⋯
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │ 27/03_18:45  0.0      0.0      0.0             0.0                      ⋯
+   2 │ 27/03_18:46  61.304   1.02173  9.0             9.0
+   3 │ 27/03_18:48  181.303  3.02172  3.0             12.0
+   4 │ 27/03_18:50  301.313  5.02188  2.0             14.0
+   5 │ 27/03_18:52  421.307  7.02178  3.0             17.0                     ⋯
+   6 │ 27/03_18:54  541.305  9.02175  3.0             20.0
+   7 │ 27/03_18:56  661.31   11.0218  3.0             23.0
+   8 │ 27/03_18:58  781.308  13.0218  2.5             25.5
+  ⋮  │      ⋮          ⋮        ⋮           ⋮                     ⋮            ⋱
+  11 │ 27/03_19:04  1141.32  19.0219  1.5             32.0                     ⋯
+  12 │ 27/03_19:06  1261.33  21.0221  3.0             35.0
+  13 │ 27/03_19:08  1381.33  23.0221  1.0             36.0
+  14 │ 27/03_19:10  1501.33  25.0221  1.0             37.0
+  15 │ 27/03_19:12  1621.33  27.0222  1.5             38.5                     ⋯
+  16 │ 27/03_19:14  1741.33  29.0222  0.5             39.0
+  17 │ 27/03_19:15  1750.42  29.1737  0.1             39.1
+                                                     1 column and 2 rows omitted
+#+end_example
+
+#+NAME: no_feed_ac_2
+#+BEGIN_SRC julia :noweb no-export
+
+  <<date_saving_acetate>>
+
+  inds = 18:33
+  exp_meth_vol = [0, 3, 2, 2, 2, 3, 2, 2, 3, 2, 2.5, 2.5, 2, 2.5, 2.5, 2]
+  exp_name = "no_feed_ac_2"
+  source = "No_Feed"
+  sample = "Sample Ac"
+
+  <<bmp_data_processing>>
+  <<bmp_data_plotting>>
+#+END_SRC
+
+#+RESULTS: no_feed_ac_2
+#+begin_example
+16×5 DataFrame
+ Row │ Timestamp    Seconds  Minutes  Methane_Volume  Cumulative_Methane_Volum ⋯
+     │ Any          Any      Any      Any             Any                      ⋯
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │ 27/03_19:19  0.0      0.0      0.0             0.0                      ⋯
+   2 │ 27/03_19:21  120.003  2.00005  3.0             3.0
+   3 │ 27/03_19:23  240.012  4.0002   2.0             5.0
+   4 │ 27/03_19:25  360.017  6.00028  2.0             7.0
+   5 │ 27/03_19:27  480.028  8.00047  2.0             9.0                      ⋯
+   6 │ 27/03_19:29  600.03   10.0005  3.0             12.0
+   7 │ 27/03_19:31  720.028  12.0005  2.0             14.0
+   8 │ 27/03_19:33  840.024  14.0004  2.0             16.0
+   9 │ 27/03_19:35  960.032  16.0005  3.0             19.0                     ⋯
+  10 │ 27/03_19:37  1080.03  18.0004  2.0             21.0
+  11 │ 27/03_19:39  1200.02  20.0004  2.5             23.5
+  12 │ 27/03_19:41  1320.03  22.0006  2.5             26.0
+  13 │ 27/03_19:43  1440.03  24.0004  2.0             28.0                     ⋯
+  14 │ 27/03_19:45  1560.03  26.0004  2.5             30.5
+  15 │ 27/03_19:47  1680.03  28.0005  2.5             33.0
+  16 │ 27/03_19:48  1784.32  29.7386  2.0             35.0
+                                                                1 column omitted
+#+end_example
+
+** Update all helper
+Σε αυτό το section θα υπάρχει ένα helper code block που θα κάνει evaluate όλα τα παραπάνω. Έτσι, αν αλλάξει κάτι το οποίο επηρεάζει περισσότερα από ένα code blocks, θα μπορούν να γίνουν updated ταυτόχρονα πιο εύκολα.
+
+#+NAME: update_acetate_tests
+#+BEGIN_SRC julia :noweb no-export
+
+  <<acet_test_0>>
+  <<acet_test_1>>
+  <<acet_test_2>>
+  <<acet_test_4>>
+  <<acet_test_ac>>
+  <<no_feed_ac_1>>
+  <<no_feed_ac_2>>
+
+#+END_SRC
+
+#+RESULTS: update_acetate_tests
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/No_Feed/no_feed_ac_2_min.png"
