@@ -109,7 +109,7 @@
 [cite:@zhouEnhancedVolatileFatty2018a] - Άλλο ένα πολύ καλό και αναλυτικό description του mixed culture fermentation για την παραγωγή VFAs τα οποία αναφέρει πως έχουν πολλές εφαρμογές και πέρα από την αναερόβια χώνευση. Επίσης, έχει ωραίο graph και δείχνει αναλυτικά τις τελικές στοιχειομετρίες.
 
 ** Επίδραση του fermentation type στην μεθανογένεση
-[cite:@fengEffectPrefermentationTypes2020] - Επίδραση κάποιων ειδών fermentation (heterolactic, homolactic, butyric and mixed acid) στην απόδοση της παραγωγής μεθανίου (BMP και production rate). Πολύ ενδιαφέρον και σίγουρα μπορεί να χρησιμοποιηθεί κατά ένα βαθμό και στη δική μου μελέτη.
+[cite:@fengEffectPrefermentationTypes2020] - Επίδραση κάποιων ειδών fermentation (heterolactic, homolactic, butyric and mixed acid) στην απόδοση της παραγωγής μεθανίου (BMP και production rate). Κάνει kinetic modelling για να συγκρίνει τα αποτελέσματα αυτά χρησιμοποιώντας first order kinetics για την υδρόλυση και τα μοντέλα Cone και Gompertz για την μεθανογένεση. Πολύ ενδιαφέρον και σίγουρα μπορεί να χρησιμοποιηθεί κατά ένα βαθμό και στη δική μου μελέτη.
 
 [cite:@chenImprovingBiomethaneYield2015] - Επίδραση κάποιων ειδών fermentation (ethanol-type, butyrate, mixed acid) στην απόδοση παραγωγής μεθανίου (acidification rate και BMPs). Συμπληρωματικά του παραπάνω μπορεί να είναι πολύ χρήσιμο για να πούμε πόσο καλό ή κακό είναι το κάθε fermentation type.
 
