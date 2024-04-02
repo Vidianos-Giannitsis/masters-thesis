@@ -1,4 +1,4 @@
-% Created 2024-03-31 Κυρ 21:04
+% Created 2024-04-02 Τρι 13:35
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -35,7 +35,7 @@
  pdftitle={Αποτελέσματα Αναερόβιας Χώνευσης σε BMPs},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.2 (Org mode 9.6.15)}, 
+ pdfcreator={Emacs 29.3 (Org mode 9.6.15)}, 
  pdflang={English}}
 \makeatletter
 \newcommand{\citeprocitem}[2]{\hyper@linkstart{cite}{citeproc_bib_item_#1}#2\hyper@linkend}
@@ -50,21 +50,25 @@
 Σκοπός του αρχείου αυτού είναι η ανάλυση όλων των αποτελεσμάτων των διάφορων πειραμάτων αναερόβιας χώνευσης στην διάταξη για την εύρεση του biomethane potential. Θα αναλυθούν 3 βασικά πειράματα. Το πρώτο είναι η κινητική παραγωγής μεθανίου από οξικό οξύ, ενώ μετά θα αναλυθούν δύο πειράματα παραγωγής μεθανίου από το υδρόλυμα των αποβλήτων τροφών που παράχθηκε στο προηγούμενο στάδιο. Το αρχείο \url{./hplc\_analysis\_notebook.org} περιέχει τα αποτελέσματα των σχετικών πειραμάτων και αναφέρει τα πλεονεκτήματα και μειονεκτήματα τους.
 
 \section{Dependencies}
-\label{sec:org9806788}
-Στο αρχείο αυτό θα οριστούν κάποια functions για να διευκολυνθεί η ανάλυση των BMPs, τα οποία θα είναι generic και μετά θα υπάρχουν κάποια specific code blocks για την εφαρμογή σε κάθε πείραμα. Πριν ξεκινήσουμε, κάνουμε activate το DrWatson project για reproducibility. Επίσης κάνουμε load το Dates.jl που θα χρειαστεί παρακάτω, καθώς και τα CSV.jl και DataFrames.jl που είναι πάντα χρήσιμα σε tabular data.
+\label{sec:org9916056}
+Στο αρχείο αυτό θα οριστούν κάποια functions για να διευκολυνθεί η ανάλυση των BMPs, τα οποία θα είναι generic και μετά θα υπάρχουν κάποια specific code blocks για την εφαρμογή σε κάθε πείραμα. Πριν ξεκινήσουμε, κάνουμε activate το DrWatson project για reproducibility. Επίσης κάνουμε load το Dates.jl που θα χρειαστεί παρακάτω, καθώς και τα CSV.jl και DataFrames.jl που είναι πάντα χρήσιμα σε tabular data. Ακόμη, παρακάτω θα χρειαστούν τα LsqFit.jl για την προσαρμογή του μοντέλου Gompertz, StatsBase για υπολογισμό μέσων και Plots.jl για plotting. Το code block αυτό δεν κάνει tangle πουθενά καθώς είναι κομμάτι του generic code που θα χρησιμοποιηθεί σε πολλά σημεία.
 
 \textbf{deps}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
 
 using DrWatson
 @quickactivate "Masters_Thesis"
+
 using Dates
 using CSV, DataFrames
+using LsqFit
+using StatsBase
+using Plots
 
 \end{minted}
 
 \section{Acetate Experiment data reading}
-\label{sec:org386b80a}
+\label{sec:org3238a80}
 Τα δεδομένα της αναερόβιας χώνευσης είναι φωτογραφίες των προχωίδων της διάταξης. ΕΞετάζοντας πόσο έχει μεταβληθεί η στάθμη τους, μπορούμε να υπολογίσουμε τον παραγόμενο όγκο μεθανίου. Αλλά πρώτα, πρέπει να ξέρουμε σε τι χρόνους έγιναν sampled τα δείγματα. Όλες οι φωτογραφίες έχουν ένα timestamp το οποίο μας βοηθάει να τα διακρίνουμε. Μπορούμε να αναλύσουμε αυτά ώστε να πάρουμε τις στιγμές που βγήκαν οι φωτογραφίες. Αρχικά, παίρνουμε όλα τα filenames με \texttt{ls}. Θα χρησιμοποιήσουμε τα flags -m και -Q για να πάρουμε comma separated output και το κάθε string να έχει double quotes.
 
 \textbf{ls\textsubscript{output}\textsubscript{acetate}}
@@ -104,7 +108,15 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 "bandicam 2024-03-29 12-43-42-169.jpg", "bandicam 2024-03-29 12-44-41-398.jpg"
 \end{verbatim}
 
-Πρώτα αποθηκεύουμε τα file names σε ένα vector της Julia κάνοντας copy τα shell results.
+Αρχικά, κάνουμε load τα dependencies στο script στο οποίο θα γίνει η ανάλυση του πειράματος αυτού.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+<<deps>>
+
+\end{minted}
+
+Έπειτα, ξεκινάμε την ανάλυση αποθηκεύοντας τα file names σε ένα vector της Julia κάνοντας copy τα shell results. Αυτό το vector θα γίνεται loaded σε όλα τα code blocks, για να είναι το κάθε ένα reproducible από μόνο του. Έτσι, στο τελικό script θα υπάρχουν πολλές επαναλήψεις.
 
 \textbf{date\textsubscript{saving}\textsubscript{acetate}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -143,7 +155,7 @@ file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-5
 \end{minted}
 
 \section{Data Processing}
-\label{sec:orga256dc0}
+\label{sec:org5c75afa}
 Έπειτα, μπορούμε να κάνουμε extract τις πληροφορίες που θέλουμε, με το Dates.jl package της Julia. Σε αυτό το code block, δεν θα ορίσουμε το file vector και αυτό θα υποτεθεί defined. Έτσι, δεν μπορούμε να τρέξουμε independently το block αυτό, αλλά μόνο chained σε ένα definition των files, για να μπορεί να τρέξει αντίστοιχα σε κάθε πείραμα. Επίσης, εκτός από να κάνουμε extract τα time stamps, φτιάχνουμε και ένα δεύτερο vector με time stamp dd/mm\textsubscript{HH}:MM το οποίο είναι πιο βολικό στη χρήση για εμένα.
 
 Στη συνέχεια, ορίζουμε άλλη μία μεταβλητή η οποία δεν υπάρχει, η \texttt{inds}. Αυτή είναι τα νούμερα στο date\textsubscript{vec} που αντιστοιχούν σε ένα ορισμένο πείραμα. Παίρνουμε τα time stamps και στην αρχική αλλά και στην formatted μορφή για αυτό το πείραμα και μετά υπολογίζουμε τα time steps και σε δευτερόλεπτα αλλά και σε λεπτά. Η αφαίρεση δύο \texttt{DateTime} objects δίνει αποτέλεσμα σε \texttt{Millisecond}, οπότε ο χρόνος σε δευτερόλεπτα διαιρεί με 1000 \texttt{Millisecond} ενώ σε λεπτά με 60000 \texttt{Millisecond}. Έπειτα, ορίζουμε ένα τρίτο undefined variable το exp\textsubscript{meth}\textsubscript{vol}, το οποίο είναι η παραγωγή μεθανίου μεταξύ των δύο φωτογραφιών, όπως σημειώνεται σε αυτές. Για την κινητική, θέλουμε την αθροιστική παραγωγή μεθανίου, οπότε χρησιμοποιούμε την συνάρτηση \texttt{cumsum}. Τέλος, αποθηκεύουμε όλα αυτά τα δεδομένα σε ένα table του \texttt{Tables.jl} interface, ώστε να μπορούμε να το κάνουμε DataFrame με headers για καλύτερο readability ή να το κάνουμε export σε csv. Για το csv export χρειαζόμαστε ένα file name. Αυτό μπορεί για άλλη μία φορά να μην οριστεί εδώ και να χρησιμοποιηθεί ως variable.
@@ -167,7 +179,7 @@ exp_df = DataFrame(exp_data)
 \end{minted}
 
 \subsection{Curve Fitting}
-\label{sec:org04de2d7}
+\label{sec:orgc834d79}
 Επίσης, θέλουμε να κάνουμε fit τα δεδομένα σε κάποιο κινητικό μοντέλο για την διεργασία, κάτι το οποίο θα βοηθήσει στη μοντελοποιήση της. Το μοντέλο Gompertz είναι ένα μοντέλο που χρησιμοποιείται συχνά για kinetic modelling διεργασιών όπως η παραγωγή μεθανίου μέσω αναερόβιας χώνευσης, οπότε θα χρησιμοποιηθεί αυτό. Η εξίσωση που θα πρέπει να προσαρμοστεί είναι η
 \[ P(t) = P_{\max } \exp \left( - \exp \left[ \frac{R_{\max }e (λ-t)}{P_{\max }} + 1 \right] \right) \]
 όπου P(t) η παραγωγή μεθανίου την στιγμή t, P\textsubscript{max} η μέγιστη ποσότητα μεθανίου που μπορεί να παραχθεί από το υπόστρωμα αυτό, R\textsubscript{max} ο ειδικός ρυθμός παραγωγής μεθανίου, λ το lag time και e η σταθερά Euler. Παρακάτω φαίνεται το fit των δεδομένων στην συνάρτηση αυτή. Αξίζει να αναφερθεί η χρήση της μεταβλητής \texttt{input\_cod} που φαίνεται παρακάτω. Η μεταβλητή αυτή εκφράζει το COD της τροφοδοσίας. Διαιρούμε τον όγκο μεθανίου με αυτήν ώστε το διάγραμμα να εκφράζει ειδικό ρυθμό παραγωγής μεθανίου σε \(\frac{\text{mL CH$_4$}}{\text{g sCOD}}\), το οποίο είναι πιο εύκολα συγκρίσιμο με βιβλιογραφία, σε σχέση με τον όγκο μεθανίου. Επίσης, αξίζει να σημειωθεί η χρήση bounded optimization. Οι παραμέτροι του μοντέλου έχουν νόημα μόνο ως θετικοί αριθμοί. Στα πειράματα με χρήση οξικό ως υπόστρωμα, όπου οι μικροοργανισμοί αντιδρούν ταχύτατα στην αλλαγή του περιβάλλοντος, η προσαρμογή του μοντέλου έδινε αρνητικό lag time. Αυτό προφανώς δεν έχει νόημα και στην πράξη, το συμπέρασμα είναι πως το lag time είναι μηδενικό (σχεδόν ακαριαία αντίδραση των μικροοργανισμών στην προσθήκη οξικού στο σύστημα). Επίσης, αξίζει να αναφερθεί η μεταβλητή \texttt{kinetics}. Σε κάποια πειράματα (πχ τις μετρήσεις παραγωγής μεθανίου χωρίς προσθήκη υποστρώματος που έγινε σε ένα δείγμα) δεν θέλουμε να κάνουμε προσαρμογή με το μοντέλο Gompertz. Αυτή η μεταβλητή είναι στην ουσία ένα toggle off του plot με την κινητική, για όσα πειράματα δεν το χρειάζονται.
@@ -175,8 +187,6 @@ exp_df = DataFrame(exp_data)
 \textbf{bmp\textsubscript{curve}\textsubscript{fitting}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
 
-using LsqFit
-using StatsBase
 gompertz(t, p) = @. p[1]*exp(-exp((((p[2]*exp(1))/p[1])*(p[3] - t)) + 1))
 p0 = [300.0, 50.0, 1.0]
 lb = [0.0, 0.0, 0.0]
@@ -197,13 +207,12 @@ kinetics = true
 \end{minted}
 
 \subsection{Plotting}
-\label{sec:orgbd32eba}
+\label{sec:orgb53eb5c}
 Τέλος, έχοντας προσαρμώσει το μοντέλο Gompertz σε κάθε σετ δεδομένων, θέλουμε να φτιάξουμε κάποια διαγράμματα με τα δεδομένα, τα οποία να δείχνουν την παραγόμενη ποσότητα μεθανίου στον χρόνο. Τα πειραματικά δεδομένα θα γίνουν plotted σε scatter plots. Χάριν ευκολίας, μπορούν να γίνουν plotted διαγράμματα και της στιγμιαίας αλλά και της συνολικής παραγωγής μεθανίου και σε άξονα χρόνου είτε λεπτά ή δευτερόλεπτα. Ο παραπάνω κώδικας υπολογίζει το fit του cumulative methane production σε λεπτά, καθώς θεωρείται η πιο χρήσιμη έκφραση, οπότε αυτό θα είναι και το διάγραμμα που έχει fit την καμπύλη. Εδώ θα εκμεταλλευτούμε τα variables που υπολογίζονται παραπάνω καθώς και 2 ακόμη, το \texttt{sample} και το \texttt{source}. Το \texttt{source} είναι ένα απλό variable το οποίο εκφράζει αν η τροφοδοσία ήταν οξικό ή υδρόλυμα για να τα ξεχωρίζουμε πιο εύκολα. Το \texttt{sample} εκφράζει το νούμερο του δείγματος για να είναι πιο εύκολο το naming scheme.
 
 \textbf{bmp\textsubscript{data}\textsubscript{plotting}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
 
-using Plots
 
 bmp_cumulative_scatter_sec = scatter(exp_sec, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (sec)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
 savefig(bmp_cumulative_scatter_sec, plotsdir("BMPs", source, "cumulative_"*exp_name*"_sec.png"))
@@ -226,15 +235,17 @@ savefig(bmp_scatter_min, plotsdir("BMPs", source, exp_name*"_min.png"))
 \end{minted}
 
 \section{Acetate Experiment Processing}
-\label{sec:orga521951}
+\label{sec:orge0936a8}
 Παρακάτω αναφέρονται οι δοκιμές που έγιναν με 100 μL οξικό σε κάθε δείγμα και θα χρησιμοποιηθούν πιθανόν συγκριτικά σε σχέση με τα FW. Μετά από τα code blocks που τρέχουν τον κώδικα θα υπάρχουν και κάποια από τα corresponding αποτελέσματα. Συγκεκριμένα, ο πίνακας με τα κινητικά δεδομένα, το διάγραμμα παραγωγής μεθανίου το οποίο έχει το curve fitting και το διάγραμμα στιγμίαιας παραγωγής μεθανίου. Υπάρχουν και κάποια άλλα χρήσιμα διαγράμματα, τα οποία είναι αποθηκευμένα, αλλά εδώ παρατίθενται κάποια για καλύτερη ανάγνωση του αρχείου.
 
 \subsection{Acetate Test 1}
-\label{sec:org81113a0}
+\label{sec:orgf142137}
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (1). Notably, δεν είχε διαρροή στις 27/03, αλλά για κάποιον λόγο, στην επαναδοκιμή στις 29/03 δεν παρήγαγε μεθάνιο (τουλάχιστον στην προχοίδα). Οπότε, θα χρησιμοποιηθεί αυτό της 27/03.
 
 \textbf{acet\textsubscript{test}\textsubscript{1}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+### Data Analysis on Sample 1 ###
 
 <<date_saving_acetate>>
 
@@ -281,11 +292,13 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \end{center}
 
 \subsection{Acetate Test 0}
-\label{sec:org5dc3c49}
+\label{sec:orgbfd6eb3}
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (0).
 
 \textbf{acet\textsubscript{test}\textsubscript{0}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+### Data Analysis on Sample 0 ###
 
 <<date_saving_acetate>>
 
@@ -339,11 +352,13 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 
 
 \subsection{Acetate Test Ac}
-\label{sec:orgf41151c}
+\label{sec:orge262c4d}
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (Ac). Το δείγμα αυτό είναι αυτό που δεν θα τροφοδοτηθεί με κάποιο από τα υδρολύματα των FW αλλά θα χρησιμοποιηθεί ως blank, οπότε είναι labelled ως Acetate. Για αυτό, αξίζει να αναφερθεί πως την πρώτη πειραματική ημέρα (27/03), παρήγαγε αέριο χωρίς να τροφοδοτηθεί με κάποιο υπόστρωμα. Η κινητική αυτής της παραγωγής (η οποία δεν ξέρουμε σε τι ευθύνεται) θα αναλυθεί παρακάτω. Βέβαια, μόλις τροφοδοτήθηκε με οξικό και η παραγωγή του τελείωσε, σταμάτησε και εκείνη η παραγωγή.
 
 \textbf{acet\textsubscript{test}\textsubscript{ac}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+### Data Analysis on Sample Ac ###
 
 <<date_saving_acetate>>
 
@@ -397,11 +412,13 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \end{center}
 
 \subsection{Acetate Test 4}
-\label{sec:orgad607e7}
+\label{sec:org047337c}
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (4).
 
 \textbf{acet\textsubscript{test}\textsubscript{4}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+### Data Analysis on Sample 4 ###
 
 <<date_saving_acetate>>
 
@@ -446,11 +463,13 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \end{center}
 
 \subsection{Acetate Test 2}
-\label{sec:org92dbf40}
+\label{sec:org3099e1f}
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (2).
 
 \textbf{acet\textsubscript{test}\textsubscript{2}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+### Data Analysis on Sample 2 ###
 
 <<date_saving_acetate>>
 
@@ -499,11 +518,13 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \end{center}
 
 \subsection{Παραγωγή μεθανίου χωρίς feed από το δείγμα Ac}
-\label{sec:org60ea202}
+\label{sec:org5159c66}
 Όπως προαναφέρθηκε, το δείγμα Ac παρήγαγε μεθάνιο χωρίς να τροφοδοτηθεί με κάτι για κάποιον ανεξήγητο λόγο. Καθώς έχουμε πειραματικά δεδομένα για αυτή την κατανάλωση (και μάλιστα 2 data sets), θα γίνει και μία ανάλυση για αυτό.
 
 \textbf{no\textsubscript{feed}\textsubscript{ac}\textsubscript{1}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+### No Feed Data Analysis ###
 
 <<date_saving_acetate>>
 
@@ -535,7 +556,7 @@ kinetics = false
 \end{minted}
 
 \subsection{Update all helper}
-\label{sec:org75331fc}
+\label{sec:org90fc6c1}
 Σε αυτό το section θα υπάρχει ένα helper code block που θα κάνει evaluate όλα τα παραπάνω. Έτσι, αν αλλάξει κάτι το οποίο επηρεάζει περισσότερα από ένα code blocks, θα μπορούν να γίνουν updated ταυτόχρονα πιο εύκολα. Επίσης, μία επιπλέον χρησιμότητα του code block αυτού είναι ότι αποθηκεύει ένα CSV που συγκεντρώνει όλα τα δεδομένα των κινητικών παραμέτρων από την προσαρμογή που έγινε παραπάνω, το οποίο είναι χρήσιμο για συγκρίσεις, παρόλο που τα συγκεκριμένα πειράματα δεν είναι τόσο σημαντικό να συγκριθούν.
 
 \textbf{update\textsubscript{acetate}\textsubscript{tests}}
@@ -556,7 +577,7 @@ DataFrame(model_fit_table)
 \end{minted}
 
 \subsection{Γενικά σχόλια για αυτόν τον κύκλο πειραμάτων}
-\label{sec:orgaeea496}
+\label{sec:org985391b}
 Ο πρώτος αυτός κύκλος πειραμάτων ήταν για την δοκιμή προσθήκης οξικού οξέος, του ιδανικού υποστρώματος της μεθανογένεσης, για να δούμε πως θα αντιδράσει σε αυτό το σύστημα. Δεν έχει τόσο συγκριτικό χαρακτήρα μεταξύ των πειραμάτων (παρόλο που ένα σχόλιο που μπορεί να γίνει είναι πως τα πειράματα τα οποία ήταν ίδια πρακτικά στην αρχή, είχαν αρκετά διαφορετική απόκριση στην προσθήκη οξικού), αλλά τον χαρακτήρα της βέλτιστης δυνατής μεθανογένεσης από κάποιο υπόστρωμα. Από την μελέτη αυτή, προέκυψαν αρκετά συμπεράσματα.
 
 Ένα ενδιαφέρον σχόλιο είναι πως το σύστημα ανταποκρίνεται στην προσθήκη του οξικού πολύ γρήγορα (μετά από μερικά δευτερόλεπτα κιόλας βλέπουμε παραγωγή μεθανίου) και στο μοντέλο αυτό μεταφράζεται ως μηδενικό lag-phase.

@@ -19,7 +19,7 @@
   - [[#γενικά-σχόλια-για-αυτόν-τον-κύκλο-πειραμάτων][Γενικά σχόλια για αυτόν τον κύκλο πειραμάτων]]
 
 * Dependencies
-Στο αρχείο αυτό θα οριστούν κάποια functions για να διευκολυνθεί η ανάλυση των BMPs, τα οποία θα είναι generic και μετά θα υπάρχουν κάποια specific code blocks για την εφαρμογή σε κάθε πείραμα. Πριν ξεκινήσουμε, κάνουμε activate το DrWatson project για reproducibility. Επίσης κάνουμε load το Dates.jl που θα χρειαστεί παρακάτω, καθώς και τα CSV.jl και DataFrames.jl που είναι πάντα χρήσιμα σε tabular data.
+Στο αρχείο αυτό θα οριστούν κάποια functions για να διευκολυνθεί η ανάλυση των BMPs, τα οποία θα είναι generic και μετά θα υπάρχουν κάποια specific code blocks για την εφαρμογή σε κάθε πείραμα. Πριν ξεκινήσουμε, κάνουμε activate το DrWatson project για reproducibility. Επίσης κάνουμε load το Dates.jl που θα χρειαστεί παρακάτω, καθώς και τα CSV.jl και DataFrames.jl που είναι πάντα χρήσιμα σε tabular data. Ακόμη, παρακάτω θα χρειαστούν τα LsqFit.jl για την προσαρμογή του μοντέλου Gompertz, StatsBase για υπολογισμό μέσων και Plots.jl για plotting. Το code block αυτό δεν κάνει tangle πουθενά καθώς είναι κομμάτι του generic code που θα χρησιμοποιηθεί σε πολλά σημεία.
 
 *deps*
 #+NAME: deps
@@ -27,8 +27,12 @@
 
   using DrWatson
   @quickactivate "Masters_Thesis"
+
   using Dates
   using CSV, DataFrames
+  using LsqFit
+  using StatsBase
+  using Plots
 
 #+END_SRC
 
@@ -74,7 +78,16 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 "bandicam 2024-03-29 12-43-42-169.jpg", "bandicam 2024-03-29 12-44-41-398.jpg"
 #+end_example
 
-Πρώτα αποθηκεύουμε τα file names σε ένα vector της Julia κάνοντας copy τα shell results.
+Αρχικά, κάνουμε load τα dependencies στο script στο οποίο θα γίνει η ανάλυση του πειράματος αυτού.
+
+#+NAME: deps_acetate
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_analysis.jl
+
+  <<deps>>
+
+#+END_SRC
+
+Έπειτα, ξεκινάμε την ανάλυση αποθηκεύοντας τα file names σε ένα vector της Julia κάνοντας copy τα shell results. Αυτό το vector θα γίνεται loaded σε όλα τα code blocks, για να είναι το κάθε ένα reproducible από μόνο του. Έτσι, στο τελικό script θα υπάρχουν πολλές επαναλήψεις.
 
 *date_saving_acetate*
 #+NAME: date_saving_acetate
@@ -146,8 +159,6 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 #+NAME: bmp_curve_fitting
 #+BEGIN_SRC julia
 
-  using LsqFit
-  using StatsBase
   gompertz(t, p) = @. p[1]*exp(-exp((((p[2]*exp(1))/p[1])*(p[3] - t)) + 1))
   p0 = [300.0, 50.0, 1.0]
   lb = [0.0, 0.0, 0.0]
@@ -174,7 +185,6 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 #+NAME: bmp_data_plotting
 #+BEGIN_SRC julia
 
-  using Plots
 
   bmp_cumulative_scatter_sec = scatter(exp_sec, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (sec)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
   savefig(bmp_cumulative_scatter_sec, plotsdir("BMPs", source, "cumulative_"*exp_name*"_sec.png"))
@@ -205,6 +215,8 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 *acet_test_1*
 #+NAME: acet_test_1
 #+BEGIN_SRC julia :noweb no-export
+
+  ### Data Analysis on Sample 1 ###
 
   <<date_saving_acetate>>
 
@@ -247,6 +259,8 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 *acet_test_0*
 #+NAME: acet_test_0
 #+BEGIN_SRC julia :noweb no-export
+
+  ### Data Analysis on Sample 0 ###
 
   <<date_saving_acetate>>
 
@@ -297,6 +311,8 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 #+NAME: acet_test_ac
 #+BEGIN_SRC julia :noweb no-export
 
+  ### Data Analysis on Sample Ac ###
+
   <<date_saving_acetate>>
 
   inds = 38:56
@@ -346,6 +362,8 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 #+NAME: acet_test_4
 #+BEGIN_SRC julia :noweb no-export
 
+  ### Data Analysis on Sample 4 ###
+
   <<date_saving_acetate>>
 
   inds = 41:50
@@ -385,6 +403,8 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 *acet_test_2*
 #+NAME: acet_test_2
 #+BEGIN_SRC julia :noweb no-export
+
+  ### Data Analysis on Sample 2 ###
 
   <<date_saving_acetate>>
 
@@ -429,6 +449,8 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 *no_feed_ac_1*
 #+NAME: no_feed_ac_1
 #+BEGIN_SRC julia :noweb no-export
+
+  ### No Feed Data Analysis ###
 
   <<date_saving_acetate>>
 
@@ -515,7 +537,7 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 
 *update_acetate_tests*
 #+NAME: update_acetate_tests
-#+BEGIN_SRC julia :noweb no-export
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_analysis.jl
 
   <<acet_test_0>>
   <<acet_test_1>>
