@@ -1,4 +1,4 @@
-% Created 2024-04-02 Τρι 13:35
+% Created 2024-04-05 Παρ 23:36
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -50,7 +50,7 @@
 Σκοπός του αρχείου αυτού είναι η ανάλυση όλων των αποτελεσμάτων των διάφορων πειραμάτων αναερόβιας χώνευσης στην διάταξη για την εύρεση του biomethane potential. Θα αναλυθούν 3 βασικά πειράματα. Το πρώτο είναι η κινητική παραγωγής μεθανίου από οξικό οξύ, ενώ μετά θα αναλυθούν δύο πειράματα παραγωγής μεθανίου από το υδρόλυμα των αποβλήτων τροφών που παράχθηκε στο προηγούμενο στάδιο. Το αρχείο \url{./hplc\_analysis\_notebook.org} περιέχει τα αποτελέσματα των σχετικών πειραμάτων και αναφέρει τα πλεονεκτήματα και μειονεκτήματα τους.
 
 \section{Dependencies}
-\label{sec:org9916056}
+\label{sec:orge23271d}
 Στο αρχείο αυτό θα οριστούν κάποια functions για να διευκολυνθεί η ανάλυση των BMPs, τα οποία θα είναι generic και μετά θα υπάρχουν κάποια specific code blocks για την εφαρμογή σε κάθε πείραμα. Πριν ξεκινήσουμε, κάνουμε activate το DrWatson project για reproducibility. Επίσης κάνουμε load το Dates.jl που θα χρειαστεί παρακάτω, καθώς και τα CSV.jl και DataFrames.jl που είναι πάντα χρήσιμα σε tabular data. Ακόμη, παρακάτω θα χρειαστούν τα LsqFit.jl για την προσαρμογή του μοντέλου Gompertz, StatsBase για υπολογισμό μέσων και Plots.jl για plotting. Το code block αυτό δεν κάνει tangle πουθενά καθώς είναι κομμάτι του generic code που θα χρησιμοποιηθεί σε πολλά σημεία.
 
 \textbf{deps}
@@ -60,16 +60,16 @@ using DrWatson
 @quickactivate "Masters_Thesis"
 
 using Dates
+using StatsBase
 using CSV, DataFrames
 using LsqFit
-using StatsBase
 using Plots
 
 \end{minted}
 
 \section{Acetate Experiment data reading}
-\label{sec:org3238a80}
-Τα δεδομένα της αναερόβιας χώνευσης είναι φωτογραφίες των προχωίδων της διάταξης. ΕΞετάζοντας πόσο έχει μεταβληθεί η στάθμη τους, μπορούμε να υπολογίσουμε τον παραγόμενο όγκο μεθανίου. Αλλά πρώτα, πρέπει να ξέρουμε σε τι χρόνους έγιναν sampled τα δείγματα. Όλες οι φωτογραφίες έχουν ένα timestamp το οποίο μας βοηθάει να τα διακρίνουμε. Μπορούμε να αναλύσουμε αυτά ώστε να πάρουμε τις στιγμές που βγήκαν οι φωτογραφίες. Αρχικά, παίρνουμε όλα τα filenames με \texttt{ls}. Θα χρησιμοποιήσουμε τα flags -m και -Q για να πάρουμε comma separated output και το κάθε string να έχει double quotes.
+\label{sec:org02033d4}
+Τα δεδομένα της αναερόβιας χώνευσης είναι φωτογραφίες των προχωίδων της διάταξης. Εξετάζοντας πόσο έχει μεταβληθεί η στάθμη τους, μπορούμε να υπολογίσουμε τον παραγόμενο όγκο μεθανίου. Αλλά πρώτα, πρέπει να ξέρουμε σε τι χρόνους έγιναν sampled τα δείγματα. Όλες οι φωτογραφίες έχουν ένα timestamp το οποίο μας βοηθάει να τα διακρίνουμε. Μπορούμε να αναλύσουμε αυτά ώστε να πάρουμε τις στιγμές που βγήκαν οι φωτογραφίες. Αρχικά, παίρνουμε όλα τα filenames με \texttt{ls}. Θα χρησιμοποιήσουμε τα flags -m και -Q για να πάρουμε comma separated output και το κάθε string να έχει double quotes.
 
 \textbf{ls\textsubscript{output}\textsubscript{acetate}}
 \begin{minted}[breaklines=true,breakanywhere=true]{sh}
@@ -154,11 +154,50 @@ file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-5
 
 \end{minted}
 
+\section{FW Hydrolysate Experiment 1 Data Reading}
+\label{sec:orgb780786}
+Με την ίδια λογική με παραπάνω, κάνουμε load ότι θα χρειαστεί για αυτό το πείραμα.
+
+\textbf{ls\textsubscript{output}\textsubscript{fw}\textsubscript{1}}
+\begin{minted}[breaklines=true,breakanywhere=true]{sh}
+ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
+\end{minted}
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+<<deps>>
+
+\end{minted}
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+file_vec = ["bandicam 2024-04-01 11-05-53-069.jpg", "bandicam 2024-04-01 11-09-37-035.jpg",
+"bandicam 2024-04-01 11-11-37-051.jpg", "bandicam 2024-04-01 11-12-37-060.jpg",
+"bandicam 2024-04-01 11-13-26-776.jpg", "bandicam 2024-04-01 11-14-26-770.jpg",
+"bandicam 2024-04-01 11-15-26-780.jpg", "bandicam 2024-04-01 11-21-53-098.jpg",
+"bandicam 2024-04-01 11-52-12-665.jpg", "bandicam 2024-04-01 12-22-12-663.jpg",
+"bandicam 2024-04-01 16-52-12-699.jpg", "bandicam 2024-04-02 10-54-01-344.jpg",
+"bandicam 2024-04-02 12-54-01-788.jpg", "bandicam 2024-04-02 13-24-01-783.jpg",
+"bandicam 2024-04-02 13-54-01-797.jpg", "bandicam 2024-04-02 14-24-01-798.jpg",
+"bandicam 2024-04-02 14-54-01-793.jpg", "bandicam 2024-04-02 15-24-01-786.jpg",
+"bandicam 2024-04-02 15-54-01-785.jpg", "bandicam 2024-04-02 16-24-01-800.jpg",
+"bandicam 2024-04-02 16-54-01-801.jpg", "bandicam 2024-04-02 17-24-01-784.jpg",
+"bandicam 2024-04-02 17-54-02-191.jpg", "bandicam 2024-04-02 19-54-02-222.jpg",
+"bandicam 2024-04-02 21-54-02-318.jpg", "bandicam 2024-04-02 23-54-02-573.jpg",
+"bandicam 2024-04-03 01-54-02-576.jpg", "bandicam 2024-04-03 03-54-02-564.jpg",
+"bandicam 2024-04-03 05-54-02-863.jpg", "bandicam 2024-04-03 07-54-02-978.jpg",
+"bandicam 2024-04-03 09-54-02-983.jpg", "bandicam 2024-04-03 12-54-03-516.jpg",
+"bandicam 2024-04-03 13-54-03-505.jpg", "bandicam 2024-04-03 14-24-03-564.jpg"
+]
+\end{minted}
+
 \section{Data Processing}
-\label{sec:org5c75afa}
+\label{sec:org048c1cc}
 Έπειτα, μπορούμε να κάνουμε extract τις πληροφορίες που θέλουμε, με το Dates.jl package της Julia. Σε αυτό το code block, δεν θα ορίσουμε το file vector και αυτό θα υποτεθεί defined. Έτσι, δεν μπορούμε να τρέξουμε independently το block αυτό, αλλά μόνο chained σε ένα definition των files, για να μπορεί να τρέξει αντίστοιχα σε κάθε πείραμα. Επίσης, εκτός από να κάνουμε extract τα time stamps, φτιάχνουμε και ένα δεύτερο vector με time stamp dd/mm\textsubscript{HH}:MM το οποίο είναι πιο βολικό στη χρήση για εμένα.
 
-Στη συνέχεια, ορίζουμε άλλη μία μεταβλητή η οποία δεν υπάρχει, η \texttt{inds}. Αυτή είναι τα νούμερα στο date\textsubscript{vec} που αντιστοιχούν σε ένα ορισμένο πείραμα. Παίρνουμε τα time stamps και στην αρχική αλλά και στην formatted μορφή για αυτό το πείραμα και μετά υπολογίζουμε τα time steps και σε δευτερόλεπτα αλλά και σε λεπτά. Η αφαίρεση δύο \texttt{DateTime} objects δίνει αποτέλεσμα σε \texttt{Millisecond}, οπότε ο χρόνος σε δευτερόλεπτα διαιρεί με 1000 \texttt{Millisecond} ενώ σε λεπτά με 60000 \texttt{Millisecond}. Έπειτα, ορίζουμε ένα τρίτο undefined variable το exp\textsubscript{meth}\textsubscript{vol}, το οποίο είναι η παραγωγή μεθανίου μεταξύ των δύο φωτογραφιών, όπως σημειώνεται σε αυτές. Για την κινητική, θέλουμε την αθροιστική παραγωγή μεθανίου, οπότε χρησιμοποιούμε την συνάρτηση \texttt{cumsum}. Τέλος, αποθηκεύουμε όλα αυτά τα δεδομένα σε ένα table του \texttt{Tables.jl} interface, ώστε να μπορούμε να το κάνουμε DataFrame με headers για καλύτερο readability ή να το κάνουμε export σε csv. Για το csv export χρειαζόμαστε ένα file name. Αυτό μπορεί για άλλη μία φορά να μην οριστεί εδώ και να χρησιμοποιηθεί ως variable.
+Στη συνέχεια, ορίζουμε άλλη μία μεταβλητή η οποία δεν υπάρχει, η \texttt{inds}. Αυτή είναι τα νούμερα στο date\textsubscript{vec} που αντιστοιχούν σε ένα ορισμένο πείραμα. Παίρνουμε τα time stamps και στην αρχική αλλά και στην formatted μορφή για αυτό το πείραμα και μετά υπολογίζουμε τα time steps και σε δευτερόλεπτα αλλά και σε λεπτά. Η αφαίρεση δύο \texttt{DateTime} objects δίνει αποτέλεσμα σε \texttt{Millisecond}, οπότε ο χρόνος σε δευτερόλεπτα διαιρεί με 1000 \texttt{Millisecond} ενώ σε λεπτά με 60000 \texttt{Millisecond}. Έπειτα, ορίζουμε ένα τρίτο undefined variable το exp\textsubscript{meth}\textsubscript{vol}, το οποίο είναι η παραγωγή μεθανίου μεταξύ των δύο φωτογραφιών, όπως σημειώνεται σε αυτές. Για την κινητική, θέλουμε την αθροιστική παραγωγή μεθανίου, οπότε χρησιμοποιούμε την συνάρτηση \texttt{cumsum}.
+
+Τέλος, αποθηκεύουμε όλα αυτά τα δεδομένα σε ένα table του \texttt{Tables.jl} interface, ώστε να μπορούμε να το κάνουμε DataFrame με headers για καλύτερο readability ή να το κάνουμε export σε csv. Για το csv export χρειαζόμαστε ένα file name. Αυτό μπορεί για άλλη μία φορά να μην οριστεί εδώ και να χρησιμοποιηθεί ως variable. Βέβαια, ένα σημαντικό σημείο είναι πως τα πειράματα με οξικό πάνε γρήγορα, ενώ με το υδρόλυμα των FW αρκετά πιο αργά. Οπότε, αν το variable \texttt{source} είναι ίσο με "Hydrolyzed FW", κάνουμε save τον χρόνο σε λεπτά και ώρες, αλλιώς σε λεπτά και δευτερόλεπτα.
 
 \textbf{bmp\textsubscript{data}\textsubscript{processing}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -168,32 +207,41 @@ formatted_date = [Dates.format(date_vec[i], "dd/mm_HH:MM") for i in 1:length(dat
 
 exp_stamps = date_vec[inds]
 exp_formatted = formatted_date[inds]
-exp_sec = [(exp_stamps[i] - exp_stamps[1])/Millisecond(1000) for i in 1:(last(inds) - first(inds) + 1)]
-exp_min = [(exp_stamps[i] - exp_stamps[1])/Millisecond(60000) for i in 1:(last(inds) - first(inds) + 1)]
-exp_cum_meth_vol = cumsum(exp_meth_vol)
+exp_sec = round.([(exp_stamps[i] - exp_stamps[1])/Millisecond(1000) for i in 1:length(inds)]; digits = 4)
+exp_min = round.([(exp_stamps[i] - exp_stamps[1])/Millisecond(60000) for i in 1:length(inds)]; digits = 4)
+exp_hour = round.([(exp_stamps[i] - exp_stamps[1])/Millisecond(3600000) for i in 1:length(inds)]; digits = 4)
+exp_cum_meth_vol = round.(cumsum(exp_meth_vol); digits = 3)
 
-exp_data = Tables.table(hcat(exp_formatted, exp_sec, exp_min, exp_meth_vol, exp_cum_meth_vol), header = [:Timestamp, :Seconds, :Minutes, :Methane_Volume, :Cumulative_Methane_Volume])
+if source == "Hydrolyzed FW"
+    exp_data = Tables.table(hcat(exp_formatted, exp_min, exp_hour, exp_meth_vol, exp_cum_meth_vol), header = [:Timestamp, :Minutes, :Hours, :Methane_Volume, :Cumulative_Methane_Volume])
+else
+    exp_data = Tables.table(hcat(exp_formatted, exp_sec, exp_min, exp_meth_vol, exp_cum_meth_vol), header = [:Timestamp, :Seconds, :Minutes, :Methane_Volume, :Cumulative_Methane_Volume])
+end
+
 CSV.write(datadir("exp_pro", exp_name*".csv"), exp_data)
 exp_df = DataFrame(exp_data)
 
 \end{minted}
 
 \subsection{Curve Fitting}
-\label{sec:orgc834d79}
+\label{sec:orgfce396e}
 Επίσης, θέλουμε να κάνουμε fit τα δεδομένα σε κάποιο κινητικό μοντέλο για την διεργασία, κάτι το οποίο θα βοηθήσει στη μοντελοποιήση της. Το μοντέλο Gompertz είναι ένα μοντέλο που χρησιμοποιείται συχνά για kinetic modelling διεργασιών όπως η παραγωγή μεθανίου μέσω αναερόβιας χώνευσης, οπότε θα χρησιμοποιηθεί αυτό. Η εξίσωση που θα πρέπει να προσαρμοστεί είναι η
 \[ P(t) = P_{\max } \exp \left( - \exp \left[ \frac{R_{\max }e (λ-t)}{P_{\max }} + 1 \right] \right) \]
 όπου P(t) η παραγωγή μεθανίου την στιγμή t, P\textsubscript{max} η μέγιστη ποσότητα μεθανίου που μπορεί να παραχθεί από το υπόστρωμα αυτό, R\textsubscript{max} ο ειδικός ρυθμός παραγωγής μεθανίου, λ το lag time και e η σταθερά Euler. Παρακάτω φαίνεται το fit των δεδομένων στην συνάρτηση αυτή. Αξίζει να αναφερθεί η χρήση της μεταβλητής \texttt{input\_cod} που φαίνεται παρακάτω. Η μεταβλητή αυτή εκφράζει το COD της τροφοδοσίας. Διαιρούμε τον όγκο μεθανίου με αυτήν ώστε το διάγραμμα να εκφράζει ειδικό ρυθμό παραγωγής μεθανίου σε \(\frac{\text{mL CH$_4$}}{\text{g sCOD}}\), το οποίο είναι πιο εύκολα συγκρίσιμο με βιβλιογραφία, σε σχέση με τον όγκο μεθανίου. Επίσης, αξίζει να σημειωθεί η χρήση bounded optimization. Οι παραμέτροι του μοντέλου έχουν νόημα μόνο ως θετικοί αριθμοί. Στα πειράματα με χρήση οξικό ως υπόστρωμα, όπου οι μικροοργανισμοί αντιδρούν ταχύτατα στην αλλαγή του περιβάλλοντος, η προσαρμογή του μοντέλου έδινε αρνητικό lag time. Αυτό προφανώς δεν έχει νόημα και στην πράξη, το συμπέρασμα είναι πως το lag time είναι μηδενικό (σχεδόν ακαριαία αντίδραση των μικροοργανισμών στην προσθήκη οξικού στο σύστημα). Επίσης, αξίζει να αναφερθεί η μεταβλητή \texttt{kinetics}. Σε κάποια πειράματα (πχ τις μετρήσεις παραγωγής μεθανίου χωρίς προσθήκη υποστρώματος που έγινε σε ένα δείγμα) δεν θέλουμε να κάνουμε προσαρμογή με το μοντέλο Gompertz. Αυτή η μεταβλητή είναι στην ουσία ένα toggle off του plot με την κινητική, για όσα πειράματα δεν το χρειάζονται.
 
-\textbf{bmp\textsubscript{curve}\textsubscript{fitting}}
+Παρακάτω υπάρχουν 2 code blocks. Το πρώτο κάνει fit σε timescale λεπτών ενώ το δεύτερο σε ωρών. Ανάλογα με το πείραμα, μπορεί να βγάλουν ίδια αποτελέσματα, αλλά ενδέχεται να είναι και διαφορετικά.
+
+\textbf{bmp\textsubscript{curve}\textsubscript{fitting}\textsubscript{min}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
 
 gompertz(t, p) = @. p[1]*exp(-exp((((p[2]*exp(1))/p[1])*(p[3] - t)) + 1))
-p0 = [300.0, 50.0, 1.0]
+
 lb = [0.0, 0.0, 0.0]
 ub = [Inf, Inf, Inf]
 specific_meth_vol = exp_cum_meth_vol./input_cod
 
 fit = curve_fit(gompertz, exp_min, specific_meth_vol, p0, lower = lb, upper = ub)
+
 model_params = fit.param
 gompertz(t) = gompertz(t, model_params)
 
@@ -203,61 +251,96 @@ SS_tot = sum([(specific_meth_vol[i] - mean(specific_meth_vol)).^2 for i in 1:len
 r_squared = 1 - SS_res/SS_tot
 
 kinetics = true
+timescale = "min"
+\end{minted}
 
+
+\textbf{bmp\textsubscript{curve}\textsubscript{fitting}\textsubscript{hour}}
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+gompertz(t, p) = @. p[1]*exp(-exp((((p[2]*exp(1))/p[1])*(p[3] - t)) + 1))
+lb = [0.0, 0.0, 0.0]
+ub = [Inf, Inf, Inf]
+specific_meth_vol = exp_cum_meth_vol./input_cod
+
+fit = curve_fit(gompertz, exp_hour, specific_meth_vol, p0, lower = lb, upper = ub)
+
+model_params = fit.param
+gompertz(t) = gompertz(t, model_params)
+
+model_res = fit.resid
+SS_res = sum(model_res.^2)
+SS_tot = sum([(specific_meth_vol[i] - mean(specific_meth_vol)).^2 for i in 1:length(specific_meth_vol)])
+r_squared = 1 - SS_res/SS_tot
+
+kinetics = true
+timescale = "hour"
 \end{minted}
 
 \subsection{Plotting}
-\label{sec:orgb53eb5c}
-Τέλος, έχοντας προσαρμώσει το μοντέλο Gompertz σε κάθε σετ δεδομένων, θέλουμε να φτιάξουμε κάποια διαγράμματα με τα δεδομένα, τα οποία να δείχνουν την παραγόμενη ποσότητα μεθανίου στον χρόνο. Τα πειραματικά δεδομένα θα γίνουν plotted σε scatter plots. Χάριν ευκολίας, μπορούν να γίνουν plotted διαγράμματα και της στιγμιαίας αλλά και της συνολικής παραγωγής μεθανίου και σε άξονα χρόνου είτε λεπτά ή δευτερόλεπτα. Ο παραπάνω κώδικας υπολογίζει το fit του cumulative methane production σε λεπτά, καθώς θεωρείται η πιο χρήσιμη έκφραση, οπότε αυτό θα είναι και το διάγραμμα που έχει fit την καμπύλη. Εδώ θα εκμεταλλευτούμε τα variables που υπολογίζονται παραπάνω καθώς και 2 ακόμη, το \texttt{sample} και το \texttt{source}. Το \texttt{source} είναι ένα απλό variable το οποίο εκφράζει αν η τροφοδοσία ήταν οξικό ή υδρόλυμα για να τα ξεχωρίζουμε πιο εύκολα. Το \texttt{sample} εκφράζει το νούμερο του δείγματος για να είναι πιο εύκολο το naming scheme.
+\label{sec:org37f330e}
+Τέλος, έχοντας προσαρμώσει το μοντέλο Gompertz σε κάθε σετ δεδομένων, θέλουμε να φτιάξουμε κάποια διαγράμματα με τα δεδομένα, τα οποία να δείχνουν την παραγόμενη ποσότητα μεθανίου στον χρόνο. Τα πειραματικά δεδομένα θα γίνουν plotted σε scatter plots. Χάριν ευκολίας, μπορούν να γίνουν plotted διαγράμματα και της στιγμιαίας αλλά και της συνολικής παραγωγής μεθανίου και σε άξονα χρόνου είτε λεπτά ή δευτερόλεπτα. Ο παραπάνω κώδικας υπολογίζει το fit του cumulative methane production σε λεπτά, καθώς θεωρείται η πιο χρήσιμη έκφραση, οπότε αυτό θα είναι και το διάγραμμα που έχει fit την καμπύλη. Εδώ θα εκμεταλλευτούμε τα variables που υπολογίζονται παραπάνω καθώς και 2 ακόμη, το \texttt{sample} και το \texttt{source}. Το \texttt{source} είναι ένα απλό variable το οποίο εκφράζει αν η τροφοδοσία ήταν οξικό ή υδρόλυμα για να τα ξεχωρίζουμε πιο εύκολα. Επίσης, χρησιμοποιείται για να κάνει generate τα σωστά plots (δευτερόλεπτα και λεπτά με fitting σε λεπτά για οξικό, λεπτά και ώρες με fitting ανάλογα το timescale για τα υδρολύματα). Το \texttt{sample} εκφράζει το νούμερο του δείγματος για να είναι πιο εύκολο το naming scheme.
 
 \textbf{bmp\textsubscript{data}\textsubscript{plotting}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
 
+if source == "Hydrolyzed FW"
+    bmp_cumulative_scatter_min = scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
+    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
-bmp_cumulative_scatter_sec = scatter(exp_sec, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (sec)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
-savefig(bmp_cumulative_scatter_sec, plotsdir("BMPs", source, "cumulative_"*exp_name*"_sec.png"))
+    bmp_cumulative_scatter_hour = scatter(exp_hour, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (hour)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
+    savefig(bmp_cumulative_scatter_hour, plotsdir("BMPs", source, "cumulative_"*exp_name*"_hour.png"))
 
-bmp_cumulative_scatter_min = scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
-savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
+    if timescale == "hour"
+        bmp_specific_methane = scatter(exp_hour, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" - "*sample, size = (700, 470), legend = :bottomright)
+        plot!(exp_hour, gompertz(exp_hour), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+        savefig(bmp_specific_methane, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+    elseif timescale =="min" 
+        bmp_specific_methane = scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" - "*sample, size = (700, 470), legend = :bottomright)
+        plot!(exp_min, gompertz(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+        savefig(bmp_specific_methane, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+    end
+else
+    bmp_cumulative_scatter_min = scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
+    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
-if kinetics
-    bmp_specific_methane = scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" - "*sample, size = (700, 470), legend = :bottomright)
-    plot!(exp_min, gompertz(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-    savefig(bmp_specific_methane, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*".png"))
+    bmp_cumulative_scatter_sec = scatter(exp_sec, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (sec)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
+    savefig(bmp_cumulative_scatter_sec, plotsdir("BMPs", source, "cumulative_"*exp_name*"_sec.png"))
+
+    if kinetics
+        bmp_specific_methane = scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" - "*sample, size = (700, 470), legend = :bottomright)
+        plot!(exp_min, gompertz(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+        savefig(bmp_specific_methane, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*".png"))
+    end
 end
-
-bmp_scatter_sec = scatter(exp_sec, exp_meth_vol, markersize = 5, legend = false, xlabel = "Time (sec)", ylabel = "Methane Volume (mL)", title = "Methane Production from "*source*" - "*sample)
-savefig(bmp_scatter_sec, plotsdir("BMPs", source, exp_name*"_sec.png"))
-
-bmp_scatter_min = scatter(exp_min, exp_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Methane Volume (mL)", title = "Methane Production from "*source*" - "*sample)
-savefig(bmp_scatter_min, plotsdir("BMPs", source, exp_name*"_min.png"))
 
 \end{minted}
 
 \section{Acetate Experiment Processing}
-\label{sec:orge0936a8}
+\label{sec:org5c1830d}
 Παρακάτω αναφέρονται οι δοκιμές που έγιναν με 100 μL οξικό σε κάθε δείγμα και θα χρησιμοποιηθούν πιθανόν συγκριτικά σε σχέση με τα FW. Μετά από τα code blocks που τρέχουν τον κώδικα θα υπάρχουν και κάποια από τα corresponding αποτελέσματα. Συγκεκριμένα, ο πίνακας με τα κινητικά δεδομένα, το διάγραμμα παραγωγής μεθανίου το οποίο έχει το curve fitting και το διάγραμμα στιγμίαιας παραγωγής μεθανίου. Υπάρχουν και κάποια άλλα χρήσιμα διαγράμματα, τα οποία είναι αποθηκευμένα, αλλά εδώ παρατίθενται κάποια για καλύτερη ανάγνωση του αρχείου.
 
-\subsection{Acetate Test 1}
-\label{sec:orgf142137}
-Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (1). Notably, δεν είχε διαρροή στις 27/03, αλλά για κάποιον λόγο, στην επαναδοκιμή στις 29/03 δεν παρήγαγε μεθάνιο (τουλάχιστον στην προχοίδα). Οπότε, θα χρησιμοποιηθεί αυτό της 27/03.
+\subsection{Acetate Test FW}
+\label{sec:orga28266d}
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα labelled ως FW (στο οποίο θα τροφοδοτηθούν untreated FW). Notably, δεν είχε διαρροή στις 27/03, αλλά για κάποιον λόγο, στην επαναδοκιμή στις 29/03 δεν παρήγαγε μεθάνιο (τουλάχιστον στην προχοίδα). Οπότε, θα χρησιμοποιηθεί αυτό της 27/03.
 
-\textbf{acet\textsubscript{test}\textsubscript{1}}
+\textbf{acet\textsubscript{test}\textsubscript{FW}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
 
-### Data Analysis on Sample 1 ###
+### Data Analysis on Sample FW ###
 
 <<date_saving_acetate>>
 
 inds = 1:12
 exp_meth_vol = [0, 12, 5, 3, 1.5, 1.5, 1, 1.5, 1, 0.5, 0.5, 0.5]
-exp_name = "acet_test_1"
+exp_name = "acet_test_fw"
 source = "Acetate"
-sample = "Sample 1"
+sample = "Sample FW"
 input_cod = 0.1
+p0 = [250.0, 60.0, 1.0]
 
 <<bmp_data_processing>>
-<<bmp_curve_fitting>>
+<<bmp_curve_fitting_min>>
 model_acet_1 = vcat(sample, model_params, r_squared)
 <<bmp_data_plotting>>
 \end{minted}
@@ -284,15 +367,11 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \end{table}
 
 \begin{center}
-\includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/methane_kinetics_acet_test_1.png}
-\end{center}
-
-\begin{center}
-\includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/acet_test_1_min.png}
+\includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/methane_kinetics_acet_test_fw.png}
 \end{center}
 
 \subsection{Acetate Test 0}
-\label{sec:orgbfd6eb3}
+\label{sec:org40c66a9}
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (0).
 
 \textbf{acet\textsubscript{test}\textsubscript{0}}
@@ -308,9 +387,10 @@ exp_name = "acet_test_0"
 source = "Acetate"
 sample = "Sample 0"
 input_cod = 0.1
+p0 = [400.0, 80.0, 1.0]
 
 <<bmp_data_processing>>
-<<bmp_curve_fitting>>
+<<bmp_curve_fitting_min>>
 model_acet_0 = vcat(sample, model_params, r_squared)
 <<bmp_data_plotting>>
 \end{minted}
@@ -346,34 +426,38 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/methane_kinetics_acet_test_0.png}
 \end{center}
 
-\begin{center}
-\includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/acet_test_0_min.png}
-\end{center}
+\subsection{Acetate Test 1}
+\label{sec:org0c9e7de}
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (1). Aξίζει να αναφερθεί πως την πρώτη πειραματική ημέρα (27/03), παρήγαγε αέριο χωρίς να τροφοδοτηθεί με κάποιο υπόστρωμα. Η κινητική αυτής της παραγωγής (η οποία δεν ξέρουμε σε τι ευθύνεται) θα αναλυθεί παρακάτω. Βέβαια, μόλις τροφοδοτήθηκε με οξικό και η παραγωγή του τελείωσε, σταμάτησε και εκείνη η παραγωγή. Βέβαια, είχε την χαμηλότερη παραγωγή βιοαερίου μόλις τροφοδοτήθηκε με οξικό, οπότε ενδέχεται αυτή η μέτρηση να ήταν προβληματική.
 
-
-\subsection{Acetate Test Ac}
-\label{sec:orge262c4d}
-Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (Ac). Το δείγμα αυτό είναι αυτό που δεν θα τροφοδοτηθεί με κάποιο από τα υδρολύματα των FW αλλά θα χρησιμοποιηθεί ως blank, οπότε είναι labelled ως Acetate. Για αυτό, αξίζει να αναφερθεί πως την πρώτη πειραματική ημέρα (27/03), παρήγαγε αέριο χωρίς να τροφοδοτηθεί με κάποιο υπόστρωμα. Η κινητική αυτής της παραγωγής (η οποία δεν ξέρουμε σε τι ευθύνεται) θα αναλυθεί παρακάτω. Βέβαια, μόλις τροφοδοτήθηκε με οξικό και η παραγωγή του τελείωσε, σταμάτησε και εκείνη η παραγωγή.
-
-\textbf{acet\textsubscript{test}\textsubscript{ac}}
+\textbf{acet\textsubscript{test}\textsubscript{1}}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
 
-### Data Analysis on Sample Ac ###
+### Data Analysis on Sample 1 ###
 
 <<date_saving_acetate>>
 
 inds = 38:56
 exp_meth_vol = [0, 6.5, 5, 3, 0.5, 1.5, 1.5, 0.5, 1, 0.5, 0.5, 0.3, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05]
-exp_name = "acet_test_ac"
+exp_name = "acet_test_1"
 source = "Acetate"
-sample = "Sample Ac"
+sample = "Sample 1"
 input_cod = 0.1
+p0 = [200.0, 40.0, 1.0]
 
 <<bmp_data_processing>>
-<<bmp_curve_fitting>>
+<<bmp_curve_fitting_min>>
 model_acet_ac = vcat(sample, model_params, r_squared)
 <<bmp_data_plotting>>
 \end{minted}
+
+\begin{verbatim}
+sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
+sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
+sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
+"/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Acetate/methane_kinetics_acet_test_1.png"
+\end{verbatim}
+
 
 \begin{table}[htbp]
 \caption{Κινητικά δεδομένα}
@@ -404,66 +488,11 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \end{table}
 
 \begin{center}
-\includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/methane_kinetics_acet_test_ac.png}
-\end{center}
-
-\begin{center}
-\includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/acet_test_ac_min.png}
-\end{center}
-
-\subsection{Acetate Test 4}
-\label{sec:org047337c}
-Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (4).
-
-\textbf{acet\textsubscript{test}\textsubscript{4}}
-\begin{minted}[breaklines=true,breakanywhere=true]{julia}
-
-### Data Analysis on Sample 4 ###
-
-<<date_saving_acetate>>
-
-inds = 41:50
-exp_meth_vol = [0, 4, 10, 9, 4, 5, 5, 4, 3, 3]
-exp_name = "acet_test_4"
-source = "Acetate"
-sample = "Sample 4"
-input_cod = 0.1
-
-<<bmp_data_processing>>
-<<bmp_curve_fitting>>
-model_acet_4 = vcat(sample, model_params, r_squared)
-<<bmp_data_plotting>>
-\end{minted}
-
-\begin{table}[htbp]
-\caption{Κινητικά δεδομένα}
-\centering
-\begin{tabular}{lrrrr}
-Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\textsubscript{Methane}\textsubscript{Volume}\\[0pt]
-\hline
-29/03\textsubscript{12}:29 & 0.0 & 0.0 & 0 & 0\\[0pt]
-29/03\textsubscript{12}:29 & 13.397 & 0.2233 & 4 & 4\\[0pt]
-29/03\textsubscript{12}:30 & 73.405 & 1.2234 & 10 & 14\\[0pt]
-29/03\textsubscript{12}:31 & 133.4 & 2.2233 & 9 & 23\\[0pt]
-29/03\textsubscript{12}:32 & 159.347 & 2.6558 & 4 & 27\\[0pt]
-29/03\textsubscript{12}:33 & 219.346 & 3.6557 & 5 & 32\\[0pt]
-29/03\textsubscript{12}:34 & 279.335 & 4.6556 & 5 & 37\\[0pt]
-29/03\textsubscript{12}:35 & 339.339 & 5.6556 & 4 & 41\\[0pt]
-29/03\textsubscript{12}:36 & 399.338 & 6.6556 & 3 & 44\\[0pt]
-29/03\textsubscript{12}:37 & 459.361 & 7.6560 & 3 & 47\\[0pt]
-\end{tabular}
-\end{table}
-
-\begin{center}
-\includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/methane_kinetics_acet_test_4.png}
-\end{center}
-
-\begin{center}
-\includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/acet_test_4_min.png}
+\includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/methane_kinetics_acet_test_1.png}
 \end{center}
 
 \subsection{Acetate Test 2}
-\label{sec:org3099e1f}
+\label{sec:org6179e81}
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (2).
 
 \textbf{acet\textsubscript{test}\textsubscript{2}}
@@ -479,9 +508,10 @@ exp_name = "acet_test_2"
 source = "Acetate"
 sample = "Sample 2"
 input_cod = 0.1
+p0 = [300.0, 60.0, 1.0]
 
 <<bmp_data_processing>>
-<<bmp_curve_fitting>>
+<<bmp_curve_fitting_min>>
 model_acet_2 = vcat(sample, model_params, r_squared)
 <<bmp_data_plotting>>
 \end{minted}
@@ -513,12 +543,56 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/methane_kinetics_acet_test_2.png}
 \end{center}
 
+\subsection{Acetate Test 4}
+\label{sec:orgab86f3b}
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (4).
+
+\textbf{acet\textsubscript{test}\textsubscript{4}}
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+### Data Analysis on Sample 4 ###
+
+<<date_saving_acetate>>
+
+inds = 41:50
+exp_meth_vol = [0, 4, 10, 9, 4, 5, 5, 4, 3, 3]
+exp_name = "acet_test_4"
+source = "Acetate"
+sample = "Sample 4"
+input_cod = 0.1
+p0 = [400.0, 100.0, 1.0]
+
+<<bmp_data_processing>>
+<<bmp_curve_fitting_min>>
+model_acet_4 = vcat(sample, model_params, r_squared)
+<<bmp_data_plotting>>
+\end{minted}
+
+\begin{table}[htbp]
+\caption{Κινητικά δεδομένα}
+\centering
+\begin{tabular}{lrrrr}
+Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\textsubscript{Methane}\textsubscript{Volume}\\[0pt]
+\hline
+29/03\textsubscript{12}:29 & 0.0 & 0.0 & 0 & 0\\[0pt]
+29/03\textsubscript{12}:29 & 13.397 & 0.2233 & 4 & 4\\[0pt]
+29/03\textsubscript{12}:30 & 73.405 & 1.2234 & 10 & 14\\[0pt]
+29/03\textsubscript{12}:31 & 133.4 & 2.2233 & 9 & 23\\[0pt]
+29/03\textsubscript{12}:32 & 159.347 & 2.6558 & 4 & 27\\[0pt]
+29/03\textsubscript{12}:33 & 219.346 & 3.6557 & 5 & 32\\[0pt]
+29/03\textsubscript{12}:34 & 279.335 & 4.6556 & 5 & 37\\[0pt]
+29/03\textsubscript{12}:35 & 339.339 & 5.6556 & 4 & 41\\[0pt]
+29/03\textsubscript{12}:36 & 399.338 & 6.6556 & 3 & 44\\[0pt]
+29/03\textsubscript{12}:37 & 459.361 & 7.6560 & 3 & 47\\[0pt]
+\end{tabular}
+\end{table}
+
 \begin{center}
-\includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/acet_test_2_min.png}
+\includegraphics[width=.9\linewidth]{../plots/BMPs/Acetate/methane_kinetics_acet_test_4.png}
 \end{center}
 
 \subsection{Παραγωγή μεθανίου χωρίς feed από το δείγμα Ac}
-\label{sec:org5159c66}
+\label{sec:org18b7b2c}
 Όπως προαναφέρθηκε, το δείγμα Ac παρήγαγε μεθάνιο χωρίς να τροφοδοτηθεί με κάτι για κάποιον ανεξήγητο λόγο. Καθώς έχουμε πειραματικά δεδομένα για αυτή την κατανάλωση (και μάλιστα 2 data sets), θα γίνει και μία ανάλυση για αυτό.
 
 \textbf{no\textsubscript{feed}\textsubscript{ac}\textsubscript{1}}
@@ -556,7 +630,7 @@ kinetics = false
 \end{minted}
 
 \subsection{Update all helper}
-\label{sec:org90fc6c1}
+\label{sec:org79cbcf0}
 Σε αυτό το section θα υπάρχει ένα helper code block που θα κάνει evaluate όλα τα παραπάνω. Έτσι, αν αλλάξει κάτι το οποίο επηρεάζει περισσότερα από ένα code blocks, θα μπορούν να γίνουν updated ταυτόχρονα πιο εύκολα. Επίσης, μία επιπλέον χρησιμότητα του code block αυτού είναι ότι αποθηκεύει ένα CSV που συγκεντρώνει όλα τα δεδομένα των κινητικών παραμέτρων από την προσαρμογή που έγινε παραπάνω, το οποίο είναι χρήσιμο για συγκρίσεις, παρόλο που τα συγκεκριμένα πειράματα δεν είναι τόσο σημαντικό να συγκριθούν.
 
 \textbf{update\textsubscript{acetate}\textsubscript{tests}}
@@ -576,11 +650,423 @@ DataFrame(model_fit_table)
 
 \end{minted}
 
+\begin{table}[htbp]
+\caption{Kinetic Models}
+\centering
+\begin{tabular}{lrrrr}
+Sample\textsubscript{Name} & Production\textsubscript{Potential} & Production\textsubscript{Rate} & Lag\textsubscript{Time} & R\textsubscript{squared}\\[0pt]
+\hline
+Sample 0 & 452.518 & 80.388 & 0.0 & 0.967\\[0pt]
+Sample 1 & 208.238 & 55.028 & 0.0 & 0.960\\[0pt]
+Sample 2 & 292.865 & 61.914 & 0.0 & 0.989\\[0pt]
+Sample 4 & 466.239 & 97.778 & 0.0 & 0.990\\[0pt]
+Sample FW & 255.214 & 55.941 & 0.0 & 0.896\\[0pt]
+\end{tabular}
+\end{table}
+
 \subsection{Γενικά σχόλια για αυτόν τον κύκλο πειραμάτων}
-\label{sec:org985391b}
+\label{sec:org5462c07}
 Ο πρώτος αυτός κύκλος πειραμάτων ήταν για την δοκιμή προσθήκης οξικού οξέος, του ιδανικού υποστρώματος της μεθανογένεσης, για να δούμε πως θα αντιδράσει σε αυτό το σύστημα. Δεν έχει τόσο συγκριτικό χαρακτήρα μεταξύ των πειραμάτων (παρόλο που ένα σχόλιο που μπορεί να γίνει είναι πως τα πειράματα τα οποία ήταν ίδια πρακτικά στην αρχή, είχαν αρκετά διαφορετική απόκριση στην προσθήκη οξικού), αλλά τον χαρακτήρα της βέλτιστης δυνατής μεθανογένεσης από κάποιο υπόστρωμα. Από την μελέτη αυτή, προέκυψαν αρκετά συμπεράσματα.
 
 Ένα ενδιαφέρον σχόλιο είναι πως το σύστημα ανταποκρίνεται στην προσθήκη του οξικού πολύ γρήγορα (μετά από μερικά δευτερόλεπτα κιόλας βλέπουμε παραγωγή μεθανίου) και στο μοντέλο αυτό μεταφράζεται ως μηδενικό lag-phase.
 
 Το δείγμα 4 είχε αναπάντεχα υψηλό ρυθμό παραγωγής μεθανίου, το οποίο φάνηκε από το γεγονός ότι παράχθηκε την μέγιστη ποσότητα οξικού που περιμέναμε σε περίπου 7 λεπτά ενώ τα υπόλοιπα χρειάστηκαν τουλάχιστον 15 λεπτά. Αυτό φάνηκε και στο μοντέλο, όπου το δείγμα αυτό είχε πολύ υψηλό ειδικό ρυθμό παραγωγής μεθανίου. Το δείγμα Ac ήταν αυτό που παρήγαγε αέριο χωρίς κάποιο υπόστρωμα. Μόλις προστέθηκε οξικό, αντέδρασε σε αυτό και ο ρυθμός του αυξήθηκε, αλλά επιβράδυνε πολύ γρήγορα, με αποτέλεσμα να έχει πολύ αργό ρυθμό παραγωγής μεθανίο και το χαμηλότερο δυναμικό παραγωγής μεθανίου. Μπορεί η αλλαγή αυτή να ευθύνεται σε αυτήν την απόκριση. Τα δείγματα 0 και 4 είχαν πολύ μεγαλύτερη παραγωγικότητα από τα άλλα 3, χωρίς να υπάρχει κάποια εύκολη εξήγηση για αυτό.
+
+\section{FW Hydrolysate 1 Processing}
+\label{sec:orgf48f211}
+Στο section αυτό θα αναλυθούν τα αποτελεσματα του πρώτου πειράματος που χρησιμοποιήσε FW hydrolysate ως υπόστρωμα. Σκοπός είναι να γίνει μία σύγκριση αυτού με το οξικό για κάθε δοχείο για να προκύψουν αποτελέσματα για το κάθε πείραμα. Οι 5 δοκιμές που έγιναν ήταν στα δείγματα 0, 1, 2 και 4 (τα οποία πλέον έχουν νόημα επειδή εκφράζουν την ποσότητα mix που προστέθηκε κατά την υδρόλυση) αλλά επίσης έγινε και ένα πείραμα για να μετρηθεί η απόδοση σε μεθάνιο του δείγματος μόνο με FW (ενδέχεται να υπήρξε διαρροή στο δείγμα αυτό καθώς η παραγωγή ήταν απειροελάχιστη).
+
+\subsection{Sample 0}
+\label{sec:orgdd6fa71}
+Το δείγμα αυτό είναι labelled ως δείγμα 0 καθώς είναι το δείγμα το οποίο τροφοδοτήθηκε με treated FW, όμως χωρίς προσθήκη του μιξ ενζύμων και μικροοργανισμών. Όπως έχουμε δεί, όλες οι αντιδράσεις που γίνονται κατά την υδρόλυση και ζύμωση μπορούν να γίνουν και χωρίς το μιξ. Όμως, γινόντουσαν πιο αποτελεσματικά με την προσθήκη αυτού. Οπότε, ελπίζουμε πως το δείγμα αυτό θα έχει χειρότερα αποτελέσματα από τα άλλα, το οποίο θα μας οδηγήσει στην υπόθεση ότι το μιξ βελτιώνει όχι μόνο τα κριτήρια υδρόλυσης και οξεογένεσης αλλά και αυτό της μεθανογένεσης.
+
+\textbf{hydrolysate\textsubscript{0}\textsubscript{ad}}
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+### Data Analysis on Hydrolysate with 0 ml ###
+
+<<date_saving_fw_1>>
+
+inds = 1:34
+exp_meth_vol = [0, 1.0, 0.2, 0.02, 0.02, 0.01, 0.2, 0.2, 0.5, 0.2, 0.5, 1.5, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05]
+
+exp_name = "hydrolysate_0"
+source = "Hydrolyzed FW"
+sample = "Sample 0"
+input_cod = 0.1
+
+<<bmp_data_processing>>
+
+# The same model is fit either with min or hour
+p0 = [50.0, 0.4, 1.0]
+<<bmp_curve_fitting_min>>
+model_hydro_0_min = vcat(sample, model_params, r_squared)
+<<bmp_data_plotting>>
+
+p0 = [40.0, 1.0, 1.0]
+<<bmp_curve_fitting_hour>>
+model_hydro_0_hour = vcat(sample, model_params, r_squared)
+<<bmp_data_plotting>>
+\end{minted}
+
+\subsubsection{Results}
+\label{sec:org455895d}
+Παρακάτω φαίνονται τα αποτελέσματα του σχετικού πειράματος.
+
+Παρήγαγε 6.1 ml μεθανίου, το οποίο είναι το \(12.8 \%\) του πειράματος με οξικό. Σχετικά με την προσαρμογή των δεδομένων του σε ένα μοντέλο Gompertz, υπάρχουν 2 πιθανά μοντέλα που ταιριάζουν στο πείραμα. Στο πρώτο, ο ειδικός ρυθμός ανάπτυξης είναι μεγάλος, το οποίο κάνει fit τέλεια στις μετρήσεις της πρώτης ώρας όπου η παραγωγή είναι γρήγορη. Όμως, προβλέπει την στάσιμη φάση λίγες ώρες μετά, το οποίο δεν ισχύει καθώς την 2η μέρα υπάρχει μία καλή παραγωγικότητα μεθανίου. Παρόλα αυτά, έχει καλό R\textsuperscript{2}. Αυτό το μοντέλο είναι πιο εύκολο να προβλεφθεί με x άξονα σε λεπτά, όπου δεν χρειάζεται πάρα πολύ υψηλή αρχική συνθήκη. Ο προβλεπόμενος ειδικός ρυθμός ανάπτυξης θα είναι \(0.384 \frac{ml}{g ~ sCOD \min } \text{ ή } 23.03 \frac{ml}{g ~ sCOD hour}\).
+
+Όμως, υπάρχει και ένα δεύτερο μοντέλο με καλή προσαρμογή (μάλιστα είναι ελαφρώς καλύτερη). Αν ο ειδικός ρυθμός ανάπτυξης είναι χαμηλός, υπάρχει μοντέλο που προσαρμόζεται σχεδόν τέλεια στην 2η και 3η μέρα. Συγκεκριμένα, με ειδικό ρυθμό \(1.636 \frac{ml}{g ~ sCOD ~ hour}\) πετυχαίνεται μία πολύ καλή προσαρμογή. Όμως, αυτό είναι αρκετά λάθος για την πρώτη μέρα.
+
+Ένα πιθανό συμπέρασμα μπορεί να είναι πως κάτι συμβαίνει στον αντιδραστήρα το οποίο επιβραδύνει σημαντικά τον μέγιστο ειδικό ρυθμό ανάπτυξης, ο οποίος μπαίνει στο μοντέλο.
+
+\begin{center}
+\begin{tabular}{lrrrr}
+Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsubscript{Methane}\textsubscript{Volume}\\[0pt]
+\hline
+01/04\textsubscript{11}:05 & 0.0 & 0.0 & 0.0 & 0.0\\[0pt]
+01/04\textsubscript{11}:09 & 3.7328 & 0.0622 & 1.0 & 1.0\\[0pt]
+01/04\textsubscript{11}:11 & 5.733 & 0.0956 & 0.2 & 1.2\\[0pt]
+01/04\textsubscript{11}:12 & 6.7332 & 0.1122 & 0.02 & 1.22\\[0pt]
+01/04\textsubscript{11}:13 & 7.5618 & 0.126 & 0.02 & 1.24\\[0pt]
+01/04\textsubscript{11}:14 & 8.5617 & 0.1427 & 0.01 & 1.25\\[0pt]
+01/04\textsubscript{11}:15 & 9.5618 & 0.1594 & 0.2 & 1.45\\[0pt]
+01/04\textsubscript{11}:21 & 16.0005 & 0.2667 & 0.2 & 1.65\\[0pt]
+01/04\textsubscript{11}:52 & 46.3266 & 0.7721 & 0.5 & 2.15\\[0pt]
+01/04\textsubscript{12}:22 & 76.3266 & 1.2721 & 0.2 & 2.35\\[0pt]
+01/04\textsubscript{16}:52 & 346.3272 & 5.7721 & 0.5 & 2.85\\[0pt]
+02/04\textsubscript{10}:54 & 1428.1379 & 23.8023 & 1.5 & 4.35\\[0pt]
+02/04\textsubscript{12}:54 & 1548.1453 & 25.8024 & 0.05 & 4.4\\[0pt]
+02/04\textsubscript{13}:24 & 1578.1452 & 26.3024 & 0.05 & 4.45\\[0pt]
+02/04\textsubscript{13}:54 & 1608.1455 & 26.8024 & 0.05 & 4.5\\[0pt]
+02/04\textsubscript{14}:24 & 1638.1455 & 27.3024 & 0.05 & 4.55\\[0pt]
+02/04\textsubscript{14}:54 & 1668.1454 & 27.8024 & 0.05 & 4.6\\[0pt]
+02/04\textsubscript{15}:24 & 1698.1453 & 28.3024 & 0.05 & 4.65\\[0pt]
+02/04\textsubscript{15}:54 & 1728.1453 & 28.8024 & 0.1 & 4.75\\[0pt]
+02/04\textsubscript{16}:24 & 1758.1455 & 29.3024 & 0.1 & 4.85\\[0pt]
+02/04\textsubscript{16}:54 & 1788.1455 & 29.8024 & 0.1 & 4.95\\[0pt]
+02/04\textsubscript{17}:24 & 1818.1452 & 30.3024 & 0.1 & 5.05\\[0pt]
+02/04\textsubscript{17}:54 & 1848.152 & 30.8025 & 0.1 & 5.15\\[0pt]
+02/04\textsubscript{19}:54 & 1968.1526 & 32.8025 & 0.1 & 5.25\\[0pt]
+02/04\textsubscript{21}:54 & 2088.1542 & 34.8026 & 0.1 & 5.35\\[0pt]
+02/04\textsubscript{23}:54 & 2208.1584 & 36.8026 & 0.1 & 5.45\\[0pt]
+03/04\textsubscript{01}:54 & 2328.1584 & 38.8026 & 0.1 & 5.55\\[0pt]
+03/04\textsubscript{03}:54 & 2448.1582 & 40.8026 & 0.1 & 5.65\\[0pt]
+03/04\textsubscript{05}:54 & 2568.1632 & 42.8027 & 0.1 & 5.75\\[0pt]
+03/04\textsubscript{07}:54 & 2688.1651 & 44.8028 & 0.1 & 5.85\\[0pt]
+03/04\textsubscript{09}:54 & 2808.1652 & 46.8028 & 0.1 & 5.95\\[0pt]
+03/04\textsubscript{12}:54 & 2988.1741 & 49.8029 & 0.05 & 6.0\\[0pt]
+03/04\textsubscript{13}:54 & 3048.1739 & 50.8029 & 0.05 & 6.05\\[0pt]
+03/04\textsubscript{14}:24 & 3078.1749 & 51.3029 & 0.05 & 6.1\\[0pt]
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_0_min.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_0_hour.png}
+\end{center}
+
+\subsection{Sample 1}
+\label{sec:orge28bb9f}
+Το δείγμα αυτό τροφοδοτήθηκε με το υδρόλυμα το οποίο είχε προσθήκη 1 ml mix. Στο αρχικό κινητικό πείραμα, το δείγμα αυτό είχε αρκετά παρόμοια συμπεριφορά με το 0 και χειρότερη αυτής του 1. Από την μέτρηση του COD του, είχε αναπάντεχα υψηλό sCOD. Αυτό σημαίνει είτε πως έγινε κάποιο λάθος στην ανάλυση ή ότι απλώς έγινε πολύ καλύτερη υδρόλυση από ότι περιμέναμε στο πείραμα αυτό. Με βάση το sCOD του, αναμένεται να έχει καλά αποτελέσματα. Με βάση την HPLC του αρχικού πειράματος, θα περιμέναμε να είναι λίγο καλύτερο από το 0.
+
+\textbf{hydrolysate\textsubscript{1}\textsubscript{ad}}
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+### Data Analysis on Hydrolysate with 1 ml ###
+
+<<date_saving_fw_1>>
+
+inds = 2:34
+exp_meth_vol = [0, 2.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0.2, 0.5, 2.0, 0.3, 0.3, 0.3, 0.1, 0.6, 0.6, 0.5, 0.5, 0.5, 0.4, 0.6, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.2, 0.2]
+exp_name = "hydrolysate_1"
+source = "Hydrolyzed FW"
+sample = "Sample 1"
+input_cod = 0.1
+
+p0 = [130.0, 10.0, 1.0]
+<<bmp_data_processing>>
+<<bmp_curve_fitting_min>>
+model_hydro_1_min = vcat(sample, model_params, r_squared)
+<<bmp_data_plotting>>
+
+p0 = [200.0, 5.0, 1.0]
+<<bmp_curve_fitting_hour>>
+model_hydro_1_hour = vcat(sample, model_params, r_squared)
+<<bmp_data_plotting>>
+\end{minted}
+
+\subsubsection{Results}
+\label{sec:org601500e}
+Το πείραμα αυτό παρήγαγε 13.05 ml μεθάνιο, το οποίο είναι το \(60.7 \%\) του πειράματος με οξικό καθώς εκείνο το πείραμα είχε μία σχετικά χαμηλή παραγωγικότητα για οξικό. Υπάρχει η σκέψη ότι μπορεί λόγω της διεργασίας που συνέβαινε αρχικά στο δείγμα αυτό (παραγωγή μεθανίου χωρίς τροφή) να επηρεάστηκε η παραγωγικότητα του και αυτό το ποσοστό να μην είναι τόσο έμπιστο.
+
+Από άποψη προσαρμογής, το πείραμα αυτό έχει το πρόβλημα πως μεταξύ της 2ης και 3ης μέρας όχι μόνο επιβραδύνθηκε αρκετά το πείραμα (όπως στο 0 ml) αλλά σχεδόν σταμάτησε. Όμως, το πρωί της τρίτης μέρας, λίγο πριν σταματήσουμε το πείραμα, η παραγωγή αυξήθηκε σχετικά σημαντικά. Οπότε, η προσαρμογή του είναι λίγο πιο δύσκολη. Υπάρχει πάλι το φαινόμενο των 2 ρυθμών (ενός γρήγορου για τα δείγματα της 1ης μέρας και ενός αργού για μετά), όμως, ο γρήγορος είναι σημαντικά χειρότερος εδώ (R\textsuperscript{2} 0.689 αντί για 0.815), προβλέπει με λιγότερη ακρίβεια ακόμη και την πρώτη μέρα και η στάσιμη φάση του είναι πολύ χαμηλά. Ο αργός ρυθμός είναι και αυτός σχετικά λάθος επειδή δεν μπορεί να προβλέψει την δημιουργία στάσιμης φάσης και μετά επανεκίννησης της χώνευσης (κάτι που δεν νομίζω να προβλέπεται από οποιοδήποτε μοντέλο). Οπότε, κάνει underestimate το σημείο που ακόμη παράγει και overestimate όταν έχει αρχίσει η στάσιμη φάση. Βέβαια, για τόσα πειραματικά σημεία (τα οποία έχουν και κάποια προβλήματα που δεν μπορούν να εξηγηθούν εύκολα), η προσαρμογή με R\textsuperscript{2} = 0.815 είναι σχετικά καλή.
+
+Το μοντέλο με τον γρήγορο ρυθμό έχει ειδικό ρυθμό ανάπτυξης \(0.841 \frac{ml}{g ~ sCOD min } \text{ ή } 50.43 \frac{ml}{g ~ sCOD hour}\) ενώ το αργό έχει ρυθμό \(3.175 \frac{ml}{g ~ sCOD hour}\).
+
+\begin{center}
+\begin{tabular}{lrrrr}
+Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsubscript{Methane}\textsubscript{Volume}\\[0pt]
+\hline
+01/04\textsubscript{11}:09 & 0.0 & 0.0 & 0.0 & 0.0\\[0pt]
+01/04\textsubscript{11}:11 & 2.0003 & 0.0333 & 2.0 & 2.0\\[0pt]
+01/04\textsubscript{11}:12 & 3.0004 & 0.05 & 0.5 & 2.5\\[0pt]
+01/04\textsubscript{11}:13 & 3.829 & 0.0638 & 0.5 & 3.0\\[0pt]
+01/04\textsubscript{11}:14 & 4.8289 & 0.0805 & 0.5 & 3.5\\[0pt]
+01/04\textsubscript{11}:15 & 5.8291 & 0.0972 & 0.5 & 4.0\\[0pt]
+01/04\textsubscript{11}:21 & 12.2677 & 0.2045 & 0.5 & 4.5\\[0pt]
+01/04\textsubscript{11}:52 & 42.5938 & 0.7099 & 0.0 & 4.5\\[0pt]
+01/04\textsubscript{12}:22 & 72.5938 & 1.2099 & 0.2 & 4.7\\[0pt]
+01/04\textsubscript{16}:52 & 342.5944 & 5.7099 & 0.5 & 5.2\\[0pt]
+02/04\textsubscript{10}:54 & 1424.4052 & 23.7401 & 2.0 & 7.2\\[0pt]
+02/04\textsubscript{12}:54 & 1544.4126 & 25.7402 & 0.3 & 7.5\\[0pt]
+02/04\textsubscript{13}:24 & 1574.4125 & 26.2402 & 0.3 & 7.8\\[0pt]
+02/04\textsubscript{13}:54 & 1604.4127 & 26.7402 & 0.3 & 8.1\\[0pt]
+02/04\textsubscript{14}:24 & 1634.4127 & 27.2402 & 0.1 & 8.2\\[0pt]
+02/04\textsubscript{14}:54 & 1664.4126 & 27.7402 & 0.6 & 8.8\\[0pt]
+02/04\textsubscript{15}:24 & 1694.4125 & 28.2402 & 0.6 & 9.4\\[0pt]
+02/04\textsubscript{15}:54 & 1724.4125 & 28.7402 & 0.5 & 9.9\\[0pt]
+02/04\textsubscript{16}:24 & 1754.4128 & 29.2402 & 0.5 & 10.4\\[0pt]
+02/04\textsubscript{16}:54 & 1784.4128 & 29.7402 & 0.5 & 10.9\\[0pt]
+02/04\textsubscript{17}:24 & 1814.4125 & 30.2402 & 0.4 & 11.3\\[0pt]
+02/04\textsubscript{17}:54 & 1844.4193 & 30.7403 & 0.6 & 11.9\\[0pt]
+02/04\textsubscript{19}:54 & 1964.4198 & 32.7403 & 0.1 & 12.0\\[0pt]
+02/04\textsubscript{21}:54 & 2084.4214 & 34.7404 & 0.05 & 12.05\\[0pt]
+02/04\textsubscript{23}:54 & 2204.4256 & 36.7404 & 0.05 & 12.1\\[0pt]
+03/04\textsubscript{01}:54 & 2324.4257 & 38.7404 & 0.05 & 12.15\\[0pt]
+03/04\textsubscript{03}:54 & 2444.4255 & 40.7404 & 0.05 & 12.2\\[0pt]
+03/04\textsubscript{05}:54 & 2564.4305 & 42.7405 & 0.05 & 12.25\\[0pt]
+03/04\textsubscript{07}:54 & 2684.4324 & 44.7405 & 0.05 & 12.3\\[0pt]
+03/04\textsubscript{09}:54 & 2804.4325 & 46.7405 & 0.05 & 12.35\\[0pt]
+03/04\textsubscript{12}:54 & 2984.4414 & 49.7407 & 0.3 & 12.65\\[0pt]
+03/04\textsubscript{13}:54 & 3044.4412 & 50.7407 & 0.2 & 12.85\\[0pt]
+03/04\textsubscript{14}:24 & 3074.4422 & 51.2407 & 0.2 & 13.05\\[0pt]
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_1_min.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_1_hour.png}
+\end{center}
+
+\subsection{Sample 2}
+\label{sec:org5a4c8ff}
+Το δείγμα το οποίο στην υδρόλυση είχε 2 ml από το μιξ. Με βάση το αρχικό πείραμα υδρόλυσης, αυτό και το 4 ml είχαν το καλύτερο performance και ελάχιστη διαφορά μεταξύ τους (κατά βάση στην συγκέντρωση γαλακτικού οξέος) οπότε θα αναμέναμε εδώ να παρατηρηθεί η καλύτερη μεθανογένεση.
+
+\textbf{hydrolysate\textsubscript{2}\textsubscript{ad}}
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+### Data Analysis on Hydrolysate with 2 ml ###
+
+<<date_saving_fw_1>>
+
+inds = 7:34
+exp_meth_vol = [0, 6, 0.5, 0.1, 0.5, 1.5, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2]
+exp_name = "hydrolysate_2"
+source = "Hydrolyzed FW"
+sample = "Sample 2"
+input_cod = 0.1
+
+<<bmp_data_processing>>
+
+p0 = [100.0, 0.01, 1.0]
+<<bmp_curve_fitting_min>>
+model_hydro_2_min = vcat(sample, model_params, r_squared)
+<<bmp_data_plotting>>
+
+p0 = [100.0, 1000.0, 0.03]
+<<bmp_curve_fitting_hour>>
+model_hydro_2_hour = vcat(sample, model_params, r_squared)
+<<bmp_data_plotting>>
+\end{minted}
+
+\subsubsection{Results}
+\label{sec:orgc152b6b}
+Το παραγώμενο μεθάνιο είναι 11.1 ml, δηλαδή \(37 \%\) του προβλεπόμενου μεθανίου με βάση το οξικό.
+
+Ένα πολύ βασικό πρόβλημα του πειράματος αυτού είναι πως έχουμε μία μεγάλη παραγωγικότητα μεθανίου στην πρώτη φωτογραφία, όμως αυτή ήταν 6.5 λεπτά μετά την αρχή. Οπότε, δύνανται να υπάρχουν πάρα πολλά κινητικά μοντέλα τα οποία είναι αποδεχτά. Αξίζει να σημειωθεί πως το καλύτερο R\textsuperscript{2} είναι 0.724, το οποίο δείχνει πως κανένα από τα μοντέλα δεν είναι ιδιαίτερα αξιόπιστο. Το πρόβλημα της δειγματοληψίας αυτής είναι πιθανόν να φταίει.
+
+Τα τέσσερα δυνατά μοντέλα διακρίνονται ως εξής: Μπορεί ο ρυθμός να είναι αρκετά χαμηλός ώστε να προσωμοιώνει το τέλος της χώνευσης, το οποίο είναι αργό. Ο ρυθμός αυτός είναι \(0.032 \frac{ml}{g ~ sCOD \min } \text{ ή } 1.92 \frac{ml}{g ~ sCOD \min }\), ο οποίος είναι παρόμοιας τάξης μεγέθους με τον αργό ρυθμό των άλλων δειγμάτων. Όπως και στο sample 1 όμως, το αποτέλεσμα αυτό δεν έχει καλό R\textsuperscript{2} και μάλλον δεν θεωρείται έμπιστο. Το άλλο μοντέλο που ακολουθεί την λογική των παραπάνω είναι το χειρότερο δυνατό μοντέλο (R\textsuperscript{2} = 0.639) το οποίο έχει ειδικό ρυθμό ανάπτυξης \(1.192 \frac{ml}{g ~ sCOD \min }\) (ο οποίος είναι παρόμοιας τάξης μεγέθους με τους άλλους 2, αλλά λίγο μεγαλύτερος) και την λογική ότι στα πρώτα 6 λεπτά παράχθηκε το περισσότερο μεθάνιο. Το καλύτερο δυνατό μοντέλο έχει παρόμοια λογική πολύ γρήγορου ειδικού ρυθμού ανάπτυξης \(\left( 15.483 \frac{ml}{g ~ sCOD \min } \right)\), αλλά ένα lag phase 2.42 λεπτών. Η λογική που μπορούν να ισχύουν και τα δύο είναι ότι βλέπουμε αποτέλεσμα σε 6.5 λεπτά περίπου, οπότε, μπορεί να υπήρχε ένα lag time στην αρχή και μετά να εξελίχθηκε πιο γρήγορα το φαινόμενο. Επίσης, ένα μοντέλο με ακόμη μεγαλύτερο lag time αλλά και ειδικό ρυθμό ανάπτυξης προέκυψε και είχε σχεδόν identical R\textsuperscript{2} με το παραπάνω. Καθώς κανένα άλλο μοντέλο δεν έχει παρουσιάσει lag time, το πιο εύλογο θα ήταν να ισχύει ένα από τα 2 πρώτα μοντέλα. Όμως, απουσία άλλων δεδομένων, το καλύτερο μοντέλο είναι αυτό με το μικρό lag phase.
+
+\begin{center}
+\begin{tabular}{lrrrr}
+Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsubscript{Methane}\textsubscript{Volume}\\[0pt]
+\hline
+01/04\textsubscript{11}:15 & 0.0 & 0.0 & 0.0 & 0.0\\[0pt]
+01/04\textsubscript{11}:21 & 6.4386 & 0.1073 & 6.0 & 6.0\\[0pt]
+01/04\textsubscript{11}:52 & 36.7648 & 0.6127 & 0.5 & 6.5\\[0pt]
+01/04\textsubscript{12}:22 & 66.7647 & 1.1127 & 0.1 & 6.6\\[0pt]
+01/04\textsubscript{16}:52 & 336.7653 & 5.6128 & 0.5 & 7.1\\[0pt]
+02/04\textsubscript{10}:54 & 1418.5761 & 23.6429 & 1.5 & 8.6\\[0pt]
+02/04\textsubscript{12}:54 & 1538.5835 & 25.6431 & 0.2 & 8.8\\[0pt]
+02/04\textsubscript{13}:24 & 1568.5834 & 26.1431 & 0.1 & 8.9\\[0pt]
+02/04\textsubscript{13}:54 & 1598.5836 & 26.6431 & 0.1 & 9.0\\[0pt]
+02/04\textsubscript{14}:24 & 1628.5836 & 27.1431 & 0.1 & 9.1\\[0pt]
+02/04\textsubscript{14}:54 & 1658.5836 & 27.6431 & 0.1 & 9.2\\[0pt]
+02/04\textsubscript{15}:24 & 1688.5834 & 28.1431 & 0.1 & 9.3\\[0pt]
+02/04\textsubscript{15}:54 & 1718.5834 & 28.6431 & 0.1 & 9.4\\[0pt]
+02/04\textsubscript{16}:24 & 1748.5837 & 29.1431 & 0.1 & 9.5\\[0pt]
+02/04\textsubscript{16}:54 & 1778.5837 & 29.6431 & 0.1 & 9.6\\[0pt]
+02/04\textsubscript{17}:24 & 1808.5834 & 30.1431 & 0.1 & 9.7\\[0pt]
+02/04\textsubscript{17}:54 & 1838.5902 & 30.6432 & 0.1 & 9.8\\[0pt]
+02/04\textsubscript{19}:54 & 1958.5907 & 32.6432 & 0.1 & 9.9\\[0pt]
+02/04\textsubscript{21}:54 & 2078.5923 & 34.6432 & 0.1 & 10.0\\[0pt]
+02/04\textsubscript{23}:54 & 2198.5966 & 36.6433 & 0.1 & 10.1\\[0pt]
+03/04\textsubscript{01}:54 & 2318.5966 & 38.6433 & 0.1 & 10.2\\[0pt]
+03/04\textsubscript{03}:54 & 2438.5964 & 40.6433 & 0.1 & 10.3\\[0pt]
+03/04\textsubscript{05}:54 & 2558.6014 & 42.6434 & 0.1 & 10.4\\[0pt]
+03/04\textsubscript{07}:54 & 2678.6033 & 44.6434 & 0.1 & 10.5\\[0pt]
+03/04\textsubscript{09}:54 & 2798.6034 & 46.6434 & 0.1 & 10.6\\[0pt]
+03/04\textsubscript{12}:54 & 2978.6123 & 49.6435 & 0.1 & 10.7\\[0pt]
+03/04\textsubscript{13}:54 & 3038.6121 & 50.6435 & 0.2 & 10.9\\[0pt]
+03/04\textsubscript{14}:24 & 3068.6131 & 51.1436 & 0.2 & 11.1\\[0pt]
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_2_min.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_2_hour.png}
+\end{center}
+
+\subsection{Sample 4}
+\label{sec:orga3e5af5}
+Το δείγμα 4 ήταν αυτό με τα 4 ml mix στην υδρόλυση. Είναι η μέγιστη ποσότητα που χρησιμοποιήθηκε για τα πειράματα χώνευσης καθώς το 8 ml δεν είχε ιδιαίτερα μεγάλη διαφορά και είναι πολύ πιο ακριβό. Όπως προαναφέρθηκε, αναμένουμε να έχει παρόμοια ποιότητα με το 2 ml καθώς με εξαίρεση μίας ποσότητας γαλακτικού είναι σχεδόν ίδια.
+
+\textbf{hydrolysate\textsubscript{4}\textsubscript{ad}}
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+### Data Analysis on Hydrolysate with 4 ml ###
+
+<<date_saving_fw_1>>
+
+inds = 5:34
+exp_meth_vol = [0, 13, 0.1, 0.2, 0.1, 0.2, 0.5, 1, 0.4, 0.1, 0.3, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.2, 0.2, 0.1]
+exp_name = "hydrolysate_4"
+source = "Hydrolyzed FW"
+sample = "Sample 4"
+input_cod = 0.1
+
+<<bmp_data_processing>>
+
+p0 = [170.0, 150.0, 1.0]
+<<bmp_curve_fitting_min>>
+model_hydro_4_min = vcat(sample, model_params, r_squared)
+<<bmp_data_plotting>>
+
+p0 = [170.0, 1000.0, 0.1]
+<<bmp_curve_fitting_hour>>
+model_hydro_4_hour = vcat(sample, model_params, r_squared)
+<<bmp_data_plotting>>
+\end{minted}
+
+\subsubsection{Results}
+\label{sec:orgdccd26e}
+Το δείγμα αυτό είχε την ιδιαιτερότητα της μεγαλύτερης παραγωγής μεθανίου από όλα τα δείγματα σε αρκετά γρήγορο ρυθμό, κάτι που προβλέπεται καθώς ήταν και η συμπεριφορά της λάσπης του. Η παραγωγή 17.35 ml μεθανίου είναι το \(36.9 \%\) αυτής του οξικού οξέος. Το γεγονός ότι είναι το ίδιο ποσοστό με αυτό του 2 ml είναι αρκετά καλό.
+
+Επίσης, η παραγωγή είναι περίεργη καθώς παράγονται 13 ml μέσα σε ένα λεπτό και μετά το σύστημα μπαίνει σε μία σχεδόν στάσιμη φάση όπου η παραγωγή μεθανίου έχει επιβραδυνθεί σημαντικά, αλλά συνεχίζει να παράγει κάποια μικρή ποσότητα μέχρι και τις 51 ώρες όπου σταμάτησε το πείραμα. Οπότε, το γεγονός ότι το μοντέλο που προβλέπεται είναι ένα με πάρα πολύ υψηλό ειδικό ρυθμό ανάπτυξης το οποίο φτάνει σε στάσιμη φάση στα πρώτα λεπτά είναι αναμενόμενο.
+
+Όμως, σε αντίθεση με τα άλλα πειράματα, αυτό είναι σχεδόν ολόσωστο σαν ιδέα καθώς 51 ώρες δεν παρήγαγαν ούτε το μισό του πρώτου λεπτού, οπότε παρόλο που θα αναμέναμε λίγο περισσότερη καμπύλη και όχι την μορφη που προκύπτει (η οποία είναι ουσιαστικά μία κατακόρυφη και μία οριζόντια γραμμή), η εξίσωση αυτή προβλέπει σχετικά καλά την πραγματικότητα και το R\textsuperscript{2} είναι 0.865, το οποίο είναι η καλύτερη προσαρμογή που έχουμε δεί σε ένα από αυτά τα πειράματα. Ο ειδικός ρυθμός ανάπτυξης που έχει προβλεφθεί είναι \(162.84 \frac{ml}{g ~ sCOD \min } \text{ ή } 9732.61 \frac{ml}{g ~ sCOD ~ hour}\) το οποίο είναι τεράστια διαφορά σε σχέση με τα άλλα πειράματα, ακόμη και αν χρησιμοποιηθεί το μοντέλο τους με τον γρήγορο ρυθμό.
+
+Όπως αναφέρθηκε όμως, η συμπεριφορά αυτή είναι αναμενόμενη καθώς η λάσπη στο δοχείο αυτό είχε αυτή την ιδιαιτερότητα από την τροφοδοσία με το οξικό (παρόλο που εδώ φάνηκε πολύ πιο έντονα). Βέβαια, αξίζει να αναφερθεί πως παρότι ο ρυθμός αναμένεται να είναι μεγάλος, η τιμή αυτή είναι σχεδόν διπλάσια από τον αντίστοιχο ειδικό ρυθμό ανάπτυξης για τροφοδοσία με οξικό, το οποίο είναι αρκετά περίεργο.
+
+\begin{center}
+\begin{tabular}{lrrrr}
+Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsubscript{Methane}\textsubscript{Volume}\\[0pt]
+\hline
+01/04\textsubscript{11}:13 & 0.0 & 0.0 & 0.0 & 0.0\\[0pt]
+01/04\textsubscript{11}:14 & 0.9999 & 0.0167 & 13.0 & 13.0\\[0pt]
+01/04\textsubscript{11}:15 & 2.0001 & 0.0333 & 0.1 & 13.1\\[0pt]
+01/04\textsubscript{11}:21 & 8.4387 & 0.1406 & 0.2 & 13.3\\[0pt]
+01/04\textsubscript{11}:52 & 38.7648 & 0.6461 & 0.1 & 13.4\\[0pt]
+01/04\textsubscript{12}:22 & 68.7648 & 1.1461 & 0.2 & 13.6\\[0pt]
+01/04\textsubscript{16}:52 & 338.7654 & 5.6461 & 0.5 & 14.1\\[0pt]
+02/04\textsubscript{10}:54 & 1420.5761 & 23.6763 & 1.0 & 15.1\\[0pt]
+02/04\textsubscript{12}:54 & 1540.5835 & 25.6764 & 0.4 & 15.5\\[0pt]
+02/04\textsubscript{13}:24 & 1570.5834 & 26.1764 & 0.1 & 15.6\\[0pt]
+02/04\textsubscript{13}:54 & 1600.5837 & 26.6764 & 0.3 & 15.9\\[0pt]
+02/04\textsubscript{14}:24 & 1630.5837 & 27.1764 & 0.1 & 16.0\\[0pt]
+02/04\textsubscript{14}:54 & 1660.5836 & 27.6764 & 0.1 & 16.1\\[0pt]
+02/04\textsubscript{15}:24 & 1690.5835 & 28.1764 & 0.1 & 16.2\\[0pt]
+02/04\textsubscript{15}:54 & 1720.5835 & 28.6764 & 0.0 & 16.2\\[0pt]
+02/04\textsubscript{16}:24 & 1750.5837 & 29.1764 & 0.0 & 16.2\\[0pt]
+02/04\textsubscript{16}:54 & 1780.5838 & 29.6764 & 0.0 & 16.2\\[0pt]
+02/04\textsubscript{17}:24 & 1810.5835 & 30.1764 & 0.05 & 16.25\\[0pt]
+02/04\textsubscript{17}:54 & 1840.5902 & 30.6765 & 0.05 & 16.3\\[0pt]
+02/04\textsubscript{19}:54 & 1960.5908 & 32.6765 & 0.05 & 16.35\\[0pt]
+02/04\textsubscript{21}:54 & 2080.5924 & 34.6765 & 0.05 & 16.4\\[0pt]
+02/04\textsubscript{23}:54 & 2200.5966 & 36.6766 & 0.05 & 16.45\\[0pt]
+03/04\textsubscript{01}:54 & 2320.5967 & 38.6766 & 0.05 & 16.5\\[0pt]
+03/04\textsubscript{03}:54 & 2440.5965 & 40.6766 & 0.05 & 16.55\\[0pt]
+03/04\textsubscript{05}:54 & 2560.6014 & 42.6767 & 0.05 & 16.6\\[0pt]
+03/04\textsubscript{07}:54 & 2680.6034 & 44.6767 & 0.05 & 16.65\\[0pt]
+03/04\textsubscript{09}:54 & 2800.6034 & 46.6767 & 0.2 & 16.85\\[0pt]
+03/04\textsubscript{12}:54 & 2980.6123 & 49.6769 & 0.2 & 17.05\\[0pt]
+03/04\textsubscript{13}:54 & 3040.6122 & 50.6769 & 0.2 & 17.25\\[0pt]
+03/04\textsubscript{14}:24 & 3070.6131 & 51.1769 & 0.1 & 17.35\\[0pt]
+\end{tabular}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_4_min.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_4_hour.png}
+\end{center}
+
+\subsection{Untreated FW}
+\label{sec:orgfdd3c0d}
+
+\subsection{Update all}
+\label{sec:org836bfb2}
+Όπως και παραπάνω για τα πειράματα στο οξικό, θα υπάρχει και ένα code block το οποίο θα κάνει update όλα τα code blocks, θα τα κάνει tangle σε ένα script file και θα αποθηκεύει ένα CSV με όλα τα κινητικά αποτελέσματα.
+
+\textbf{update\textsubscript{hydrolysate}\textsubscript{tests}}
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+<<hydrolysate_0_ad>>
+<<hydrolysate_1_ad>>
+<<hydrolysate_2_ad>>
+<<hydrolysate_4_ad>>
+
+model_fit_table_min = Tables.table(vcat(reshape(model_hydro_0_min, 1, 5), reshape(model_hydro_1_min, 1, 5), reshape(model_hydro_2_min, 1, 5), reshape(model_hydro_4_min, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
+CSV.write(datadir("exp_pro", "methane_from_hydrolysate_kinetics_min.csv"), model_fit_table_min)
+
+model_fit_table_hour = Tables.table(vcat(reshape(model_hydro_0_hour, 1, 5), reshape(model_hydro_1_hour, 1, 5), reshape(model_hydro_2_hour, 1, 5), reshape(model_hydro_4_hour, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
+CSV.write(datadir("exp_pro", "methane_from_hydrolysate_kinetics_hour.csv"), model_fit_table_hour)
+\end{minted}
+
+\begin{table}[htbp]
+\caption{Kinetics with timescale in hours}
+\centering
+\begin{tabular}{lrrrr}
+Sample\textsubscript{Name} & Production\textsubscript{Potential} & Production\textsubscript{Rate} & Lag\textsubscript{Time} & R2\\[0pt]
+\hline
+Sample 0 & 67.363 & 1.636 & 0.0 & 0.862\\[0pt]
+Sample 1 & 163.745 & 3.175 & 0.0 & 0.815\\[0pt]
+Sample 2 & 94.538 & 929.102 & 0.0404 & 0.724\\[0pt]
+Sample 4 & 158.432 & 9732.61 & 0.00186 & 0.865\\[0pt]
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{Kinetics with timescale in minutes}
+\centering
+\begin{tabular}{lrrrr}
+Sample\textsubscript{Name} & Production\textsubscript{Potential} & Production\textsubscript{Rate} & Lag\textsubscript{Time} & R2\\[0pt]
+\hline
+Sample 0 & 50.980 & 0.384 & 0.0 & 0.846\\[0pt]
+Sample 1 & 105.569 & 0.840 & 0.0 & 0.689\\[0pt]
+Sample 2 & 872.706 & 0.0320 & 0.0 & 0.687\\[0pt]
+Sample 4 & 158.428 & 162.838 & 0.112 & 0.865\\[0pt]
+\end{tabular}
+\end{table}
 \end{document}
