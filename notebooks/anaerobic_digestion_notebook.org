@@ -1088,7 +1088,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
 *update_hydrolysate_tests*
 #+NAME: update_hydrolysate_tests
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_hydrolysate_analysis.jl
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_1_analysis.jl
 
   <<hydrolysate_0_ad>>
   <<hydrolysate_1_ad>>
