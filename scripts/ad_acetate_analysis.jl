@@ -44,6 +44,7 @@ file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-5
 
 inds = 34:51
 exp_meth_vol = [0, 4, 12, 7.5, 4.5, 2.5, 2.5, 4, 0.5, 2, 2, 1, 1, 1, 1, 1, 0.5, 0.5]
+meth_vol_acet_0 = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_0"
 source = "Acetate"
 sample = "Sample 0"
@@ -159,6 +160,7 @@ file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-5
 
 inds = 38:56
 exp_meth_vol = [0, 6.5, 5, 3, 0.5, 1.5, 1.5, 0.5, 1, 0.5, 0.5, 0.3, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05]
+meth_vol_acet_1 = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_1"
 source = "Acetate"
 sample = "Sample 1"
@@ -274,6 +276,7 @@ file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-5
 
 inds = 44:57
 exp_meth_vol = [0, 4, 7, 5.5, 4.5, 2.5, 2, 1, 1, 1, 0.5, 0.5, 0.45, 0.05]
+meth_vol_acet_2 = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_2"
 source = "Acetate"
 sample = "Sample 2"
@@ -389,6 +392,7 @@ file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-5
 
 inds = 41:50
 exp_meth_vol = [0, 4, 10, 9, 4, 5, 5, 4, 3, 3]
+meth_vol_acet_4 = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_4"
 source = "Acetate"
 sample = "Sample 4"
@@ -504,6 +508,7 @@ file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-5
 
 inds = 1:12
 exp_meth_vol = [0, 12, 5, 3, 1.5, 1.5, 1, 1.5, 1, 0.5, 0.5, 0.5]
+meth_vol_acet_fw = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_fw"
 source = "Acetate"
 sample = "Sample FW"
