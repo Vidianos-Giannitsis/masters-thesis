@@ -7,6 +7,7 @@
 /_research
 /.CondaPkg
 /bmp_pictures/Vidianos_BMPs
+/notebooks/.ob-julia-snail
 
 ################################################################################
 #                                    Julia                                     #
