@@ -240,10 +240,10 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
   exp_hour = round.([(exp_stamps[i] - exp_stamps[1])/Millisecond(3600000) for i in 1:length(inds)]; digits = 4)
   exp_cum_meth_vol = round.(cumsum(exp_meth_vol); digits = 3)
 
-  if source == "Hydrolyzed FW"
-      exp_data = Tables.table(hcat(exp_formatted, exp_min, exp_hour, exp_meth_vol, exp_cum_meth_vol), header = [:Timestamp, :Minutes, :Hours, :Methane_Volume, :Cumulative_Methane_Volume])
-  else
+  if source == "Acetate"
       exp_data = Tables.table(hcat(exp_formatted, exp_sec, exp_min, exp_meth_vol, exp_cum_meth_vol), header = [:Timestamp, :Seconds, :Minutes, :Methane_Volume, :Cumulative_Methane_Volume])
+  else
+      exp_data = Tables.table(hcat(exp_formatted, exp_min, exp_hour, exp_meth_vol, exp_cum_meth_vol), header = [:Timestamp, :Minutes, :Hours, :Methane_Volume, :Cumulative_Methane_Volume])
   end
 
   CSV.write(datadir("exp_pro", exp_name*".csv"), exp_data)
@@ -313,7 +313,19 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 #+NAME: bmp_data_plotting
 #+BEGIN_SRC julia
 
-  if source == "Hydrolyzed FW"
+  if source == "Acetate"
+      bmp_cumulative_scatter_min = scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
+      savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
+
+      bmp_cumulative_scatter_sec = scatter(exp_sec, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (sec)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
+      savefig(bmp_cumulative_scatter_sec, plotsdir("BMPs", source, "cumulative_"*exp_name*"_sec.png"))
+
+      if kinetics
+	  bmp_specific_methane = scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" - "*sample, size = (700, 470), legend = :bottomright)
+	  plot!(exp_min, gompertz(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	  savefig(bmp_specific_methane, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*".png"))
+      end
+  else
       bmp_cumulative_scatter_min = scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
       savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -328,18 +340,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 	  bmp_specific_methane = scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" - "*sample, size = (700, 470), legend = :bottomright)
 	  plot!(exp_min, gompertz(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	  savefig(bmp_specific_methane, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
-      end
-  else
-      bmp_cumulative_scatter_min = scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
-      savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
-
-      bmp_cumulative_scatter_sec = scatter(exp_sec, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (sec)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
-      savefig(bmp_cumulative_scatter_sec, plotsdir("BMPs", source, "cumulative_"*exp_name*"_sec.png"))
-
-      if kinetics
-	  bmp_specific_methane = scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" - "*sample, size = (700, 470), legend = :bottomright)
-	  plot!(exp_min, gompertz(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	  savefig(bmp_specific_methane, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*".png"))
       end
   end
 
@@ -369,7 +369,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   <<bmp_data_processing>>
   <<bmp_curve_fitting_min>>
-  model_acet_1 = vcat(sample, model_params, r_squared)
+  model_acet_fw = vcat(sample, model_params, r_squared)
   <<bmp_data_plotting>>
 #+END_SRC
 
@@ -473,7 +473,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   <<bmp_data_processing>>
   <<bmp_curve_fitting_min>>
-  model_acet_ac = vcat(sample, model_params, r_squared)
+  model_acet_1 = vcat(sample, model_params, r_squared)
   <<bmp_data_plotting>>
 #+END_SRC
 
@@ -706,15 +706,29 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
   <<acet_test_1>>
   <<acet_test_2>>
   <<acet_test_4>>
-  <<acet_test_ac>>
+  <<acet_test_FW>>
   <<no_feed_ac_1>>
   <<no_feed_ac_2>>
 
-  model_fit_table = Tables.table(vcat(reshape(model_acet_ac, 1, 5), reshape(model_acet_0, 1, 5), reshape(model_acet_1, 1, 5), reshape(model_acet_2, 1, 5), reshape(model_acet_4, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
+  model_fit_table = Tables.table(vcat(reshape(model_acet_0, 1, 5), reshape(model_acet_1, 1, 5), reshape(model_acet_2, 1, 5), reshape(model_acet_4, 1, 5), reshape(model_acet_fw, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
   CSV.write(datadir("exp_pro", "methane_from_acetate_kinetics.csv"), model_fit_table)
   DataFrame(model_fit_table)
 
 #+END_SRC
+
+#+RESULTS: update_acetate_tests
+#+begin_example
+5×5 DataFrame
+ Row │ Sample_Name  Methane_Production_Potential  Methane_Production_Rate  Lag ⋯
+     │ Any          Any                           Any                      Any ⋯
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │ Sample 0     452.518                       80.3876                  0.0 ⋯
+   2 │ Sample 1     208.238                       55.0277                  0.0
+   3 │ Sample 2     292.866                       61.9136                  0.0
+   4 │ Sample 4     466.239                       97.7773                  0.0
+   5 │ Sample FW    255.214                       55.9408                  0.0 ⋯
+                                                               2 columns omitted
+#+end_example
 
 #+CAPTION: Kinetic Models
 | Sample_Name | Production_Potential | Production_Rate | Lag_Time | R_squared |
@@ -731,6 +745,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 Ένα ενδιαφέρον σχόλιο είναι πως το σύστημα ανταποκρίνεται στην προσθήκη του οξικού πολύ γρήγορα (μετά από μερικά δευτερόλεπτα κιόλας βλέπουμε παραγωγή μεθανίου) και στο μοντέλο αυτό μεταφράζεται ως μηδενικό lag-phase.
 
 Το δείγμα 4 είχε αναπάντεχα υψηλό ρυθμό παραγωγής μεθανίου, το οποίο φάνηκε από το γεγονός ότι παράχθηκε την μέγιστη ποσότητα οξικού που περιμέναμε σε περίπου 7 λεπτά ενώ τα υπόλοιπα χρειάστηκαν τουλάχιστον 15 λεπτά. Αυτό φάνηκε και στο μοντέλο, όπου το δείγμα αυτό είχε πολύ υψηλό ειδικό ρυθμό παραγωγής μεθανίου. Το δείγμα Ac ήταν αυτό που παρήγαγε αέριο χωρίς κάποιο υπόστρωμα. Μόλις προστέθηκε οξικό, αντέδρασε σε αυτό και ο ρυθμός του αυξήθηκε, αλλά επιβράδυνε πολύ γρήγορα, με αποτέλεσμα να έχει πολύ αργό ρυθμό παραγωγής μεθανίο και το χαμηλότερο δυναμικό παραγωγής μεθανίου. Μπορεί η αλλαγή αυτή να ευθύνεται σε αυτήν την απόκριση. Τα δείγματα 0 και 4 είχαν πολύ μεγαλύτερη παραγωγικότητα από τα άλλα 3, χωρίς να υπάρχει κάποια εύκολη εξήγηση για αυτό.
+
+\pagebreak
 
 * FW Hydrolysate 1 Processing
 Στο section αυτό θα αναλυθούν τα αποτελεσματα του πρώτου πειράματος που χρησιμοποιήσε FW hydrolysate ως υπόστρωμα. Σκοπός είναι να γίνει μία σύγκριση αυτού με το οξικό για κάθε δοχείο για να προκύψουν αποτελέσματα για το κάθε πείραμα. Οι 5 δοκιμές που έγιναν ήταν στα δείγματα 0, 1, 2 και 4 (τα οποία πλέον έχουν νόημα επειδή εκφράζουν την ποσότητα mix που προστέθηκε κατά την υδρόλυση) αλλά επίσης έγινε και ένα πείραμα για να μετρηθεί η απόδοση σε μεθάνιο του δείγματος μόνο με FW (ενδέχεται να υπήρξε διαρροή στο δείγμα αυτό καθώς η παραγωγή ήταν απειροελάχιστη).
@@ -933,24 +949,18 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   <<bmp_data_processing>>
 
-  p0 = [100.0, 0.01, 1.0]
+  p0 = [100.0, 15.0, 1.0]
   <<bmp_curve_fitting_min>>
   model_hydro_2_min = vcat(sample, model_params, r_squared)
   <<bmp_data_plotting>>
 
-  p0 = [100.0, 1000.0, 0.03]
+  p0 = [100.0, 1.0, 0.03]
   <<bmp_curve_fitting_hour>>
   model_hydro_2_hour = vcat(sample, model_params, r_squared)
   <<bmp_data_plotting>>
 #+END_SRC
 
 #+RESULTS: hydrolysate_2_ad
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
 : "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_2_hour.png"
 
 *** Results
@@ -958,7 +968,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
 Ένα πολύ βασικό πρόβλημα του πειράματος αυτού είναι πως έχουμε μία μεγάλη παραγωγικότητα μεθανίου στην πρώτη φωτογραφία, όμως αυτή ήταν 6.5 λεπτά μετά την αρχή. Οπότε, δύνανται να υπάρχουν πάρα πολλά κινητικά μοντέλα τα οποία είναι αποδεχτά. Αξίζει να σημειωθεί πως το καλύτερο R^2 είναι 0.724, το οποίο δείχνει πως κανένα από τα μοντέλα δεν είναι ιδιαίτερα αξιόπιστο. Το πρόβλημα της δειγματοληψίας αυτής είναι πιθανόν να φταίει.
 
-Τα τέσσερα δυνατά μοντέλα διακρίνονται ως εξής: Μπορεί ο ρυθμός να είναι αρκετά χαμηλός ώστε να προσωμοιώνει το τέλος της χώνευσης, το οποίο είναι αργό. Ο ρυθμός αυτός είναι \( 0.032 \frac{ml}{g ~ sCOD \min } \text{ ή } 1.92 \frac{ml}{g ~ sCOD \min }\), ο οποίος είναι παρόμοιας τάξης μεγέθους με τον αργό ρυθμό των άλλων δειγμάτων. Όπως και στο sample 1 όμως, το αποτέλεσμα αυτό δεν έχει καλό R^2 και μάλλον δεν θεωρείται έμπιστο. Το άλλο μοντέλο που ακολουθεί την λογική των παραπάνω είναι το χειρότερο δυνατό μοντέλο (R^2 = 0.639) το οποίο έχει ειδικό ρυθμό ανάπτυξης \( 1.192 \frac{ml}{g ~ sCOD \min } \) (ο οποίος είναι παρόμοιας τάξης μεγέθους με τους άλλους 2, αλλά λίγο μεγαλύτερος) και την λογική ότι στα πρώτα 6 λεπτά παράχθηκε το περισσότερο μεθάνιο. Το καλύτερο δυνατό μοντέλο έχει παρόμοια λογική πολύ γρήγορου ειδικού ρυθμού ανάπτυξης \( \left( 15.483 \frac{ml}{g ~ sCOD \min } \right) \), αλλά ένα lag phase 2.42 λεπτών. Η λογική που μπορούν να ισχύουν και τα δύο είναι ότι βλέπουμε αποτέλεσμα σε 6.5 λεπτά περίπου, οπότε, μπορεί να υπήρχε ένα lag time στην αρχή και μετά να εξελίχθηκε πιο γρήγορα το φαινόμενο. Επίσης, ένα μοντέλο με ακόμη μεγαλύτερο lag time αλλά και ειδικό ρυθμό ανάπτυξης προέκυψε και είχε σχεδόν identical R^2 με το παραπάνω. Καθώς κανένα άλλο μοντέλο δεν έχει παρουσιάσει lag time, το πιο εύλογο θα ήταν να ισχύει ένα από τα 2 πρώτα μοντέλα. Όμως, απουσία άλλων δεδομένων, το καλύτερο μοντέλο είναι αυτό με το μικρό lag phase.
+Τα τέσσερα δυνατά μοντέλα διακρίνονται ως εξής: Μπορεί ο ρυθμός να είναι αρκετά χαμηλός ώστε να προσωμοιώνει το τέλος της χώνευσης, το οποίο είναι αργό. Ο ρυθμός αυτός είναι \( 0.031 \frac{ml}{g ~ sCOD \min } \text{ ή } 1.88 \frac{ml}{g ~ sCOD \min }\), ο οποίος είναι παρόμοιας τάξης μεγέθους με τον αργό ρυθμό των άλλων δειγμάτων. Όπως και στο sample 1 όμως, το αποτέλεσμα αυτό δεν έχει καλό R^2 και μάλλον δεν θεωρείται έμπιστο. Το άλλο μοντέλο που ακολουθεί την λογική των παραπάνω είναι το χειρότερο δυνατό μοντέλο (R^2 = 0.639) το οποίο έχει ειδικό ρυθμό ανάπτυξης \( 1.192 \frac{ml}{g ~ sCOD \min } \) (ο οποίος είναι παρόμοιας τάξης μεγέθους με τους άλλους 2, αλλά λίγο μεγαλύτερος) και την λογική ότι στα πρώτα 6 λεπτά παράχθηκε το περισσότερο μεθάνιο. Το καλύτερο δυνατό μοντέλο έχει παρόμοια λογική πολύ γρήγορου ειδικού ρυθμού ανάπτυξης \( \left( 15.483 \frac{ml}{g ~ sCOD \min } \right) \), αλλά ένα lag phase 2.42 λεπτών. Η λογική που μπορούν να ισχύουν και τα δύο είναι ότι βλέπουμε αποτέλεσμα σε 6.5 λεπτά περίπου, οπότε, μπορεί να υπήρχε ένα lag time στην αρχή και μετά να εξελίχθηκε πιο γρήγορα το φαινόμενο. Επίσης, ένα μοντέλο με ακόμη μεγαλύτερο lag time αλλά και ειδικό ρυθμό ανάπτυξης προέκυψε και είχε σχεδόν identical R^2 με το παραπάνω. Καθώς κανένα άλλο μοντέλο δεν έχει παρουσιάσει lag time, το πιο εύλογο θα ήταν να ισχύει ένα από τα 2 πρώτα μοντέλα. Όμως, απουσία άλλων δεδομένων, το καλύτερο μοντέλο είναι αυτό με το μικρό lag phase.
 
 | Timestamp   |   Minutes |   Hours | Methane_Volume | Cumulative_Methane_Volume |
 |-------------+-----------+---------+----------------+---------------------------|
@@ -1082,6 +1092,74 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_4_hour.png]]
 
 ** Untreated FW
+Εκτός από τα παραπάνω, σε ένα από τα δοχεία προστέθηκε ανεπεξέργαστο FW. Αυτό έχει διαφορά από το δείγμα 0, καθώς εκείνο υπέστει ζύμωση κατά τις 72 ώρες που ήταν στους 40 \( ^oC \) ακόμη και χωρίς να προσθέσουμε κάποιο εμβόλιο, ενώ το δείγμα αυτό αναφέρεται σε food waste το οποίο δεν έχει υποστεί καμία επεξεργασία. Θα θέλαμε το δείγμα αυτό να έχει το χειρότερο performance (είτε πολύ αργή παραγωγή, ή μικρή τελική παραγωγή), το οποίο θα μας επιδείκνυε πως η επεξεργασία που έγινε βοηθάει πραγματικά στην χώνευση. Βέβαια, αξίζει να αναφερθεί πως το δοχείο αυτό είχε κάποιο προβλήματα με διαρροή στα αρχικά στάδια του πειράματος, οπότε ενδέχεται τα αποτελέσματα που θα προκύψουν να μην είναι έγκυρα. Παρακάτω φαίνεται ο κώδικας επεξεργασίας των αποτελεσμάτων του.
+
+*untreated_fw_1_ad*
+#+NAME: untreated_fw_1_ad
+#+BEGIN_SRC julia :noweb no-export
+
+  ### Data Analysis on Untreated FW ###
+
+  <<date_saving_fw_1>>
+
+  inds = 12:34
+  exp_meth_vol = [0, 0.2, 0, 0.1, 0.1, 0, 0, 0, 0.1, 0.1, 0, 0.1, 0.2, 0.1, 0.1, 0.1, 0.0, 0.1, 0.2, 0.1, 0.2, 0.1, 0.1]
+  exp_name = "untreated_fw_1"
+  source = "Untreated FW"
+  sample = "FW 1"
+  input_cod = 0.1
+
+  <<bmp_data_processing>>
+
+  p0 = [20.0, 0.01, 1.0]
+  <<bmp_curve_fitting_min>>
+  model_hydro_fw_min = vcat(sample, model_params, r_squared)
+  <<bmp_data_plotting>>
+
+  p0 = [20.0, 1.0, 0.1]
+  <<bmp_curve_fitting_hour>>
+  model_hydro_fw_hour = vcat(sample, model_params, r_squared)
+  <<bmp_data_plotting>>
+#+END_SRC
+
+#+RESULTS: untreated_fw_1_ad
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_1_hour.png"
+
+*** Results
+Το δείγμα αυτό παρήγαγε μόνο το \( 7.1 \% \) του μεθανίου που είχε παράξει από οξικό και το έκανε αυτό σε έναν αργό σχετικά ρυθμό. Κρίνεται πιθανό να μην επιλύθηκαν τα προβλήματα διαρροής που είχε και η παραγωγή του αερίου να ήταν στην πραγματικότητα μεγαλύτερη. Όμως όπως και στο δείγμα με 0 ml ένζυμα το οποίο όμως υπέστει 3 μέρες υδρόλυση και ζύμωση, μας "βολεύει" τα ποσοστά αυτά να είναι πολύ χαμηλά επειδή σημαίνει πως η επεξεργασία που κάναμε όντως συνείσφερε στην παραγωγή μεθανίου.
+
+Από άποψη προσαρμογής, το μοντέλο Gompertz μπορεί να προσαρμοστεί πολύ καλά σε τέτοια δεδομένα όπου η παραγωγή μεθανίου γίνεται σε παρόμοιο ρυθμό για όλη την διεργασία. Το μοντέλο που θα αντιστοιχήσει θα είναι ένα μοντέλο χαμηλού ρυθμού (με βάση την παραπάνω διάκριση), το οποίο όμως είναι το μόνο που μπορεί να ισχύει καθώς στην αρχή δεν υπάρχει μία απότομη παραγωγή αερίου ταχύτατα για να μπορεί να προσαρμοστεί κάτι διαφορετικό. Τα μοντέλα σε λεπτά και ώρες δεν προσαρμόζονται με τον ακριβώς ίδιο τρόπο, αλλά οι διαφορές τους είναι μικρές. Ο ειδικός ρυθμός ανάπτυξης είναι της τάξης του \( 0.0137 \frac{ml}{g ~ sCOD \min} \text{ ή } 0.823 \frac{ml}{g ~ sCOD ~ hour} \). Τα άλλα μοντέλα που προσαρμόστηκαν με αργό ρυθμό ανάπτυξης είχαν κινητικές της τάξης του 0.03-0.05 \( \frac{ml}{g ~ sCOD \min } \) οπότε αυτό είναι πιο αργό αλλά συγκρίσιμο με εκείνα.
+
+| Timestamp   |   Minutes |   Hours | Methane_Volume | Cumulative_Methane_Volume |
+|-------------+-----------+---------+----------------+---------------------------|
+| 02/04_10:54 |       0.0 |     0.0 |            0.0 |                       0.0 |
+| 02/04_12:54 |  120.0074 |  2.0001 |            0.2 |                       0.2 |
+| 02/04_13:24 |  150.0073 |  2.5001 |            0.0 |                       0.2 |
+| 02/04_13:54 |  180.0076 |  3.0001 |            0.1 |                       0.3 |
+| 02/04_14:24 |  210.0076 |  3.5001 |            0.1 |                       0.4 |
+| 02/04_14:54 |  240.0075 |  4.0001 |            0.0 |                       0.4 |
+| 02/04_15:24 |  270.0074 |  4.5001 |            0.0 |                       0.4 |
+| 02/04_15:54 |  300.0073 |  5.0001 |            0.0 |                       0.4 |
+| 02/04_16:24 |  330.0076 |  5.5001 |            0.1 |                       0.5 |
+| 02/04_16:54 |  360.0076 |  6.0001 |            0.1 |                       0.6 |
+| 02/04_17:24 |  390.0073 |  6.5001 |            0.0 |                       0.6 |
+| 02/04_17:54 |  420.0141 |  7.0002 |            0.1 |                       0.7 |
+| 02/04_19:54 |  540.0146 |  9.0002 |            0.2 |                       0.9 |
+| 02/04_21:54 |  660.0162 | 11.0003 |            0.1 |                       1.0 |
+| 02/04_23:54 |  780.0205 | 13.0003 |            0.1 |                       1.1 |
+| 03/04_01:54 |  900.0205 | 15.0003 |            0.1 |                       1.2 |
+| 03/04_03:54 | 1020.0203 | 17.0003 |            0.0 |                       1.2 |
+| 03/04_05:54 | 1140.0253 | 19.0004 |            0.1 |                       1.3 |
+| 03/04_07:54 | 1260.0272 | 21.0005 |            0.2 |                       1.5 |
+| 03/04_09:54 | 1380.0273 | 23.0005 |            0.1 |                       1.6 |
+| 03/04_12:54 | 1560.0362 | 26.0006 |            0.2 |                       1.8 |
+| 03/04_13:54 |  1620.036 | 27.0006 |            0.1 |                       1.9 |
+| 03/04_14:24 |  1650.037 | 27.5006 |            0.1 |                       2.0 |
+
+[[../plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_1_min.png]]
+
+[[../plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_1_hour.png]]
+
 
 ** Update all
 Όπως και παραπάνω για τα πειράματα στο οξικό, θα υπάρχει και ένα code block το οποίο θα κάνει update όλα τα code blocks, θα τα κάνει tangle σε ένα script file και θα αποθηκεύει ένα CSV με όλα τα κινητικά αποτελέσματα.
@@ -1094,13 +1172,17 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
   <<hydrolysate_1_ad>>
   <<hydrolysate_2_ad>>
   <<hydrolysate_4_ad>>
+  <<untreated_fw_1_ad>>
 
-  model_fit_table_min = Tables.table(vcat(reshape(model_hydro_0_min, 1, 5), reshape(model_hydro_1_min, 1, 5), reshape(model_hydro_2_min, 1, 5), reshape(model_hydro_4_min, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
+  model_fit_table_min = Tables.table(vcat(reshape(model_hydro_0_min, 1, 5), reshape(model_hydro_1_min, 1, 5), reshape(model_hydro_2_min, 1, 5), reshape(model_hydro_4_min, 1, 5), reshape(model_hydro_fw_min, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
   CSV.write(datadir("exp_pro", "methane_from_hydrolysate_kinetics_min.csv"), model_fit_table_min)
 
-  model_fit_table_hour = Tables.table(vcat(reshape(model_hydro_0_hour, 1, 5), reshape(model_hydro_1_hour, 1, 5), reshape(model_hydro_2_hour, 1, 5), reshape(model_hydro_4_hour, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
+  model_fit_table_hour = Tables.table(vcat(reshape(model_hydro_0_hour, 1, 5), reshape(model_hydro_1_hour, 1, 5), reshape(model_hydro_2_hour, 1, 5), reshape(model_hydro_4_hour, 1, 5), reshape(model_hydro_fw_hour, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
   CSV.write(datadir("exp_pro", "methane_from_hydrolysate_kinetics_hour.csv"), model_fit_table_hour)
 #+END_SRC
+
+#+RESULTS: update_hydrolysate_tests
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/data/exp_pro/methane_from_hydrolysate_kinetics_hour.csv"
 
 #+CAPTION: Kinetics with timescale in hours
 | Sample_Name | Production_Potential | Production_Rate | Lag_Time |    R2 |
@@ -1109,6 +1191,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | Sample 1    |              163.745 |           3.175 |      0.0 | 0.815 |
 | Sample 2    |               94.538 |         929.102 |   0.0404 | 0.724 |
 | Sample 4    |              158.432 |         9732.61 |  0.00186 | 0.865 |
+| FW 1        |               21.656 |           0.823 |      0.0 | 0.975 |
 
 #+CAPTION: Kinetics with timescale in minutes
 | Sample_Name | Production_Potential | Production_Rate | Lag_Time |    R2 |
@@ -1117,3 +1200,4 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | Sample 1    |              105.569 |           0.840 |      0.0 | 0.689 |
 | Sample 2    |              872.706 |          0.0320 |      0.0 | 0.687 |
 | Sample 4    |              158.428 |         162.838 |    0.112 | 0.865 |
+| FW 1        |               22.980 |          0.0127 |      0.0 | 0.969 |
