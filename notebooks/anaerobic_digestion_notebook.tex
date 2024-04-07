@@ -1,4 +1,4 @@
-% Created 2024-04-07 Κυρ 13:42
+% Created 2024-04-07 Κυρ 16:29
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -50,7 +50,7 @@
 Σκοπός του αρχείου αυτού είναι η ανάλυση όλων των αποτελεσμάτων των διάφορων πειραμάτων αναερόβιας χώνευσης στην διάταξη για την εύρεση του biomethane potential. Θα αναλυθούν 3 βασικά πειράματα. Το πρώτο είναι η κινητική παραγωγής μεθανίου από οξικό οξύ, ενώ μετά θα αναλυθούν δύο πειράματα παραγωγής μεθανίου από το υδρόλυμα των αποβλήτων τροφών που παράχθηκε στο προηγούμενο στάδιο. Το αρχείο \url{./hplc\_analysis\_notebook.org} περιέχει τα αποτελέσματα των σχετικών πειραμάτων και αναφέρει τα πλεονεκτήματα και μειονεκτήματα τους.
 
 \section{Dependencies}
-\label{sec:org3246ff4}
+\label{sec:orgd32935a}
 Στο αρχείο αυτό θα οριστούν κάποια functions για να διευκολυνθεί η ανάλυση των BMPs, τα οποία θα είναι generic και μετά θα υπάρχουν κάποια specific code blocks για την εφαρμογή σε κάθε πείραμα. Πριν ξεκινήσουμε, κάνουμε activate το DrWatson project για reproducibility. Επίσης κάνουμε load το Dates.jl που θα χρειαστεί παρακάτω, καθώς και τα CSV.jl και DataFrames.jl που είναι πάντα χρήσιμα σε tabular data. Ακόμη, παρακάτω θα χρειαστούν τα LsqFit.jl για την προσαρμογή του μοντέλου Gompertz, StatsBase για υπολογισμό μέσων και Plots.jl για plotting. Το code block αυτό δεν κάνει tangle πουθενά καθώς είναι κομμάτι του generic code που θα χρησιμοποιηθεί σε πολλά σημεία.
 
 \textbf{deps}
@@ -68,7 +68,7 @@ using Plots
 \end{minted}
 
 \section{Acetate Experiment data reading}
-\label{sec:orga9503df}
+\label{sec:orge21b687}
 Τα δεδομένα της αναερόβιας χώνευσης είναι φωτογραφίες των προχωίδων της διάταξης. Εξετάζοντας πόσο έχει μεταβληθεί η στάθμη τους, μπορούμε να υπολογίσουμε τον παραγόμενο όγκο μεθανίου. Αλλά πρώτα, πρέπει να ξέρουμε σε τι χρόνους έγιναν sampled τα δείγματα. Όλες οι φωτογραφίες έχουν ένα timestamp το οποίο μας βοηθάει να τα διακρίνουμε. Μπορούμε να αναλύσουμε αυτά ώστε να πάρουμε τις στιγμές που βγήκαν οι φωτογραφίες. Αρχικά, παίρνουμε όλα τα filenames με \texttt{ls}. Θα χρησιμοποιήσουμε τα flags -m και -Q για να πάρουμε comma separated output και το κάθε string να έχει double quotes.
 
 \textbf{ls\textsubscript{output}\textsubscript{acetate}}
@@ -155,7 +155,7 @@ file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-5
 \end{minted}
 
 \section{FW Hydrolysate Experiment 1 Data Reading}
-\label{sec:org012e73d}
+\label{sec:org28d1f2c}
 Με την ίδια λογική με παραπάνω, κάνουμε load ότι θα χρειαστεί για αυτό το πείραμα.
 
 \textbf{ls\textsubscript{output}\textsubscript{fw}\textsubscript{1}}
@@ -192,7 +192,7 @@ file_vec = ["bandicam 2024-04-01 11-05-53-069.jpg", "bandicam 2024-04-01 11-09-3
 \end{minted}
 
 \section{Data Processing}
-\label{sec:org965d83e}
+\label{sec:orgfe9041d}
 Έπειτα, μπορούμε να κάνουμε extract τις πληροφορίες που θέλουμε, με το Dates.jl package της Julia. Σε αυτό το code block, δεν θα ορίσουμε το file vector και αυτό θα υποτεθεί defined. Έτσι, δεν μπορούμε να τρέξουμε independently το block αυτό, αλλά μόνο chained σε ένα definition των files, για να μπορεί να τρέξει αντίστοιχα σε κάθε πείραμα. Επίσης, εκτός από να κάνουμε extract τα time stamps, φτιάχνουμε και ένα δεύτερο vector με time stamp dd/mm\textsubscript{HH}:MM το οποίο είναι πιο βολικό στη χρήση για εμένα.
 
 Στη συνέχεια, ορίζουμε άλλη μία μεταβλητή η οποία δεν υπάρχει, η \texttt{inds}. Αυτή είναι τα νούμερα στο date\textsubscript{vec} που αντιστοιχούν σε ένα ορισμένο πείραμα. Παίρνουμε τα time stamps και στην αρχική αλλά και στην formatted μορφή για αυτό το πείραμα και μετά υπολογίζουμε τα time steps και σε δευτερόλεπτα αλλά και σε λεπτά. Η αφαίρεση δύο \texttt{DateTime} objects δίνει αποτέλεσμα σε \texttt{Millisecond}, οπότε ο χρόνος σε δευτερόλεπτα διαιρεί με 1000 \texttt{Millisecond} ενώ σε λεπτά με 60000 \texttt{Millisecond}. Έπειτα, ορίζουμε ένα τρίτο undefined variable το exp\textsubscript{meth}\textsubscript{vol}, το οποίο είναι η παραγωγή μεθανίου μεταξύ των δύο φωτογραφιών, όπως σημειώνεται σε αυτές. Για την κινητική, θέλουμε την αθροιστική παραγωγή μεθανίου, οπότε χρησιμοποιούμε την συνάρτηση \texttt{cumsum}.
@@ -224,7 +224,7 @@ exp_df = DataFrame(exp_data)
 \end{minted}
 
 \subsection{Curve Fitting}
-\label{sec:org0f58436}
+\label{sec:orgb1f23c7}
 Επίσης, θέλουμε να κάνουμε fit τα δεδομένα σε κάποιο κινητικό μοντέλο για την διεργασία, κάτι το οποίο θα βοηθήσει στη μοντελοποιήση της. Το μοντέλο Gompertz είναι ένα μοντέλο που χρησιμοποιείται συχνά για kinetic modelling διεργασιών όπως η παραγωγή μεθανίου μέσω αναερόβιας χώνευσης, οπότε θα χρησιμοποιηθεί αυτό. Η εξίσωση που θα πρέπει να προσαρμοστεί είναι η
 \[ P(t) = P_{\max } \exp \left( - \exp \left[ \frac{R_{\max }e (λ-t)}{P_{\max }} + 1 \right] \right) \]
 όπου P(t) η παραγωγή μεθανίου την στιγμή t, P\textsubscript{max} η μέγιστη ποσότητα μεθανίου που μπορεί να παραχθεί από το υπόστρωμα αυτό, R\textsubscript{max} ο ειδικός ρυθμός παραγωγής μεθανίου, λ το lag time και e η σταθερά Euler. Παρακάτω φαίνεται το fit των δεδομένων στην συνάρτηση αυτή. Αξίζει να αναφερθεί η χρήση της μεταβλητής \texttt{input\_cod} που φαίνεται παρακάτω. Η μεταβλητή αυτή εκφράζει το COD της τροφοδοσίας. Διαιρούμε τον όγκο μεθανίου με αυτήν ώστε το διάγραμμα να εκφράζει ειδικό ρυθμό παραγωγής μεθανίου σε \(\frac{\text{mL CH$_4$}}{\text{g sCOD}}\), το οποίο είναι πιο εύκολα συγκρίσιμο με βιβλιογραφία, σε σχέση με τον όγκο μεθανίου. Επίσης, αξίζει να σημειωθεί η χρήση bounded optimization. Οι παραμέτροι του μοντέλου έχουν νόημα μόνο ως θετικοί αριθμοί. Στα πειράματα με χρήση οξικό ως υπόστρωμα, όπου οι μικροοργανισμοί αντιδρούν ταχύτατα στην αλλαγή του περιβάλλοντος, η προσαρμογή του μοντέλου έδινε αρνητικό lag time. Αυτό προφανώς δεν έχει νόημα και στην πράξη, το συμπέρασμα είναι πως το lag time είναι μηδενικό (σχεδόν ακαριαία αντίδραση των μικροοργανισμών στην προσθήκη οξικού στο σύστημα). Επίσης, αξίζει να αναφερθεί η μεταβλητή \texttt{kinetics}. Σε κάποια πειράματα (πχ τις μετρήσεις παραγωγής μεθανίου χωρίς προσθήκη υποστρώματος που έγινε σε ένα δείγμα) δεν θέλουμε να κάνουμε προσαρμογή με το μοντέλο Gompertz. Αυτή η μεταβλητή είναι στην ουσία ένα toggle off του plot με την κινητική, για όσα πειράματα δεν το χρειάζονται.
@@ -278,7 +278,7 @@ timescale = "hour"
 \end{minted}
 
 \subsection{Plotting}
-\label{sec:org95392cb}
+\label{sec:org97a81c7}
 Τέλος, έχοντας προσαρμώσει το μοντέλο Gompertz σε κάθε σετ δεδομένων, θέλουμε να φτιάξουμε κάποια διαγράμματα με τα δεδομένα, τα οποία να δείχνουν την παραγόμενη ποσότητα μεθανίου στον χρόνο. Τα πειραματικά δεδομένα θα γίνουν plotted σε scatter plots. Χάριν ευκολίας, μπορούν να γίνουν plotted διαγράμματα και της στιγμιαίας αλλά και της συνολικής παραγωγής μεθανίου και σε άξονα χρόνου είτε λεπτά ή δευτερόλεπτα. Ο παραπάνω κώδικας υπολογίζει το fit του cumulative methane production σε λεπτά, καθώς θεωρείται η πιο χρήσιμη έκφραση, οπότε αυτό θα είναι και το διάγραμμα που έχει fit την καμπύλη. Εδώ θα εκμεταλλευτούμε τα variables που υπολογίζονται παραπάνω καθώς και 2 ακόμη, το \texttt{sample} και το \texttt{source}. Το \texttt{source} είναι ένα απλό variable το οποίο εκφράζει αν η τροφοδοσία ήταν οξικό ή υδρόλυμα για να τα ξεχωρίζουμε πιο εύκολα. Επίσης, χρησιμοποιείται για να κάνει generate τα σωστά plots (δευτερόλεπτα και λεπτά με fitting σε λεπτά για οξικό, λεπτά και ώρες με fitting ανάλογα το timescale για τα υδρολύματα). Το \texttt{sample} εκφράζει το νούμερο του δείγματος για να είναι πιο εύκολο το naming scheme.
 
 \textbf{bmp\textsubscript{data}\textsubscript{plotting}}
@@ -317,11 +317,11 @@ end
 \end{minted}
 
 \section{Acetate Experiment Processing}
-\label{sec:org8ebf262}
+\label{sec:org81317fc}
 Παρακάτω αναφέρονται οι δοκιμές που έγιναν με 100 μL οξικό σε κάθε δείγμα και θα χρησιμοποιηθούν πιθανόν συγκριτικά σε σχέση με τα FW. Μετά από τα code blocks που τρέχουν τον κώδικα θα υπάρχουν και κάποια από τα corresponding αποτελέσματα. Συγκεκριμένα, ο πίνακας με τα κινητικά δεδομένα, το διάγραμμα παραγωγής μεθανίου το οποίο έχει το curve fitting και το διάγραμμα στιγμίαιας παραγωγής μεθανίου. Υπάρχουν και κάποια άλλα χρήσιμα διαγράμματα, τα οποία είναι αποθηκευμένα, αλλά εδώ παρατίθενται κάποια για καλύτερη ανάγνωση του αρχείου.
 
 \subsection{Acetate Test FW}
-\label{sec:org7289072}
+\label{sec:org869f1e6}
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα labelled ως FW (στο οποίο θα τροφοδοτηθούν untreated FW). Notably, δεν είχε διαρροή στις 27/03, αλλά για κάποιον λόγο, στην επαναδοκιμή στις 29/03 δεν παρήγαγε μεθάνιο (τουλάχιστον στην προχοίδα). Οπότε, θα χρησιμοποιηθεί αυτό της 27/03.
 
 \textbf{acet\textsubscript{test}\textsubscript{FW}}
@@ -333,6 +333,7 @@ end
 
 inds = 1:12
 exp_meth_vol = [0, 12, 5, 3, 1.5, 1.5, 1, 1.5, 1, 0.5, 0.5, 0.5]
+meth_vol_acet_fw = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_fw"
 source = "Acetate"
 sample = "Sample FW"
@@ -371,7 +372,7 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \end{center}
 
 \subsection{Acetate Test 0}
-\label{sec:orgc7418b0}
+\label{sec:org48bc5a8}
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (0).
 
 \textbf{acet\textsubscript{test}\textsubscript{0}}
@@ -383,6 +384,7 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 
 inds = 34:51
 exp_meth_vol = [0, 4, 12, 7.5, 4.5, 2.5, 2.5, 4, 0.5, 2, 2, 1, 1, 1, 1, 1, 0.5, 0.5]
+meth_vol_acet_0 = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_0"
 source = "Acetate"
 sample = "Sample 0"
@@ -427,7 +429,7 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \end{center}
 
 \subsection{Acetate Test 1}
-\label{sec:orgcb55445}
+\label{sec:org8337b42}
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (1). Aξίζει να αναφερθεί πως την πρώτη πειραματική ημέρα (27/03), παρήγαγε αέριο χωρίς να τροφοδοτηθεί με κάποιο υπόστρωμα. Η κινητική αυτής της παραγωγής (η οποία δεν ξέρουμε σε τι ευθύνεται) θα αναλυθεί παρακάτω. Βέβαια, μόλις τροφοδοτήθηκε με οξικό και η παραγωγή του τελείωσε, σταμάτησε και εκείνη η παραγωγή. Βέβαια, είχε την χαμηλότερη παραγωγή βιοαερίου μόλις τροφοδοτήθηκε με οξικό, οπότε ενδέχεται αυτή η μέτρηση να ήταν προβληματική.
 
 \textbf{acet\textsubscript{test}\textsubscript{1}}
@@ -439,6 +441,7 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 
 inds = 38:56
 exp_meth_vol = [0, 6.5, 5, 3, 0.5, 1.5, 1.5, 0.5, 1, 0.5, 0.5, 0.3, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05]
+meth_vol_acet_1 = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_1"
 source = "Acetate"
 sample = "Sample 1"
@@ -492,7 +495,7 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \end{center}
 
 \subsection{Acetate Test 2}
-\label{sec:org7aee929}
+\label{sec:org1ea860f}
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (2).
 
 \textbf{acet\textsubscript{test}\textsubscript{2}}
@@ -504,6 +507,7 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 
 inds = 44:57
 exp_meth_vol = [0, 4, 7, 5.5, 4.5, 2.5, 2, 1, 1, 1, 0.5, 0.5, 0.45, 0.05]
+meth_vol_acet_2 = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_2"
 source = "Acetate"
 sample = "Sample 2"
@@ -544,7 +548,7 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \end{center}
 
 \subsection{Acetate Test 4}
-\label{sec:org45d3cba}
+\label{sec:orgb5452bb}
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (4).
 
 \textbf{acet\textsubscript{test}\textsubscript{4}}
@@ -556,6 +560,7 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 
 inds = 41:50
 exp_meth_vol = [0, 4, 10, 9, 4, 5, 5, 4, 3, 3]
+meth_vol_acet_4 = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_4"
 source = "Acetate"
 sample = "Sample 4"
@@ -592,7 +597,7 @@ Timestamp & Seconds & Minutes & Methane\textsubscript{Volume} & Cumulative\texts
 \end{center}
 
 \subsection{Παραγωγή μεθανίου χωρίς feed από το δείγμα Ac}
-\label{sec:org27cf0fc}
+\label{sec:org0dfc3ec}
 Όπως προαναφέρθηκε, το δείγμα Ac παρήγαγε μεθάνιο χωρίς να τροφοδοτηθεί με κάτι για κάποιον ανεξήγητο λόγο. Καθώς έχουμε πειραματικά δεδομένα για αυτή την κατανάλωση (και μάλιστα 2 data sets), θα γίνει και μία ανάλυση για αυτό.
 
 \textbf{no\textsubscript{feed}\textsubscript{ac}\textsubscript{1}}
@@ -630,7 +635,7 @@ kinetics = false
 \end{minted}
 
 \subsection{Update all helper}
-\label{sec:orgfec0fba}
+\label{sec:org231e4fb}
 Σε αυτό το section θα υπάρχει ένα helper code block που θα κάνει evaluate όλα τα παραπάνω. Έτσι, αν αλλάξει κάτι το οποίο επηρεάζει περισσότερα από ένα code blocks, θα μπορούν να γίνουν updated ταυτόχρονα πιο εύκολα. Επίσης, μία επιπλέον χρησιμότητα του code block αυτού είναι ότι αποθηκεύει ένα CSV που συγκεντρώνει όλα τα δεδομένα των κινητικών παραμέτρων από την προσαρμογή που έγινε παραπάνω, το οποίο είναι χρήσιμο για συγκρίσεις, παρόλο που τα συγκεκριμένα πειράματα δεν είναι τόσο σημαντικό να συγκριθούν.
 
 \textbf{update\textsubscript{acetate}\textsubscript{tests}}
@@ -665,7 +670,7 @@ Sample FW & 255.214 & 55.941 & 0.0 & 0.896\\[0pt]
 \end{table}
 
 \subsection{Γενικά σχόλια για αυτόν τον κύκλο πειραμάτων}
-\label{sec:orge5d4edc}
+\label{sec:orgbe8f308}
 Ο πρώτος αυτός κύκλος πειραμάτων ήταν για την δοκιμή προσθήκης οξικού οξέος, του ιδανικού υποστρώματος της μεθανογένεσης, για να δούμε πως θα αντιδράσει σε αυτό το σύστημα. Δεν έχει τόσο συγκριτικό χαρακτήρα μεταξύ των πειραμάτων (παρόλο που ένα σχόλιο που μπορεί να γίνει είναι πως τα πειράματα τα οποία ήταν ίδια πρακτικά στην αρχή, είχαν αρκετά διαφορετική απόκριση στην προσθήκη οξικού), αλλά τον χαρακτήρα της βέλτιστης δυνατής μεθανογένεσης από κάποιο υπόστρωμα. Από την μελέτη αυτή, προέκυψαν αρκετά συμπεράσματα.
 
 Ένα ενδιαφέρον σχόλιο είναι πως το σύστημα ανταποκρίνεται στην προσθήκη του οξικού πολύ γρήγορα (μετά από μερικά δευτερόλεπτα κιόλας βλέπουμε παραγωγή μεθανίου) και στο μοντέλο αυτό μεταφράζεται ως μηδενικό lag-phase.
@@ -675,11 +680,11 @@ Sample FW & 255.214 & 55.941 & 0.0 & 0.896\\[0pt]
 \pagebreak
 
 \section{FW Hydrolysate 1 Processing}
-\label{sec:org9828d9f}
+\label{sec:org774d2f0}
 Στο section αυτό θα αναλυθούν τα αποτελεσματα του πρώτου πειράματος που χρησιμοποιήσε FW hydrolysate ως υπόστρωμα. Σκοπός είναι να γίνει μία σύγκριση αυτού με το οξικό για κάθε δοχείο για να προκύψουν αποτελέσματα για το κάθε πείραμα. Οι 5 δοκιμές που έγιναν ήταν στα δείγματα 0, 1, 2 και 4 (τα οποία πλέον έχουν νόημα επειδή εκφράζουν την ποσότητα mix που προστέθηκε κατά την υδρόλυση) αλλά επίσης έγινε και ένα πείραμα για να μετρηθεί η απόδοση σε μεθάνιο του δείγματος μόνο με FW (ενδέχεται να υπήρξε διαρροή στο δείγμα αυτό καθώς η παραγωγή ήταν απειροελάχιστη).
 
 \subsection{Sample 0}
-\label{sec:org5c92806}
+\label{sec:orgd82ab26}
 Το δείγμα αυτό είναι labelled ως δείγμα 0 καθώς είναι το δείγμα το οποίο τροφοδοτήθηκε με treated FW, όμως χωρίς προσθήκη του μιξ ενζύμων και μικροοργανισμών. Όπως έχουμε δεί, όλες οι αντιδράσεις που γίνονται κατά την υδρόλυση και ζύμωση μπορούν να γίνουν και χωρίς το μιξ. Όμως, γινόντουσαν πιο αποτελεσματικά με την προσθήκη αυτού. Οπότε, ελπίζουμε πως το δείγμα αυτό θα έχει χειρότερα αποτελέσματα από τα άλλα, το οποίο θα μας οδηγήσει στην υπόθεση ότι το μιξ βελτιώνει όχι μόνο τα κριτήρια υδρόλυσης και οξεογένεσης αλλά και αυτό της μεθανογένεσης.
 
 \textbf{hydrolysate\textsubscript{0}\textsubscript{ad}}
@@ -691,6 +696,7 @@ Sample FW & 255.214 & 55.941 & 0.0 & 0.896\\[0pt]
 
 inds = 1:34
 exp_meth_vol = [0, 1.0, 0.2, 0.02, 0.02, 0.01, 0.2, 0.2, 0.5, 0.2, 0.5, 1.5, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05]
+meth_vol_hydro_0 = cumsum(exp_meth_vol)[end]
 
 exp_name = "hydrolysate_0"
 source = "Hydrolyzed FW"
@@ -712,7 +718,7 @@ model_hydro_0_hour = vcat(sample, model_params, r_squared)
 \end{minted}
 
 \subsubsection{Results}
-\label{sec:org14bddc7}
+\label{sec:orgd73d461}
 Παρακάτω φαίνονται τα αποτελέσματα του σχετικού πειράματος.
 
 Παρήγαγε 6.1 ml μεθανίου, το οποίο είναι το \(12.8 \%\) του πειράματος με οξικό. Σχετικά με την προσαρμογή των δεδομένων του σε ένα μοντέλο Gompertz, υπάρχουν 2 πιθανά μοντέλα που ταιριάζουν στο πείραμα. Στο πρώτο, ο ειδικός ρυθμός ανάπτυξης είναι μεγάλος, το οποίο κάνει fit τέλεια στις μετρήσεις της πρώτης ώρας όπου η παραγωγή είναι γρήγορη. Όμως, προβλέπει την στάσιμη φάση λίγες ώρες μετά, το οποίο δεν ισχύει καθώς την 2η μέρα υπάρχει μία καλή παραγωγικότητα μεθανίου. Παρόλα αυτά, έχει καλό R\textsuperscript{2}. Αυτό το μοντέλο είναι πιο εύκολο να προβλεφθεί με x άξονα σε λεπτά, όπου δεν χρειάζεται πάρα πολύ υψηλή αρχική συνθήκη. Ο προβλεπόμενος ειδικός ρυθμός ανάπτυξης θα είναι \(0.384 \frac{ml}{g ~ sCOD \min } \text{ ή } 23.03 \frac{ml}{g ~ sCOD hour}\).
@@ -771,7 +777,7 @@ Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsub
 \end{center}
 
 \subsection{Sample 1}
-\label{sec:org8133c1c}
+\label{sec:orga410852}
 Το δείγμα αυτό τροφοδοτήθηκε με το υδρόλυμα το οποίο είχε προσθήκη 1 ml mix. Στο αρχικό κινητικό πείραμα, το δείγμα αυτό είχε αρκετά παρόμοια συμπεριφορά με το 0 και χειρότερη αυτής του 1. Από την μέτρηση του COD του, είχε αναπάντεχα υψηλό sCOD. Αυτό σημαίνει είτε πως έγινε κάποιο λάθος στην ανάλυση ή ότι απλώς έγινε πολύ καλύτερη υδρόλυση από ότι περιμέναμε στο πείραμα αυτό. Με βάση το sCOD του, αναμένεται να έχει καλά αποτελέσματα. Με βάση την HPLC του αρχικού πειράματος, θα περιμέναμε να είναι λίγο καλύτερο από το 0.
 
 \textbf{hydrolysate\textsubscript{1}\textsubscript{ad}}
@@ -783,6 +789,7 @@ Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsub
 
 inds = 2:34
 exp_meth_vol = [0, 2.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0.2, 0.5, 2.0, 0.3, 0.3, 0.3, 0.1, 0.6, 0.6, 0.5, 0.5, 0.5, 0.4, 0.6, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.2, 0.2]
+meth_vol_hydro_1 = cumsum(exp_meth_vol)[end]
 exp_name = "hydrolysate_1"
 source = "Hydrolyzed FW"
 sample = "Sample 1"
@@ -801,7 +808,7 @@ model_hydro_1_hour = vcat(sample, model_params, r_squared)
 \end{minted}
 
 \subsubsection{Results}
-\label{sec:org6171be6}
+\label{sec:orgb8b06c4}
 Το πείραμα αυτό παρήγαγε 13.05 ml μεθάνιο, το οποίο είναι το \(60.7 \%\) του πειράματος με οξικό καθώς εκείνο το πείραμα είχε μία σχετικά χαμηλή παραγωγικότητα για οξικό. Υπάρχει η σκέψη ότι μπορεί λόγω της διεργασίας που συνέβαινε αρχικά στο δείγμα αυτό (παραγωγή μεθανίου χωρίς τροφή) να επηρεάστηκε η παραγωγικότητα του και αυτό το ποσοστό να μην είναι τόσο έμπιστο.
 
 Από άποψη προσαρμογής, το πείραμα αυτό έχει το πρόβλημα πως μεταξύ της 2ης και 3ης μέρας όχι μόνο επιβραδύνθηκε αρκετά το πείραμα (όπως στο 0 ml) αλλά σχεδόν σταμάτησε. Όμως, το πρωί της τρίτης μέρας, λίγο πριν σταματήσουμε το πείραμα, η παραγωγή αυξήθηκε σχετικά σημαντικά. Οπότε, η προσαρμογή του είναι λίγο πιο δύσκολη. Υπάρχει πάλι το φαινόμενο των 2 ρυθμών (ενός γρήγορου για τα δείγματα της 1ης μέρας και ενός αργού για μετά), όμως, ο γρήγορος είναι σημαντικά χειρότερος εδώ (R\textsuperscript{2} 0.689 αντί για 0.815), προβλέπει με λιγότερη ακρίβεια ακόμη και την πρώτη μέρα και η στάσιμη φάση του είναι πολύ χαμηλά. Ο αργός ρυθμός είναι και αυτός σχετικά λάθος επειδή δεν μπορεί να προβλέψει την δημιουργία στάσιμης φάσης και μετά επανεκίννησης της χώνευσης (κάτι που δεν νομίζω να προβλέπεται από οποιοδήποτε μοντέλο). Οπότε, κάνει underestimate το σημείο που ακόμη παράγει και overestimate όταν έχει αρχίσει η στάσιμη φάση. Βέβαια, για τόσα πειραματικά σημεία (τα οποία έχουν και κάποια προβλήματα που δεν μπορούν να εξηγηθούν εύκολα), η προσαρμογή με R\textsuperscript{2} = 0.815 είναι σχετικά καλή.
@@ -857,7 +864,7 @@ Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsub
 \end{center}
 
 \subsection{Sample 2}
-\label{sec:org9f206ab}
+\label{sec:orgd7a7b10}
 Το δείγμα το οποίο στην υδρόλυση είχε 2 ml από το μιξ. Με βάση το αρχικό πείραμα υδρόλυσης, αυτό και το 4 ml είχαν το καλύτερο performance και ελάχιστη διαφορά μεταξύ τους (κατά βάση στην συγκέντρωση γαλακτικού οξέος) οπότε θα αναμέναμε εδώ να παρατηρηθεί η καλύτερη μεθανογένεση.
 
 \textbf{hydrolysate\textsubscript{2}\textsubscript{ad}}
@@ -869,6 +876,7 @@ Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsub
 
 inds = 7:34
 exp_meth_vol = [0, 6, 0.5, 0.1, 0.5, 1.5, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2]
+meth_vol_hydro_2 = cumsum(exp_meth_vol)[end]
 exp_name = "hydrolysate_2"
 source = "Hydrolyzed FW"
 sample = "Sample 2"
@@ -888,7 +896,7 @@ model_hydro_2_hour = vcat(sample, model_params, r_squared)
 \end{minted}
 
 \subsubsection{Results}
-\label{sec:orga46991a}
+\label{sec:org1947700}
 Το παραγώμενο μεθάνιο είναι 11.1 ml, δηλαδή \(37 \%\) του προβλεπόμενου μεθανίου με βάση το οξικό.
 
 Ένα πολύ βασικό πρόβλημα του πειράματος αυτού είναι πως έχουμε μία μεγάλη παραγωγικότητα μεθανίου στην πρώτη φωτογραφία, όμως αυτή ήταν 6.5 λεπτά μετά την αρχή. Οπότε, δύνανται να υπάρχουν πάρα πολλά κινητικά μοντέλα τα οποία είναι αποδεχτά. Αξίζει να σημειωθεί πως το καλύτερο R\textsuperscript{2} είναι 0.724, το οποίο δείχνει πως κανένα από τα μοντέλα δεν είναι ιδιαίτερα αξιόπιστο. Το πρόβλημα της δειγματοληψίας αυτής είναι πιθανόν να φταίει.
@@ -939,7 +947,7 @@ Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsub
 \end{center}
 
 \subsection{Sample 4}
-\label{sec:orgb4d477d}
+\label{sec:org763ae12}
 Το δείγμα 4 ήταν αυτό με τα 4 ml mix στην υδρόλυση. Είναι η μέγιστη ποσότητα που χρησιμοποιήθηκε για τα πειράματα χώνευσης καθώς το 8 ml δεν είχε ιδιαίτερα μεγάλη διαφορά και είναι πολύ πιο ακριβό. Όπως προαναφέρθηκε, αναμένουμε να έχει παρόμοια ποιότητα με το 2 ml καθώς με εξαίρεση μίας ποσότητας γαλακτικού είναι σχεδόν ίδια.
 
 \textbf{hydrolysate\textsubscript{4}\textsubscript{ad}}
@@ -951,6 +959,7 @@ Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsub
 
 inds = 5:34
 exp_meth_vol = [0, 13, 0.1, 0.2, 0.1, 0.2, 0.5, 1, 0.4, 0.1, 0.3, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.2, 0.2, 0.1]
+meth_vol_hydro_4 = cumsum(exp_meth_vol)[end]
 exp_name = "hydrolysate_4"
 source = "Hydrolyzed FW"
 sample = "Sample 4"
@@ -970,7 +979,7 @@ model_hydro_4_hour = vcat(sample, model_params, r_squared)
 \end{minted}
 
 \subsubsection{Results}
-\label{sec:orgf3350d1}
+\label{sec:org742fe2d}
 Το δείγμα αυτό είχε την ιδιαιτερότητα της μεγαλύτερης παραγωγής μεθανίου από όλα τα δείγματα σε αρκετά γρήγορο ρυθμό, κάτι που προβλέπεται καθώς ήταν και η συμπεριφορά της λάσπης του. Η παραγωγή 17.35 ml μεθανίου είναι το \(36.9 \%\) αυτής του οξικού οξέος. Το γεγονός ότι είναι το ίδιο ποσοστό με αυτό του 2 ml είναι αρκετά καλό.
 
 Επίσης, η παραγωγή είναι περίεργη καθώς παράγονται 13 ml μέσα σε ένα λεπτό και μετά το σύστημα μπαίνει σε μία σχεδόν στάσιμη φάση όπου η παραγωγή μεθανίου έχει επιβραδυνθεί σημαντικά, αλλά συνεχίζει να παράγει κάποια μικρή ποσότητα μέχρι και τις 51 ώρες όπου σταμάτησε το πείραμα. Οπότε, το γεγονός ότι το μοντέλο που προβλέπεται είναι ένα με πάρα πολύ υψηλό ειδικό ρυθμό ανάπτυξης το οποίο φτάνει σε στάσιμη φάση στα πρώτα λεπτά είναι αναμενόμενο.
@@ -1025,7 +1034,7 @@ Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsub
 \end{center}
 
 \subsection{Untreated FW}
-\label{sec:orgd195c81}
+\label{sec:org0909be7}
 Εκτός από τα παραπάνω, σε ένα από τα δοχεία προστέθηκε ανεπεξέργαστο FW. Αυτό έχει διαφορά από το δείγμα 0, καθώς εκείνο υπέστει ζύμωση κατά τις 72 ώρες που ήταν στους 40 \(^oC\) ακόμη και χωρίς να προσθέσουμε κάποιο εμβόλιο, ενώ το δείγμα αυτό αναφέρεται σε food waste το οποίο δεν έχει υποστεί καμία επεξεργασία. Θα θέλαμε το δείγμα αυτό να έχει το χειρότερο performance (είτε πολύ αργή παραγωγή, ή μικρή τελική παραγωγή), το οποίο θα μας επιδείκνυε πως η επεξεργασία που έγινε βοηθάει πραγματικά στην χώνευση. Βέβαια, αξίζει να αναφερθεί πως το δοχείο αυτό είχε κάποιο προβλήματα με διαρροή στα αρχικά στάδια του πειράματος, οπότε ενδέχεται τα αποτελέσματα που θα προκύψουν να μην είναι έγκυρα. Παρακάτω φαίνεται ο κώδικας επεξεργασίας των αποτελεσμάτων του.
 
 \textbf{untreated\textsubscript{fw}\textsubscript{1}\textsubscript{ad}}
@@ -1037,6 +1046,7 @@ Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsub
 
 inds = 12:34
 exp_meth_vol = [0, 0.2, 0, 0.1, 0.1, 0, 0, 0, 0.1, 0.1, 0, 0.1, 0.2, 0.1, 0.1, 0.1, 0.0, 0.1, 0.2, 0.1, 0.2, 0.1, 0.1]
+meth_vol_hydro_fw = cumsum(exp_meth_vol)[end]
 exp_name = "untreated_fw_1"
 source = "Untreated FW"
 sample = "FW 1"
@@ -1056,7 +1066,7 @@ model_hydro_fw_hour = vcat(sample, model_params, r_squared)
 \end{minted}
 
 \subsubsection{Results}
-\label{sec:orgf358f63}
+\label{sec:orgb935ce8}
 Το δείγμα αυτό παρήγαγε μόνο το \(7.1 \%\) του μεθανίου που είχε παράξει από οξικό και το έκανε αυτό σε έναν αργό σχετικά ρυθμό. Κρίνεται πιθανό να μην επιλύθηκαν τα προβλήματα διαρροής που είχε και η παραγωγή του αερίου να ήταν στην πραγματικότητα μεγαλύτερη. Όμως όπως και στο δείγμα με 0 ml ένζυμα το οποίο όμως υπέστει 3 μέρες υδρόλυση και ζύμωση, μας "βολεύει" τα ποσοστά αυτά να είναι πολύ χαμηλά επειδή σημαίνει πως η επεξεργασία που κάναμε όντως συνείσφερε στην παραγωγή μεθανίου.
 
 Από άποψη προσαρμογής, το μοντέλο Gompertz μπορεί να προσαρμοστεί πολύ καλά σε τέτοια δεδομένα όπου η παραγωγή μεθανίου γίνεται σε παρόμοιο ρυθμό για όλη την διεργασία. Το μοντέλο που θα αντιστοιχήσει θα είναι ένα μοντέλο χαμηλού ρυθμού (με βάση την παραπάνω διάκριση), το οποίο όμως είναι το μόνο που μπορεί να ισχύει καθώς στην αρχή δεν υπάρχει μία απότομη παραγωγή αερίου ταχύτατα για να μπορεί να προσαρμοστεί κάτι διαφορετικό. Τα μοντέλα σε λεπτά και ώρες δεν προσαρμόζονται με τον ακριβώς ίδιο τρόπο, αλλά οι διαφορές τους είναι μικρές. Ο ειδικός ρυθμός ανάπτυξης είναι της τάξης του \(0.0137 \frac{ml}{g ~ sCOD \min} \text{ ή } 0.823 \frac{ml}{g ~ sCOD ~ hour}\). Τα άλλα μοντέλα που προσαρμόστηκαν με αργό ρυθμό ανάπτυξης είχαν κινητικές της τάξης του 0.03-0.05 \(\frac{ml}{g ~ sCOD \min }\) οπότε αυτό είναι πιο αργό αλλά συγκρίσιμο με εκείνα.
@@ -1101,7 +1111,7 @@ Timestamp & Minutes & Hours & Methane\textsubscript{Volume} & Cumulative\textsub
 
 
 \subsection{Update all}
-\label{sec:org9c37242}
+\label{sec:orgf0760be}
 Όπως και παραπάνω για τα πειράματα στο οξικό, θα υπάρχει και ένα code block το οποίο θα κάνει update όλα τα code blocks, θα τα κάνει tangle σε ένα script file και θα αποθηκεύει ένα CSV με όλα τα κινητικά αποτελέσματα.
 
 \textbf{update\textsubscript{hydrolysate}\textsubscript{tests}}
@@ -1147,4 +1157,56 @@ Sample 4 & 158.428 & 162.838 & 0.112 & 0.865\\[0pt]
 FW 1 & 22.980 & 0.0127 & 0.0 & 0.969\\[0pt]
 \end{tabular}
 \end{table}
+
+\subsection{Plotting Methane Potential}
+\label{sec:orgc37a0e0}
+Σε αυτό το section θα γίνει ένα plot το οποίο θα συγκρίνει μέγιστο μεθάνιο (παραγωγή από οξικό) με αυτό που παράχθηκε από το FW. Το plotting θα γίνει μέσω του \texttt{CairoMakie.jl} το οποίο είναι αρκετά featureful. Αρχικά όμως πρέπει να κάνουμε κάποιο data collection για να γίνει το plotting. Τρέχουμε τα 2 code blocks που κάνουν update όλα τα πειράματα με βασικό σκοπό να αποθηκεύσουμε τον τελικό όγκο σε κάθε πείραμα. Έπειτα βάζουμε όλα αυτά σε ένα vector και εκτός από την απόλυτη τιμή, υπολογίζουμε και το ποσοστό του μέγιστου που πετυχαίνει το υδρόλυμα. Όπως έχουν αποθηκευτεί, αυτό είναι διαίρεση του στοιχείου i+5 με το i. Έπειτα φτιάχνουμε ένα string των ποσοστών αυτών μαζί με τα labels που τους αντιστοιχούν. Αυτό θα προστεθεί στο plot που φτιάχνουμε.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+<<update_acetate_tests>>
+<<update_hydrolysate_tests>>
+
+meth_vol = [meth_vol_acet_0, meth_vol_acet_1, meth_vol_acet_2, meth_vol_acet_4, meth_vol_acet_fw, meth_vol_hydro_0, meth_vol_hydro_1, meth_vol_hydro_2, meth_vol_hydro_4, meth_vol_hydro_fw]
+
+percent_bmp = [meth_vol[i+5]/meth_vol[i] for i in 1:5]
+string_bmp = vcat(string.(round.(percent_bmp.*100, digits = 2)).*" %", ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated \nFW"])
+
+\end{minted}
+
+Έχοντας κάνει το preprocessing αυτό, ξεκινάμε την δημιουργία διαγραμμάτων. Φτιάχνουμε ένα figure και έναν άξονα πάνω σε αυτό όπου θα κάνουμε τα bar plots που θέλουμε. Οι μεταβλητές \texttt{xdata} και \texttt{grp} είναι απαραίτητες για να φτιαχτεί το plot. Το xdata λέει σε ποιό σημείο του άξονα x θα πάει κάθε δεδομένο (όπως τα έχουμε ορίσει θα είναι από το 1 εώς το 5 δύο φορές) ενώ το grp λέει σε ποιό group θα ανήκει το κάθε πείραμα. Τα 5 πρώτα είναι στο group 1 (οξικό) ενώ τα άλλα στο 2 (υδρόλυμα). Ορίζουμε και το legend και το plot αυτό είναι έτοιμο. Από κάτω, κάνουμε insert το string με τα ποσοστά που υπολογίστηκε παραπάνω σε ένα text plot του Makie. Έπειτα, κάνουμε save το plot αυτό.
+
+\begin{minted}[breaklines=true,breakanywhere=true]{julia}
+
+using CairoMakie
+colors = Makie.wong_colors()
+
+fig = Figure(size = (600, 400))
+ax = Axis(fig[1,1], xticks = (1:5, ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated FW"]),
+          title = "Acetate vs Hydrolysate BMP")
+
+xdata = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5]
+grp = [1, 1, 1, 1, 1, 2, 2, 2, 2, 2]
+
+barplot!(ax, xdata, meth_vol,
+        dodge = grp,
+        color = colors[grp])
+
+# Legend
+labels = ["Acetate", "FW Hydrolysate"]
+elements = [PolyElement(polycolor = colors[i]) for i in 1:length(labels)]
+title = "Source"
+Legend(fig[1,2], elements, labels, title)
+
+ax2 = Axis(fig[2, 1], xticks = (1:5, ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated FW"]), yticks = ([1, 2], ["", ""]), title = "% of Acetate BMP in Hydrolysates")
+hidespines!(ax2)
+hidedecorations!(ax2)
+text!(xdata, repeat(1:1, 10), text = string_bmp, align = [(:left, :top), (:left, :top), (:center, :top), (:right, :top), (:right, :top), (:left, :bottom), (:left, :bottom), (:center, :bottom), (:right, :bottom), (:right, :bottom)])
+
+save(plotsdir("BMPs", "Hydrolyzed FW", "acet_vs_hydro_bmp_1.png"), fig)
+\end{minted}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{../plots/BMPs/Hydrolyzed FW/acet_vs_hydro_bmp_1.png}
+\end{center}
 \end{document}

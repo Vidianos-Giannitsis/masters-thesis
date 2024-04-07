@@ -361,6 +361,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   inds = 1:12
   exp_meth_vol = [0, 12, 5, 3, 1.5, 1.5, 1, 1.5, 1, 0.5, 0.5, 0.5]
+  meth_vol_acet_fw = cumsum(exp_meth_vol)[end]
   exp_name = "acet_test_fw"
   source = "Acetate"
   sample = "Sample FW"
@@ -410,6 +411,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   inds = 34:51
   exp_meth_vol = [0, 4, 12, 7.5, 4.5, 2.5, 2.5, 4, 0.5, 2, 2, 1, 1, 1, 1, 1, 0.5, 0.5]
+  meth_vol_acet_0 = cumsum(exp_meth_vol)[end]
   exp_name = "acet_test_0"
   source = "Acetate"
   sample = "Sample 0"
@@ -465,6 +467,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   inds = 38:56
   exp_meth_vol = [0, 6.5, 5, 3, 0.5, 1.5, 1.5, 0.5, 1, 0.5, 0.5, 0.3, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05]
+  meth_vol_acet_1 = cumsum(exp_meth_vol)[end]
   exp_name = "acet_test_1"
   source = "Acetate"
   sample = "Sample 1"
@@ -521,6 +524,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   inds = 44:57
   exp_meth_vol = [0, 4, 7, 5.5, 4.5, 2.5, 2, 1, 1, 1, 0.5, 0.5, 0.45, 0.05]
+  meth_vol_acet_2 = cumsum(exp_meth_vol)[end]
   exp_name = "acet_test_2"
   source = "Acetate"
   sample = "Sample 2"
@@ -572,6 +576,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   inds = 41:50
   exp_meth_vol = [0, 4, 10, 9, 4, 5, 5, 4, 3, 3]
+  meth_vol_acet_4 = cumsum(exp_meth_vol)[end]
   exp_name = "acet_test_4"
   source = "Acetate"
   sample = "Sample 4"
@@ -764,6 +769,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   inds = 1:34
   exp_meth_vol = [0, 1.0, 0.2, 0.02, 0.02, 0.01, 0.2, 0.2, 0.5, 0.2, 0.5, 1.5, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05]
+  meth_vol_hydro_0 = cumsum(exp_meth_vol)[end]
 
   exp_name = "hydrolysate_0"
   source = "Hydrolyzed FW"
@@ -856,6 +862,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   inds = 2:34
   exp_meth_vol = [0, 2.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0.2, 0.5, 2.0, 0.3, 0.3, 0.3, 0.1, 0.6, 0.6, 0.5, 0.5, 0.5, 0.4, 0.6, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.2, 0.2]
+  meth_vol_hydro_1 = cumsum(exp_meth_vol)[end]
   exp_name = "hydrolysate_1"
   source = "Hydrolyzed FW"
   sample = "Sample 1"
@@ -942,6 +949,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   inds = 7:34
   exp_meth_vol = [0, 6, 0.5, 0.1, 0.5, 1.5, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2]
+  meth_vol_hydro_2 = cumsum(exp_meth_vol)[end]
   exp_name = "hydrolysate_2"
   source = "Hydrolyzed FW"
   sample = "Sample 2"
@@ -1018,6 +1026,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   inds = 5:34
   exp_meth_vol = [0, 13, 0.1, 0.2, 0.1, 0.2, 0.5, 1, 0.4, 0.1, 0.3, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.2, 0.2, 0.1]
+  meth_vol_hydro_4 = cumsum(exp_meth_vol)[end]
   exp_name = "hydrolysate_4"
   source = "Hydrolyzed FW"
   sample = "Sample 4"
@@ -1104,6 +1113,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   inds = 12:34
   exp_meth_vol = [0, 0.2, 0, 0.1, 0.1, 0, 0, 0, 0.1, 0.1, 0, 0.1, 0.2, 0.1, 0.1, 0.1, 0.0, 0.1, 0.2, 0.1, 0.2, 0.1, 0.1]
+  meth_vol_hydro_fw = cumsum(exp_meth_vol)[end]
   exp_name = "untreated_fw_1"
   source = "Untreated FW"
   sample = "FW 1"
@@ -1201,3 +1211,55 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | Sample 2    |              872.706 |          0.0320 |      0.0 | 0.687 |
 | Sample 4    |              158.428 |         162.838 |    0.112 | 0.865 |
 | FW 1        |               22.980 |          0.0127 |      0.0 | 0.969 |
+
+** Plotting Methane Potential
+Σε αυτό το section θα γίνει ένα plot το οποίο θα συγκρίνει μέγιστο μεθάνιο (παραγωγή από οξικό) με αυτό που παράχθηκε από το FW. Το plotting θα γίνει μέσω του ~CairoMakie.jl~ το οποίο είναι αρκετά featureful. Αρχικά όμως πρέπει να κάνουμε κάποιο data collection για να γίνει το plotting. Τρέχουμε τα 2 code blocks που κάνουν update όλα τα πειράματα με βασικό σκοπό να αποθηκεύσουμε τον τελικό όγκο σε κάθε πείραμα. Έπειτα βάζουμε όλα αυτά σε ένα vector και εκτός από την απόλυτη τιμή, υπολογίζουμε και το ποσοστό του μέγιστου που πετυχαίνει το υδρόλυμα. Όπως έχουν αποθηκευτεί, αυτό είναι διαίρεση του στοιχείου i+5 με το i. Έπειτα φτιάχνουμε ένα string των ποσοστών αυτών μαζί με τα labels που τους αντιστοιχούν. Αυτό θα προστεθεί στο plot που φτιάχνουμε.
+
+#+NAME: BMP_data_collection_1
+#+BEGIN_SRC julia :noweb :no-export
+
+  <<update_acetate_tests>>
+  <<update_hydrolysate_tests>>
+
+  meth_vol = [meth_vol_acet_0, meth_vol_acet_1, meth_vol_acet_2, meth_vol_acet_4, meth_vol_acet_fw, meth_vol_hydro_0, meth_vol_hydro_1, meth_vol_hydro_2, meth_vol_hydro_4, meth_vol_hydro_fw]
+
+  percent_bmp = [meth_vol[i+5]/meth_vol[i] for i in 1:5]
+  string_bmp = vcat(string.(round.(percent_bmp.*100, digits = 2)).*" %", ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated \nFW"])
+
+#+END_SRC
+
+Έχοντας κάνει το preprocessing αυτό, ξεκινάμε την δημιουργία διαγραμμάτων. Φτιάχνουμε ένα figure και έναν άξονα πάνω σε αυτό όπου θα κάνουμε τα bar plots που θέλουμε. Οι μεταβλητές ~xdata~ και ~grp~ είναι απαραίτητες για να φτιαχτεί το plot. Το xdata λέει σε ποιό σημείο του άξονα x θα πάει κάθε δεδομένο (όπως τα έχουμε ορίσει θα είναι από το 1 εώς το 5 δύο φορές) ενώ το grp λέει σε ποιό group θα ανήκει το κάθε πείραμα. Τα 5 πρώτα είναι στο group 1 (οξικό) ενώ τα άλλα στο 2 (υδρόλυμα). Ορίζουμε και το legend και το plot αυτό είναι έτοιμο. Από κάτω, κάνουμε insert το string με τα ποσοστά που υπολογίστηκε παραπάνω σε ένα text plot του Makie. Έπειτα, κάνουμε save το plot αυτό.
+
+#+NAME: BMP_plotting
+#+BEGIN_SRC julia
+
+  using CairoMakie
+  colors = Makie.wong_colors()
+
+  fig = Figure(size = (600, 400))
+  ax = Axis(fig[1,1], xticks = (1:5, ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated FW"]),
+	    title = "Acetate vs Hydrolysate BMP")
+
+  xdata = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5]
+  grp = [1, 1, 1, 1, 1, 2, 2, 2, 2, 2]
+
+  barplot!(ax, xdata, meth_vol,
+	  dodge = grp,
+	  color = colors[grp])
+
+  # Legend
+  labels = ["Acetate", "FW Hydrolysate"]
+  elements = [PolyElement(polycolor = colors[i]) for i in 1:length(labels)]
+  title = "Source"
+  Legend(fig[1,2], elements, labels, title)
+
+  ax2 = Axis(fig[2, 1], xticks = (1:5, ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated FW"]), yticks = ([1, 2], ["", ""]), title = "% of Acetate BMP in Hydrolysates")
+  hidespines!(ax2)
+  hidedecorations!(ax2)
+  text!(xdata, repeat(1:1, 10), text = string_bmp, align = [(:left, :top), (:left, :top), (:center, :top), (:right, :top), (:right, :top), (:left, :bottom), (:left, :bottom), (:center, :bottom), (:right, :bottom), (:right, :bottom)])
+
+  save(plotsdir("BMPs", "Hydrolyzed FW", "acet_vs_hydro_bmp_1.png"), fig)
+#+END_SRC
+
+#+ATTR_ORG: :width 900px
+[[../plots/BMPs/Hydrolyzed FW/acet_vs_hydro_bmp_1.png]]
