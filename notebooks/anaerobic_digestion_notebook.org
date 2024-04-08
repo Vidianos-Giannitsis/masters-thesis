@@ -47,8 +47,8 @@
 * Acetate Experiment data reading
 Τα δεδομένα της αναερόβιας χώνευσης είναι φωτογραφίες των προχωίδων της διάταξης. Εξετάζοντας πόσο έχει μεταβληθεί η στάθμη τους, μπορούμε να υπολογίσουμε τον παραγόμενο όγκο μεθανίου. Αλλά πρώτα, πρέπει να ξέρουμε σε τι χρόνους έγιναν sampled τα δείγματα. Όλες οι φωτογραφίες έχουν ένα timestamp το οποίο μας βοηθάει να τα διακρίνουμε. Μπορούμε να αναλύσουμε αυτά ώστε να πάρουμε τις στιγμές που βγήκαν οι φωτογραφίες. Αρχικά, παίρνουμε όλα τα filenames με ~ls~. Θα χρησιμοποιήσουμε τα flags -m και -Q για να πάρουμε comma separated output και το κάθε string να έχει double quotes.
 
-*ls_output_acetate*
-#+NAME: ls_output_acetate
+*ls_output_acetate_s1*
+#+NAME: ls_output_acetate_s1
 #+BEGIN_SRC sh :results output
 ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 #+END_SRC
@@ -88,8 +88,8 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 
 Αρχικά, κάνουμε load τα dependencies στο script στο οποίο θα γίνει η ανάλυση του πειράματος αυτού.
 
-#+NAME: deps_acetate
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_analysis.jl
+#+NAME: deps_acetate_s1
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_s1_analysis.jl
 
   <<deps>>
 
@@ -97,8 +97,8 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 
 Έπειτα, ξεκινάμε την ανάλυση αποθηκεύοντας τα file names σε ένα vector της Julia κάνοντας copy τα shell results. Αυτό το vector θα γίνεται loaded σε όλα τα code blocks, για να είναι το κάθε ένα reproducible από μόνο του. Έτσι, στο τελικό script θα υπάρχουν πολλές επαναλήψεις.
 
-*date_saving_acetate*
-#+NAME: date_saving_acetate
+*date_saving_acetate_s1*
+#+NAME: date_saving_acetate_s1
 #+BEGIN_SRC julia
 
   file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-57-161.jpg",
@@ -134,11 +134,36 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 
 #+END_SRC
 
+#+RESULTS: date_saving_acetate_s1
+#+begin_example
+58-element Vector{String}:
+ "bandicam 2024-03-27 18-45-55-857.jpg"
+ "bandicam 2024-03-27 18-46-57-161.jpg"
+ "bandicam 2024-03-27 18-48-57-160.jpg"
+ "bandicam 2024-03-27 18-50-57-170.jpg"
+ "bandicam 2024-03-27 18-52-57-164.jpg"
+ "bandicam 2024-03-27 18-54-57-162.jpg"
+ "bandicam 2024-03-27 18-56-57-167.jpg"
+ "bandicam 2024-03-27 18-58-57-165.jpg"
+ "bandicam 2024-03-27 19-00-57-170.jpg"
+ "bandicam 2024-03-27 19-02-57-179.jpg"
+ ⋮
+ "bandicam 2024-03-29 12-37-05-858.jpg"
+ "bandicam 2024-03-29 12-38-06-101.jpg"
+ "bandicam 2024-03-29 12-38-47-045.jpg"
+ "bandicam 2024-03-29 12-39-47-039.jpg"
+ "bandicam 2024-03-29 12-40-47-050.jpg"
+ "bandicam 2024-03-29 12-41-47-047.jpg"
+ "bandicam 2024-03-29 12-42-47-057.jpg"
+ "bandicam 2024-03-29 12-43-42-169.jpg"
+ "bandicam 2024-03-29 12-44-41-398.jpg"
+#+end_example
+
 * FW Hydrolysate Experiment 1 Data Reading
 Με την ίδια λογική με παραπάνω, κάνουμε load ότι θα χρειαστεί για αυτό το πείραμα.
 
-*ls_output_fw_1*
-#+NAME: ls_output_fw_1
+*ls_output_fw_s1_r1*
+#+NAME: ls_output_fw_s1_r1
 #+BEGIN_SRC sh :results output
 ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 #+END_SRC
@@ -164,14 +189,14 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 "bandicam 2024-04-03 13-54-03-505.jpg", "bandicam 2024-04-03 14-24-03-564.jpg"
 #+end_example
 
-#+NAME: deps_fw_1
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_1_analysis.jl
+#+NAME: deps_fw_s1_r1
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_s1_r1_analysis.jl
 
   <<deps>>
 
 #+END_SRC
 
-#+NAME: date_saving_fw_1
+#+NAME: date_saving_fw_s1_r1
 #+BEGIN_SRC julia
 
   file_vec = ["bandicam 2024-04-01 11-05-53-069.jpg", "bandicam 2024-04-01 11-09-37-035.jpg",
@@ -314,31 +339,37 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 #+BEGIN_SRC julia
 
   if source == "Acetate"
-      bmp_cumulative_scatter_min = scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
+      bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" /nUsing "*sample*" "*sludge, size = (700, 470))
       savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
-      bmp_cumulative_scatter_sec = scatter(exp_sec, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (sec)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
+      bmp_cumulative_scatter_sec = Plots.scatter(exp_sec, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (sec)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
       savefig(bmp_cumulative_scatter_sec, plotsdir("BMPs", source, "cumulative_"*exp_name*"_sec.png"))
 
       if kinetics
-	  bmp_specific_methane = scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" - "*sample, size = (700, 470), legend = :bottomright)
-	  plot!(exp_min, gompertz(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	  bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
+	  Plots.plot!(exp_min, gompertz(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	  savefig(bmp_specific_methane, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*".png"))
       end
-  else
-      bmp_cumulative_scatter_min = scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
+  elseif source == "No_Feed"
+      bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" /nUsing "*sample*" "*sludge, size = (700, 470))
       savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
-      bmp_cumulative_scatter_hour = scatter(exp_hour, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (hour)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" - "*sample, size = (700, 470))
+      bmp_cumulative_scatter_sec = Plots.scatter(exp_sec, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (sec)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
+      savefig(bmp_cumulative_scatter_sec, plotsdir("BMPs", source, "cumulative_"*exp_name*"_sec.png"))
+  else
+      bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
+      savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
+
+      bmp_cumulative_scatter_hour = Plots.scatter(exp_hour, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (hour)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
       savefig(bmp_cumulative_scatter_hour, plotsdir("BMPs", source, "cumulative_"*exp_name*"_hour.png"))
 
       if timescale == "hour"
-	  bmp_specific_methane = scatter(exp_hour, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" - "*sample, size = (700, 470), legend = :bottomright)
-	  plot!(exp_hour, gompertz(exp_hour), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	  bmp_specific_methane = Plots.scatter(exp_hour, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	  Plots.plot!(exp_hour, gompertz(exp_hour), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	  savefig(bmp_specific_methane, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
       elseif timescale =="min" 
-	  bmp_specific_methane = scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" - "*sample, size = (700, 470), legend = :bottomright)
-	  plot!(exp_min, gompertz(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	  bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g sCOD)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	  Plots.plot!(exp_min, gompertz(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	  savefig(bmp_specific_methane, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
       end
   end
@@ -351,8 +382,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 ** Acetate Test FW
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα labelled ως FW (στο οποίο θα τροφοδοτηθούν untreated FW). Notably, δεν είχε διαρροή στις 27/03, αλλά για κάποιον λόγο, στην επαναδοκιμή στις 29/03 δεν παρήγαγε μεθάνιο (τουλάχιστον στην προχοίδα). Οπότε, θα χρησιμοποιηθεί αυτό της 27/03.
 
-*acet_test_FW*
-#+NAME: acet_test_FW
+*acet_test_FW_s1*
+#+NAME: acet_test_FW_s1
 #+BEGIN_SRC julia :noweb no-export
 
   ### Data Analysis on Sample FW ###
@@ -362,9 +393,10 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
   inds = 1:12
   exp_meth_vol = [0, 12, 5, 3, 1.5, 1.5, 1, 1.5, 1, 0.5, 0.5, 0.5]
   meth_vol_acet_fw = cumsum(exp_meth_vol)[end]
-  exp_name = "acet_test_fw"
+  exp_name = "acet_test_fw_s1"
   source = "Acetate"
   sample = "Sample FW"
+  sludge = "Sludge 1"
   input_cod = 0.1
   p0 = [250.0, 60.0, 1.0]
 
@@ -396,25 +428,26 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | 27/03_19:04 | 1141.316 | 19.0219 |            0.5 |                      27.5 |
 | 27/03_19:06 | 1261.325 | 21.0220 |            0.5 |                      28.0 |
 
-[[../plots/BMPs/Acetate/methane_kinetics_acet_test_fw.png]]
+[[../plots/BMPs/Acetate/methane_kinetics_acet_test_fw_s1.png]]
 
 ** Acetate Test 0
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (0).
 
-*acet_test_0*
-#+NAME: acet_test_0
+*acet_test_0_s1*
+#+NAME: acet_test_0_s1
 #+BEGIN_SRC julia :noweb no-export
 
   ### Data Analysis on Sample 0 ###
 
-  <<date_saving_acetate>>
+  <<date_saving_acetate_s1>>
 
   inds = 34:51
   exp_meth_vol = [0, 4, 12, 7.5, 4.5, 2.5, 2.5, 4, 0.5, 2, 2, 1, 1, 1, 1, 1, 0.5, 0.5]
   meth_vol_acet_0 = cumsum(exp_meth_vol)[end]
-  exp_name = "acet_test_0"
+  exp_name = "acet_test_0_s1"
   source = "Acetate"
   sample = "Sample 0"
+  sludge = "Sludge 1"
   input_cod = 0.1
   p0 = [400.0, 80.0, 1.0]
 
@@ -452,25 +485,26 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | 29/03_12:37 | 809.683 | 13.4947 |            0.5 |                      47.0 |
 | 29/03_12:38 | 869.926 | 14.4987 |            0.5 |                      47.5 |
 
-[[../plots/BMPs/Acetate/methane_kinetics_acet_test_0.png]]
+[[../plots/BMPs/Acetate/methane_kinetics_acet_test_0_s1.png]]
 
 ** Acetate Test 1
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (1). Aξίζει να αναφερθεί πως την πρώτη πειραματική ημέρα (27/03), παρήγαγε αέριο χωρίς να τροφοδοτηθεί με κάποιο υπόστρωμα. Η κινητική αυτής της παραγωγής (η οποία δεν ξέρουμε σε τι ευθύνεται) θα αναλυθεί παρακάτω. Βέβαια, μόλις τροφοδοτήθηκε με οξικό και η παραγωγή του τελείωσε, σταμάτησε και εκείνη η παραγωγή. Βέβαια, είχε την χαμηλότερη παραγωγή βιοαερίου μόλις τροφοδοτήθηκε με οξικό, οπότε ενδέχεται αυτή η μέτρηση να ήταν προβληματική.
 
-*acet_test_1*
-#+NAME: acet_test_1
+*acet_test_1_s1*
+#+NAME: acet_test_1_s1
 #+BEGIN_SRC julia :noweb no-export
 
   ### Data Analysis on Sample 1 ###
 
-  <<date_saving_acetate>>
+  <<date_saving_acetate_s1>>
 
   inds = 38:56
   exp_meth_vol = [0, 6.5, 5, 3, 0.5, 1.5, 1.5, 0.5, 1, 0.5, 0.5, 0.3, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05]
   meth_vol_acet_1 = cumsum(exp_meth_vol)[end]
-  exp_name = "acet_test_1"
+  exp_name = "acet_test_1_s1"
   source = "Acetate"
   sample = "Sample 1"
+  sludge = "Sludge 1"
   input_cod = 0.1
   p0 = [200.0, 40.0, 1.0]
 
@@ -509,25 +543,26 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | 29/03_12:41 | 896.879 | 14.9479 |           0.05 |                     21.45 |
 | 29/03_12:42 | 956.889 | 15.9482 |           0.05 |                     21.50 |
 
-[[../plots/BMPs/Acetate/methane_kinetics_acet_test_1.png]]
+[[../plots/BMPs/Acetate/methane_kinetics_acet_test_1_s1.png]]
 
 ** Acetate Test 2
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (2).
 
-*acet_test_2*
-#+NAME: acet_test_2
+*acet_test_2_s1*
+#+NAME: acet_test_2_s1
 #+BEGIN_SRC julia :noweb no-export
 
   ### Data Analysis on Sample 2 ###
 
-  <<date_saving_acetate>>
+  <<date_saving_acetate_s1>>
 
   inds = 44:57
   exp_meth_vol = [0, 4, 7, 5.5, 4.5, 2.5, 2, 1, 1, 1, 0.5, 0.5, 0.45, 0.05]
   meth_vol_acet_2 = cumsum(exp_meth_vol)[end]
-  exp_name = "acet_test_2"
+  exp_name = "acet_test_2_s1"
   source = "Acetate"
   sample = "Sample 2"
+  sludge = "Sludge 1"
   input_cod = 0.1
   p0 = [300.0, 60.0, 1.0]
 
@@ -561,25 +596,26 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | 29/03_12:42 |  667.16 | 11.1193 |           0.45 |                     29.95 |
 | 29/03_12:43 | 722.272 | 12.0379 |           0.05 |                      30.0 |
 
-[[../plots/BMPs/Acetate/methane_kinetics_acet_test_2.png]]
+[[../plots/BMPs/Acetate/methane_kinetics_acet_test_2_s1.png]]
 
 ** Acetate Test 4
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (4).
 
-*acet_test_4*
-#+NAME: acet_test_4
+*acet_test_4_s1*
+#+NAME: acet_test_4_s1
 #+BEGIN_SRC julia :noweb no-export
 
   ### Data Analysis on Sample 4 ###
 
-  <<date_saving_acetate>>
+  <<date_saving_acetate_s1>>
 
   inds = 41:50
   exp_meth_vol = [0, 4, 10, 9, 4, 5, 5, 4, 3, 3]
   meth_vol_acet_4 = cumsum(exp_meth_vol)[end]
-  exp_name = "acet_test_4"
+  exp_name = "acet_test_4_s1"
   source = "Acetate"
   sample = "Sample 4"
+  sludge = "Sludge 1"
   input_cod = 0.1
   p0 = [400.0, 100.0, 1.0]
 
@@ -609,7 +645,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | 29/03_12:36 | 399.338 |  6.6556 |              3 |                        44 |
 | 29/03_12:37 | 459.361 |  7.6560 |              3 |                        47 |
 
-[[../plots/BMPs/Acetate/methane_kinetics_acet_test_4.png]]
+[[../plots/BMPs/Acetate/methane_kinetics_acet_test_4_s1.png]]
 
 ** Παραγωγή μεθανίου χωρίς feed από το δείγμα Ac
 Όπως προαναφέρθηκε, το δείγμα Ac παρήγαγε μεθάνιο χωρίς να τροφοδοτηθεί με κάτι για κάποιον ανεξήγητο λόγο. Καθώς έχουμε πειραματικά δεδομένα για αυτή την κατανάλωση (και μάλιστα 2 data sets), θα γίνει και μία ανάλυση για αυτό.
@@ -620,13 +656,14 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   ### No Feed Data Analysis ###
 
-  <<date_saving_acetate>>
+  <<date_saving_acetate_s1>>
 
   inds = 1:17
   exp_meth_vol = [0, 9, 3, 2, 3, 3, 3, 2.5, 2.5, 2.5, 1.5, 3, 1, 1, 1.5, 0.5, 0.1]
   exp_name = "no_feed_ac_1"
   source = "No_Feed"
   sample = "Sample Ac"
+  sludge = "Sludge 1"
   kinetics = false
 
   <<bmp_data_processing>>
@@ -662,13 +699,14 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 #+NAME: no_feed_ac_2
 #+BEGIN_SRC julia :noweb no-export
 
-  <<date_saving_acetate>>
+  <<date_saving_acetate_s1>>
 
   inds = 18:33
   exp_meth_vol = [0, 3, 2, 2, 2, 3, 2, 2, 3, 2, 2.5, 2.5, 2, 2.5, 2.5, 2]
   exp_name = "no_feed_ac_2"
   source = "No_Feed"
   sample = "Sample Ac"
+  sludge = "Sludge 1"
   kinetics = false
 
   <<bmp_data_processing>>
@@ -703,23 +741,37 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 ** Update all helper
 Σε αυτό το section θα υπάρχει ένα helper code block που θα κάνει evaluate όλα τα παραπάνω. Έτσι, αν αλλάξει κάτι το οποίο επηρεάζει περισσότερα από ένα code blocks, θα μπορούν να γίνουν updated ταυτόχρονα πιο εύκολα. Επίσης, μία επιπλέον χρησιμότητα του code block αυτού είναι ότι αποθηκεύει ένα CSV που συγκεντρώνει όλα τα δεδομένα των κινητικών παραμέτρων από την προσαρμογή που έγινε παραπάνω, το οποίο είναι χρήσιμο για συγκρίσεις, παρόλο που τα συγκεκριμένα πειράματα δεν είναι τόσο σημαντικό να συγκριθούν.
 
-*update_acetate_tests*
-#+NAME: update_acetate_tests
+*update_acetate_tests_s1*
+#+NAME: update_acetate_tests_s1
 #+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_analysis.jl
 
-  <<acet_test_0>>
-  <<acet_test_1>>
-  <<acet_test_2>>
-  <<acet_test_4>>
-  <<acet_test_FW>>
+  <<acet_test_0_s1>>
+  <<acet_test_1_s1>>
+  <<acet_test_2_s1>>
+  <<acet_test_4_s1>>
+  <<acet_test_FW_s1>>
   <<no_feed_ac_1>>
   <<no_feed_ac_2>>
 
   model_fit_table = Tables.table(vcat(reshape(model_acet_0, 1, 5), reshape(model_acet_1, 1, 5), reshape(model_acet_2, 1, 5), reshape(model_acet_4, 1, 5), reshape(model_acet_fw, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
-  CSV.write(datadir("exp_pro", "methane_from_acetate_kinetics.csv"), model_fit_table)
+  CSV.write(datadir("exp_pro", "methane_from_acetate_kinetics_s1.csv"), model_fit_table)
   DataFrame(model_fit_table)
 
 #+END_SRC
+
+#+RESULTS: update_acetate_tests_s1
+#+begin_example
+5×5 DataFrame
+ Row │ Sample_Name  Methane_Production_Potential  Methane_Production_Rate  Lag ⋯
+     │ Any          Any                           Any                      Any ⋯
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │ Sample 0     452.518                       80.3876                  0.0 ⋯
+   2 │ Sample 1     208.238                       55.0277                  0.0
+   3 │ Sample 2     292.866                       61.9136                  0.0
+   4 │ Sample 4     466.239                       97.7773                  0.0
+   5 │ Sample FW    255.214                       55.9408                  0.0 ⋯
+                                                               2 columns omitted
+#+end_example
 
 #+RESULTS: update_acetate_tests
 #+begin_example
@@ -759,21 +811,23 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 ** Sample 0
 Το δείγμα αυτό είναι labelled ως δείγμα 0 καθώς είναι το δείγμα το οποίο τροφοδοτήθηκε με treated FW, όμως χωρίς προσθήκη του μιξ ενζύμων και μικροοργανισμών. Όπως έχουμε δεί, όλες οι αντιδράσεις που γίνονται κατά την υδρόλυση και ζύμωση μπορούν να γίνουν και χωρίς το μιξ. Όμως, γινόντουσαν πιο αποτελεσματικά με την προσθήκη αυτού. Οπότε, ελπίζουμε πως το δείγμα αυτό θα έχει χειρότερα αποτελέσματα από τα άλλα, το οποίο θα μας οδηγήσει στην υπόθεση ότι το μιξ βελτιώνει όχι μόνο τα κριτήρια υδρόλυσης και οξεογένεσης αλλά και αυτό της μεθανογένεσης.
 
-*hydrolysate_0_ad_1*
-#+NAME: hydrolysate_0_ad_1
+*hydrolysate_0_s1_r1*
+#+NAME: hydrolysate_0_s1_r1
 #+BEGIN_SRC julia :noweb no-export
 
   ### Data Analysis on Hydrolysate with 0 ml ###
 
-  <<date_saving_fw_1>>
+  <<date_saving_fw_s1_r1>>
 
   inds = 1:34
   exp_meth_vol = [0, 1.0, 0.2, 0.02, 0.02, 0.01, 0.2, 0.2, 0.5, 0.2, 0.5, 1.5, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05]
   meth_vol_hydro_0 = cumsum(exp_meth_vol)[end]
 
-  exp_name = "hydrolysate_0"
+  exp_name = "hydrolysate_0_s1_r1"
   source = "Hydrolyzed FW"
   sample = "Sample 0"
+  sludge = "Sludge 1"
+  run_num = "Run 1"
   input_cod = 0.1
 
   <<bmp_data_processing>>
@@ -845,27 +899,29 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | 03/04_13:54 | 3048.1739 | 50.8029 |           0.05 |                      6.05 |
 | 03/04_14:24 | 3078.1749 | 51.3029 |           0.05 |                       6.1 |
 
-[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_0_min.png]]
+[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_0_s1_r1_min.png]]
 
-[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_0_hour.png]]
+[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_0_s1_r1_hour.png]]
 
 ** Sample 1
 Το δείγμα αυτό τροφοδοτήθηκε με το υδρόλυμα το οποίο είχε προσθήκη 1 ml mix. Στο αρχικό κινητικό πείραμα, το δείγμα αυτό είχε αρκετά παρόμοια συμπεριφορά με το 0 και χειρότερη αυτής του 1. Από την μέτρηση του COD του, είχε αναπάντεχα υψηλό sCOD. Αυτό σημαίνει είτε πως έγινε κάποιο λάθος στην ανάλυση ή ότι απλώς έγινε πολύ καλύτερη υδρόλυση από ότι περιμέναμε στο πείραμα αυτό. Με βάση το sCOD του, αναμένεται να έχει καλά αποτελέσματα. Με βάση την HPLC του αρχικού πειράματος, θα περιμέναμε να είναι λίγο καλύτερο από το 0.
 
-*hydrolysate_1_ad_1*
-#+NAME: hydrolysate_1_ad_1
+*hydrolysate_1_s1_r1*
+#+NAME: hydrolysate_1_s1_r1
 #+BEGIN_SRC julia :noweb no-export
 
   ### Data Analysis on Hydrolysate with 1 ml ###
 
-  <<date_saving_fw_1>>
+  <<date_saving_fw_s1_r1>>
 
   inds = 2:34
   exp_meth_vol = [0, 2.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0.2, 0.5, 2.0, 0.3, 0.3, 0.3, 0.1, 0.6, 0.6, 0.5, 0.5, 0.5, 0.4, 0.6, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.2, 0.2]
   meth_vol_hydro_1 = cumsum(exp_meth_vol)[end]
-  exp_name = "hydrolysate_1"
+  exp_name = "hydrolysate_1_s1_r1"
   source = "Hydrolyzed FW"
   sample = "Sample 1"
+  sludge = "Sludge 1"
+  run_num = "Run 1"
   input_cod = 0.1
 
   p0 = [130.0, 10.0, 1.0]
@@ -932,27 +988,29 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | 03/04_13:54 | 3044.4412 | 50.7407 |            0.2 |                     12.85 |
 | 03/04_14:24 | 3074.4422 | 51.2407 |            0.2 |                     13.05 |
 
-[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_1_min.png]]
+[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_1_s1_r1_min.png]]
 
-[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_1_hour.png]]
+[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_1_s1_r1_hour.png]]
 
 ** Sample 2
 Το δείγμα το οποίο στην υδρόλυση είχε 2 ml από το μιξ. Με βάση το αρχικό πείραμα υδρόλυσης, αυτό και το 4 ml είχαν το καλύτερο performance και ελάχιστη διαφορά μεταξύ τους (κατά βάση στην συγκέντρωση γαλακτικού οξέος) οπότε θα αναμέναμε εδώ να παρατηρηθεί η καλύτερη μεθανογένεση.
 
-*hydrolysate_2_ad_1*
-#+NAME: hydrolysate_2_ad_1
+*hydrolysate_2_s1_r1*
+#+NAME: hydrolysate_2_s1_r1
 #+BEGIN_SRC julia :noweb no-export
 
   ### Data Analysis on Hydrolysate with 2 ml ###
 
-  <<date_saving_fw_1>>
+  <<date_saving_fw_s1_r1>>
 
   inds = 7:34
   exp_meth_vol = [0, 6, 0.5, 0.1, 0.5, 1.5, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2]
   meth_vol_hydro_2 = cumsum(exp_meth_vol)[end]
-  exp_name = "hydrolysate_2"
+  exp_name = "hydrolysate_2_s1_r1"
   source = "Hydrolyzed FW"
   sample = "Sample 2"
+  sludge = "Sludge 1"
+  run_num = "Run 1"
   input_cod = 0.1
 
   <<bmp_data_processing>>
@@ -1009,27 +1067,30 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | 03/04_13:54 | 3038.6121 | 50.6435 |            0.2 |                      10.9 |
 | 03/04_14:24 | 3068.6131 | 51.1436 |            0.2 |                      11.1 |
 
-[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_2_min.png]]
+[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_2_s1_r1_min.png]]
 
-[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_2_hour.png]]
+[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_2_s1_r1_hour.png]]
 
 ** Sample 4
 Το δείγμα 4 ήταν αυτό με τα 4 ml mix στην υδρόλυση. Είναι η μέγιστη ποσότητα που χρησιμοποιήθηκε για τα πειράματα χώνευσης καθώς το 8 ml δεν είχε ιδιαίτερα μεγάλη διαφορά και είναι πολύ πιο ακριβό. Όπως προαναφέρθηκε, αναμένουμε να έχει παρόμοια ποιότητα με το 2 ml καθώς με εξαίρεση μίας ποσότητας γαλακτικού είναι σχεδόν ίδια.
 
-*hydrolysate_4_ad_1*
-#+NAME: hydrolysate_4_ad_1
+*hydrolysate_4_s1_r1*
+#+NAME: hydrolysate_4_s1_r1
 #+BEGIN_SRC julia :noweb no-export
 
   ### Data Analysis on Hydrolysate with 4 ml ###
 
-  <<date_saving_fw_1>>
+  <<date_saving_fw_s1_r1>>
 
   inds = 5:34
   exp_meth_vol = [0, 13, 0.1, 0.2, 0.1, 0.2, 0.5, 1, 0.4, 0.1, 0.3, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.2, 0.2, 0.1]
   meth_vol_hydro_4 = cumsum(exp_meth_vol)[end]
-  exp_name = "hydrolysate_4"
+  exp_name = "hydrolysate_4_s1_r1"
   source = "Hydrolyzed FW"
   sample = "Sample 4"
+  sludge = "Sludge 1"
+  run_num = "Run 1"
+
   input_cod = 0.1
 
   <<bmp_data_processing>>
@@ -1096,27 +1157,30 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | 03/04_13:54 | 3040.6122 | 50.6769 |            0.2 |                     17.25 |
 | 03/04_14:24 | 3070.6131 | 51.1769 |            0.1 |                     17.35 |
 
-[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_4_min.png]]
+[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_4_s1_r1_min.png]]
 
-[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_4_hour.png]]
+[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_4_s1_r1_hour.png]]
 
 ** Untreated FW
 Εκτός από τα παραπάνω, σε ένα από τα δοχεία προστέθηκε ανεπεξέργαστο FW. Αυτό έχει διαφορά από το δείγμα 0, καθώς εκείνο υπέστει ζύμωση κατά τις 72 ώρες που ήταν στους 40 \( ^oC \) ακόμη και χωρίς να προσθέσουμε κάποιο εμβόλιο, ενώ το δείγμα αυτό αναφέρεται σε food waste το οποίο δεν έχει υποστεί καμία επεξεργασία. Θα θέλαμε το δείγμα αυτό να έχει το χειρότερο performance (είτε πολύ αργή παραγωγή, ή μικρή τελική παραγωγή), το οποίο θα μας επιδείκνυε πως η επεξεργασία που έγινε βοηθάει πραγματικά στην χώνευση. Βέβαια, αξίζει να αναφερθεί πως το δοχείο αυτό είχε κάποιο προβλήματα με διαρροή στα αρχικά στάδια του πειράματος, οπότε ενδέχεται τα αποτελέσματα που θα προκύψουν να μην είναι έγκυρα. Παρακάτω φαίνεται ο κώδικας επεξεργασίας των αποτελεσμάτων του.
 
-*untreated_fw_1_ad*
-#+NAME: untreated_fw_1_ad
+*untreated_fw_s1_r1*
+#+NAME: untreated_fw_s1_r1
 #+BEGIN_SRC julia :noweb no-export
 
   ### Data Analysis on Untreated FW ###
 
-  <<date_saving_fw_1>>
+  <<date_saving_fw_s1_r1>>
 
   inds = 12:34
   exp_meth_vol = [0, 0.2, 0, 0.1, 0.1, 0, 0, 0, 0.1, 0.1, 0, 0.1, 0.2, 0.1, 0.1, 0.1, 0.0, 0.1, 0.2, 0.1, 0.2, 0.1, 0.1]
   meth_vol_hydro_fw = cumsum(exp_meth_vol)[end]
-  exp_name = "untreated_fw_1"
+  exp_name = "untreated_fw_s1_r1"
   source = "Untreated FW"
   sample = "FW 1"
+  sludge = "Sludge 1"
+  run_num = "Run 1"
+
   input_cod = 0.1
 
   <<bmp_data_processing>>
@@ -1166,29 +1230,33 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 | 03/04_13:54 |  1620.036 | 27.0006 |            0.1 |                       1.9 |
 | 03/04_14:24 |  1650.037 | 27.5006 |            0.1 |                       2.0 |
 
-[[../plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_1_min.png]]
+[[../plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_s1_r1_min.png]]
 
-[[../plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_1_hour.png]]
+[[../plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_s1_r1_hour.png]]
 
 
 ** Update all
 Όπως και παραπάνω για τα πειράματα στο οξικό, θα υπάρχει και ένα code block το οποίο θα κάνει update όλα τα code blocks, θα τα κάνει tangle σε ένα script file και θα αποθηκεύει ένα CSV με όλα τα κινητικά αποτελέσματα.
 
-*update_hydrolysate_tests*
-#+NAME: update_hydrolysate_tests
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_1_analysis.jl
+*update_hydrolysate_tests_s1_r1*
+#+NAME: update_hydrolysate_tests_s1_r1
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_s1_r1_analysis.jl
 
-  <<hydrolysate_0_ad>>
-  <<hydrolysate_1_ad>>
-  <<hydrolysate_2_ad>>
-  <<hydrolysate_4_ad>>
-  <<untreated_fw_1_ad>>
+  <<hydrolysate_0_s1_r1>>
+  <<hydrolysate_1_s1_r1>>
+  <<hydrolysate_2_s1_r1>>
+  <<hydrolysate_4_s1_r1>>
+  <<untreated_fw_s1_r1>>
 
   model_fit_table_min = Tables.table(vcat(reshape(model_hydro_0_min, 1, 5), reshape(model_hydro_1_min, 1, 5), reshape(model_hydro_2_min, 1, 5), reshape(model_hydro_4_min, 1, 5), reshape(model_hydro_fw_min, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
-  CSV.write(datadir("exp_pro", "methane_from_hydrolysate_kinetics_min.csv"), model_fit_table_min)
+  CSV.write(datadir("exp_pro", "methane_from_hydrolysate_kinetics_min_s1_r1.csv"), model_fit_table_min)
 
   model_fit_table_hour = Tables.table(vcat(reshape(model_hydro_0_hour, 1, 5), reshape(model_hydro_1_hour, 1, 5), reshape(model_hydro_2_hour, 1, 5), reshape(model_hydro_4_hour, 1, 5), reshape(model_hydro_fw_hour, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
-  CSV.write(datadir("exp_pro", "methane_from_hydrolysate_kinetics_hour.csv"), model_fit_table_hour)
+  CSV.write(datadir("exp_pro", "methane_from_hydrolysate_kinetics_hour_s1_r1.csv"), model_fit_table_hour)
+
+#+RESULTS: update_hydrolysate_tests_s1_r1
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/data/exp_pro/methane_from_hydrolysate_kinetics_hour_s1_r1.csv"
+
 #+END_SRC
 
 #+RESULTS: update_hydrolysate_tests
@@ -1215,17 +1283,13 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 ** Plotting Methane Potential
 Σε αυτό το section θα γίνει ένα plot το οποίο θα συγκρίνει μέγιστο μεθάνιο (παραγωγή από οξικό) με αυτό που παράχθηκε από το FW. Το plotting θα γίνει μέσω του ~CairoMakie.jl~ το οποίο είναι αρκετά featureful. Αρχικά όμως πρέπει να κάνουμε κάποιο data collection για να γίνει το plotting. Τρέχουμε τα 2 code blocks που κάνουν update όλα τα πειράματα με βασικό σκοπό να αποθηκεύσουμε τον τελικό όγκο σε κάθε πείραμα. Έπειτα βάζουμε όλα αυτά σε ένα vector και εκτός από την απόλυτη τιμή, υπολογίζουμε και το ποσοστό του μέγιστου που πετυχαίνει το υδρόλυμα. Όπως έχουν αποθηκευτεί, αυτό είναι διαίρεση του στοιχείου i+5 με το i. Έπειτα φτιάχνουμε ένα string των ποσοστών αυτών μαζί με τα labels που τους αντιστοιχούν. Αυτό θα προστεθεί στο plot που φτιάχνουμε.
 
-#+NAME: BMP_data_collection_1
+#+NAME: BMP_data_collection_s1_r1
 #+BEGIN_SRC julia :noweb :no-export
 
-  <<update_acetate_tests>>
-  <<update_hydrolysate_tests>>
+  <<update_acetate_tests_s1>>
+  <<update_hydrolysate_tests_s1_r1>>
 
-  meth_vol = [meth_vol_acet_0, meth_vol_acet_1, meth_vol_acet_2, meth_vol_acet_4, meth_vol_acet_fw, meth_vol_hydro_0, meth_vol_hydro_1, meth_vol_hydro_2, meth_vol_hydro_4, meth_vol_hydro_fw]
-
-  percent_bmp = [meth_vol[i+5]/meth_vol[i] for i in 1:5]
-  string_bmp = vcat(string.(round.(percent_bmp.*100, digits = 2)).*" %", ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated \nFW"])
-
+  comp_name = "s1_r1"
 #+END_SRC
 
 Έχοντας κάνει το preprocessing αυτό, ξεκινάμε την δημιουργία διαγραμμάτων. Φτιάχνουμε ένα figure και έναν άξονα πάνω σε αυτό όπου θα κάνουμε τα bar plots που θέλουμε. Οι μεταβλητές ~xdata~ και ~grp~ είναι απαραίτητες για να φτιαχτεί το plot. Το xdata λέει σε ποιό σημείο του άξονα x θα πάει κάθε δεδομένο (όπως τα έχουμε ορίσει θα είναι από το 1 εώς το 5 δύο φορές) ενώ το grp λέει σε ποιό group θα ανήκει το κάθε πείραμα. Τα 5 πρώτα είναι στο group 1 (οξικό) ενώ τα άλλα στο 2 (υδρόλυμα). Ορίζουμε και το legend και το plot αυτό είναι έτοιμο. Από κάτω, κάνουμε insert το string με τα ποσοστά που υπολογίστηκε παραπάνω σε ένα text plot του Makie. Έπειτα, κάνουμε save το plot αυτό.
@@ -1235,6 +1299,11 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
 
   using CairoMakie
   colors = Makie.wong_colors()
+
+  meth_vol = [meth_vol_acet_0, meth_vol_acet_1, meth_vol_acet_2, meth_vol_acet_4, meth_vol_acet_fw, meth_vol_hydro_0, meth_vol_hydro_1, meth_vol_hydro_2, meth_vol_hydro_4, meth_vol_hydro_fw]
+
+  percent_bmp = [meth_vol[i+5]/meth_vol[i] for i in 1:5]
+  string_bmp = vcat(string.(round.(percent_bmp.*100, digits = 2)).*" %", ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated \nFW"])
 
   fig = Figure(size = (600, 400))
   ax = Axis(fig[1,1], xticks = (1:5, ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated FW"]),
@@ -1258,8 +1327,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_1/
   hidedecorations!(ax2)
   text!(xdata, repeat(1:1, 10), text = string_bmp, align = [(:left, :top), (:left, :top), (:center, :top), (:right, :top), (:right, :top), (:left, :bottom), (:left, :bottom), (:center, :bottom), (:right, :bottom), (:right, :bottom)])
 
-  save(plotsdir("BMPs", "Hydrolyzed FW", "acet_vs_hydro_bmp_1.png"), fig)
+  save(plotsdir("BMPs", "Hydrolyzed FW", "acet_vs_hydro_bmp_"*comp_name*".png"), fig)
+
+#+RESULTS: BMP_plotting
+: CairoMakie.Screen{IMAGE}
+
 #+END_SRC
 
 #+ATTR_ORG: :width 900px
-[[../plots/BMPs/Hydrolyzed FW/acet_vs_hydro_bmp_1.png]]
+[[../plots/BMPs/Hydrolyzed FW/acet_vs_hydro_bmp_s1_r1.png]]
