@@ -187,7 +187,10 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R1/
 "bandicam 2024-04-03 01-54-02-576.jpg", "bandicam 2024-04-03 03-54-02-564.jpg",
 "bandicam 2024-04-03 05-54-02-863.jpg", "bandicam 2024-04-03 07-54-02-978.jpg",
 "bandicam 2024-04-03 09-54-02-983.jpg", "bandicam 2024-04-03 12-54-03-516.jpg",
-"bandicam 2024-04-03 13-54-03-505.jpg", "bandicam 2024-04-03 14-24-03-564.jpg"
+"bandicam 2024-04-03 13-54-03-505.jpg", "bandicam 2024-04-03 14-24-03-564.jpg",
+"bandicam 2024-04-03 14-54-49-083.jpg", "bandicam 2024-04-03 15-26-51-834.jpg",
+"bandicam 2024-04-03 16-29-08-087.jpg", "bandicam 2024-04-03 17-29-08-355.jpg",
+"bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg"
 #+end_example
 
 #+NAME: deps_fw_s1_r1
@@ -216,9 +219,37 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R1/
   "bandicam 2024-04-03 01-54-02-576.jpg", "bandicam 2024-04-03 03-54-02-564.jpg",
   "bandicam 2024-04-03 05-54-02-863.jpg", "bandicam 2024-04-03 07-54-02-978.jpg",
   "bandicam 2024-04-03 09-54-02-983.jpg", "bandicam 2024-04-03 12-54-03-516.jpg",
-  "bandicam 2024-04-03 13-54-03-505.jpg", "bandicam 2024-04-03 14-24-03-564.jpg"
+  "bandicam 2024-04-03 13-54-03-505.jpg", "bandicam 2024-04-03 14-24-03-564.jpg",
+  "bandicam 2024-04-03 14-54-49-083.jpg", "bandicam 2024-04-03 15-26-51-834.jpg",
+  "bandicam 2024-04-03 16-29-08-087.jpg", "bandicam 2024-04-03 17-29-08-355.jpg",
+  "bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg"
   ]
 #+END_SRC
+
+#+RESULTS: date_saving_fw_s1_r1
+#+begin_example
+40-element Vector{String}:
+ "bandicam 2024-04-01 11-05-53-069.jpg"
+ "bandicam 2024-04-01 11-09-37-035.jpg"
+ "bandicam 2024-04-01 11-11-37-051.jpg"
+ "bandicam 2024-04-01 11-12-37-060.jpg"
+ "bandicam 2024-04-01 11-13-26-776.jpg"
+ "bandicam 2024-04-01 11-14-26-770.jpg"
+ "bandicam 2024-04-01 11-15-26-780.jpg"
+ "bandicam 2024-04-01 11-21-53-098.jpg"
+ "bandicam 2024-04-01 11-52-12-665.jpg"
+ "bandicam 2024-04-01 12-22-12-663.jpg"
+ ⋮
+ "bandicam 2024-04-03 12-54-03-516.jpg"
+ "bandicam 2024-04-03 13-54-03-505.jpg"
+ "bandicam 2024-04-03 14-24-03-564.jpg"
+ "bandicam 2024-04-03 14-37-15-369.jpg"
+ "bandicam 2024-04-03 14-42-17-107.jpg"
+ "bandicam 2024-04-03 14-47-40-862.jpg"
+ "bandicam 2024-04-03 14-52-49-083.jpg"
+ "bandicam 2024-04-03 14-56-51-812.jpg"
+ "bandicam 2024-04-03 15-26-51-834.jpg"
+#+end_example
 
 #+RESULTS: date_saving_fw_1
 #+begin_example
@@ -502,16 +533,16 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 ** Acetate Test FW
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα labelled ως FW (στο οποίο θα τροφοδοτηθούν untreated FW). Notably, δεν είχε διαρροή στις 27/03, αλλά για κάποιον λόγο, στην επαναδοκιμή στις 29/03 δεν παρήγαγε μεθάνιο (τουλάχιστον στην προχοίδα). Οπότε, θα χρησιμοποιηθεί αυτό της 27/03.
 
-*acet_test_FW_s1*
-#+NAME: acet_test_FW_s1
+*acet_test_fw_s1*
+#+NAME: acet_test_fw_s1
 #+BEGIN_SRC julia :noweb no-export
 
   ### Data Analysis on Sample FW ###
 
-  <<date_saving_acetate>>
+  <<date_saving_acetate_s1>>
 
-  inds = 1:12
-  exp_meth_vol = [0, 12, 5, 3, 1.5, 1.5, 1, 1.5, 1, 0.5, 0.5, 0.5]
+  inds = 1:20
+  exp_meth_vol = [0, 12, 5, 3, 1.5, 1.5, 1, 1.5, 1, 0.5, 0.5, 0.5, 0, 0, 0, 0, 0, 0, 0, 0]
   meth_vol_acet_fw = cumsum(exp_meth_vol)[end]
   exp_name = "acet_test_fw_s1"
   source = "Acetate"
@@ -522,31 +553,41 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<bmp_data_processing>>
   <<bmp_curve_fitting_min>>
-  model_acet_fw = vcat(sample, model_params, r_squared)
+  model_acet_fw = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
-#+RESULTS: acet_test_1
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Acetate/methane_kinetics_acet_test_fw.png"
+#+RESULTS: acet_test_FW_s1
+: "../data/exp_pro/acet_test_fw_s1.csv"
+
+#+NAME: acet_data_fw_s1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<acet_test_fw_s1()>> '(4))
+#+END_SRC
 
 #+CAPTION: Κινητικά δεδομένα
 | Timestamp   |  Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
-|-------------+----------+---------+----------------+---------------------------|
 | 27/03_18:45 |      0.0 |     0.0 |            0.0 |                       0.0 |
-| 27/03_18:46 |   61.304 | 1.02173 |           12.0 |                      12.0 |
-| 27/03_18:48 |  181.303 | 3.02172 |            5.0 |                      17.0 |
-| 27/03_18:50 |  301.313 | 5.02188 |            3.0 |                      20.0 |
-| 27/03_18:52 |  421.307 | 7.02178 |            1.5 |                      21.5 |
-| 27/03_18:54 |  541.305 | 9.02175 |            1.5 |                      23.0 |
+| 27/03_18:46 |   61.304 |  1.0217 |           12.0 |                      12.0 |
+| 27/03_18:48 |  181.303 |  3.0217 |            5.0 |                      17.0 |
+| 27/03_18:50 |  301.313 |  5.0219 |            3.0 |                      20.0 |
+| 27/03_18:52 |  421.307 |  7.0218 |            1.5 |                      21.5 |
+| 27/03_18:54 |  541.305 |  9.0218 |            1.5 |                      23.0 |
 | 27/03_18:56 |   661.31 | 11.0218 |            1.0 |                      24.0 |
 | 27/03_18:58 |  781.308 | 13.0218 |            1.5 |                      25.5 |
 | 27/03_19:00 |  901.313 | 15.0219 |            1.0 |                      26.5 |
-| 27/03_19:02 | 1021.322 | 17.0220 |            0.5 |                      27.0 |
+| 27/03_19:02 | 1021.322 |  17.022 |            0.5 |                      27.0 |
 | 27/03_19:04 | 1141.316 | 19.0219 |            0.5 |                      27.5 |
-| 27/03_19:06 | 1261.325 | 21.0220 |            0.5 |                      28.0 |
+| 27/03_19:06 | 1261.325 | 21.0221 |            0.5 |                      28.0 |
+| 27/03_19:08 | 1381.328 | 23.0221 |            0.0 |                      28.0 |
+| 27/03_19:10 | 1501.327 | 25.0221 |            0.0 |                      28.0 |
+| 27/03_19:12 | 1621.332 | 27.0222 |            0.0 |                      28.0 |
+| 27/03_19:14 |  1741.33 | 29.0222 |            0.0 |                      28.0 |
+| 27/03_19:15 | 1750.422 | 29.1737 |            0.0 |                      28.0 |
+| 27/03_19:19 | 1990.416 | 33.1736 |            0.0 |                      28.0 |
+| 27/03_19:21 | 2110.419 | 35.1736 |            0.0 |                      28.0 |
+| 27/03_19:23 | 2230.428 | 37.1738 |            0.0 |                      28.0 |
 
 [[../plots/BMPs/Acetate/methane_kinetics_acet_test_fw_s1.png]]
 
@@ -561,8 +602,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<date_saving_acetate_s1>>
 
-  inds = 34:51
-  exp_meth_vol = [0, 4, 12, 7.5, 4.5, 2.5, 2.5, 4, 0.5, 2, 2, 1, 1, 1, 1, 1, 0.5, 0.5]
+  inds = 34:58
+  exp_meth_vol = [0, 4, 12, 7.5, 4.5, 2.5, 2.5, 4, 0.5, 2, 2, 1, 1, 1, 1, 1, 0.5, 0.5, 0, 0, 0, 0, 0, 0, 0]
   meth_vol_acet_0 = cumsum(exp_meth_vol)[end]
   exp_name = "acet_test_0_s1"
   source = "Acetate"
@@ -573,37 +614,46 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<bmp_data_processing>>
   <<bmp_curve_fitting_min>>
-  model_acet_0 = vcat(sample, model_params, r_squared)
+  model_acet_0 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
-#+RESULTS: acet_test_0
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Acetate/methane_kinetics_acet_test_0.png"
+#+RESULTS: acet_test_0_s1
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Acetate/methane_kinetics_acet_test_0_s1.png"
+
+#+NAME: acet_data_0_s1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<acet_test_0_s1()>> '(4))
+#+END_SRC
 
 #+CAPTION: Κινητικά δεδομένα
-| Timestamp   | Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
-|-------------+---------+---------+----------------+---------------------------|
-| 29/03_12:23 |     0.0 |     0.0 |            0.0 |                       0.0 |
-| 29/03_12:23 |  13.967 |  0.2327 |            4.0 |                       4.0 |
-| 29/03_12:24 |  73.986 |  1.2331 |           12.0 |                      16.0 |
-| 29/03_12:25 | 133.981 |  2.2330 |            7.5 |                      23.5 |
-| 29/03_12:26 | 193.993 |  3.2332 |            4.5 |                      28.0 |
-| 29/03_12:27 | 230.339 |  3.8389 |            2.5 |                      30.5 |
-| 29/03_12:28 | 290.327 |  4.8388 |            2.5 |                      33.0 |
-| 29/03_12:29 | 350.322 |  5.8387 |            4.0 |                      37.0 |
-| 29/03_12:29 | 363.719 |  6.0619 |            0.5 |                      37.5 |
-| 29/03_12:30 | 423.727 |  7.0621 |            2.0 |                      39.5 |
-| 29/03_12:31 | 483.722 |  8.0620 |            2.0 |                      41.5 |
-| 29/03_12:32 | 509.669 |  8.4945 |            1.0 |                      42.5 |
-| 29/03_12:33 | 569.668 |  9.4945 |            1.0 |                      43.5 |
-| 29/03_12:34 | 629.657 | 10.4943 |            1.0 |                      44.5 |
-| 29/03_12:35 | 689.661 | 11.4943 |            1.0 |                      45.5 |
-| 29/03_12:36 |  749.66 | 12.4943 |            1.0 |                      46.5 |
-| 29/03_12:37 | 809.683 | 13.4947 |            0.5 |                      47.0 |
-| 29/03_12:38 | 869.926 | 14.4987 |            0.5 |                      47.5 |
+| Timestamp   |  Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
+| 29/03_12:23 |      0.0 |     0.0 |            0.0 |                       0.0 |
+| 29/03_12:23 |   13.967 |  0.2328 |            4.0 |                       4.0 |
+| 29/03_12:24 |   73.986 |  1.2331 |           12.0 |                      16.0 |
+| 29/03_12:25 |  133.981 |   2.233 |            7.5 |                      23.5 |
+| 29/03_12:26 |  193.993 |  3.2332 |            4.5 |                      28.0 |
+| 29/03_12:27 |  230.339 |   3.839 |            2.5 |                      30.5 |
+| 29/03_12:28 |  290.327 |  4.8388 |            2.5 |                      33.0 |
+| 29/03_12:29 |  350.322 |  5.8387 |            4.0 |                      37.0 |
+| 29/03_12:29 |  363.719 |   6.062 |            0.5 |                      37.5 |
+| 29/03_12:30 |  423.727 |  7.0621 |            2.0 |                      39.5 |
+| 29/03_12:31 |  483.722 |   8.062 |            2.0 |                      41.5 |
+| 29/03_12:32 |  509.669 |  8.4945 |            1.0 |                      42.5 |
+| 29/03_12:33 |  569.668 |  9.4945 |            1.0 |                      43.5 |
+| 29/03_12:34 |  629.657 | 10.4943 |            1.0 |                      44.5 |
+| 29/03_12:35 |  689.661 | 11.4944 |            1.0 |                      45.5 |
+| 29/03_12:36 |   749.66 | 12.4943 |            1.0 |                      46.5 |
+| 29/03_12:37 |  809.683 | 13.4947 |            0.5 |                      47.0 |
+| 29/03_12:38 |  869.926 | 14.4988 |            0.5 |                      47.5 |
+| 29/03_12:38 |   910.87 | 15.1812 |            0.0 |                      47.5 |
+| 29/03_12:39 |  970.864 | 16.1811 |            0.0 |                      47.5 |
+| 29/03_12:40 | 1030.875 | 17.1812 |            0.0 |                      47.5 |
+| 29/03_12:41 | 1090.872 | 18.1812 |            0.0 |                      47.5 |
+| 29/03_12:42 | 1150.882 | 19.1814 |            0.0 |                      47.5 |
+| 29/03_12:43 | 1205.994 | 20.0999 |            0.0 |                      47.5 |
+| 29/03_12:44 | 1265.223 |  21.087 |            0.0 |                      47.5 |
 
 [[../plots/BMPs/Acetate/methane_kinetics_acet_test_0_s1.png]]
 
@@ -618,8 +668,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<date_saving_acetate_s1>>
 
-  inds = 38:56
-  exp_meth_vol = [0, 6.5, 5, 3, 0.5, 1.5, 1.5, 0.5, 1, 0.5, 0.5, 0.3, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05]
+  inds = 38:58
+  exp_meth_vol = [0, 6.5, 5, 3, 0.5, 1.5, 1.5, 0.5, 1, 0.5, 0.5, 0.3, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05, 0, 0]
   meth_vol_acet_1 = cumsum(exp_meth_vol)[end]
   exp_name = "acet_test_1_s1"
   source = "Acetate"
@@ -630,38 +680,43 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<bmp_data_processing>>
   <<bmp_curve_fitting_min>>
-  model_acet_1 = vcat(sample, model_params, r_squared)
+  model_acet_1 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
-#+RESULTS: acet_test_ac
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Acetate/methane_kinetics_acet_test_1.png"
+#+RESULTS: acet_test_1_s1
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Acetate/methane_kinetics_acet_test_1_s1.png"
+
+#+NAME: acet_data_1_s1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<acet_test_1_s1()>> '(4))
+#+END_SRC
 
 #+CAPTION: Κινητικά δεδομένα
-| Timestamp   | Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
-|-------------+---------+---------+----------------+---------------------------|
-| 29/03_12:26 |     0.0 |     0.0 |            0.0 |                       0.0 |
-| 29/03_12:27 |  36.346 |  0.6058 |            6.5 |                       6.5 |
-| 29/03_12:28 |  96.334 |  1.6055 |            5.0 |                      11.5 |
-| 29/03_12:29 | 156.329 |  2.6055 |            3.0 |                      14.5 |
-| 29/03_12:29 | 169.726 |  2.8288 |            0.5 |                      15.0 |
-| 29/03_12:30 | 229.734 |  3.8289 |            1.5 |                      16.5 |
-| 29/03_12:31 | 289.729 |  4.8288 |            1.5 |                      18.0 |
-| 29/03_12:32 | 315.676 |  5.2613 |            0.5 |                      18.5 |
-| 29/03_12:33 | 375.675 |  6.2612 |            1.0 |                      19.5 |
-| 29/03_12:34 | 435.664 |  7.2610 |            0.5 |                      20.0 |
-| 29/03_12:35 | 495.668 |  8.2611 |            0.5 |                      20.5 |
-| 29/03_12:36 | 555.667 |  9.2611 |            0.3 |                      20.8 |
-| 29/03_12:37 |  615.69 | 10.2615 |            0.2 |                      21.0 |
-| 29/03_12:38 | 675.933 | 11.2655 |            0.2 |                      21.2 |
-| 29/03_12:38 | 716.877 | 11.9479 |            0.1 |                      21.3 |
-| 29/03_12:39 | 776.871 | 12.9479 |           0.05 |                     21.35 |
-| 29/03_12:40 | 836.882 | 13.9480 |           0.05 |                      21.4 |
-| 29/03_12:41 | 896.879 | 14.9479 |           0.05 |                     21.45 |
-| 29/03_12:42 | 956.889 | 15.9482 |           0.05 |                     21.50 |
+| Timestamp   |  Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
+|-------------+----------+---------+----------------+---------------------------|
+| 29/03_12:26 |      0.0 |     0.0 |            0.0 |                       0.0 |
+| 29/03_12:27 |   36.346 |  0.6058 |            6.5 |                       6.5 |
+| 29/03_12:28 |   96.334 |  1.6056 |            5.0 |                      11.5 |
+| 29/03_12:29 |  156.329 |  2.6055 |            3.0 |                      14.5 |
+| 29/03_12:29 |  169.726 |  2.8288 |            0.5 |                      15.0 |
+| 29/03_12:30 |  229.734 |  3.8289 |            1.5 |                      16.5 |
+| 29/03_12:31 |  289.729 |  4.8288 |            1.5 |                      18.0 |
+| 29/03_12:32 |  315.676 |  5.2613 |            0.5 |                      18.5 |
+| 29/03_12:33 |  375.675 |  6.2613 |            1.0 |                      19.5 |
+| 29/03_12:34 |  435.664 |  7.2611 |            0.5 |                      20.0 |
+| 29/03_12:35 |  495.668 |  8.2611 |            0.5 |                      20.5 |
+| 29/03_12:36 |  555.667 |  9.2611 |            0.3 |                      20.8 |
+| 29/03_12:37 |   615.69 | 10.2615 |            0.2 |                      21.0 |
+| 29/03_12:38 |  675.933 | 11.2656 |            0.2 |                      21.2 |
+| 29/03_12:38 |  716.877 |  11.948 |            0.1 |                      21.3 |
+| 29/03_12:39 |  776.871 | 12.9479 |           0.05 |                     21.35 |
+| 29/03_12:40 |  836.882 |  13.948 |           0.05 |                      21.4 |
+| 29/03_12:41 |  896.879 |  14.948 |           0.05 |                     21.45 |
+| 29/03_12:42 |  956.889 | 15.9482 |           0.05 |                      21.5 |
+| 29/03_12:43 | 1012.001 | 16.8667 |            0.0 |                      21.5 |
+| 29/03_12:44 |  1071.23 | 17.8538 |            0.0 |                      21.5 |
 
 [[../plots/BMPs/Acetate/methane_kinetics_acet_test_1_s1.png]]
 
@@ -676,8 +731,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<date_saving_acetate_s1>>
 
-  inds = 44:57
-  exp_meth_vol = [0, 4, 7, 5.5, 4.5, 2.5, 2, 1, 1, 1, 0.5, 0.5, 0.45, 0.05]
+  inds = 44:58
+  exp_meth_vol = [0, 4, 7, 5.5, 4.5, 2.5, 2, 1, 1, 1, 0.5, 0.5, 0.45, 0.05, 0]
   meth_vol_acet_2 = cumsum(exp_meth_vol)[end]
   exp_name = "acet_test_2_s1"
   source = "Acetate"
@@ -688,15 +743,18 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<bmp_data_processing>>
   <<bmp_curve_fitting_min>>
-  model_acet_2 = vcat(sample, model_params, r_squared)
+  model_acet_2 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
-#+RESULTS: acet_test_2
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Acetate/methane_kinetics_acet_test_2.png"
+#+RESULTS: acet_test_2_s1
+: "../data/exp_pro/acet_test_2_s1.csv"
+
+#+NAME: acet_data_2_s1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<acet_test_2_s1()>> '(4))
+#+END_SRC
 
 #+CAPTION: Κινητικά Δεδομένα
 | Timestamp   | Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
@@ -710,11 +768,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 | 29/03_12:37 | 325.961 |  5.4327 |            2.0 |                      25.5 |
 | 29/03_12:38 | 386.204 |  6.4367 |            1.0 |                      26.5 |
 | 29/03_12:38 | 427.148 |  7.1191 |            1.0 |                      27.5 |
-| 29/03_12:39 | 487.142 |  8.1190 |            1.0 |                      28.5 |
+| 29/03_12:39 | 487.142 |   8.119 |            1.0 |                      28.5 |
 | 29/03_12:40 | 547.153 |  9.1192 |            0.5 |                      29.0 |
 | 29/03_12:41 |  607.15 | 10.1192 |            0.5 |                      29.5 |
 | 29/03_12:42 |  667.16 | 11.1193 |           0.45 |                     29.95 |
 | 29/03_12:43 | 722.272 | 12.0379 |           0.05 |                      30.0 |
+| 29/03_12:44 | 781.501 |  13.025 |            0.0 |                      30.0 |
 
 [[../plots/BMPs/Acetate/methane_kinetics_acet_test_2_s1.png]]
 
@@ -729,8 +788,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<date_saving_acetate_s1>>
 
-  inds = 41:50
-  exp_meth_vol = [0, 4, 10, 9, 4, 5, 5, 4, 3, 3]
+  inds = 41:58
+  exp_meth_vol = [0, 4, 10, 9, 4, 5, 5, 4, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0]
   meth_vol_acet_4 = cumsum(exp_meth_vol)[end]
   exp_name = "acet_test_4_s1"
   source = "Acetate"
@@ -741,29 +800,40 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<bmp_data_processing>>
   <<bmp_curve_fitting_min>>
-  model_acet_4 = vcat(sample, model_params, r_squared)
+  model_acet_4 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
-#+RESULTS: acet_test_4
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Acetate/methane_kinetics_acet_test_4.png"
+#+RESULTS: acet_test_4_s1
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Acetate/methane_kinetics_acet_test_4_s1.png"
+
+#+NAME: acet_data_4_s1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<acet_test_4_s1()>> '(4))
+#+END_SRC
 
 #+CAPTION: Κινητικά δεδομένα
 | Timestamp   | Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
 |-------------+---------+---------+----------------+---------------------------|
-| 29/03_12:29 |     0.0 |     0.0 |              0 |                         0 |
-| 29/03_12:29 |  13.397 |  0.2233 |              4 |                         4 |
-| 29/03_12:30 |  73.405 |  1.2234 |             10 |                        14 |
-| 29/03_12:31 |   133.4 |  2.2233 |              9 |                        23 |
-| 29/03_12:32 | 159.347 |  2.6558 |              4 |                        27 |
-| 29/03_12:33 | 219.346 |  3.6557 |              5 |                        32 |
-| 29/03_12:34 | 279.335 |  4.6556 |              5 |                        37 |
-| 29/03_12:35 | 339.339 |  5.6556 |              4 |                        41 |
-| 29/03_12:36 | 399.338 |  6.6556 |              3 |                        44 |
-| 29/03_12:37 | 459.361 |  7.6560 |              3 |                        47 |
+| 29/03_12:29 |     0.0 |     0.0 |              0 |                       0.0 |
+| 29/03_12:29 |  13.397 |  0.2233 |              4 |                       4.0 |
+| 29/03_12:30 |  73.405 |  1.2234 |             10 |                      14.0 |
+| 29/03_12:31 |   133.4 |  2.2233 |              9 |                      23.0 |
+| 29/03_12:32 | 159.347 |  2.6558 |              4 |                      27.0 |
+| 29/03_12:33 | 219.346 |  3.6558 |              5 |                      32.0 |
+| 29/03_12:34 | 279.335 |  4.6556 |              5 |                      37.0 |
+| 29/03_12:35 | 339.339 |  5.6556 |              4 |                      41.0 |
+| 29/03_12:36 | 399.338 |  6.6556 |              3 |                      44.0 |
+| 29/03_12:37 | 459.361 |   7.656 |              3 |                      47.0 |
+| 29/03_12:38 | 519.604 |  8.6601 |              0 |                      47.0 |
+| 29/03_12:38 | 560.548 |  9.3425 |              0 |                      47.0 |
+| 29/03_12:39 | 620.542 | 10.3424 |              0 |                      47.0 |
+| 29/03_12:40 | 680.553 | 11.3425 |              0 |                      47.0 |
+| 29/03_12:41 |  740.55 | 12.3425 |              0 |                      47.0 |
+| 29/03_12:42 |  800.56 | 13.3427 |              0 |                      47.0 |
+| 29/03_12:43 | 855.672 | 14.2612 |              0 |                      47.0 |
+| 29/03_12:44 | 914.901 | 15.2484 |              0 |                      47.0 |
 
 [[../plots/BMPs/Acetate/methane_kinetics_acet_test_4_s1.png]]
 
@@ -860,7 +930,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
 ** Update all helper
 Σε αυτό το section θα υπάρχει ένα helper code block που θα κάνει evaluate όλα τα παραπάνω. Έτσι, αν αλλάξει κάτι το οποίο επηρεάζει περισσότερα από ένα code blocks, θα μπορούν να γίνουν updated ταυτόχρονα πιο εύκολα. Επίσης, μία επιπλέον χρησιμότητα του code block αυτού είναι ότι αποθηκεύει ένα CSV που συγκεντρώνει όλα τα δεδομένα των κινητικών παραμέτρων από την προσαρμογή που έγινε παραπάνω, το οποίο είναι χρήσιμο για συγκρίσεις, παρόλο που τα συγκεκριμένα πειράματα δεν είναι τόσο σημαντικό να συγκριθούν.
-
 *update_acetate_tests_s1*
 #+NAME: update_acetate_tests_s1
 #+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_analysis.jl
@@ -873,34 +942,26 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   <<no_feed_ac_1>>
   <<no_feed_ac_2>>
 
-  model_fit_table = Tables.table(vcat(reshape(model_acet_0, 1, 5), reshape(model_acet_1, 1, 5), reshape(model_acet_2, 1, 5), reshape(model_acet_4, 1, 5), reshape(model_acet_fw, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
+  model_fit_table = Tables.table(vcat(reshape(model_acet_0, 1, 5), reshape(model_acet_1, 1, 5), reshape(model_acet_2, 1, 5), reshape(model_acet_4, 1, 5), reshape(model_acet_fw, 1, 5)), header = [:Sample_Name, :Production_Potential, :Production_Rate, :Lag_Time, :R_squared])
   CSV.write(datadir("exp_pro", "methane_from_acetate_kinetics_s1.csv"), model_fit_table)
-  DataFrame(model_fit_table)
-
+  return("../data/exp_pro/methane_from_acetate_kinetics_s1.csv")
 #+END_SRC
 
 #+RESULTS: update_acetate_tests_s1
-#+begin_example
-5×5 DataFrame
- Row │ Sample_Name  Methane_Production_Potential  Methane_Production_Rate  Lag ⋯
-     │ Any          Any                           Any                      Any ⋯
-─────┼──────────────────────────────────────────────────────────────────────────
-   1 │ Sample 0     452.518                       80.3876                  0.0 ⋯
-   2 │ Sample 1     208.238                       55.0277                  0.0
-   3 │ Sample 2     292.866                       61.9136                  0.0
-   4 │ Sample 4     466.239                       97.7773                  0.0
-   5 │ Sample FW    255.214                       55.9408                  0.0 ⋯
-                                                               2 columns omitted
-#+end_example
+: "..data/exp_pro/methane_from_acetate_kinetics_s1.csv"
+
+#+NAME: acet_kinetic_data_s1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<update_acetate_tests_s1()>> '(4))
+#+END_SRC
 
 #+CAPTION: Kinetic Models
 | Sample_Name | Production_Potential | Production_Rate | Lag_Time | R_squared |
-|-------------+----------------------+-----------------+----------+-----------|
-| Sample 0    |              452.518 |          80.388 |      0.0 |     0.967 |
-| Sample 1    |              208.238 |          55.028 |      0.0 |     0.960 |
-| Sample 2    |              292.865 |          61.914 |      0.0 |     0.989 |
-| Sample 4    |              466.239 |          97.778 |      0.0 |     0.990 |
-| Sample FW   |              255.214 |          55.941 |      0.0 |     0.896 |
+| Sample 0    |              466.328 |          76.639 |      0.0 |     0.971 |
+| Sample 1    |              209.405 |          54.485 |      0.0 |      0.96 |
+| Sample 2    |              293.893 |          62.335 |      0.0 |      0.99 |
+| Sample 4    |              472.276 |          96.498 |      0.0 |     0.994 |
+| Sample FW   |              270.141 |          49.008 |      0.0 |       0.9 |
 
 ** Γενικά σχόλια για αυτόν τον κύκλο πειραμάτων
 Ο πρώτος αυτός κύκλος πειραμάτων ήταν για την δοκιμή προσθήκης οξικού οξέος, του ιδανικού υποστρώματος της μεθανογένεσης, για να δούμε πως θα αντιδράσει σε αυτό το σύστημα. Δεν έχει τόσο συγκριτικό χαρακτήρα μεταξύ των πειραμάτων (παρόλο που ένα σχόλιο που μπορεί να γίνει είναι πως τα πειράματα τα οποία ήταν ίδια πρακτικά στην αρχή, είχαν αρκετά διαφορετική απόκριση στην προσθήκη οξικού), αλλά τον χαρακτήρα της βέλτιστης δυνατής μεθανογένεσης από κάποιο υπόστρωμα. Από την μελέτη αυτή, προέκυψαν αρκετά συμπεράσματα.
@@ -925,8 +986,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<date_saving_fw_s1_r1>>
 
-  inds = 1:34
-  exp_meth_vol = [0, 1.0, 0.2, 0.02, 0.02, 0.01, 0.2, 0.2, 0.5, 0.2, 0.5, 1.5, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05]
+  inds = 1:40
+  exp_meth_vol = [0, 1.0, 0.2, 0.02, 0.02, 0.01, 0.2, 0.2, 0.5, 0.2, 0.5, 1.5, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05, 0, 0, 0, 0, 0, 0]
   meth_vol_hydro_0 = cumsum(exp_meth_vol)[end]
 
   exp_name = "hydrolysate_0_s1_r1"
@@ -941,23 +1002,15 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   # The same model is fit either with min or hour
   p0 = [50.0, 0.4, 1.0]
   <<bmp_curve_fitting_min>>
-  model_hydro_0_min = vcat(sample, model_params, r_squared)
+  model_hydro_0_min = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
 
   p0 = [40.0, 1.0, 1.0]
   <<bmp_curve_fitting_hour>>
-  model_hydro_0_hour = vcat(sample, model_params, r_squared)
+  model_hydro_0_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
-
-#+RESULTS: hydrolysate_0_ad
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_0_hour.png"
 
 *** Results
 Παρακάτω φαίνονται τα αποτελέσματα του σχετικού πειράματος.
@@ -968,8 +1021,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
 Ένα πιθανό συμπέρασμα μπορεί να είναι πως κάτι συμβαίνει στον αντιδραστήρα το οποίο επιβραδύνει σημαντικά τον μέγιστο ειδικό ρυθμό ανάπτυξης, ο οποίος μπαίνει στο μοντέλο.
 
+#+NAME: hydrolysate_data_0_s1_r1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 3 <<hydrolysate_0_s1_r1()>> '(4))
+#+END_SRC
+
 | Timestamp   |   Minutes |   Hours | Methane_Volume | Cumulative_Methane_Volume |
-|-------------+-----------+---------+----------------+---------------------------|
 | 01/04_11:05 |       0.0 |     0.0 |            0.0 |                       0.0 |
 | 01/04_11:09 |    3.7328 |  0.0622 |            1.0 |                       1.0 |
 | 01/04_11:11 |     5.733 |  0.0956 |            0.2 |                       1.2 |
@@ -1004,6 +1061,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 | 03/04_12:54 | 2988.1741 | 49.8029 |           0.05 |                       6.0 |
 | 03/04_13:54 | 3048.1739 | 50.8029 |           0.05 |                      6.05 |
 | 03/04_14:24 | 3078.1749 | 51.3029 |           0.05 |                       6.1 |
+| 03/04_14:54 | 3108.9336 | 51.8156 |            0.0 |                       6.1 |
+| 03/04_15:26 | 3140.9794 | 52.3497 |            0.0 |                       6.1 |
+| 03/04_16:29 | 3203.2503 | 53.3875 |            0.0 |                       6.1 |
+| 03/04_17:29 | 3263.2548 | 54.3876 |            0.0 |                       6.1 |
+| 03/04_18:29 | 3323.2547 | 55.3876 |            0.0 |                       6.1 |
+| 03/04_20:29 | 3443.2548 | 57.3876 |            0.0 |                       6.1 |
 
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_0_s1_r1_min.png]]
 
@@ -1020,8 +1083,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<date_saving_fw_s1_r1>>
 
-  inds = 2:34
-  exp_meth_vol = [0, 2.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0.2, 0.5, 2.0, 0.3, 0.3, 0.3, 0.1, 0.6, 0.6, 0.5, 0.5, 0.5, 0.4, 0.6, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.2, 0.2]
+  inds = 2:40
+  exp_meth_vol = [0, 2.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0.2, 0.5, 2.0, 0.3, 0.3, 0.3, 0.1, 0.6, 0.6, 0.5, 0.5, 0.5, 0.4, 0.6, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.2, 0.2, 0, 0, 0, 0, 0, 0]
   meth_vol_hydro_1 = cumsum(exp_meth_vol)[end]
   exp_name = "hydrolysate_1_s1_r1"
   source = "Hydrolyzed FW"
@@ -1033,23 +1096,15 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   p0 = [130.0, 10.0, 1.0]
   <<bmp_data_processing>>
   <<bmp_curve_fitting_min>>
-  model_hydro_1_min = vcat(sample, model_params, r_squared)
+  model_hydro_1_min = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
 
   p0 = [200.0, 5.0, 1.0]
   <<bmp_curve_fitting_hour>>
-  model_hydro_1_hour = vcat(sample, model_params, r_squared)
+  model_hydro_1_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
-
-#+RESULTS: hydrolysate_1_ad
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: sys:1: UserWarning: No data for colormapping provided via 'c'. Parameters 'vmin', 'vmax' will be ignored
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_1_hour.png"
 
 *** Results
 Το πείραμα αυτό παρήγαγε 13.05 ml μεθάνιο, το οποίο είναι το \( 60.7 \% \) του πειράματος με οξικό καθώς εκείνο το πείραμα είχε μία σχετικά χαμηλή παραγωγικότητα για οξικό. Υπάρχει η σκέψη ότι μπορεί λόγω της διεργασίας που συνέβαινε αρχικά στο δείγμα αυτό (παραγωγή μεθανίου χωρίς τροφή) να επηρεάστηκε η παραγωγικότητα του και αυτό το ποσοστό να μην είναι τόσο έμπιστο.
@@ -1057,6 +1112,11 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 Από άποψη προσαρμογής, το πείραμα αυτό έχει το πρόβλημα πως μεταξύ της 2ης και 3ης μέρας όχι μόνο επιβραδύνθηκε αρκετά το πείραμα (όπως στο 0 ml) αλλά σχεδόν σταμάτησε. Όμως, το πρωί της τρίτης μέρας, λίγο πριν σταματήσουμε το πείραμα, η παραγωγή αυξήθηκε σχετικά σημαντικά. Οπότε, η προσαρμογή του είναι λίγο πιο δύσκολη. Υπάρχει πάλι το φαινόμενο των 2 ρυθμών (ενός γρήγορου για τα δείγματα της 1ης μέρας και ενός αργού για μετά), όμως, ο γρήγορος είναι σημαντικά χειρότερος εδώ (R^2 0.689 αντί για 0.815), προβλέπει με λιγότερη ακρίβεια ακόμη και την πρώτη μέρα και η στάσιμη φάση του είναι πολύ χαμηλά. Ο αργός ρυθμός είναι και αυτός σχετικά λάθος επειδή δεν μπορεί να προβλέψει την δημιουργία στάσιμης φάσης και μετά επανεκίννησης της χώνευσης (κάτι που δεν νομίζω να προβλέπεται από οποιοδήποτε μοντέλο). Οπότε, κάνει underestimate το σημείο που ακόμη παράγει και overestimate όταν έχει αρχίσει η στάσιμη φάση. Βέβαια, για τόσα πειραματικά σημεία (τα οποία έχουν και κάποια προβλήματα που δεν μπορούν να εξηγηθούν εύκολα), η προσαρμογή με R^2 = 0.815 είναι σχετικά καλή.
 
 Το μοντέλο με τον γρήγορο ρυθμό έχει ειδικό ρυθμό ανάπτυξης \( 0.841 \frac{ml}{g ~ sCOD min } \text{ ή } 50.43 \frac{ml}{g ~ sCOD hour}  \) ενώ το αργό έχει ρυθμό \( 3.175 \frac{ml}{g ~ sCOD hour} \).
+
+#+NAME: hydrolysate_data_1_s1_r1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 3 <<hydrolysate_1_s1_r1()>> '(4))
+#+END_SRC
 
 | Timestamp   |   Minutes |   Hours | Methane_Volume | Cumulative_Methane_Volume |
 |-------------+-----------+---------+----------------+---------------------------|
@@ -1093,6 +1153,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 | 03/04_12:54 | 2984.4414 | 49.7407 |            0.3 |                     12.65 |
 | 03/04_13:54 | 3044.4412 | 50.7407 |            0.2 |                     12.85 |
 | 03/04_14:24 | 3074.4422 | 51.2407 |            0.2 |                     13.05 |
+| 03/04_14:54 | 3105.2008 | 51.7533 |            0.0 |                     13.05 |
+| 03/04_15:26 | 3137.2466 | 52.2874 |            0.0 |                     13.05 |
+| 03/04_16:29 | 3199.5175 | 53.3253 |            0.0 |                     13.05 |
+| 03/04_17:29 |  3259.522 | 54.3254 |            0.0 |                     13.05 |
+| 03/04_18:29 |  3319.522 | 55.3254 |            0.0 |                     13.05 |
+| 03/04_20:29 |  3439.522 | 57.3254 |            0.0 |                     13.05 |
 
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_1_s1_r1_min.png]]
 
@@ -1109,8 +1175,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<date_saving_fw_s1_r1>>
 
-  inds = 7:34
-  exp_meth_vol = [0, 6, 0.5, 0.1, 0.5, 1.5, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2]
+  inds = 7:40
+  exp_meth_vol = [0, 6, 0.5, 0.1, 0.5, 1.5, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0, 0, 0, 0, 0, 0]
   meth_vol_hydro_2 = cumsum(exp_meth_vol)[end]
   exp_name = "hydrolysate_2_s1_r1"
   source = "Hydrolyzed FW"
@@ -1123,13 +1189,14 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   p0 = [100.0, 15.0, 1.0]
   <<bmp_curve_fitting_min>>
-  model_hydro_2_min = vcat(sample, model_params, r_squared)
+  model_hydro_2_min = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
 
   p0 = [100.0, 1.0, 0.03]
   <<bmp_curve_fitting_hour>>
-  model_hydro_2_hour = vcat(sample, model_params, r_squared)
+  model_hydro_2_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
 #+RESULTS: hydrolysate_2_ad
@@ -1141,6 +1208,11 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 Ένα πολύ βασικό πρόβλημα του πειράματος αυτού είναι πως έχουμε μία μεγάλη παραγωγικότητα μεθανίου στην πρώτη φωτογραφία, όμως αυτή ήταν 6.5 λεπτά μετά την αρχή. Οπότε, δύνανται να υπάρχουν πάρα πολλά κινητικά μοντέλα τα οποία είναι αποδεχτά. Αξίζει να σημειωθεί πως το καλύτερο R^2 είναι 0.724, το οποίο δείχνει πως κανένα από τα μοντέλα δεν είναι ιδιαίτερα αξιόπιστο. Το πρόβλημα της δειγματοληψίας αυτής είναι πιθανόν να φταίει.
 
 Τα τέσσερα δυνατά μοντέλα διακρίνονται ως εξής: Μπορεί ο ρυθμός να είναι αρκετά χαμηλός ώστε να προσωμοιώνει το τέλος της χώνευσης, το οποίο είναι αργό. Ο ρυθμός αυτός είναι \( 0.031 \frac{ml}{g ~ sCOD \min } \text{ ή } 1.88 \frac{ml}{g ~ sCOD \min }\), ο οποίος είναι παρόμοιας τάξης μεγέθους με τον αργό ρυθμό των άλλων δειγμάτων. Όπως και στο sample 1 όμως, το αποτέλεσμα αυτό δεν έχει καλό R^2 και μάλλον δεν θεωρείται έμπιστο. Το άλλο μοντέλο που ακολουθεί την λογική των παραπάνω είναι το χειρότερο δυνατό μοντέλο (R^2 = 0.639) το οποίο έχει ειδικό ρυθμό ανάπτυξης \( 1.192 \frac{ml}{g ~ sCOD \min } \) (ο οποίος είναι παρόμοιας τάξης μεγέθους με τους άλλους 2, αλλά λίγο μεγαλύτερος) και την λογική ότι στα πρώτα 6 λεπτά παράχθηκε το περισσότερο μεθάνιο. Το καλύτερο δυνατό μοντέλο έχει παρόμοια λογική πολύ γρήγορου ειδικού ρυθμού ανάπτυξης \( \left( 15.483 \frac{ml}{g ~ sCOD \min } \right) \), αλλά ένα lag phase 2.42 λεπτών. Η λογική που μπορούν να ισχύουν και τα δύο είναι ότι βλέπουμε αποτέλεσμα σε 6.5 λεπτά περίπου, οπότε, μπορεί να υπήρχε ένα lag time στην αρχή και μετά να εξελίχθηκε πιο γρήγορα το φαινόμενο. Επίσης, ένα μοντέλο με ακόμη μεγαλύτερο lag time αλλά και ειδικό ρυθμό ανάπτυξης προέκυψε και είχε σχεδόν identical R^2 με το παραπάνω. Καθώς κανένα άλλο μοντέλο δεν έχει παρουσιάσει lag time, το πιο εύλογο θα ήταν να ισχύει ένα από τα 2 πρώτα μοντέλα. Όμως, απουσία άλλων δεδομένων, το καλύτερο μοντέλο είναι αυτό με το μικρό lag phase.
+
+#+NAME: hydrolysate_data_2_s1_r1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 3 <<hydrolysate_2_s1_r1()>> '(4))
+#+END_SRC
 
 | Timestamp   |   Minutes |   Hours | Methane_Volume | Cumulative_Methane_Volume |
 |-------------+-----------+---------+----------------+---------------------------|
@@ -1172,6 +1244,13 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 | 03/04_12:54 | 2978.6123 | 49.6435 |            0.1 |                      10.7 |
 | 03/04_13:54 | 3038.6121 | 50.6435 |            0.2 |                      10.9 |
 | 03/04_14:24 | 3068.6131 | 51.1436 |            0.2 |                      11.1 |
+| 03/04_14:54 | 3099.3717 | 51.6562 |            0.0 |                      11.1 |
+| 03/04_15:26 | 3131.4176 | 52.1903 |            0.0 |                      11.1 |
+| 03/04_16:29 | 3193.6884 | 53.2281 |            0.0 |                      11.1 |
+| 03/04_17:29 | 3253.6929 | 54.2282 |            0.0 |                      11.1 |
+| 03/04_18:29 | 3313.6929 | 55.2282 |            0.0 |                      11.1 |
+| 03/04_20:29 | 3433.6929 | 57.2282 |            0.0 |                      11.1 |
+
 
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_2_s1_r1_min.png]]
 
@@ -1188,8 +1267,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<date_saving_fw_s1_r1>>
 
-  inds = 5:34
-  exp_meth_vol = [0, 13, 0.1, 0.2, 0.1, 0.2, 0.5, 1, 0.4, 0.1, 0.3, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.2, 0.2, 0.1]
+  inds = 5:40
+  exp_meth_vol = [0, 13, 0.1, 0.2, 0.1, 0.2, 0.5, 1, 0.4, 0.1, 0.3, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.2, 0.2, 0.1, 0, 0, 0, 0, 0, 0]
   meth_vol_hydro_4 = cumsum(exp_meth_vol)[end]
   exp_name = "hydrolysate_4_s1_r1"
   source = "Hydrolyzed FW"
@@ -1203,13 +1282,14 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   p0 = [170.0, 150.0, 1.0]
   <<bmp_curve_fitting_min>>
-  model_hydro_4_min = vcat(sample, model_params, r_squared)
+  model_hydro_4_min = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
 
   p0 = [170.0, 1000.0, 0.1]
   <<bmp_curve_fitting_hour>>
-  model_hydro_4_hour = vcat(sample, model_params, r_squared)
+  model_hydro_4_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
 #+RESULTS: hydrolysate_4_ad
@@ -1229,6 +1309,11 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 Όμως, σε αντίθεση με τα άλλα πειράματα, αυτό είναι σχεδόν ολόσωστο σαν ιδέα καθώς 51 ώρες δεν παρήγαγαν ούτε το μισό του πρώτου λεπτού, οπότε παρόλο που θα αναμέναμε λίγο περισσότερη καμπύλη και όχι την μορφη που προκύπτει (η οποία είναι ουσιαστικά μία κατακόρυφη και μία οριζόντια γραμμή), η εξίσωση αυτή προβλέπει σχετικά καλά την πραγματικότητα και το R^2 είναι 0.865, το οποίο είναι η καλύτερη προσαρμογή που έχουμε δεί σε ένα από αυτά τα πειράματα. Ο ειδικός ρυθμός ανάπτυξης που έχει προβλεφθεί είναι \( 162.84 \frac{ml}{g ~ sCOD \min } \text{ ή } 9732.61 \frac{ml}{g ~ sCOD ~ hour} \) το οποίο είναι τεράστια διαφορά σε σχέση με τα άλλα πειράματα, ακόμη και αν χρησιμοποιηθεί το μοντέλο τους με τον γρήγορο ρυθμό.
 
 Όπως αναφέρθηκε όμως, η συμπεριφορά αυτή είναι αναμενόμενη καθώς η λάσπη στο δοχείο αυτό είχε αυτή την ιδιαιτερότητα από την τροφοδοσία με το οξικό (παρόλο που εδώ φάνηκε πολύ πιο έντονα). Βέβαια, αξίζει να αναφερθεί πως παρότι ο ρυθμός αναμένεται να είναι μεγάλος, η τιμή αυτή είναι σχεδόν διπλάσια από τον αντίστοιχο ειδικό ρυθμό ανάπτυξης για τροφοδοσία με οξικό, το οποίο είναι αρκετά περίεργο.
+
+#+NAME: hydrolysate_data_4_s1_r1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 3 <<hydrolysate_4_s1_r1()>> '(4))
+#+END_SRC
 
 | Timestamp   |   Minutes |   Hours | Methane_Volume | Cumulative_Methane_Volume |
 |-------------+-----------+---------+----------------+---------------------------|
@@ -1262,6 +1347,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 | 03/04_12:54 | 2980.6123 | 49.6769 |            0.2 |                     17.05 |
 | 03/04_13:54 | 3040.6122 | 50.6769 |            0.2 |                     17.25 |
 | 03/04_14:24 | 3070.6131 | 51.1769 |            0.1 |                     17.35 |
+| 03/04_14:54 | 3101.3718 | 51.6895 |            0.0 |                     17.35 |
+| 03/04_15:26 | 3133.4176 | 52.2236 |            0.0 |                     17.35 |
+| 03/04_16:29 | 3195.6885 | 53.2615 |            0.0 |                     17.35 |
+| 03/04_17:29 |  3255.693 | 54.2615 |            0.0 |                     17.35 |
+| 03/04_18:29 | 3315.6929 | 55.2615 |            0.0 |                     17.35 |
+| 03/04_20:29 |  3435.693 | 57.2615 |            0.0 |                     17.35 |
 
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_4_s1_r1_min.png]]
 
@@ -1278,8 +1369,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<date_saving_fw_s1_r1>>
 
-  inds = 12:34
-  exp_meth_vol = [0, 0.2, 0, 0.1, 0.1, 0, 0, 0, 0.1, 0.1, 0, 0.1, 0.2, 0.1, 0.1, 0.1, 0.0, 0.1, 0.2, 0.1, 0.2, 0.1, 0.1]
+  inds = 12:40
+  exp_meth_vol = [0, 0.2, 0, 0.1, 0.1, 0, 0, 0, 0.1, 0.1, 0, 0.1, 0.2, 0.1, 0.1, 0.1, 0.0, 0.1, 0.2, 0.1, 0.2, 0.1, 0.1, 0, 0, 0, 0, 0, 0]
   meth_vol_hydro_fw = cumsum(exp_meth_vol)[end]
   exp_name = "untreated_fw_s1_r1"
   source = "Untreated FW"
@@ -1293,13 +1384,14 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   p0 = [20.0, 0.01, 1.0]
   <<bmp_curve_fitting_min>>
-  model_hydro_fw_min = vcat(sample, model_params, r_squared)
+  model_hydro_fw_min = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
 
   p0 = [20.0, 1.0, 0.1]
   <<bmp_curve_fitting_hour>>
-  model_hydro_fw_hour = vcat(sample, model_params, r_squared)
+  model_hydro_fw_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
 #+RESULTS: untreated_fw_1_ad
@@ -1310,8 +1402,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
 Από άποψη προσαρμογής, το μοντέλο Gompertz μπορεί να προσαρμοστεί πολύ καλά σε τέτοια δεδομένα όπου η παραγωγή μεθανίου γίνεται σε παρόμοιο ρυθμό για όλη την διεργασία. Το μοντέλο που θα αντιστοιχήσει θα είναι ένα μοντέλο χαμηλού ρυθμού (με βάση την παραπάνω διάκριση), το οποίο όμως είναι το μόνο που μπορεί να ισχύει καθώς στην αρχή δεν υπάρχει μία απότομη παραγωγή αερίου ταχύτατα για να μπορεί να προσαρμοστεί κάτι διαφορετικό. Τα μοντέλα σε λεπτά και ώρες δεν προσαρμόζονται με τον ακριβώς ίδιο τρόπο, αλλά οι διαφορές τους είναι μικρές. Ο ειδικός ρυθμός ανάπτυξης είναι της τάξης του \( 0.0137 \frac{ml}{g ~ sCOD \min} \text{ ή } 0.823 \frac{ml}{g ~ sCOD ~ hour} \). Τα άλλα μοντέλα που προσαρμόστηκαν με αργό ρυθμό ανάπτυξης είχαν κινητικές της τάξης του 0.03-0.05 \( \frac{ml}{g ~ sCOD \min } \) οπότε αυτό είναι πιο αργό αλλά συγκρίσιμο με εκείνα.
 
+#+NAME: untreated_fw_data_s1_r1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 3 <<untreated_fw_s1_r1()>> '(4))
+#+END_SRC
+
 | Timestamp   |   Minutes |   Hours | Methane_Volume | Cumulative_Methane_Volume |
-|-------------+-----------+---------+----------------+---------------------------|
 | 02/04_10:54 |       0.0 |     0.0 |            0.0 |                       0.0 |
 | 02/04_12:54 |  120.0074 |  2.0001 |            0.2 |                       0.2 |
 | 02/04_13:24 |  150.0073 |  2.5001 |            0.0 |                       0.2 |
@@ -1335,6 +1431,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 | 03/04_12:54 | 1560.0362 | 26.0006 |            0.2 |                       1.8 |
 | 03/04_13:54 |  1620.036 | 27.0006 |            0.1 |                       1.9 |
 | 03/04_14:24 |  1650.037 | 27.5006 |            0.1 |                       2.0 |
+| 03/04_14:54 | 1680.7956 | 28.0133 |            0.0 |                       2.0 |
+| 03/04_15:26 | 1712.8415 | 28.5474 |            0.0 |                       2.0 |
+| 03/04_16:29 | 1775.1124 | 29.5852 |            0.0 |                       2.0 |
+| 03/04_17:29 | 1835.1168 | 30.5853 |            0.0 |                       2.0 |
+| 03/04_18:29 | 1895.1168 | 31.5853 |            0.0 |                       2.0 |
+| 03/04_20:29 | 2015.1168 | 33.5853 |            0.0 |                       2.0 |
 
 [[../plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_s1_r1_min.png]]
 
@@ -1354,51 +1456,54 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   <<hydrolysate_4_s1_r1>>
   <<untreated_fw_s1_r1>>
 
-  model_fit_table_min = Tables.table(vcat(reshape(model_hydro_0_min, 1, 5), reshape(model_hydro_1_min, 1, 5), reshape(model_hydro_2_min, 1, 5), reshape(model_hydro_4_min, 1, 5), reshape(model_hydro_fw_min, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
+  model_fit_table_min = Tables.table(vcat(reshape(model_hydro_0_min, 1, 5), reshape(model_hydro_1_min, 1, 5), reshape(model_hydro_2_min, 1, 5), reshape(model_hydro_4_min, 1, 5), reshape(model_hydro_fw_min, 1, 5)), header = [:Sample_Name, :Production_Potential, :Production_Rate, :Lag_Time, :R_squared])
   CSV.write(datadir("exp_pro", "methane_from_hydrolysate_kinetics_min_s1_r1.csv"), model_fit_table_min)
 
-  model_fit_table_hour = Tables.table(vcat(reshape(model_hydro_0_hour, 1, 5), reshape(model_hydro_1_hour, 1, 5), reshape(model_hydro_2_hour, 1, 5), reshape(model_hydro_4_hour, 1, 5), reshape(model_hydro_fw_hour, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
+  model_fit_table_hour = Tables.table(vcat(reshape(model_hydro_0_hour, 1, 5), reshape(model_hydro_1_hour, 1, 5), reshape(model_hydro_2_hour, 1, 5), reshape(model_hydro_4_hour, 1, 5), reshape(model_hydro_fw_hour, 1, 5)), header = [:Sample_Name, :Production_Potential, :Production_Rate, :Lag_Time, :R_squared])
   CSV.write(datadir("exp_pro", "methane_from_hydrolysate_kinetics_hour_s1_r1.csv"), model_fit_table_hour)
+  return("../data/exp_pro/methane_from_hydrolysate_kinetics_min_s1_r1.csv")
+#+END_SRC
 
 #+RESULTS: update_hydrolysate_tests_s1_r1
 : "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/data/exp_pro/methane_from_hydrolysate_kinetics_hour_s1_r1.csv"
 
-#+END_SRC
+#+NAME: hydrolysate_kinetic_name_hour_s1_r1
+#+BEGIN_SRC julia
 
-#+RESULTS: update_hydrolysate_tests
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/data/exp_pro/methane_from_hydrolysate_kinetics_hour.csv"
+  return("../data/exp_pro/methane_from_hydrolysate_kinetics_hour_s1_r1.csv")
+#+END_SRC
 
 Στα παρακάτω tables φαίνοντια οι κινητικές που προέκυψαν. Όπως έχει αναφερθεί και παραπάνω, έχουν προσαρμοστεί δύο μοντέλα στα περισσότερα, ένα αργό (το οποίο προσαρμόζει καλά την 2η και 3η μέρα) και ένα γρήγορο (το οποίο προσαρμόζει καλά στην αρχή του πειράματος). Το αργό μοντέλο φαίνεται στο timescale ωρών (ήταν πιο εύκολο να προσαρμοστεί εδώ επειδή για να βγεί στα λεπτά ήθελε initial condition ρυθμού σχεδόν 0) ενώ το γρήγορο φαίνεται στο timescale λεπτών. Αξίζει να σημειωθεί πως το δείγμα 4 δεν έχει καλή προσαρμογή σε αργό μοντέλο και το δείγμα FW δεν έχει καλή προσαρμογή σε γρήγορο. 
 
+#+NAME: hydrolysate_kinetics_hour_s1_r1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<hydrolysate_kinetic_name_hour_s1_r1()>> '(4))
+#+END_SRC
+
 #+CAPTION: Kinetics with timescale in hours
-| Sample_Name | Production_Potential | Production_Rate | Lag_Time |    R2 |
-|-------------+----------------------+-----------------+----------+-------|
-| Sample 0    |               67.363 |           1.636 |      0.0 | 0.862 |
-| Sample 1    |              163.745 |           3.175 |      0.0 | 0.815 |
-| Sample 2    |              839.354 |           1.876 |      0.0 | 0.666 |
-| Sample 4    |              158.432 |         9732.61 |  0.00186 | 0.865 |
-| FW 1        |               21.656 |           0.823 |      0.0 | 0.975 |
+| Sample_Name | Production_Potential | Production_Rate | Lag_Time | R_squared |
+| Sample 0    |               65.137 |           1.666 |      0.0 |     0.884 |
+| Sample 1    |               147.07 |           3.279 |      0.0 |     0.843 |
+| Sample 2    |              886.768 |           1.684 |      0.0 |     0.687 |
+| Sample 4    |              161.139 |        9333.985 |    0.002 |     0.839 |
+| FW 1        |               22.964 |           0.812 |      0.0 |     0.984 |
+
+#+NAME: hydrolysate_kinetics_minute_s1_r1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<update_hydrolysate_tests_s1_r1()>> '(4))
+#+END_SRC
 
 #+CAPTION: Kinetics with timescale in minutes
-| Sample_Name | Production_Potential | Production_Rate | Lag_Time |    R2 |
-|-------------+----------------------+-----------------+----------+-------|
-| Sample 0    |               50.980 |           0.384 |      0.0 | 0.846 |
-| Sample 1    |              105.569 |           0.840 |      0.0 | 0.689 |
-| Sample 2    |               94.538 |          15.483 |    2.422 | 0.724 |
-| Sample 4    |              158.428 |         162.838 |    0.112 | 0.865 |
-| FW 1        |               22.980 |          0.0127 |      0.0 | 0.969 |
+| Sample_Name | Production_Potential | Production_Rate | Lag_Time | R_squared |
+| Sample 0    |               52.998 |           0.375 |      0.0 |     0.837 |
+| Sample 1    |              110.589 |           0.817 |      0.0 |     0.693 |
+| Sample 2    |               97.625 |          15.351 |    2.415 |     0.677 |
+| Sample 4    |              161.135 |         156.195 |    0.099 |     0.839 |
+| FW 1        |               23.688 |           0.013 |      0.0 |     0.982 |
+
 
 ** Plotting Methane Potential
-Σε αυτό το section θα γίνει ένα plot το οποίο θα συγκρίνει μέγιστο μεθάνιο (παραγωγή από οξικό) με αυτό που παράχθηκε από το FW. Το plotting θα γίνει μέσω του ~CairoMakie.jl~ το οποίο είναι αρκετά featureful. Αρχικά όμως πρέπει να κάνουμε κάποιο data collection για να γίνει το plotting. Τρέχουμε τα 2 code blocks που κάνουν update όλα τα πειράματα με βασικό σκοπό να αποθηκεύσουμε τον τελικό όγκο σε κάθε πείραμα. Έπειτα βάζουμε όλα αυτά σε ένα vector και εκτός από την απόλυτη τιμή, υπολογίζουμε και το ποσοστό του μέγιστου που πετυχαίνει το υδρόλυμα. Όπως έχουν αποθηκευτεί, αυτό είναι διαίρεση του στοιχείου i+5 με το i. Έπειτα φτιάχνουμε ένα string των ποσοστών αυτών μαζί με τα labels που τους αντιστοιχούν. Αυτό θα προστεθεί στο plot που φτιάχνουμε.
-
-#+NAME: BMP_data_collection_s1_r1
-#+BEGIN_SRC julia :noweb no-export
-
-  <<update_acetate_tests_s1>>
-  <<update_hydrolysate_tests_s1_r1>>
-
-  comp_name = "s1_r1"
-#+END_SRC
+Σε αυτό το section θα γίνει ένα plot το οποίο θα συγκρίνει μέγιστο μεθάνιο (παραγωγή από οξικό) με αυτό που παράχθηκε από το FW. Το plotting θα γίνει μέσω του ~CairoMakie.jl~ το οποίο είναι αρκετά featureful. Η διαδικασία είναι πως βάζουμε όλους τους όγκους παραγόμενου μεθανίου σε ένα vector και εκτός από την απόλυτη τιμή, υπολογίζουμε και το ποσοστό του μέγιστου που πετυχαίνει το υδρόλυμα. Όπως έχουν αποθηκευτεί, αυτό είναι διαίρεση του στοιχείου i+5 με το i. Έπειτα φτιάχνουμε ένα string των ποσοστών αυτών μαζί με τα labels που τους αντιστοιχούν. Αυτό θα προστεθεί στο plot που φτιάχνουμε.
 
 Έχοντας κάνει το preprocessing αυτό, ξεκινάμε την δημιουργία διαγραμμάτων. Φτιάχνουμε ένα figure και έναν άξονα πάνω σε αυτό όπου θα κάνουμε τα bar plots που θέλουμε. Οι μεταβλητές ~xdata~ και ~grp~ είναι απαραίτητες για να φτιαχτεί το plot. Το xdata λέει σε ποιό σημείο του άξονα x θα πάει κάθε δεδομένο (όπως τα έχουμε ορίσει θα είναι από το 1 εώς το 5 δύο φορές) ενώ το grp λέει σε ποιό group θα ανήκει το κάθε πείραμα. Τα 5 πρώτα είναι στο group 1 (οξικό) ενώ τα άλλα στο 2 (υδρόλυμα). Ορίζουμε και το legend και το plot αυτό είναι έτοιμο. Από κάτω, κάνουμε insert το string με τα ποσοστά που υπολογίστηκε παραπάνω σε ένα text plot του Makie. Έπειτα, κάνουμε save το plot αυτό.
 
@@ -1436,11 +1541,21 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   text!(xdata, repeat(1:1, 10), text = string_bmp, align = [(:left, :top), (:left, :top), (:center, :top), (:right, :top), (:right, :top), (:left, :bottom), (:left, :bottom), (:center, :bottom), (:right, :bottom), (:right, :bottom)])
 
   save(plotsdir("BMPs", "Hydrolyzed FW", "acet_vs_hydro_bmp_"*comp_name*".png"), fig)
-
-#+RESULTS: BMP_plotting
-: CairoMakie.Screen{IMAGE}
-
 #+END_SRC
+
+Για να τρέξουμε αυτό το code block χωρίς προβλήματα, πρέπει να δώσουμε τιμή στο ~comp_name~ και να κάνουμε update τα tests ώστε να έχουμε τα σωστά.
+#+NAME: BMP_data_collection_s1_r1
+#+BEGIN_SRC julia :noweb no-export
+
+  <<update_acetate_tests_s1>>
+  <<update_hydrolysate_tests_s1_r1>>
+
+  comp_name = "s1_r1"
+  <<BMP_plotting>>
+#+END_SRC
+
+#+RESULTS: BMP_data_collection_s1_r1
+: CairoMakie.Screen{IMAGE}
 
 #+ATTR_ORG: :width 900px
 [[../plots/BMPs/Hydrolyzed FW/acet_vs_hydro_bmp_s1_r1.png]]
@@ -1486,13 +1601,14 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   # The same model is fit either with min or hour
   p0 = [50.0, 0.4, 1.0]
   <<bmp_curve_fitting_min>>
-  model_hydro_0_min = vcat(sample, model_params, r_squared)
+  model_hydro_0_min = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
 
   p0 = [40.0, 1.0, 1.0]
   <<bmp_curve_fitting_hour>>
-  model_hydro_0_hour = vcat(sample, model_params, r_squared)
+  model_hydro_0_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
 #+RESULTS: hydrolysate_0_s1_r2
@@ -1500,6 +1616,11 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
 *** Results
 Παρακάτω φαίνονται τα αποτελέσματα του σχετικού πειράματος.
+
+#+NAME: hydrolysate_data_0_s1_r2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 3 <<hydrolysate_0_s1_r2()>> '(4))
+#+END_SRC
 
 | Timestamp   |   Minutes |    Hours | Methane_Volume | Cumulative_Methane_Volume |
 |-------------+-----------+----------+----------------+---------------------------|
@@ -1574,8 +1695,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 | 08/04_10:40 | 6963.4332 | 116.0572 |            0.0 |                      3.45 |
 
 
-[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_0_s1_r2_min.png]]
-
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_0_s1_r2_hour.png]]
 
 ** Sample 1
@@ -1602,19 +1721,26 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   p0 = [130.0, 10.0, 1.0]
   <<bmp_data_processing>>
   <<bmp_curve_fitting_min>>
-  model_hydro_1_min = vcat(sample, model_params, r_squared)
+  model_hydro_1_min = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
 
   p0 = [200.0, 5.0, 1.0]
   <<bmp_curve_fitting_hour>>
-  model_hydro_1_hour = vcat(sample, model_params, r_squared)
+  model_hydro_1_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
 #+RESULTS: hydrolysate_1_s1_r2
 : "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_1_s1_r2_hour.png"
 
 *** Results
+
+#+NAME: hydrolysate_data_1_s1_r2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 3 <<hydrolysate_1_s1_r2()>> '(4))
+#+END_SRC
+
 | Timestamp   |   Minutes |    Hours | Methane_Volume | Cumulative_Methane_Volume |
 |-------------+-----------+----------+----------------+---------------------------|
 | 03/04_14:45 |       0.0 |      0.0 |            0.0 |                       0.0 |
@@ -1687,8 +1813,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 | 08/04_10:40 | 6955.0083 | 115.9168 |            0.1 |                       9.6 |
 
 
-[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_1_s1_r2_min.png]]
-
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_1_s1_r2_hour.png]]
 
 ** Sample 2
@@ -1716,19 +1840,26 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   p0 = [100.0, 15.0, 1.0]
   <<bmp_curve_fitting_min>>
-  model_hydro_2_min = vcat(sample, model_params, r_squared)
+  model_hydro_2_min = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
 
   p0 = [100.0, 1.0, 0.03]
   <<bmp_curve_fitting_hour>>
-  model_hydro_2_hour = vcat(sample, model_params, r_squared)
+  model_hydro_2_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
 #+RESULTS: hydrolysate_2_s1_r2
 : "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_2_s1_r2_hour.png"
 
 *** Results
+
+#+NAME: hydrolysate_data_2_s1_r2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 3 <<hydrolysate_2_s1_r2()>> '(4))
+#+END_SRC
+
 | Timestamp   |   Minutes |    Hours | Methane_Volume | Cumulative_Methane_Volume |
 |-------------+-----------+----------+----------------+---------------------------|
 | 03/04_14:56 |       0.0 |      0.0 |            0.0 |                       0.0 |
@@ -1799,8 +1930,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 | 08/04_10:40 | 6943.8258 | 115.7304 |           0.05 |                       7.9 |
 
 
-[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_2_s1_r2_min.png]]
-
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_2_s1_r2_hour.png]]
 
 ** Sample 4
@@ -1829,13 +1958,14 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   p0 = [170.0, 150.0, 1.0]
   <<bmp_curve_fitting_min>>
-  model_hydro_4_min = vcat(sample, model_params, r_squared)
+  model_hydro_4_min = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
 
   p0 = [170.0, 1000.0, 0.1]
   <<bmp_curve_fitting_hour>>
-  model_hydro_4_hour = vcat(sample, model_params, r_squared)
+  model_hydro_4_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
 #+RESULTS: hydrolysate_4_s1_r2
@@ -1843,8 +1973,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
 *** Results
 
+#+NAME: hydrolysate_data_4_s1_r2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 3 <<hydrolysate_4_s1_r2()>> '(4))
+#+END_SRC
+
 | Timestamp   |   Minutes |    Hours | Methane_Volume | Cumulative_Methane_Volume |
-|-------------+-----------+----------+----------------+---------------------------|
 | 03/04_14:51 |       0.0 |      0.0 |            0.0 |                       0.0 |
 | 03/04_14:56 |    5.0455 |   0.0841 |            0.0 |                       0.0 |
 | 03/04_15:29 |   37.3164 |   0.6219 |            0.0 |                       0.0 |
@@ -1914,8 +2048,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 | 08/04_10:40 | 6948.8713 | 115.8145 |            0.1 |                       7.4 |
 
 
-[[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_4_s1_r2_min.png]]
-
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_4_s1_r2_hour.png]]
 
 ** Untreated FW
@@ -1934,7 +2066,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   meth_vol_hydro_fw = cumsum(exp_meth_vol)[end]
   exp_name = "untreated_fw_s1_r2"
   source = "Untreated FW"
-  sample = "FW 1"
+  sample = "FW"
   sludge = "Sludge 1"
   run_num = "Run 2"
 
@@ -1944,19 +2076,25 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   p0 = [75.0, 100.0, 1.0]
   <<bmp_curve_fitting_min>>
-  model_hydro_fw_min = vcat(sample, model_params, r_squared)
+  model_hydro_fw_min = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
 
   p0 = [75.0, 1.0, 0.1]
   <<bmp_curve_fitting_hour>>
-  model_hydro_fw_hour = vcat(sample, model_params, r_squared)
+  model_hydro_fw_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
 #+END_SRC
 
 #+RESULTS: untreated_fw_s1_r2
 : "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_s1_r2_hour.png"
 
 *** Results
+
+#+NAME: untreated_fw_data_0_s1_r2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 3 <<untreated_fw_s1_r2()>> '(4))
+#+END_SRC
 
 | Timestamp   |   Minutes |   Hours | Methane_Volume | Cumulative_Methane_Volume |
 |-------------+-----------+---------+----------------+---------------------------|
@@ -1996,8 +2134,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 | 07/04_20:40 |  3483.225 | 58.0538 |            0.0 |                      8.35 |
 
 
-[[../plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_s1_r2_min.png]]
-
 [[../plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_s1_r2_hour.png]]
 
 ** Untreated FW Correction
@@ -2011,12 +2147,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<date_saving_fw_s1_r2>>
 
-  inds = 32:62
-  exp_meth_vol = [1, 0, 0.1, 0.2, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0, 0, 0.2, 0.2, 0.1, 0.1, 0.1, 0, 0.1, 0.1, 0.1, 0.1, 0, 0.1, 0.05, 0, 0, 0, 0]
-  meth_vol_hydro_fw = cumsum(exp_meth_vol)[end]
-  exp_name = "untreated_fw_s1_r2"
+  inds = 33:62
+  exp_meth_vol = [0, 0.1, 0.2, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0, 0, 0.2, 0.2, 0.1, 0.1, 0.1, 0, 0.1, 0.1, 0.1, 0.1, 0, 0.1, 0.05, 0, 0, 0, 0]
+  meth_vol_hydro_fw_corr = cumsum(exp_meth_vol)[end]
+  exp_name = "untreated_fw_s1_r2_corr"
   source = "Untreated FW"
-  sample = "FW 1"
+  sample = "FW"
   sludge = "Sludge 1"
   run_num = "Run 2"
 
@@ -2024,17 +2160,23 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
   <<bmp_data_processing>>
 
-  p0 = [75.0, 100.0, 1.0]
+  p0 = [75.0, 1.0, 1.0]
   <<bmp_curve_fitting_min>>
-  model_hydro_fw_min = vcat(sample, model_params, r_squared)
+  model_hydro_fw_corr_min = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
 
-  p0 = [75.0, 1.0, 0.1]
+  p0 = [75.0, 1.2, 0.1]
   <<bmp_curve_fitting_hour>>
-  model_hydro_fw_hour = vcat(sample, model_params, r_squared)
+  model_hydro_fw_corr_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
   <<bmp_data_plotting>>
 #+END_SRC
 
+#+RESULTS: untreated_fw_s1_r2_corr
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_s1_r2_corr_hour.png"
+
+[[../plots/BMPs/Untreated FW/methane_kinetics_untreated_fw_s1_r2_corr_hour.png]]
+
+Αφαιρώντας την περίεργη αυτή αρχή του πειράματος, για την οποία μπορεί να μην ευθύνεται το μεθάνιο, βλέπουμε πως η καμπύλη έχει μία τέλεια προσαρμογή στα πειραματικά δεδομένα με R^2 = 0.982.
 
 ** Update all
 Όπως και για τα προηγούμενα, θα υπάρχει και ένα code block το οποίο θα κάνει update όλα τα code blocks, θα τα κάνει tangle σε ένα script file και θα αποθηκεύει ένα CSV με όλα τα κινητικά αποτελέσματα.
@@ -2048,34 +2190,51 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   <<hydrolysate_2_s1_r2>>
   <<hydrolysate_4_s1_r2>>
   <<untreated_fw_s1_r2>>
+  <<untreated_fw_s1_r2_corr>>
 
-  model_fit_table_min = Tables.table(vcat(reshape(model_hydro_0_min, 1, 5), reshape(model_hydro_1_min, 1, 5), reshape(model_hydro_2_min, 1, 5), reshape(model_hydro_4_min, 1, 5), reshape(model_hydro_fw_min, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
+  model_fit_table_min = Tables.table(vcat(reshape(model_hydro_0_min, 1, 5), reshape(model_hydro_1_min, 1, 5), reshape(model_hydro_2_min, 1, 5), reshape(model_hydro_4_min, 1, 5), reshape(model_hydro_fw_min, 1, 5), reshape(model_hydro_fw_corr_min, 1, 5)), header = [:Sample_Name, :Production_Potential, :Production_Rate, :Lag_Time, :R_squared])
   CSV.write(datadir("exp_pro", "methane_from_hydrolysate_kinetics_min_s1_r2.csv"), model_fit_table_min)
 
-  model_fit_table_hour = Tables.table(vcat(reshape(model_hydro_0_hour, 1, 5), reshape(model_hydro_1_hour, 1, 5), reshape(model_hydro_2_hour, 1, 5), reshape(model_hydro_4_hour, 1, 5), reshape(model_hydro_fw_hour, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
+  model_fit_table_hour = Tables.table(vcat(reshape(model_hydro_0_hour, 1, 5), reshape(model_hydro_1_hour, 1, 5), reshape(model_hydro_2_hour, 1, 5), reshape(model_hydro_4_hour, 1, 5), reshape(model_hydro_fw_hour, 1, 5), reshape(model_hydro_fw_corr_hour, 1, 5)), header = [:Sample_Name, :Production_Potential, :Production_Rate, :Lag_Time, :R_squared])
   CSV.write(datadir("exp_pro", "methane_from_hydrolysate_kinetics_hour_s1_r2.csv"), model_fit_table_hour)
+  return("../data/exp_pro/methane_from_hydrolysate_kinetics_min_s1_r2.csv")
 #+END_SRC
 
 #+RESULTS: update_hydrolysate_tests_s1_r2
 : "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/data/exp_pro/methane_from_hydrolysate_kinetics_hour_s1_r2.csv"
 
+#+NAME: hydrolysate_kinetic_name_hour_s1_r2
+#+BEGIN_SRC julia
+  return("../data/exp_pro/methane_from_hydrolysate_kinetics_hour_s1_r2.csv")
+#+END_SRC
+
+#+NAME: hydrolysate_kinetics_hour_s1_r2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<hydrolysate_kinetic_name_hour_s1_r2()>> '(4))
+#+END_SRC
+
 #+CAPTION: Kinetics with timescale in hours
 | Sample_Name | Production_Potential | Production_Rate | Lag_Time | R_squared |
-|-------------+----------------------+-----------------+----------+-----------|
 | Sample 0    |               37.583 |           0.434 |    3.763 |     0.991 |
-| Sample 1    |              104.279 |           1.075 |    4.507 |     0.995 |
+| Sample 1    |               104.28 |           1.075 |    4.507 |     0.995 |
 | Sample 2    |               78.458 |           1.144 |      0.0 |     0.927 |
-| Sample 4    |               83.674 |           0.796 |    0.265 |     0.986 |
-| FW 1        |              767.403 |           1.167 |      0.0 |     0.464 |
+| Sample 4    |               83.675 |           0.797 |    0.265 |     0.986 |
+| FW          |              767.403 |           1.167 |      0.0 |     0.464 |
+| FW          |               26.719 |           0.571 |      0.0 |     0.982 |
+
+#+NAME: hydrolysate_kinetics_min_s1_r2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<update_hydrolysate_tests_s1_r2()>> '(4))
+#+END_SRC
 
 #+CAPTION: Kinetics with timescale in minutes
 | Sample_Name | Production_Potential | Production_Rate | Lag_Time | R_squared |
-|-------------+----------------------+-----------------+----------+-----------|
-| Sample 0    |               37.583 |         0.00722 |  225.800 |     0.991 |
-| Sample 1    |              104.279 |          0.0179 |  270.399 |     0.995 |
-| Sample 2    |               76.957 |          0.0205 |      0.0 |     0.933 |
-| Sample 4    |               83.675 |          0.0132 |   15.910 |     0.986 |
-| FW 1        |               74.291 |          49.128 |    1.041 |     0.863 |
+| Sample 0    |               37.583 |           0.007 |    225.8 |     0.991 |
+| Sample 1    |               104.28 |           0.018 |  270.399 |     0.995 |
+| Sample 2    |               76.957 |           0.021 |      0.0 |     0.933 |
+| Sample 4    |               83.675 |           0.013 |    15.91 |     0.986 |
+| FW          |               74.291 |          49.128 |    1.041 |     0.863 |
+| FW          |                26.91 |           0.009 |      0.0 |     0.982 |
 
 ** Plotting Methane Potential
 Σε αυτό το section θα γίνει ένα plot το οποίο θα συγκρίνει μέγιστο μεθάνιο (παραγωγή από οξικό) με αυτό που παράχθηκε από το FW. Το plotting θα γίνει μέσω του ~CairoMakie.jl~ το οποίο είναι αρκετά featureful. Αρχικά όμως πρέπει να κάνουμε κάποιο data collection για να γίνει το plotting. Τρέχουμε τα 2 code blocks που κάνουν update όλα τα πειράματα με βασικό σκοπό να αποθηκεύσουμε τον τελικό όγκο σε κάθε πείραμα. Έπειτα βάζουμε όλα αυτά σε ένα vector και εκτός από την απόλυτη τιμή, υπολογίζουμε και το ποσοστό του μέγιστου που πετυχαίνει το υδρόλυμα. Όπως έχουν αποθηκευτεί, αυτό είναι διαίρεση του στοιχείου i+5 με το i. Έπειτα φτιάχνουμε ένα string των ποσοστών αυτών μαζί με τα labels που τους αντιστοιχούν. Αυτό θα προστεθεί στο plot που φτιάχνουμε.
@@ -2100,32 +2259,33 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   using CairoMakie
   colors = Makie.wong_colors()
 
-  meth_vol = [meth_vol_acet_0, meth_vol_acet_1, meth_vol_acet_2, meth_vol_acet_4, meth_vol_acet_fw, meth_vol_hydro_0, meth_vol_hydro_1, meth_vol_hydro_2, meth_vol_hydro_4, meth_vol_hydro_fw]
+  meth_vol = [meth_vol_acet_0, meth_vol_acet_1, meth_vol_acet_2, meth_vol_acet_4, meth_vol_acet_fw, meth_vol_hydro_0, meth_vol_hydro_1, meth_vol_hydro_2, meth_vol_hydro_4, meth_vol_hydro_fw, meth_vol_hydro_fw_corr]
 
-  percent_bmp = [meth_vol[i+5]/meth_vol[i] for i in 1:5]
-  string_bmp = vcat(string.(round.(percent_bmp.*100, digits = 2)).*" %", ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated \nFW"])
+  percent_bmp = vcat([meth_vol[i+5]/meth_vol[i] for i in 1:5], meth_vol[11]/meth_vol[5])
+  string_bmp = vcat(string.(round.(percent_bmp.*100, digits = 2)).*" %", ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated \nFW", "Untreated FW \nCorrected"])
 
   fig = Figure(size = (600, 400))
   ax = Axis(fig[1,1], xticks = (1:5, ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated FW"]),
 	    title = "Acetate vs Hydrolysate BMP")
 
-  xdata = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5]
-  grp = [1, 1, 1, 1, 1, 2, 2, 2, 2, 2]
+  xdata = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 5]
+  grp = [1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3]
 
   barplot!(ax, xdata, meth_vol,
 	  dodge = grp,
 	  color = colors[grp])
 
   # Legend
-  labels = ["Acetate", "FW Hydrolysate"]
+  labels = ["Acetate", "FW", "FW Corrected"]
   elements = [PolyElement(polycolor = colors[i]) for i in 1:length(labels)]
   title = "Source"
   Legend(fig[1,2], elements, labels, title)
 
-  ax2 = Axis(fig[2, 1], xticks = (1:5, ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated FW"]), yticks = ([1, 2], ["", ""]), title = "% of Acetate BMP in Hydrolysates")
+  xdata_2 = [1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6]
+  ax2 = Axis(fig[2, 1:2], xticks = (1:6, ["0 ml", "1 ml", "2 ml", "4 ml", "Untreated FW", "Untreated FW Corrected"]), yticks = ([1, 2], ["", ""]), title = "% of Acetate BMP in Hydrolysates")
   hidespines!(ax2)
   hidedecorations!(ax2)
-  text!(xdata, repeat(1:1, 10), text = string_bmp, align = [(:left, :top), (:left, :top), (:center, :top), (:right, :top), (:right, :top), (:left, :bottom), (:left, :bottom), (:center, :bottom), (:right, :bottom), (:right, :bottom)])
+  text!(xdata_2, repeat(1:1, 12), text = string_bmp, align = [(:left, :top), (:left, :top), (:center, :top), (:center, :top), (:right, :top), (:right, :top), (:left, :bottom), (:left, :bottom), (:center, :bottom), (:center, :bottom), (:right, :bottom), (:right, :bottom)])
 
   save(plotsdir("BMPs", "Hydrolyzed FW", "acet_vs_hydro_bmp_"*comp_name*".png"), fig)
 #+END_SRC
@@ -2146,6 +2306,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 Από την άποψη των BMPs, χωρίς το untreated FW (το οποίο ενδέχεται να έχει παραπάνω παραγωγή από ότι πρέπει λόγω των παραπάνω παρατηρήσεων), η σειρά είναι 0 > 4 > 2 > 1. Το 0 είναι πάλι το χαμηλότερο, το οποίο κάνει ξανά validate ότι η προσθήκη του μιξ βοηθάει στην προεπεξεργασία και κάνει το υδρόλυμα πιο αποτελεσματικό για την παραγωγή μεθανίου. Το δείγμα 1 έχει και πάλι την περισσότερη ποσότητα μεθανίου. Αυτό δεν μπορεί να αιτιολογηθεί από τα αποτελέσματα του αρχικού πειράματος υδρόλυσης σε αυτές τις συνθήκες, αλλά η αναπάντεχα μεγάλη συγκέντρωση sCOD του, οδηγεί στο συμπέρασμα της καλύτερης διαλυτοποίησης σε αυτό το πείραμα και πιθανόν αυτό να ευθύνεται για την αυξημένη παραγωγή μεθανίου.
 
 * Πίνακας με κινητικά δεδομένα
+Για την ευκολότερη σύγκριση των πειραμάτων δημιουργήθηκαν τα πινακάκια αυτά τα οποία δείχνουν συγκριτικά το methane production potential και τον μέγιστο ειδικό ρυθμό ανάπτυξης μεταξύ του πειράματος οξικού και με υδρόλυμα FW. 
 
 | Reactor | K_max_hydro (ml/g sCOD min) | K_max_acet (ml/g sCOD min) | K_max hydro/acet (%) |
 |---------+-----------------------------+----------------------------+----------------------|
