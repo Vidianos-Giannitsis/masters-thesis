@@ -33,8 +33,8 @@ file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-5
 ]
 
 
-inds = 34:51
-exp_meth_vol = [0, 4, 12, 7.5, 4.5, 2.5, 2.5, 4, 0.5, 2, 2, 1, 1, 1, 1, 1, 0.5, 0.5]
+inds = 34:58
+exp_meth_vol = [0, 4, 12, 7.5, 4.5, 2.5, 2.5, 4, 0.5, 2, 2, 1, 1, 1, 1, 1, 0.5, 0.5, 0, 0, 0, 0, 0, 0, 0]
 meth_vol_acet_0 = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_0_s1"
 source = "Acetate"
@@ -82,7 +82,7 @@ r_squared = 1 - SS_res/SS_tot
 
 kinetics = true
 timescale = "min"
-model_acet_0 = vcat(sample, model_params, r_squared)
+model_acet_0 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
 if source == "Acetate"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" /nUsing "*sample*" "*sludge, size = (700, 470))
@@ -120,6 +120,7 @@ else
     end
 end
 
+return("../data/exp_pro/"*exp_name*".csv")
 
 ### Data Analysis on Sample 1 ###
 
@@ -156,8 +157,8 @@ file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-5
 ]
 
 
-inds = 38:56
-exp_meth_vol = [0, 6.5, 5, 3, 0.5, 1.5, 1.5, 0.5, 1, 0.5, 0.5, 0.3, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05]
+inds = 38:58
+exp_meth_vol = [0, 6.5, 5, 3, 0.5, 1.5, 1.5, 0.5, 1, 0.5, 0.5, 0.3, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0.05, 0, 0]
 meth_vol_acet_1 = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_1_s1"
 source = "Acetate"
@@ -205,7 +206,7 @@ r_squared = 1 - SS_res/SS_tot
 
 kinetics = true
 timescale = "min"
-model_acet_1 = vcat(sample, model_params, r_squared)
+model_acet_1 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
 if source == "Acetate"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" /nUsing "*sample*" "*sludge, size = (700, 470))
@@ -243,6 +244,7 @@ else
     end
 end
 
+return("../data/exp_pro/"*exp_name*".csv")
 
 ### Data Analysis on Sample 2 ###
 
@@ -279,8 +281,8 @@ file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-5
 ]
 
 
-inds = 44:57
-exp_meth_vol = [0, 4, 7, 5.5, 4.5, 2.5, 2, 1, 1, 1, 0.5, 0.5, 0.45, 0.05]
+inds = 44:58
+exp_meth_vol = [0, 4, 7, 5.5, 4.5, 2.5, 2, 1, 1, 1, 0.5, 0.5, 0.45, 0.05, 0]
 meth_vol_acet_2 = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_2_s1"
 source = "Acetate"
@@ -328,7 +330,7 @@ r_squared = 1 - SS_res/SS_tot
 
 kinetics = true
 timescale = "min"
-model_acet_2 = vcat(sample, model_params, r_squared)
+model_acet_2 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
 if source == "Acetate"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" /nUsing "*sample*" "*sludge, size = (700, 470))
@@ -366,6 +368,7 @@ else
     end
 end
 
+return("../data/exp_pro/"*exp_name*".csv")
 
 ### Data Analysis on Sample 4 ###
 
@@ -402,8 +405,8 @@ file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-5
 ]
 
 
-inds = 41:50
-exp_meth_vol = [0, 4, 10, 9, 4, 5, 5, 4, 3, 3]
+inds = 41:58
+exp_meth_vol = [0, 4, 10, 9, 4, 5, 5, 4, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0]
 meth_vol_acet_4 = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_4_s1"
 source = "Acetate"
@@ -451,7 +454,7 @@ r_squared = 1 - SS_res/SS_tot
 
 kinetics = true
 timescale = "min"
-model_acet_4 = vcat(sample, model_params, r_squared)
+model_acet_4 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
 if source == "Acetate"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" /nUsing "*sample*" "*sludge, size = (700, 470))
@@ -489,13 +492,45 @@ else
     end
 end
 
+return("../data/exp_pro/"*exp_name*".csv")
 
 ### Data Analysis on Sample FW ###
 
 
+file_vec = ["bandicam 2024-03-27 18-45-55-857.jpg", "bandicam 2024-03-27 18-46-57-161.jpg",
+"bandicam 2024-03-27 18-48-57-160.jpg", "bandicam 2024-03-27 18-50-57-170.jpg",
+"bandicam 2024-03-27 18-52-57-164.jpg", "bandicam 2024-03-27 18-54-57-162.jpg",
+"bandicam 2024-03-27 18-56-57-167.jpg", "bandicam 2024-03-27 18-58-57-165.jpg",
+"bandicam 2024-03-27 19-00-57-170.jpg", "bandicam 2024-03-27 19-02-57-179.jpg",
+"bandicam 2024-03-27 19-04-57-173.jpg", "bandicam 2024-03-27 19-06-57-182.jpg",
+"bandicam 2024-03-27 19-08-57-185.jpg", "bandicam 2024-03-27 19-10-57-184.jpg",
+"bandicam 2024-03-27 19-12-57-189.jpg", "bandicam 2024-03-27 19-14-57-187.jpg",
+"bandicam 2024-03-27 19-15-06-279.jpg", "bandicam 2024-03-27 19-19-06-273.jpg",
+"bandicam 2024-03-27 19-21-06-276.jpg", "bandicam 2024-03-27 19-23-06-285.jpg",
+"bandicam 2024-03-27 19-25-06-290.jpg", "bandicam 2024-03-27 19-27-06-301.jpg",
+"bandicam 2024-03-27 19-29-06-303.jpg", "bandicam 2024-03-27 19-31-06-301.jpg",
+"bandicam 2024-03-27 19-33-06-297.jpg", "bandicam 2024-03-27 19-35-06-305.jpg",
+"bandicam 2024-03-27 19-37-06-299.jpg", "bandicam 2024-03-27 19-39-06-297.jpg",
+"bandicam 2024-03-27 19-41-06-307.jpg", "bandicam 2024-03-27 19-43-06-299.jpg",
+"bandicam 2024-03-27 19-45-06-298.jpg", "bandicam 2024-03-27 19-47-06-304.jpg",
+"bandicam 2024-03-27 19-48-50-591.jpg", "bandicam 2024-03-29 12-23-36-175.jpg",
+"bandicam 2024-03-29 12-23-50-142.jpg", "bandicam 2024-03-29 12-24-50-161.jpg",
+"bandicam 2024-03-29 12-25-50-156.jpg", "bandicam 2024-03-29 12-26-50-168.jpg",
+"bandicam 2024-03-29 12-27-26-514.jpg", "bandicam 2024-03-29 12-28-26-502.jpg",
+"bandicam 2024-03-29 12-29-26-497.jpg", "bandicam 2024-03-29 12-29-39-894.jpg",
+"bandicam 2024-03-29 12-30-39-902.jpg", "bandicam 2024-03-29 12-31-39-897.jpg",
+"bandicam 2024-03-29 12-32-05-844.jpg", "bandicam 2024-03-29 12-33-05-843.jpg",
+"bandicam 2024-03-29 12-34-05-832.jpg", "bandicam 2024-03-29 12-35-05-836.jpg",
+"bandicam 2024-03-29 12-36-05-835.jpg", "bandicam 2024-03-29 12-37-05-858.jpg",
+"bandicam 2024-03-29 12-38-06-101.jpg", "bandicam 2024-03-29 12-38-47-045.jpg",
+"bandicam 2024-03-29 12-39-47-039.jpg", "bandicam 2024-03-29 12-40-47-050.jpg",
+"bandicam 2024-03-29 12-41-47-047.jpg", "bandicam 2024-03-29 12-42-47-057.jpg",
+"bandicam 2024-03-29 12-43-42-169.jpg", "bandicam 2024-03-29 12-44-41-398.jpg"
+]
 
-inds = 1:12
-exp_meth_vol = [0, 12, 5, 3, 1.5, 1.5, 1, 1.5, 1, 0.5, 0.5, 0.5]
+
+inds = 1:20
+exp_meth_vol = [0, 12, 5, 3, 1.5, 1.5, 1, 1.5, 1, 0.5, 0.5, 0.5, 0, 0, 0, 0, 0, 0, 0, 0]
 meth_vol_acet_fw = cumsum(exp_meth_vol)[end]
 exp_name = "acet_test_fw_s1"
 source = "Acetate"
@@ -543,7 +578,7 @@ r_squared = 1 - SS_res/SS_tot
 
 kinetics = true
 timescale = "min"
-model_acet_fw = vcat(sample, model_params, r_squared)
+model_acet_fw = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
 if source == "Acetate"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" /nUsing "*sample*" "*sludge, size = (700, 470))
@@ -581,6 +616,7 @@ else
     end
 end
 
+return("../data/exp_pro/"*exp_name*".csv")
 
 ### No Feed Data Analysis ###
 
@@ -782,6 +818,6 @@ else
 end
 
 
-model_fit_table = Tables.table(vcat(reshape(model_acet_0, 1, 5), reshape(model_acet_1, 1, 5), reshape(model_acet_2, 1, 5), reshape(model_acet_4, 1, 5), reshape(model_acet_fw, 1, 5)), header = [:Sample_Name, :Methane_Production_Potential, :Methane_Production_Rate, :Lag_Time, :R_squared])
+model_fit_table = Tables.table(vcat(reshape(model_acet_0, 1, 5), reshape(model_acet_1, 1, 5), reshape(model_acet_2, 1, 5), reshape(model_acet_4, 1, 5), reshape(model_acet_fw, 1, 5)), header = [:Sample_Name, :Production_Potential, :Production_Rate, :Lag_Time, :R_squared])
 CSV.write(datadir("exp_pro", "methane_from_acetate_kinetics_s1.csv"), model_fit_table)
-DataFrame(model_fit_table)
+return("../data/exp_pro/methane_from_acetate_kinetics_s1.csv")
