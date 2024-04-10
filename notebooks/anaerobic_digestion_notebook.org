@@ -45,7 +45,7 @@
 #+END_SRC
 
 * Data Reading
-** Acetate Experiment
+** Acetate Experiment S1
 Τα δεδομένα της αναερόβιας χώνευσης είναι φωτογραφίες των προχωίδων της διάταξης. Εξετάζοντας πόσο έχει μεταβληθεί η στάθμη τους, μπορούμε να υπολογίσουμε τον παραγόμενο όγκο μεθανίου. Αλλά πρώτα, πρέπει να ξέρουμε σε τι χρόνους έγιναν sampled τα δείγματα. Όλες οι φωτογραφίες έχουν ένα timestamp το οποίο μας βοηθάει να τα διακρίνουμε. Μπορούμε να αναλύσουμε αυτά ώστε να πάρουμε τις στιγμές που βγήκαν οι φωτογραφίες. Αρχικά, παίρνουμε όλα τα filenames με ~ls~. Θα χρησιμοποιήσουμε τα flags -m και -Q για να πάρουμε comma separated output και το κάθε string να έχει double quotes.
 
 *ls_output_acetate_s1*
@@ -158,6 +158,85 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
  "bandicam 2024-03-29 12-42-47-057.jpg"
  "bandicam 2024-03-29 12-43-42-169.jpg"
  "bandicam 2024-03-29 12-44-41-398.jpg"
+#+end_example
+
+** Acetate Experiment S2
+Λόγω κάποιων προβλημάτων στο προηγούμενο πείραμα και για επιβεβαίωση των αποτελεσμάτων, θα χρησιμοποιηθεί και μία δεύτερη λάσπη για πειράματα. Στο section αυτό θα γίνουν loaded τα απαραίτητα πράγματα για το πείραμα αυτό.
+
+*ls_output_acetate_s1*
+#+NAME: ls_output_acetate_s2
+#+BEGIN_SRC sh :results output
+ls -mQ ../bmp_pictures/Acet_kinetic_S2/
+#+END_SRC
+
+#+RESULTS: ls_output_acetate_s2
+#+begin_example
+"bandicam 2024-04-10 13-59-53-326.jpg", "bandicam 2024-04-10 14-00-47-113.jpg",
+"bandicam 2024-04-10 14-01-47-127.jpg", "bandicam 2024-04-10 14-02-24-772.jpg",
+"bandicam 2024-04-10 14-03-24-772.jpg", "bandicam 2024-04-10 14-04-13-064.jpg",
+"bandicam 2024-04-10 14-05-10-445.jpg", "bandicam 2024-04-10 14-06-10-467.jpg",
+"bandicam 2024-04-10 14-07-10-457.jpg", "bandicam 2024-04-10 14-07-29-046.jpg",
+"bandicam 2024-04-10 14-08-29-037.jpg", "bandicam 2024-04-10 14-08-57-059.jpg",
+"bandicam 2024-04-10 14-09-57-054.jpg", "bandicam 2024-04-10 14-10-57-052.jpg",
+"bandicam 2024-04-10 14-11-57-074.jpg", "bandicam 2024-04-10 14-12-57-085.jpg",
+"bandicam 2024-04-10 14-13-57-097.jpg", "bandicam 2024-04-10 14-14-57-102.jpg",
+"bandicam 2024-04-10 14-15-57-100.jpg", "bandicam 2024-04-10 14-16-57-090.jpg",
+"bandicam 2024-04-10 14-17-57-101.jpg"
+#+end_example
+
+Αρχικά, κάνουμε load τα dependencies στο script στο οποίο θα γίνει η ανάλυση του πειράματος αυτού.
+
+#+NAME: deps_acetate_s2
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_s2_analysis.jl
+
+  <<deps>>
+
+#+END_SRC
+
+Έπειτα, ξεκινάμε την ανάλυση αποθηκεύοντας τα file names σε ένα vector της Julia κάνοντας copy τα shell results. Αυτό το vector θα γίνεται loaded σε όλα τα code blocks, για να είναι το κάθε ένα reproducible από μόνο του. Έτσι, στο τελικό script θα υπάρχουν πολλές επαναλήψεις.
+
+*date_saving_acetate_s2*
+#+NAME: date_saving_acetate_s2
+#+BEGIN_SRC julia
+
+  file_vec = ["bandicam 2024-04-10 13-59-53-326.jpg", "bandicam 2024-04-10 14-00-47-113.jpg",
+  "bandicam 2024-04-10 14-01-47-127.jpg", "bandicam 2024-04-10 14-02-24-772.jpg",
+  "bandicam 2024-04-10 14-03-24-772.jpg", "bandicam 2024-04-10 14-04-13-064.jpg",
+  "bandicam 2024-04-10 14-05-10-445.jpg", "bandicam 2024-04-10 14-06-10-467.jpg",
+  "bandicam 2024-04-10 14-07-10-457.jpg", "bandicam 2024-04-10 14-07-29-046.jpg",
+  "bandicam 2024-04-10 14-08-29-037.jpg", "bandicam 2024-04-10 14-08-57-059.jpg",
+  "bandicam 2024-04-10 14-09-57-054.jpg", "bandicam 2024-04-10 14-10-57-052.jpg",
+  "bandicam 2024-04-10 14-11-57-074.jpg", "bandicam 2024-04-10 14-12-57-085.jpg",
+  "bandicam 2024-04-10 14-13-57-097.jpg", "bandicam 2024-04-10 14-14-57-102.jpg",
+  "bandicam 2024-04-10 14-15-57-100.jpg", "bandicam 2024-04-10 14-16-57-090.jpg",
+  "bandicam 2024-04-10 14-17-57-101.jpg"
+  ]
+
+#+END_SRC
+
+#+RESULTS: date_saving_acetate_s2
+#+begin_example
+21-element Vector{String}:
+ "bandicam 2024-04-10 13-59-53-326.jpg"
+ "bandicam 2024-04-10 14-00-47-113.jpg"
+ "bandicam 2024-04-10 14-01-47-127.jpg"
+ "bandicam 2024-04-10 14-02-24-772.jpg"
+ "bandicam 2024-04-10 14-03-24-772.jpg"
+ "bandicam 2024-04-10 14-04-13-064.jpg"
+ "bandicam 2024-04-10 14-05-10-445.jpg"
+ "bandicam 2024-04-10 14-06-10-467.jpg"
+ "bandicam 2024-04-10 14-07-10-457.jpg"
+ "bandicam 2024-04-10 14-07-29-046.jpg"
+ ⋮
+ "bandicam 2024-04-10 14-09-57-054.jpg"
+ "bandicam 2024-04-10 14-10-57-052.jpg"
+ "bandicam 2024-04-10 14-11-57-074.jpg"
+ "bandicam 2024-04-10 14-12-57-085.jpg"
+ "bandicam 2024-04-10 14-13-57-097.jpg"
+ "bandicam 2024-04-10 14-14-57-102.jpg"
+ "bandicam 2024-04-10 14-15-57-100.jpg"
+ "bandicam 2024-04-10 14-16-57-090.jpg"
+ "bandicam 2024-04-10 14-17-57-101.jpg"
 #+end_example
 
 ** FW Hydrolysate Experiment S1_R1
@@ -938,7 +1017,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   <<acet_test_1_s1>>
   <<acet_test_2_s1>>
   <<acet_test_4_s1>>
-  <<acet_test_FW_s1>>
+  <<acet_test_fw_s1>>
   <<no_feed_ac_1>>
   <<no_feed_ac_2>>
 
@@ -2353,3 +2432,324 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 |      FW |          28.0 |           8.35 |                29.821 |
 |---------+---------------+----------------+-----------------------|
 #+TBLFM: $4=($3/$2)*100;%.3f
+
+* Acetate Experiment Processing
+Παρακάτω αναφέρονται οι δοκιμές που έγιναν με 100 μL οξικό σε κάθε δείγμα και θα χρησιμοποιηθούν συγκριτικά σε σχέση με τα FW. Μετά από τα code blocks που τρέχουν τον κώδικα θα υπάρχουν και κάποια από τα corresponding αποτελέσματα. Συγκεκριμένα, ο πίνακας με τα κινητικά δεδομένα και το διάγραμμα παραγωγής μεθανίου το οποίο έχει το curve fitting. Υπάρχουν και κάποια άλλα χρήσιμα διαγράμματα, τα οποία είναι αποθηκευμένα, αλλά εδώ παρατίθενται κάποια για καλύτερη ανάγνωση του αρχείου.
+
+** Acetate Test FW
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα labelled ως FW (στο οποίο θα τροφοδοτηθούν untreated FW). Notably, δεν είχε διαρροή στις 27/03, αλλά για κάποιον λόγο, στην επαναδοκιμή στις 29/03 δεν παρήγαγε μεθάνιο (τουλάχιστον στην προχοίδα). Οπότε, θα χρησιμοποιηθεί αυτό της 27/03.
+
+*acet_test_fw_s2*
+#+NAME: acet_test_fw_s2
+#+BEGIN_SRC julia :noweb no-export
+
+  ### Data Analysis on Sample FW ###
+
+  <<date_saving_acetate_s2>>
+
+  inds = 1:16
+  exp_meth_vol = [0, 1.0, 5.0, 3.0, 1.5, 2.0, 0.5, 1.0, 0.5, 0, 0, 0, 0, 0, 0, 0]
+  meth_vol_acet_fw = cumsum(exp_meth_vol)[end]
+  exp_name = "acet_test_fw_s2"
+  source = "Acetate"
+  sample = "Sample FW"
+  sludge = "Sludge 2"
+  input_cod = 0.1
+  p0 = [250.0, 60.0, 1.0]
+
+  <<bmp_data_processing>>
+  <<bmp_curve_fitting_min>>
+  model_acet_fw = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
+#+END_SRC
+
+#+RESULTS: acet_test_FW_s2
+: "../data/exp_pro/acet_test_fw_s2.csv"
+
+#+NAME: acet_data_fw_s2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<acet_test_fw_s2()>> '(4))
+#+END_SRC
+
+#+CAPTION: Κινητικά δεδομένα
+| Timestamp   | Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
+| 10/04_13:59 |     0.0 |     0.0 |            0.0 |                       0.0 |
+| 10/04_14:00 |  53.787 |  0.8964 |            1.0 |                       1.0 |
+| 10/04_14:01 | 113.801 |  1.8967 |            5.0 |                       6.0 |
+| 10/04_14:02 | 151.446 |  2.5241 |            3.0 |                       9.0 |
+| 10/04_14:03 | 211.446 |  3.5241 |            1.5 |                      10.5 |
+| 10/04_14:04 | 259.738 |   4.329 |            2.0 |                      12.5 |
+| 10/04_14:05 | 317.119 |  5.2853 |            0.5 |                      13.0 |
+| 10/04_14:06 | 377.141 |  6.2857 |            1.0 |                      14.0 |
+| 10/04_14:07 | 437.131 |  7.2855 |            0.5 |                      14.5 |
+| 10/04_14:07 |  455.72 |  7.5953 |            0.0 |                      14.5 |
+| 10/04_14:08 | 515.711 |  8.5952 |            0.0 |                      14.5 |
+| 10/04_14:08 | 543.733 |  9.0622 |            0.0 |                      14.5 |
+| 10/04_14:09 | 603.728 | 10.0621 |            0.0 |                      14.5 |
+| 10/04_14:10 | 663.726 | 11.0621 |            0.0 |                      14.5 |
+| 10/04_14:11 | 723.748 | 12.0625 |            0.0 |                      14.5 |
+| 10/04_14:12 | 783.759 | 13.0626 |            0.0 |                      14.5 |
+
+[[../plots/BMPs/Acetate/methane_kinetics_acet_test_fw_s2.png]]
+
+** Acetate Test 0
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (0).
+
+*acet_test_0_s2*
+#+NAME: acet_test_0_s2
+#+BEGIN_SRC julia :noweb no-export
+
+  ### Data Analysis on Sample 0 ###
+
+  <<date_saving_acetate_s2>>
+
+  inds = 12:21
+  exp_meth_vol = [0, 10.5, 1.0, 0.5, 0, 0, 0, 0, 0, 0]
+  meth_vol_acet_0 = cumsum(exp_meth_vol)[end]
+  exp_name = "acet_test_0_s2"
+  source = "Acetate"
+  sample = "Sample 0"
+  sludge = "Sludge 2"
+  input_cod = 0.1
+  p0 = [400.0, 80.0, 1.0]
+
+  <<bmp_data_processing>>
+  <<bmp_curve_fitting_min>>
+  model_acet_0 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
+#+END_SRC
+
+#+RESULTS: acet_test_0_s2
+: "../data/exp_pro/acet_test_0_s2.csv"
+
+#+NAME: acet_data_0_s2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<acet_test_0_s2()>> '(4))
+#+END_SRC
+
+#+CAPTION: Κινητικά δεδομένα
+| Timestamp   | Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
+| 10/04_14:08 |     0.0 |     0.0 |            0.0 |                       0.0 |
+| 10/04_14:09 |  59.995 |  0.9999 |           10.5 |                      10.5 |
+| 10/04_14:10 | 119.993 |  1.9999 |            1.0 |                      11.5 |
+| 10/04_14:11 | 180.015 |  3.0002 |            0.5 |                      12.0 |
+| 10/04_14:12 | 240.026 |  4.0004 |            0.0 |                      12.0 |
+| 10/04_14:13 | 300.038 |  5.0006 |            0.0 |                      12.0 |
+| 10/04_14:14 | 360.043 |  6.0007 |            0.0 |                      12.0 |
+| 10/04_14:15 | 420.041 |  7.0007 |            0.0 |                      12.0 |
+| 10/04_14:16 | 480.031 |  8.0005 |            0.0 |                      12.0 |
+| 10/04_14:17 | 540.042 |  9.0007 |            0.0 |                      12.0 |
+
+[[../plots/BMPs/Acetate/methane_kinetics_acet_test_0_s2.png]]
+
+** Acetate Test 1
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (1). Aξίζει να αναφερθεί πως την πρώτη πειραματική ημέρα (27/03), παρήγαγε αέριο χωρίς να τροφοδοτηθεί με κάποιο υπόστρωμα. Η κινητική αυτής της παραγωγής (η οποία δεν ξέρουμε σε τι ευθύνεται) θα αναλυθεί παρακάτω. Βέβαια, μόλις τροφοδοτήθηκε με οξικό και η παραγωγή του τελείωσε, σταμάτησε και εκείνη η παραγωγή. Βέβαια, είχε την χαμηλότερη παραγωγή βιοαερίου μόλις τροφοδοτήθηκε με οξικό, οπότε ενδέχεται αυτή η μέτρηση να ήταν προβληματική.
+
+*acet_test_1_s2*
+#+NAME: acet_test_1_s2
+#+BEGIN_SRC julia :noweb no-export
+
+  ### Data Analysis on Sample 1 ###
+
+  <<date_saving_acetate_s2>>
+
+  inds = 7:21
+  exp_meth_vol = [0, 7, 2, 0.2, 0.8, 0.2, 1.5, 0, 0, 0, 0, 0, 0, 0, 0]
+  meth_vol_acet_1 = cumsum(exp_meth_vol)[end]
+  exp_name = "acet_test_1_s2"
+  source = "Acetate"
+  sample = "Sample 1"
+  sludge = "Sludge 2"
+  input_cod = 0.1
+  p0 = [200.0, 40.0, 1.0]
+
+  <<bmp_data_processing>>
+  <<bmp_curve_fitting_min>>
+  model_acet_1 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
+#+END_SRC
+
+#+RESULTS: acet_test_1_s2
+: "../data/exp_pro/acet_test_1_s2.csv"
+
+#+NAME: acet_data_1_s2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<acet_test_1_s2()>> '(4))
+#+END_SRC
+
+#+CAPTION: Κινητικά δεδομένα
+| Timestamp   | Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
+| 10/04_14:05 |     0.0 |     0.0 |            0.0 |                       0.0 |
+| 10/04_14:06 |  60.022 |  1.0004 |            7.0 |                       7.0 |
+| 10/04_14:07 | 120.012 |  2.0002 |            2.0 |                       9.0 |
+| 10/04_14:07 | 138.601 |    2.31 |            0.2 |                       9.2 |
+| 10/04_14:08 | 198.592 |  3.3099 |            0.8 |                      10.0 |
+| 10/04_14:08 | 226.614 |  3.7769 |            0.2 |                      10.2 |
+| 10/04_14:09 | 286.609 |  4.7768 |            1.5 |                      11.7 |
+| 10/04_14:10 | 346.607 |  5.7768 |            0.0 |                      11.7 |
+| 10/04_14:11 | 406.629 |  6.7772 |            0.0 |                      11.7 |
+| 10/04_14:12 |  466.64 |  7.7773 |            0.0 |                      11.7 |
+| 10/04_14:13 | 526.652 |  8.7775 |            0.0 |                      11.7 |
+| 10/04_14:14 | 586.657 |  9.7776 |            0.0 |                      11.7 |
+| 10/04_14:15 | 646.655 | 10.7776 |            0.0 |                      11.7 |
+| 10/04_14:16 | 706.645 | 11.7774 |            0.0 |                      11.7 |
+| 10/04_14:17 | 766.656 | 12.7776 |            0.0 |                      11.7 |
+
+[[../plots/BMPs/Acetate/methane_kinetics_acet_test_1_s2.png]]
+
+** Acetate Test 2
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (2).
+
+*acet_test_2_s2*
+#+NAME: acet_test_2_s2
+#+BEGIN_SRC julia :noweb no-export
+
+  ### Data Analysis on Sample 2 ###
+
+  <<date_saving_acetate_s2>>
+
+  inds = 4:21
+  exp_meth_vol = [0, 3.5, 3, 1, 1, 1, 0.2, 0.4, 0.4, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+  meth_vol_acet_2 = cumsum(exp_meth_vol)[end]
+  exp_name = "acet_test_2_s2"
+  source = "Acetate"
+  sample = "Sample 2"
+  sludge = "Sludge 2"
+  input_cod = 0.1
+  p0 = [300.0, 60.0, 1.0]
+
+  <<bmp_data_processing>>
+  <<bmp_curve_fitting_min>>
+  model_acet_2 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
+#+END_SRC
+
+#+RESULTS: acet_test_2_s2
+: "../data/exp_pro/acet_test_2_s2.csv"
+
+#+NAME: acet_data_2_s2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<acet_test_2_s2()>> '(4))
+#+END_SRC
+
+#+CAPTION: Κινητικά Δεδομένα
+| Timestamp   | Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
+| 10/04_14:02 |     0.0 |     0.0 |            0.0 |                       0.0 |
+| 10/04_14:03 |    60.0 |     1.0 |            3.5 |                       3.5 |
+| 10/04_14:04 | 108.292 |  1.8049 |            3.0 |                       6.5 |
+| 10/04_14:05 | 165.673 |  2.7612 |            1.0 |                       7.5 |
+| 10/04_14:06 | 225.695 |  3.7616 |            1.0 |                       8.5 |
+| 10/04_14:07 | 285.685 |  4.7614 |            1.0 |                       9.5 |
+| 10/04_14:07 | 304.274 |  5.0712 |            0.2 |                       9.7 |
+| 10/04_14:08 | 364.265 |  6.0711 |            0.4 |                      10.1 |
+| 10/04_14:08 | 392.287 |  6.5381 |            0.4 |                      10.5 |
+| 10/04_14:09 | 452.282 |   7.538 |            2.0 |                      12.5 |
+| 10/04_14:10 |  512.28 |   8.538 |            0.0 |                      12.5 |
+| 10/04_14:11 | 572.302 |  9.5384 |            0.0 |                      12.5 |
+| 10/04_14:12 | 632.313 | 10.5386 |            0.0 |                      12.5 |
+| 10/04_14:13 | 692.325 | 11.5388 |            0.0 |                      12.5 |
+| 10/04_14:14 |  752.33 | 12.5388 |            0.0 |                      12.5 |
+| 10/04_14:15 | 812.328 | 13.5388 |            0.0 |                      12.5 |
+| 10/04_14:16 | 872.318 | 14.5386 |            0.0 |                      12.5 |
+| 10/04_14:17 | 932.329 | 15.5388 |            0.0 |                      12.5 |
+
+[[../plots/BMPs/Acetate/methane_kinetics_acet_test_2_s2.png]]
+
+** Acetate Test 4
+Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα (4).
+
+*acet_test_4_s2*
+#+NAME: acet_test_4_s2
+#+BEGIN_SRC julia :noweb no-export
+
+  ### Data Analysis on Sample 4 ###
+
+  <<date_saving_acetate_s2>>
+
+  inds = 10:21
+  exp_meth_vol = [0, 5.5, 2.0, 1.5, 0.5, 0, 0, 0, 0, 0, 0, 0]
+  meth_vol_acet_4 = cumsum(exp_meth_vol)[end]
+  exp_name = "acet_test_4_s2"
+  source = "Acetate"
+  sample = "Sample 4"
+  sludge = "Sludge 2"
+  input_cod = 0.1
+  p0 = [400.0, 100.0, 1.0]
+
+  <<bmp_data_processing>>
+  <<bmp_curve_fitting_min>>
+  model_acet_4 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+  return("../data/exp_pro/"*exp_name*".csv")
+#+END_SRC
+
+#+RESULTS: acet_test_4_s2
+: "../data/exp_pro/acet_test_4_s2.csv"
+
+#+NAME: acet_data_4_s2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<acet_test_4_s2()>> '(4))
+#+END_SRC
+
+#+CAPTION: Κινητικά δεδομένα
+| Timestamp   | Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
+| 10/04_14:07 |     0.0 |     0.0 |            0.0 |                       0.0 |
+| 10/04_14:08 |  59.991 |  0.9998 |            5.5 |                       5.5 |
+| 10/04_14:08 |  88.013 |  1.4669 |            2.0 |                       7.5 |
+| 10/04_14:09 | 148.008 |  2.4668 |            1.5 |                       9.0 |
+| 10/04_14:10 | 208.006 |  3.4668 |            0.5 |                       9.5 |
+| 10/04_14:11 | 268.028 |  4.4671 |            0.0 |                       9.5 |
+| 10/04_14:12 | 328.039 |  5.4673 |            0.0 |                       9.5 |
+| 10/04_14:13 | 388.051 |  6.4675 |            0.0 |                       9.5 |
+| 10/04_14:14 | 448.056 |  7.4676 |            0.0 |                       9.5 |
+| 10/04_14:15 | 508.054 |  8.4676 |            0.0 |                       9.5 |
+| 10/04_14:16 | 568.044 |  9.4674 |            0.0 |                       9.5 |
+| 10/04_14:17 | 628.055 | 10.4676 |            0.0 |                       9.5 |
+
+[[../plots/BMPs/Acetate/methane_kinetics_acet_test_4_s2.png]]
+
+** Update all helper
+Σε αυτό το section θα υπάρχει ένα helper code block που θα κάνει evaluate όλα τα παραπάνω. Έτσι, αν αλλάξει κάτι το οποίο επηρεάζει περισσότερα από ένα code blocks, θα μπορούν να γίνουν updated ταυτόχρονα πιο εύκολα. Επίσης, μία επιπλέον χρησιμότητα του code block αυτού είναι ότι αποθηκεύει ένα CSV που συγκεντρώνει όλα τα δεδομένα των κινητικών παραμέτρων από την προσαρμογή που έγινε παραπάνω, το οποίο είναι χρήσιμο για συγκρίσεις, παρόλο που τα συγκεκριμένα πειράματα δεν είναι τόσο σημαντικό να συγκριθούν.
+*update_acetate_tests_s2*
+#+NAME: update_acetate_tests_s2
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_analysis.jl
+
+  <<acet_test_0_s2>>
+  <<acet_test_1_s2>>
+  <<acet_test_2_s2>>
+  <<acet_test_4_s2>>
+  <<acet_test_fw_s2>>
+
+  model_fit_table = Tables.table(vcat(reshape(model_acet_0, 1, 5), reshape(model_acet_1, 1, 5), reshape(model_acet_2, 1, 5), reshape(model_acet_4, 1, 5), reshape(model_acet_fw, 1, 5)), header = [:Sample_Name, :Production_Potential, :Production_Rate, :Lag_Time, :R_squared])
+  CSV.write(datadir("exp_pro", "methane_from_acetate_kinetics_s2.csv"), model_fit_table)
+  return("../data/exp_pro/methane_from_acetate_kinetics_s2.csv")
+#+END_SRC
+
+#+RESULTS: update_acetate_tests_s2
+: "..data/exp_pro/methane_from_acetate_kinetics_s2.csv"
+
+#+NAME: acet_kinetic_data_s2
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<update_acetate_tests_s2()>> '(4))
+#+END_SRC
+
+#+CAPTION: Kinetic Models
+| Sample_Name | Production_Potential | Production_Rate | Lag_Time | R_squared |
+| Sample 0    |              119.449 |         163.552 |    0.185 |     0.998 |
+| Sample 1    |              116.631 |          34.438 |      0.0 |     0.843 |
+| Sample 2    |              125.989 |          20.381 |      0.0 |     0.921 |
+| Sample 4    |               94.835 |          68.206 |    0.194 |     0.999 |
+| Sample FW   |               144.51 |          42.981 |    0.586 |     0.993 |
+
+** Γενικά σχόλια για αυτόν τον κύκλο πειραμάτων
+Αυτά τα πειράματα έχουν ως σκοπό την σύγκριση με την προηγούμενη λάσπη και μία προσπάθεια επαλήθευσης των αποτελεσμάτων του προηγούμενου κύκλου χρησιμοποιώντας διαφορετική λάσπη (το οποίο θα μας επιτρέψει να επιβεβαιώσουμε πως λειτουργούν και οι 2 όπως θα αναμέναμε).
+
+Με βάση τα αποτελέσματα του κύκλου αυτού, παρατηρούμε πως η λάσπη αυτή παράγει πολύ λιγότερο μεθάνιο. Βέβαια, μπορεί να παίζει ρόλο πως έχει προστεθεί αρκετά περισσότερη λάσπη στον αντιδραστήρα (250 g που αντιστοιχούν σε 4 g VS αντί για 125 g που αντιστοιχούσαν σε 1.5 g VS στο προηγούμενο πείραμα) οπότε ο λόγος τροφής προς μικροοργανισμούς (F/M) είναι πολύ μικρότερος.
+
+Επίσης, παρατηρείται πως ο ρυθμός παραγωγής μεθανίου είναι μικρότερος (παρότι της ίδιας τάξης μεγέθους) από το προηγούμενο πείραμα, με εξαίρεση μόνο το δείγμα 0, όπου η λάσπη παρήγαγε πάρα πολύ γρήγορα αέριο.
+
+Ως συμπέρασμα, βλέπουμε πως μία πιθανή αιτία για την μεγάλη διαφορά των δύο λασπών μπορεί να είναι η διαφορετική ποσότητα λάσπης (και άρα να πρέπει αυτή να ληφθεί υπόψην στις κινητικές) πέρα από το γεγονός ότι μπορεί να έχουν απλώς πολύ διαφορετική δραστικότητα.
