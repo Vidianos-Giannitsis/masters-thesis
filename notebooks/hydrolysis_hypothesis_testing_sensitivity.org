@@ -161,35 +161,72 @@
 #+end_example
 
 * Visualization των αποτελεσμάτων αυτών
-Για να είναι πιο ευπαρουσίαστα τα αποτελέσματα της ανάλυσης, αξίζει να κάνουμε κάποια διαγράμματα που δείχνουν την τελική συγκέντρωση της κάθε ένωσης ανάλογα με το mix amount.
+Για να είναι πιο ευπαρουσίαστα τα αποτελέσματα της ανάλυσης, αξίζει να κάνουμε κάποια διαγράμματα που δείχνουν την τελική συγκέντρωση της κάθε ένωσης ανάλογα με το mix amount και την θεροκρασία. Ο καλύτερος τρόπος να γίνει visualized αυτό είναι μέσω κάποιων stacked bar plots.
 
 #+NAME: prod_visualization
 #+BEGIN_SRC julia :tangle ../scripts/hypothesis_sensitivity_preprocessing.jl
 
-  using Plots
+  using CairoMakie
+  colors = Makie.wong_colors()
 
   xtick = ["0", "1", "2", "4", "8"]
-  plot_label = ["Lactate" "Acetate" "Propionate" "Ethanol"]
+  plot_label = ["Lactate", "Acetate", "Propionate", "Ethanol"]
+  xdata = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
+  grp = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]
 
-  prod_scatter_35 = scatter(1:5, [lact_mean_35 acet_mean_35 prop_mean_35 eth_mean_35],
-			    xticks = (1:5, ["0", "1", "2", "4", "8"]),
-			    xlabel = "Mix Amount (ml)", ylabel = "Concentration (g/l)",
-			    markersize = 6, label = plot_label,
-			    title = "Product Concentration by mix amount - 35 C")
-  savefig(plotsdir("10_11", "final_prod_scatter_10_11.png"))
+  vfa_conc_35 = vcat(prod35_0, prod35_1, prod35_2, prod35_4, prod35_8)
+  vfa_conc_40 = vcat(prod40_0, prod40_1, prod40_2, prod40_4, prod40_8)
 
-  prod_scatter_40 = scatter(1:5, [lact_mean_40 acet_mean_40 prop_mean_40 eth_mean_40],
-			    xticks = (1:5, ["0", "1", "2", "4", "8"]),
-			    xlabel = "Mix Amount (ml)", ylabel = "Concentration (g/l)",
-			    markersize = 6, label = plot_label,
-			    title = "Product Concentration by mix amount - 40 C")
-  savefig(plotsdir("28_11", "final_prod_scatter_28_11.png"))
+  fig_35 = Figure(size = (600, 400))
+  ax_35 = Axis(fig_35[1,1], xticks = (1:5, xtick),
+	       title = "Products of acidogenic fermentation at 35 C",
+	       xlabel = "Mix Amount (ml)",
+	       ylabel = "Products (g/L)")
+  prod_35 = barplot!(ax_35, xdata, vfa_conc_35, stack = grp, color = colors[grp])
+  elements = [PolyElement(polycolor = colors[i]) for i in 1:length(plot_label)]
+  Legend(fig_35[1,2], elements, plot_label, "Products: ")
+  save(get_plot_name("final_product", "10_11", "bar"), fig_35)
 
+  fig_40 = Figure(size = (600, 400))
+  ax_40 = Axis(fig_40[1,1], xticks = (1:5, xtick),
+	       title = "Products of acidogenic fermentation at 40 C",
+	       xlabel = "Mix Amount (ml)",
+	       ylabel = "Products (g/L)")
+  prod_40 = barplot!(ax_40, xdata, vfa_conc_40, stack = grp, color = colors[grp])
+  elements = [PolyElement(polycolor = colors[i]) for i in 1:length(plot_label)]
+  Legend(fig_40[1,2], elements, plot_label, "Products: ")
+  save(get_plot_name("final_product", "28_11", "bar"), fig_40)
+
+  prod_plot = vcat(prod35_0, prod35_1, prod35_2, prod35_4, prod35_8, prod40_0, prod40_1, prod40_2, prod40_4, prod40_8)
+  xdata_complete = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
+  grp1 = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]
+  grp2 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+  bar_l = ["", "", "", "35 C", "", "", "", "35 C", "", "", "", "35 C", "", "", "", "35 C", "", "", "", "35 C", "", "", "", "40 C", "", "", "", "40 C", "", "", "", "40 C", "", "", "", "40 C", "", "", "", "40 C"]
+
+  fig_comp = Figure(size = (900, 600))
+  ax_comp = Axis(fig_comp[1,1], xticks = (1:5, xtick),
+		 title = "Products of acidogenic fermentation",
+		 xlabel = "Mix Amount (ml)",
+		 ylabel = "Products (g/L)", titlesize = 22,
+		 xlabelsize = 18, ylabelsize = 18,
+		 xticksize = 16.0, yticksize = 16.0)
+  prod_comp = barplot!(ax_comp, xdata_complete, prod_plot, stack = grp1, dodge = grp2, color = colors[grp1], bar_labels = bar_l, label_size = 16)
+  elements = [PolyElement(polycolor = colors[i]) for i in 1:length(plot_label)]
+  Legend(fig_comp[1,2], elements, plot_label, "Products: ", labelsize = 20, titlesize = 20)
+  save(plotsdir("35_40_comp", "final_products.png"), fig_comp)
 #+END_SRC
 
-[[../plots/10_11/final_prod_scatter_10_11.png]]
+#+RESULTS: prod_visualization
+: CairoMakie.Screen{IMAGE}
 
-[[../plots/28_11/final_prod_scatter_28_11.png]]
+#+ATTR_ORG: :width 800px
+[[../plots/10_11/final_product_bar_10_11.png]]
+
+#+ATTR_ORG: :width 800px
+[[../plots/28_11/final_product_bar_28_11.png]]
+
+#+ATTR_ORG: :width 800px
+[[../plots/35_40_comp/final_products.png]]
 
 * Δημιουργία ψευδο-κατανομής των δεδομένων
 Για να κάνουμε ANOVA χρειάζεται κάθε μέτρηση να έχει ένα sample size μεγαλύτερο του 1 (και εφόσον κάνουμε στατιστική ανάλυση, τυπικά θέλουμε πάνω από 5 για στατιστικά σημαντικά αποτελέσματα). Δεν μπορούμε να κάνουμε το πείραμα τόσες φορές, οπότε χρειαζόμαστε έναν μηχανισμό για να φτιάξουμε δεδομένα.
