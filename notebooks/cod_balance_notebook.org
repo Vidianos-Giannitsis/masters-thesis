@@ -2,7 +2,7 @@
 #+AUTHOR: Βιδιάνος Γιαννίτσης
 
 \begin{abstract}
-Η ανάλυση COD είναι μία ανάλυση που μετράει την συνολική οργανική ύλη μίας ένωσης με βάση το πόσο οξυγόνο θέλει για να οξειδωθεί πλήρως. Η ανάλυση της HPLC μετράει την συγκέντρωση για συγκεκριμένα χημικά είδη. Συγκρίνοντας τα δεδομένα των δύο αναλύσεων μπορούμε να δούμε πόση από την οργανική ύλη που μπορεί να υπάρχει μετράει όντως η HPLC και πόση είναι άλλες, άγνωστες ενώσεις. Βέβαια, λόγω των μεγάλων αραιώσεων που απαιτούνται για να μετρηθεί το COD, πολλές φορές δεν έχει ικανοποιητική ακρίβεια, το οποίο μπορεί να δημιουργήσει προβλήματα στην σύγκριση αυτή. Το αρχείο αυτό αποτελεί ένα literate document που επεξηγεί την διαδικασία αυτή αναλυτικά και δείχνει τα αποτελέσματα της, ενώ μπορεί να κάνει tangle τον κώδικα που αναφέρεται στα κατάλληλα scripts ή να τον κάνει weave σε ένα pdf. Αξίζει να αναφερθεί πως γίνεται έντονη named code blocks τα οποία βοηθάνε στο να τρέξουμε πολλές φορές το ίδιο code block με βάση του noweb syntax που προσφέρει το org-mode. Καθώς το όνομα του code block δεν γίνεται weaved, θα υπάρχει με bold το όνομα πριν ακριβώς από κάθε code block, ώστε να μπορεί να κατανοηθεί και πότε κάποιο γίνεται inserted σε άλλα.
+Η ανάλυση COD είναι μία ανάλυση που μετράει την συνολική οργανική ύλη μίας ένωσης με βάση το πόσο οξυγόνο θέλει για να οξειδωθεί πλήρως. Η ανάλυση της HPLC μετράει την συγκέντρωση για συγκεκριμένα χημικά είδη. Συγκρίνοντας τα δεδομένα των δύο αναλύσεων μπορούμε να δούμε πόση από την οργανική ύλη που μπορεί να υπάρχει μετράει όντως η HPLC και πόση είναι άλλες, άγνωστες ενώσεις. Βέβαια, λόγω των μεγάλων αραιώσεων που απαιτούνται για να μετρηθεί το COD, πολλές φορές δεν έχει ικανοποιητική ακρίβεια, το οποίο μπορεί να δημιουργήσει προβλήματα στην σύγκριση αυτή. Ένα άλλο ενδιαφέρον που έχει μία τέτοια ανάλυση είναι πως μας επιτρέπει να δούμε πόσο από το συνολικό sCOD στο τέλος της διεργασίας είναι πτητικά λιπαρά οξέα (VFAs), ένα κριτήριο του πόσο καλό acidification έγινε στον αντιδραστήρα. Το αρχείο αυτό αποτελεί ένα literate document που επεξηγεί την διαδικασία αυτή αναλυτικά και δείχνει τα αποτελέσματα της, ενώ μπορεί να κάνει tangle τον κώδικα που αναφέρεται στα κατάλληλα scripts ή να τον κάνει weave σε ένα pdf. Αξίζει να αναφερθεί πως γίνεται έντονη named code blocks τα οποία βοηθάνε στο να τρέξουμε πολλές φορές το ίδιο code block με βάση του noweb syntax που προσφέρει το org-mode. Καθώς το όνομα του code block δεν γίνεται weaved, θα υπάρχει με bold το όνομα πριν ακριβώς από κάθε code block, ώστε να μπορεί να κατανοηθεί και πότε κάποιο γίνεται inserted σε άλλα.
 \end{abstract}
 
 * Table of Contents                                            :TOC:noexport:
@@ -27,6 +27,7 @@
   @quickactivate "Masters_Thesis"
   include(srcdir("cod_balance.jl"))
   include(srcdir("filenames.jl"))
+  using CSV, DataFrames
   using StatsPlots
 #+END_SRC
 
@@ -63,33 +64,104 @@
   cod_yields = [cod_sucrose(), cod_glucose(), cod_fructose(), cod_acetate(),
 		cod_propionate(), cod_lactate(), cod_ethanol()]
 
-  df0_cod0 = sum(df0_conc0.*cod_yields)
-  df1_cod0 = sum(df1_conc0.*cod_yields)
-  df2_cod0 = sum(df2_conc0.*cod_yields)
-  df4_cod0 = sum(df4_conc0.*cod_yields)
-  df8_cod0 = sum(df8_conc0.*cod_yields)
-  cod0_theor = [df0_cod0, df1_cod0, df2_cod0, df4_cod0, df8_cod0]
+  df0_cod0 = df0_conc0.*cod_yields
+  df1_cod0 = df1_conc0.*cod_yields
+  df2_cod0 = df2_conc0.*cod_yields
+  df4_cod0 = df4_conc0.*cod_yields
+  df8_cod0 = df8_conc0.*cod_yields
+
+  df0_cod0_sum = sum(df0_cod0)
+  df1_cod0_sum = sum(df1_cod0)
+  df2_cod0_sum = sum(df2_cod0)
+  df4_cod0_sum = sum(df4_cod0)
+  df8_cod0_sum = sum(df8_cod0)
+
+  cod0_theor = [df0_cod0_sum, df1_cod0_sum, df2_cod0_sum, df4_cod0_sum, df8_cod0_sum]
   cod0_meas = cod_meas.COD_0./1000
   cod0_error = cod0_meas - cod0_theor
 
-  df0_cod72 = sum(df0_conc72.*cod_yields)
-  df1_cod72 = sum(df1_conc72.*cod_yields)
-  df2_cod72 = sum(df2_conc72.*cod_yields)
-  df4_cod72 = sum(df4_conc72.*cod_yields)
-  df8_cod72 = sum(df8_conc72.*cod_yields)
-  cod72_theor = [df0_cod72, df1_cod72, df2_cod72, df4_cod72, df8_cod72]
+  df0_cod72 = df0_conc72.*cod_yields
+  df1_cod72 = df1_conc72.*cod_yields
+  df2_cod72 = df2_conc72.*cod_yields
+  df4_cod72 = df4_conc72.*cod_yields
+  df8_cod72 = df8_conc72.*cod_yields
+
+  df0_VFA_cod = df0_cod72[4:7]
+  df1_VFA_cod = df1_cod72[4:7]
+  df2_VFA_cod = df2_cod72[4:7]
+  df4_VFA_cod = df4_cod72[4:7]
+  df8_VFA_cod = df8_cod72[4:7]
+  VFA_vec = [hcat(df0_VFA_cod, df1_VFA_cod, df2_VFA_cod, df4_VFA_cod, df8_VFA_cod)[i, :] for i in 1:4]
+
+  df0_cod72_sum = sum(df0_cod72)
+  df1_cod72_sum = sum(df1_cod72)
+  df2_cod72_sum = sum(df2_cod72)
+  df4_cod72_sum = sum(df4_cod72)
+  df8_cod72_sum = sum(df8_cod72)
+
+  cod72_theor = [df0_cod72_sum, df1_cod72_sum, df2_cod72_sum, df4_cod72_sum, df8_cod72_sum]
   cod72_meas = cod_meas.COD_72./1000
   cod72_error = cod72_meas - cod72_theor
 
 #+END_SRC
 
 #+RESULTS: cod_data_extraction
+: 5-element Vector{Float64}:
+:  1.6154866067150744
+:  1.1355731239539066
+:  1.3948483883881124
+:  1.6798233965779827
+:  2.053019240029398
+
+* Acidification Rate
+Όπως αναφέρθηκε παραπάνω, ένα ακόμη χρήσιμο κριτήριο που μπορεί να γίνει κάνοντας convert τα αποτελέσματα της HPLC στο COD-eq τους είναι να δούμε πόσο καλό acidification έχει γίνει συγκρίνοντας ολικό διαλυτό COD με διαλυτό COD που οφείλεται στα προιόντα της οξεογένεσης. Για αυτά, θα χρησιμοποιηθεί παρακάτω ο όρος VFAs (volatile fatty acids) αλλά κατά σύμβαση θα συμπεριληφθεί σε αυτά και η αιθανόλη καθώς παρότι δεν είναι VFA είναι ένα από τα βασικά προιόντα μίας οξεογένεσης (ειδικά αν αυτή γίνεται σε χαμηλό pH).
+
+#+NAME: acidification
+#+BEGIN_SRC julia :noweb no-export
+
+  date = "10_11"
+  <<cod_data_extraction>>
+  df0_35_tVFA = sum(df0_VFA_cod)
+  df1_35_tVFA = sum(df1_VFA_cod)
+  df2_35_tVFA = sum(df2_VFA_cod)
+  df4_35_tVFA = sum(df4_VFA_cod)
+  df8_35_tVFA = sum(df8_VFA_cod)
+
+  tVFA_35 = [df0_35_tVFA, df1_35_tVFA, df2_35_tVFA, df4_35_tVFA, df8_35_tVFA]
+  acidification_35 = tVFA_35./cod72_meas
+
+  date = "28_11"
+  <<cod_data_extraction>>
+  df0_40_tVFA = sum(df0_VFA_cod)
+  df1_40_tVFA = sum(df1_VFA_cod)
+  df2_40_tVFA = sum(df2_VFA_cod)
+  df4_40_tVFA = sum(df4_VFA_cod)
+  df8_40_tVFA = sum(df8_VFA_cod)
+
+  tVFA_40 = [df0_40_tVFA, df1_40_tVFA, df2_40_tVFA, df4_40_tVFA, df8_40_tVFA]
+  acidification_40 = tVFA_40./cod72_meas
+
+  acid_plot = groupedbar([0, 1, 2, 3, 4], [acidification_35 acidification_40],
+			 label = ["35 C" "40 C"], xlabel = "Amount of mix (ml)",
+			 ylabel = "tVFAs (gCOD-eq/L)/sCOD (g/L)",
+			 title = "Acidification Rate", xticks = (0:4, mix_amount),
+			 legend = :bottom)
+  savefig(acid_plot, plotsdir("35_40_comp", "acidification_comp.png"))
+
+#+END_SRC
+
+#+RESULTS: acidification
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/35_40_comp/acidification_comp.png"
+
+[[../plots/35_40_comp/acidification_comp.png]]
 
 * Plotting
-Με αυτά τα δεδομένα, μπορούμε να κάνουμε τα συγκριτικά plots μεταξύ των δύο.
+Με αυτά τα δεδομένα, μπορούμε να κάνουμε κάποια χρήσιμα διαγράμματα. Θα κάνουμε 2 κατηγορίες διαγραμμάτων.
 
-*cod_comp_plots*
-#+NAME: cod_comp_plots
+Η πρώτη θα είναι συγκριτικά διαγράμματα των αποτελεσμάτων της ανάλυσης COD και του υπολογισμένου COD από την HPLC ενώ η δεύτερη θα είναι κάποια stacked bar plots που θα δείχνουν τις τελικές συγκεντρώσεις όλων των προιόντων σε COD-eq. Το πρώτο έχει τον συγκριτικό σκοπό του να δούμε πόσο από το διαλυτό COD είναι οι 7 ενώσεις που μετράμε στην HPLC ενώ το δεύτερο είναι συνοδευτικό του παραπάνω για να κρίνουμε ποιο δείγμα παρήγαγε τα περισσότερα οξέα. Σε άλλο αρχείο έχει γίνει το αντίστοιχο plot και σε συγκέντρωση αντί για COD-eq.
+
+*cod_plots*
+#+NAME: cod_plots
 #+BEGIN_SRC julia
 
   label = ["COD Measurement" "HPLC Measurement"]
@@ -112,7 +184,18 @@
   cod_plot = plot(cod0_plot, cod72_plot, layout = (2,1), size = (900, 600))
   savefig(cod_plot, get_plot_name("cod", date, plot_type))
 
+  vfa_plot = groupedbar([0, 1, 2, 3, 4],
+			[VFA_vec[1] VFA_vec[2] VFA_vec[3] VFA_vec[4]],
+			bar_position = :stack, xticks = (0:4, mix_amount),
+			label = ["Lactate" "Acetate" "Propionate" "Ethanol"],
+			xlabel = "Amount of mix (ml)", ylabel = "VFAs (g COD-eq/L)",
+			title = "VFAs Produced during Fermentation",
+			legend = :outerright)
+  savefig(vfa_plot, get_plot_name("vfa_cod", date, "stackedbar"))
 #+END_SRC
+
+#+RESULTS: cod_plots
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/10_11/vfa_cod_stackedbar_10_11.png"
 
 * Αποτελέσματα για το πείραμα 10/11
 Έχοντας τα παραπάνω code blocks, μπορούμε ορίζοντας το date και τρέχοντας τα να παράγουμε τα απαιτούμενα plots. Το συγκεντρωτικό plot φαίνεται παρακάτω. Επίσης, αυτό ακριβώς είναι και αυτό που θέλουμε να γίνει tangled, μόλις φυσικά κάνουμε tangle τα dependencies.
@@ -127,16 +210,18 @@
 
   date = "10_11"
   <<cod_data_extraction>>
-  <<cod_comp_plots>>
+  <<cod_plots>>
 
 #+END_SRC
 
 #+RESULTS: cod_balance_10_11
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/10_11/cod_comparison_10_11.png"
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/10_11/vfa_cod_stackedbar_10_11.png"
 
 #+CAPTION: Σύγκριση της μέτρησης COD άμεσα ή μέσω της HPLC - Πείραμα 10/11
 #+ATTR_ORG: :width 700px
 [[/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/10_11/cod_comparison_10_11.png]]
+
+[[../plots/10_11/vfa_cod_stackedbar_10_11.png]]
 
 * Αποτελέσματα για το πείραμα 28/11
 Ομοίως, μπορούμε αλλάζοντας το date να τρέξουμε και το πείραμα της 28/11 χωρίς καμία πρακτική αλλαγή στον κώδικα.
@@ -151,16 +236,18 @@
 
   date = "28_11"
   <<cod_data_extraction>>
-  <<cod_comp_plots>>
+  <<cod_plots>>
 
 #+END_SRC
 
 #+RESULTS: cod_balance_28_11
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/28_11/cod_comparison_28_11.png"
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/28_11/vfa_cod_stackedbar_28_11.png"
 
 #+CAPTION: Σύγκριση της μέτρησης COD άμεσα ή μέσω της HPLC - Πείραμα 28/11
 #+ATTR_ORG: :width 700px
 [[/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/28_11/cod_comparison_28_11.png]]
+
+[[../plots/28_11/vfa_cod_stackedbar_28_11.png]]
 
 * Πείραμα 23/10
 Στο πείραμα αυτό υπήρχε καθημερινή μέτρηση του COD, εκτός από την τελευταία μέρα που ήταν μετά το σαββατοκύριακο οπότε έχει νόημα να γίνει σύγκριση σε όλα τα διαθέσιμα σημεία.
