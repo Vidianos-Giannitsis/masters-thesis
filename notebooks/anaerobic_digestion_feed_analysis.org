@@ -79,7 +79,7 @@
 #+RESULTS: cod_data_processing
 : 4×2 Matrix{Float64}:
 :  19513.4   22242.0
-:  16371.3   13672.6
+:  16371.3   20218.7
 :   9087.24  19623.6
 :   8135.08  22480.1
 
@@ -160,22 +160,42 @@
 
   complete_cod_plot = plot(cod_bar_22_03, cod_bar_26_03, soluble_cod_scatter, total_cod_scatter, size = (900, 600))
   savefig(complete_cod_plot, get_plot_name("complete_cod", date, "plot"))
+
+  complete_cod_bar = plot(cod_bar_22_03, cod_bar_26_03, size = (800, 500))
+  savefig(complete_cod_bar, get_plot_name("complete_cod", date, "bar"))
 #+END_SRC
 
 #+RESULTS: cod_plots
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/26_03/complete_cod_plot_26_03.png"
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/26_03/complete_cod_bar_26_03.png"
 
 * Μετρήσεις στερεών
 Εκτός από τις παραπάνω αναλύσεις που έγιναν για την μέτρηση του COD των υδρολυμάτων που τροφοδοτηθούν, μία άλλη σημαντική μέτρηση ήταν αυτή των TS και VS των υδρολυμάτων αλλά και της λάσπης. Οι υπολογισμοί που χρειάστηκαν εδώ ήταν πολύ απλοί οπότε δεν χρειάζεται να γίνει data loading σε Julia, καθώς ένα απλό org table μας δίνει όλη την πληροφορία που χρειαζόμαστε. Προζυγίστηκαν οι 4 κάψες και σε αυτές μετρήθηκαν TS και VS των τεσσάρων υδρολυμάτων (0, 1, 2 και 4 ml). Παρακάτω φαίνονται τα αποτελέσματα.
 
 #+CAPTION: Μετρήσεις TS και VS για τα food waste
-| Αριθμός | m_Κάψας (g) | m_FW (g) | Ζύγισμα TS (g) |  TS (g/l) | Ζύγισμα VS (g) |  VS (g/l) | VS/TS |
+| Αριθμός | m_Κάψας (g) | m_FW (g) | Ζύγισμα TS (g) |        TS | Ζύγισμα VS (g) |        VS | VS/TS |
 |---------+-------------+----------+----------------+-----------+----------------+-----------+-------|
 |       1 |     14.9116 |   5.4618 |        15.0150 | 18.931488 |        14.9218 | 17.063972 | 0.901 |
-|       2 |     15.5253 |   5.2913 |        15.6072 | 15.478238 |        15.5196 | 16.555478 | 1.070 |
+|       2 |     15.5253 |   5.2913 |        15.6072 | 15.478238 |        15.5253 | 15.478238 | 1.000 |
 |       3 |     15.0313 |   5.7813 |        15.1098 | 13.578261 |        15.0415 | 11.813952 | 0.870 |
 |       4 |     11.3655 |   5.7184 |        11.4764 | 19.393537 |        11.3968 | 13.919978 | 0.718 |
 #+TBLFM: $5=(($4-$2)/$3)*1000::$7=$5 - (($6 -$2)/$3)*1000::$8=$7/$5;%.3f
+
+Θα γίνουν όμως imported σε julia για να γίνουν κάποια plots.
+
+#+NAME: ts_vs_plot
+#+BEGIN_SRC julia
+
+  ts_vs_data = CSV.read(datadir("exp_pro", "hydrolysate_ts_vs_26_03.csv"), DataFrame)
+  ts = ts_vs_data.TS
+  vs = ts_vs_data.VS
+
+  date = "26_03"
+  ts_vs_plot = groupedbar(1:4, [vs ts], xticks = (1:4, ["0", "1", "2", "4"]), xlabel = "Mix Amount (ml)", ylabel = "Solids (g/l)", label = ["Volatile" "Total"], title = "Solids Measurements for Hydrolysates")
+  savefig(ts_vs_plot, get_plot_name("ts_vs", date, "bar_plot"))
+#+END_SRC
+
+#+RESULTS: ts_vs_plot
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/26_03/ts_vs_bar_plot_26_03.png"
 
 Αντίστοιχη ανάλυση έγινε και για την λάσπη, όπου χρησιμοποιήθηκαν 2 ίδια δείγματα για reproducibility.
 
