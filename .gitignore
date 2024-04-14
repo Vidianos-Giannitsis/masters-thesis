@@ -8,6 +8,8 @@
 /.CondaPkg
 /bmp_pictures/Vidianos_BMPs
 /notebooks/.ob-julia-snail
+/notebooks/ltximg
+/reports/ltximg
 
 ################################################################################
 #                                    Julia                                     #
