@@ -10,6 +10,7 @@
 /notebooks/.ob-julia-snail
 /notebooks/ltximg
 /reports/ltximg
+/manuscripts/ltximg
 
 ################################################################################
 #                                    Julia                                     #

@@ -1,0 +1,84 @@
+% Created 2024-04-15 Δευ 17:42
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{import}
+\usepackage[LGR, T1]{fontenc}
+\usepackage[greek, english, american]{babel}
+\usepackage{alphabeta}
+\usepackage{esint}
+\usepackage{mathtools}
+\usepackage{esdiff}
+\usepackage{makeidx}
+\usepackage{glossaries}
+\usepackage{newfloat}
+\usepackage{minted}
+\usepackage[a4paper, margin=3cm]{geometry}
+\usepackage{chemfig}
+\usepackage{svg}
+\author{Vidianos Giannitsis}
+\date{\today}
+\title{Εισαγωγή - Στατιστικά Στοιχεία}
+\hypersetup{
+ pdfauthor={Vidianos Giannitsis},
+ pdftitle={Εισαγωγή - Στατιστικά Στοιχεία},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.6.15)}, 
+ pdflang={English}}
+\makeatletter
+\newcommand{\citeprocitem}[2]{\hyper@linkstart{cite}{citeproc_bib_item_#1}#2\hyper@linkend}
+\makeatother
+
+\usepackage[notquote]{hanging}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\section{Εισαγωγή}
+\label{sec:org8f9a1b7}
+Τα υπολείμματα τροφών αποτελούν μία από τις σημαντικότερες κατηγορίες οργανικών αποβλήτων. Ο οργανισμός τροφίμων και αγρονομίας των ηνωμένων πολιτείων (FAO) υπολογίζει πως περίπου το 1/3 της παγκόσμιας παραγωγής τροφών (περίπου 1.3 δις τόνοι ετησίως) χάνεται κατά την παραγωγική διαδικασία ή απορρίπτεται. Κάποιες από αυτές τις απώλειες είναι αναπόφευχτες, αλλά πολλές θα μπορούσαν να αποφευχθούν ή τα υπολείμματα να συλλεχθούν για μία καλύτερη αξιοποίηση, καθώς οι κλασσικές τεχνικές, όπως η υγειονομική ταφή ή η αποτέφρωση, δημιουργούν προβλήματα όπως οι ανεξέλεγκτες εκπομπές μεγάλων ποσοτήτων αερίων του θερμοκηπίου (\citeprocitem{4}{Wu et al. 2022}; \citeprocitem{5}{Zhang et al. 2020}; \citeprocitem{1}{Ishangulyyev, Kim, and Lee 2019}).
+
+Συγκεκριμένα, έχει προσδιοριστεί πως το ισοδύναμο διοξειδίου του άνθρακα που παράγεται λόγω της μη ορθής αυτής διαχείρισης των υπολείμματων ανέρχεται στους 3.3 δις τόνους (\citeprocitem{3}{Taheri et al. 2021}) . Ακόμη, έχει βρεθεί πως τα υπολείμματα τροφών που οφείλονται μόνο στην απόρριψη τροφών από καταναλωτές σε ανεπτυγμένες χώρες είναι σχεδόν όσα παράγουν οι υπό σακχάριες και αφρικανικές χώρες συνολικά (περίπου 230 εκατομμύρια). Οπότε η αποφυγή της δημιουργίας τόσων υπολειμμάτων - ή η καλύτερη αξιοποίηση τους - θα μπορούσε να λύσει πολλά προβλήματα υποσιτισμού. Ακόμη και στον οικονομικό τομέα, δημιουργούνται σοβαρά προβλήματα από την ανεξέλεγκτη αυτή απόρριψη καθώς η καθαρή αξία των τροφών που χάνονται ή απορρίπτονται σε κάποιο σημείο της εφοδιαστικής αλυσίδας είναι 936 δις δολλάρια ανά έτος με ελάχιστο κέρδος, καθώς πολύ μικρές ποσότητες των υπολειμμάτων αυτών αξιοποιούνται (\citeprocitem{1}{Ishangulyyev, Kim, and Lee 2019}) . Συμπερασματικά, η δημιουργία αυτών των υπέρογκων ποσοτήτων υπολειμμάτων τροφών πλήγει κάθε πυλώνα της βιωσιμότητας και είναι ένα πάρα πολύ σοβαρό πρόβλημα.
+
+Μία από τις βασικότερες υποκατηγορίες υπολειμμάτων τροφών είναι τα οικιακά υπολείμματα τροφών. Μία πρόσφατη μελέτη έδειξε πως περίπου το \(61 \%\) των υπολειμμάτων τροφών που παράγονται παγκοσμίως είναι από αυτόν τον τομέα. Η Ελλάδα είναι η χώρα με την δεύτερη μεγαλύτερη παραγωγή οικιακών υπολειμμάτων τροφών κατά κεφαλήν παγκοσμίως (142 κιλά/άτομο ετησίως) (\citeprocitem{2}{“Statista - The Statistics Portal” n.d.}) . Η παραγωγή υπολειμμάτων τροφών, ειδικά στον τομέα της κατανάλωσης, όπου βρίσκονται τα οικιακά υπολείμματα, καθώς και αυτά της εστίασης, είναι πολύ συχνά αναπόφευχτη. Οπότε, παρόλο που με πιο σωστές πρακτικές θα μπορούσαν να παράγονται λιγότερα υπολείμματα, η ανάπτυξη τεχνολογιών αξιοποίησης των υπολειμμάτων αυτών είναι πάρα πολύ σημαντικές. Οι τεχνολογίες αυτές θα πρέπει να είναι εύκολα εφαρμόσιμες και οικονομικές και η κλιμάκωση τους να είναι εφικτή.
+
+Γενικά, η αγορά της διαχείρισης αποβλήτων είναι αρκετά μεγάλη (υπολογίζεται περίπου στα 1293 δις δολλάρια ετησίως από μία μελέτη του 2022), ενώ προβλέψεις λένε πως θα φτάσει τα 2000 δις μέχρι το 2030 και τα οργανικά απόβλητα, ως ένα πολύ σημαντικό ποσοστό των αστικών αποβλήτων (περίπου \(40-45 \%\)) είναι μία από τις βασικές περιοχές ενδιαφέροντος της αγοράς αυτής (\citeprocitem{2}{“Statista - The Statistics Portal” n.d.}) . Μία από τις βασικότερες τεχνολογίες που έχουν αναδειχθεί σε αυτήν την αγορά η οποία έχει δει ραγδαία αύξηση τα τελευταία χρόνια είναι η αναερόβια χώνευση. Η αναερόβια χώνευση χρησιμοποιεί οργανικά απόβλητα ως υπόστρωμα και με μία σειρά βιοχημικών διεργασιών, τα μετατρέπει σε πτητικά λιπαρά οξέα (VFAs) και τελικά μεθάνιο και διοξείδιο του άνθρακα (το μίγμα γνωστό ως βιοαέριο), το οποίο είναι ένας πολύ καλός ενεργειακός φορέας. Τα υπολείμματα τροφών είναι ένα πολύ καλό υπόστρωμα για αναερόβια χώνευση καθώς είναι πλούσια σε οργανικές ενώσεις αλλά και θρεπτικά στοιχεία και μπορούν να μετατραπούν πολύ αποτελεσματικά σε βιοαέριο. Παρακάτω φαίνεται η παγκόσμια παραγωγή ενέργειας από βιοαέριο τα τελευταία 15 χρόνια (\citeprocitem{2}{“Statista - The Statistics Portal” n.d.}) .
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{../plots/statistics/statistic_id1032922_global-biogas-energy-capacity-2009-2022.png}
+\caption{Παγκόσμια παραγωγή ενέργειας από βιοαέριο}
+\end{figure}
+
+Εκτός όμως από την αξιοποίηση του μεγάλου βιοχημικού δυναμικού των υπολειμμάτων αυτών, η αναερόβια χώνευση λύνει και άλλο ένα από τα σημαντικά προβλήματα του 21ου αιώνα, το οποίο είναι η ενέργεια. Αυτή τη στιγμή, πάνω από το \(80 \%\) της ενέργειας που καταναλώνεται παγκοσμίως βασίζεται σε μη ανανεώσιμες πηγές όπως το πετρέλαιο και το φυσικό αέριο. Οι ενεργειακές απαιτήσεις παγκοσμίως έχουν μία συνεχή αύξηση, ενώ οι πρώτες ύλες αυτές εξαλείφονται (\citeprocitem{2}{“Statista - The Statistics Portal” n.d.}) . Οπότε, τεχνολογίες παραγωγής ενέργειας από ανανεώσιμες πηγές, οι οποίες να έχουν το δυναμικό να αντικαταστήσουν τις πηγές αυτές θα γίνουν απαραίτητες τα επόμενα χρόνια. Οι περισσότερες τεχνολογίες ανανεώσιμης ενέργειας (πχ αιολική, ηλιακή ή υδροηλεκτρική ενέργεια) έχουν δυσκολία να φτάσουν τέτοια επίπεδα και για αυτό χρησιμοποιούνται επικουρικά σε μία κύρια πηγή ενέργειας (αυτή τη στιγμή, περίπου το \(30 \%\) της παγκόσμιας παραγωγής ηλεκτρισμού οφείλεται σε τέτοιες πηγές) (\citeprocitem{2}{“Statista - The Statistics Portal” n.d.}) . Τα υπολείμματα τροφών από την άλλη είναι άφθονα οπότε θεωρείται πως μία αποτελεσματική επεξεργασία θα μπορέσουν να καλύψουν ένα πολύ σημαντικό ποσοστό της παγκόσμιας ανάγκης σε ενέργεια.
+
+Σκοπός της παρούσας διπλωματικής είναι η ανάπτυξη μίας οικονομικής - αλλά αποτελεσματικής - μεθόδου αξιοποιήσης υπολειμμάτων με βάση την αναερόβια χώνευση και η αξιολόγηση αυτής σε εργαστηριακή αλλά και πιλοτική κλίμακα.
+
+\section{Βιβλιογραφία}
+\label{sec:org6b3c424}
+\begin{hangparas}{1.5em}{1}
+\hypertarget{citeproc_bib_item_1}{Ishangulyyev, Rovshen, Sanghyo Kim, and Sang Hyeon Lee. 2019. “Understanding Food Loss and Waste–-Why Are We Losing and Wasting Food?” \textit{Foods} 8 (8): 297. \url{https://doi.org/10.3390/foods8080297}.}
+
+\hypertarget{citeproc_bib_item_2}{“Statista - The Statistics Portal.” n.d. https://www.statista.com/. Accessed November 13, 2023.}
+
+\hypertarget{citeproc_bib_item_3}{Taheri, Mir Edris, Erfaneh Salimi, Konstantinos Saragas, Jelica Novakovic, Elli Maria Barampouti, Sofia Mai, Dimitris Malamis, Konstantinos Moustakas, and Maria Loizidou. 2021. “Effect of Pretreatment Techniques on Enzymatic Hydrolysis of Food Waste.” \textit{Biomass Conversion and Biorefinery} 11 (2): 219–26. \url{https://doi.org/10.1007/s13399-020-00729-7}.}
+
+\hypertarget{citeproc_bib_item_4}{Wu, Lan, Wei Wei, Xuran Liu, Dongbo Wang, and Bing-Jie Ni. 2022. “Potentiality of Recovering Bioresource from Food Waste through Multi-Stage Co-digestion with Enzymatic Pretreatment.” \textit{Journal of Environmental Management} 319 (October): 115777. \url{https://doi.org/10.1016/j.jenvman.2022.115777}.}
+
+\hypertarget{citeproc_bib_item_5}{Zhang, Cunsheng, Xinxin Kang, Fenghuan Wang, Yufei Tian, Tao Liu, Yanyan Su, Tingting Qian, and Yifeng Zhang. 2020. “Valorization of Food Waste for Cost-Effective Reducing Sugar Recovery in a Two-Stage Enzymatic Hydrolysis Platform.” \textit{Energy} 208 (October): 118379. \url{https://doi.org/10.1016/j.energy.2020.118379}.}\bigskip
+\end{hangparas}
+\end{document}
