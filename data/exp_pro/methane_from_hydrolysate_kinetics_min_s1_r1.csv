@@ -1,6 +1,6 @@
 Sample_Name,Production_Potential,Production_Rate,Lag_Time,R_squared
-Sample 0,5.3,0.037,0.0,0.837
-Sample 1,11.059,0.082,0.0,0.693
-Sample 2,9.763,1.535,2.415,0.677
-Sample 4,16.113,15.619,0.099,0.839
+Sample 0,5.129,0.002,0.0,0.928
+Sample 1,12.334,0.005,0.0,0.933
+Sample 2,7.471,0.003,0.0,0.986
+Sample 4,6.418,0.003,0.0,0.976
 FW 1,2.369,0.001,0.0,0.982
