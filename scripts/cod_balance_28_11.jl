@@ -74,19 +74,37 @@ cod72_error = cod72_meas - cod72_theor
 label = ["COD Measurement" "HPLC Measurement"]
 plot_type = "comparison"
 
-cod0_plot = groupedbar([0, 1, 2, 3, 4], [cod0_meas cod0_theor],
+cod0_comp_plot = groupedbar([0, 1, 2, 3, 4], [cod0_meas cod0_theor],
 		       label = label, xlabel = "Amount of mix (ml)",
 		       ylabel = "COD (g/l)", legend =:bottom,
 		       title = "COD comparison t=0",
 		       xticks = (0:4, mix_amount))
-savefig(cod0_plot, get_plot_name("cod_0", date, plot_type))
+savefig(cod0_comp_plot, get_plot_name("cod_0", date, plot_type))
 
-cod72_plot = groupedbar([0, 1, 2, 3, 4], [cod72_meas cod72_theor],
+cod72_comp_plot = groupedbar([0, 1, 2, 3, 4], [cod72_meas cod72_theor],
 		       label = label, xlabel = "Amount of mix (ml)",
 		       ylabel = "COD (g/l)", legend =:bottom,
 		       title = "COD comparison t=72 h",
 		       xticks = (0:4, mix_amount))
-savefig(cod72_plot, get_plot_name("cod_72", date, plot_type))
+savefig(cod72_comp_plot, get_plot_name("cod_72", date, plot_type))
+
+cod_comp_plot = plot(cod0_comp_plot, cod72_comp_plot, layout = (2,1), size = (900, 600))
+savefig(cod_comp_plot, get_plot_name("cod", date, plot_type))
+
+plot_type = "bar"
+cod0_plot = bar([0, 1, 2, 3, 4], cod0_meas,
+		xlabel = "Amount of mix (ml)",
+		ylabel = "COD (g/l)", legend = false,
+		title = "COD @t=0",
+		xticks = (0:4, mix_amount))
+savefig(cod0_comp_plot, get_plot_name("cod_0", date, plot_type))
+
+cod72_plot = bar([0, 1, 2, 3, 4], cod72_meas,
+		 xlabel = "Amount of mix (ml)",
+		 ylabel = "COD (g/l)", legend = false,
+		 title = "COD @t=72 h",
+		 xticks = (0:4, mix_amount), fc = "#E36F47")
+savefig(cod72_comp_plot, get_plot_name("cod_72", date, plot_type))
 
 cod_plot = plot(cod0_plot, cod72_plot, layout = (2,1), size = (900, 600))
 savefig(cod_plot, get_plot_name("cod", date, plot_type))

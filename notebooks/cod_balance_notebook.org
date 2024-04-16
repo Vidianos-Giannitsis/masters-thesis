@@ -167,19 +167,37 @@
   label = ["COD Measurement" "HPLC Measurement"]
   plot_type = "comparison"
 
-  cod0_plot = groupedbar([0, 1, 2, 3, 4], [cod0_meas cod0_theor],
+  cod0_comp_plot = groupedbar([0, 1, 2, 3, 4], [cod0_meas cod0_theor],
 			 label = label, xlabel = "Amount of mix (ml)",
 			 ylabel = "COD (g/l)", legend =:bottom,
 			 title = "COD comparison t=0",
 			 xticks = (0:4, mix_amount))
-  savefig(cod0_plot, get_plot_name("cod_0", date, plot_type))
+  savefig(cod0_comp_plot, get_plot_name("cod_0", date, plot_type))
 
-  cod72_plot = groupedbar([0, 1, 2, 3, 4], [cod72_meas cod72_theor],
+  cod72_comp_plot = groupedbar([0, 1, 2, 3, 4], [cod72_meas cod72_theor],
 			 label = label, xlabel = "Amount of mix (ml)",
 			 ylabel = "COD (g/l)", legend =:bottom,
 			 title = "COD comparison t=72 h",
 			 xticks = (0:4, mix_amount))
-  savefig(cod72_plot, get_plot_name("cod_72", date, plot_type))
+  savefig(cod72_comp_plot, get_plot_name("cod_72", date, plot_type))
+
+  cod_comp_plot = plot(cod0_comp_plot, cod72_comp_plot, layout = (2,1), size = (900, 600))
+  savefig(cod_comp_plot, get_plot_name("cod", date, plot_type))
+
+  plot_type = "bar"
+  cod0_plot = bar([0, 1, 2, 3, 4], cod0_meas,
+		  xlabel = "Amount of mix (ml)",
+		  ylabel = "COD (g/l)", legend = false,
+		  title = "COD @t=0",
+		  xticks = (0:4, mix_amount))
+  savefig(cod0_comp_plot, get_plot_name("cod_0", date, plot_type))
+
+  cod72_plot = bar([0, 1, 2, 3, 4], cod72_meas,
+		   xlabel = "Amount of mix (ml)",
+		   ylabel = "COD (g/l)", legend = false,
+		   title = "COD @t=72 h",
+		   xticks = (0:4, mix_amount), fc = "#E36F47")
+  savefig(cod72_comp_plot, get_plot_name("cod_72", date, plot_type))
 
   cod_plot = plot(cod0_plot, cod72_plot, layout = (2,1), size = (900, 600))
   savefig(cod_plot, get_plot_name("cod", date, plot_type))
@@ -223,6 +241,9 @@
 
 [[../plots/10_11/vfa_cod_stackedbar_10_11.png]]
 
+#+ATTR_ORG: :width 700px
+[[../plots/10_11/cod_bar_10_11.png]]
+
 * Αποτελέσματα για το πείραμα 28/11
 Ομοίως, μπορούμε αλλάζοντας το date να τρέξουμε και το πείραμα της 28/11 χωρίς καμία πρακτική αλλαγή στον κώδικα.
 
@@ -248,6 +269,9 @@
 [[/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/28_11/cod_comparison_28_11.png]]
 
 [[../plots/28_11/vfa_cod_stackedbar_28_11.png]]
+
+#+ATTR_ORG: :width 700px
+[[../plots/28_11/cod_bar_28_11.png]]
 
 * Πείραμα 23/10
 Στο πείραμα αυτό υπήρχε καθημερινή μέτρηση του COD, εκτός από την τελευταία μέρα που ήταν μετά το σαββατοκύριακο οπότε έχει νόημα να γίνει σύγκριση σε όλα τα διαθέσιμα σημεία.
