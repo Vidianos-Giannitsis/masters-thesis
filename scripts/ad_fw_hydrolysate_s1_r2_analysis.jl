@@ -101,18 +101,7 @@ kinetics = "bmp"
 timescale = "min"
 model_hydro_0_min = vcat(sample, round.(model_params, digits = 4), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -135,6 +124,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -160,18 +155,7 @@ kinetics = "bmp"
 timescale = "hour"
 model_hydro_0_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -194,6 +178,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -219,18 +209,7 @@ kinetics = "sma"
 timescale = "hour"
 sma_hydro_0 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -253,6 +232,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -351,18 +336,7 @@ kinetics = "bmp"
 timescale = "min"
 model_hydro_1_min = vcat(sample, round.(model_params, digits = 4), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -385,6 +359,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -410,18 +390,7 @@ kinetics = "bmp"
 timescale = "hour"
 model_hydro_1_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -444,6 +413,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -469,18 +444,7 @@ kinetics = "sma"
 timescale = "hour"
 sma_hydro_1 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -503,6 +467,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -602,18 +572,7 @@ kinetics = "bmp"
 timescale = "min"
 model_hydro_2_min = vcat(sample, round.(model_params, digits = 4), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -636,6 +595,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -661,18 +626,7 @@ kinetics = "bmp"
 timescale = "hour"
 model_hydro_2_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -695,6 +649,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -720,18 +680,7 @@ kinetics = "sma"
 timescale = "hour"
 sma_hydro_2 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -754,6 +703,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -854,18 +809,7 @@ return("../data/exp_pro/"*exp_name*".csv")
  timescale = "min"
  model_hydro_4_min = vcat(sample, round.(model_params, digits = 4), round(r_squared, digits = 3))
  
- if source == "Acetate"
-     if kinetics == "bmp"
- 	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
- 	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
- 	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
- 
-     elseif kinetics == "sma"
- 	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
- 	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
- 	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-     end
- elseif source == "No_Feed"
+ if source == "No_Feed"
      bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
      savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
  
@@ -888,6 +832,12 @@ return("../data/exp_pro/"*exp_name*".csv")
  	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
  	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
  	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+ 
+ 	elseif kinetics == "sma"
+ 	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+ 	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+ 	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+ 
  	end
      end
  end
@@ -913,18 +863,7 @@ return("../data/exp_pro/"*exp_name*".csv")
  timescale = "hour"
  model_hydro_4_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
  
- if source == "Acetate"
-     if kinetics == "bmp"
- 	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
- 	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
- 	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
- 
-     elseif kinetics == "sma"
- 	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
- 	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
- 	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-     end
- elseif source == "No_Feed"
+ if source == "No_Feed"
      bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
      savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
  
@@ -947,6 +886,12 @@ return("../data/exp_pro/"*exp_name*".csv")
  	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
  	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
  	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+ 
+ 	elseif kinetics == "sma"
+ 	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+ 	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+ 	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+ 
  	end
      end
  end
@@ -972,18 +917,7 @@ kinetics = "sma"
 timescale = "hour"
  sma_hydro_4 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
  
- if source == "Acetate"
-     if kinetics == "bmp"
- 	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
- 	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
- 	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
- 
-     elseif kinetics == "sma"
- 	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
- 	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
- 	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-     end
- elseif source == "No_Feed"
+ if source == "No_Feed"
      bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
      savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
  
@@ -1006,6 +940,12 @@ timescale = "hour"
  	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
  	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
  	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+ 
+ 	elseif kinetics == "sma"
+ 	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+ 	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+ 	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+ 
  	end
      end
  end
@@ -1105,18 +1045,7 @@ kinetics = "bmp"
 timescale = "min"
 model_hydro_fw_min = vcat(sample, round.(model_params, digits = 4), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -1139,6 +1068,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -1164,18 +1099,7 @@ kinetics = "bmp"
 timescale = "hour"
 model_hydro_fw_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -1198,6 +1122,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -1223,18 +1153,7 @@ kinetics = "sma"
 timescale = "hour"
 sma_hydro_fw = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -1257,6 +1176,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -1366,18 +1291,7 @@ kinetics = "bmp"
 timescale = "min"
 model_hydro_0_min = vcat(sample, round.(model_params, digits = 4), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -1400,6 +1314,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -1425,18 +1345,7 @@ kinetics = "bmp"
 timescale = "hour"
 model_hydro_0_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -1459,6 +1368,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -1484,18 +1399,7 @@ kinetics = "sma"
 timescale = "hour"
 sma_hydro_0 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -1518,6 +1422,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -1616,18 +1526,7 @@ kinetics = "bmp"
 timescale = "min"
 model_hydro_1_min = vcat(sample, round.(model_params, digits = 4), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -1650,6 +1549,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -1675,18 +1580,7 @@ kinetics = "bmp"
 timescale = "hour"
 model_hydro_1_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -1709,6 +1603,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -1734,18 +1634,7 @@ kinetics = "sma"
 timescale = "hour"
 sma_hydro_1 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -1768,6 +1657,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -1867,18 +1762,7 @@ kinetics = "bmp"
 timescale = "min"
 model_hydro_2_min = vcat(sample, round.(model_params, digits = 4), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -1901,6 +1785,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -1926,18 +1816,7 @@ kinetics = "bmp"
 timescale = "hour"
 model_hydro_2_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -1960,6 +1839,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -1985,18 +1870,7 @@ kinetics = "sma"
 timescale = "hour"
 sma_hydro_2 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -2019,6 +1893,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -2119,18 +1999,7 @@ return("../data/exp_pro/"*exp_name*".csv")
  timescale = "min"
  model_hydro_4_min = vcat(sample, round.(model_params, digits = 4), round(r_squared, digits = 3))
  
- if source == "Acetate"
-     if kinetics == "bmp"
- 	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
- 	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
- 	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
- 
-     elseif kinetics == "sma"
- 	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
- 	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
- 	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-     end
- elseif source == "No_Feed"
+ if source == "No_Feed"
      bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
      savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
  
@@ -2153,6 +2022,12 @@ return("../data/exp_pro/"*exp_name*".csv")
  	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
  	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
  	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+ 
+ 	elseif kinetics == "sma"
+ 	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+ 	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+ 	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+ 
  	end
      end
  end
@@ -2178,18 +2053,7 @@ return("../data/exp_pro/"*exp_name*".csv")
  timescale = "hour"
  model_hydro_4_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
  
- if source == "Acetate"
-     if kinetics == "bmp"
- 	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
- 	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
- 	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
- 
-     elseif kinetics == "sma"
- 	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
- 	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
- 	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-     end
- elseif source == "No_Feed"
+ if source == "No_Feed"
      bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
      savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
  
@@ -2212,6 +2076,12 @@ return("../data/exp_pro/"*exp_name*".csv")
  	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
  	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
  	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+ 
+ 	elseif kinetics == "sma"
+ 	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+ 	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+ 	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+ 
  	end
      end
  end
@@ -2237,18 +2107,7 @@ kinetics = "sma"
 timescale = "hour"
  sma_hydro_4 = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
  
- if source == "Acetate"
-     if kinetics == "bmp"
- 	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
- 	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
- 	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
- 
-     elseif kinetics == "sma"
- 	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
- 	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
- 	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-     end
- elseif source == "No_Feed"
+ if source == "No_Feed"
      bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
      savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
  
@@ -2271,6 +2130,12 @@ timescale = "hour"
  	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
  	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
  	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+ 
+ 	elseif kinetics == "sma"
+ 	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+ 	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+ 	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+ 
  	end
      end
  end
@@ -2370,18 +2235,7 @@ kinetics = "bmp"
 timescale = "min"
 model_hydro_fw_min = vcat(sample, round.(model_params, digits = 4), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -2404,6 +2258,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -2429,18 +2289,7 @@ kinetics = "bmp"
 timescale = "hour"
 model_hydro_fw_hour = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -2463,6 +2312,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
@@ -2488,18 +2343,7 @@ kinetics = "sma"
 timescale = "hour"
 sma_hydro_fw = vcat(sample, round.(model_params, digits = 3), round(r_squared, digits = 3))
 
-if source == "Acetate"
-    if kinetics == "bmp"
-	bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
-	Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_min.png"))
-
-    elseif kinetics == "sma"
-	bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470), legend = :bottomright)
-	Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
-	savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*".png"))
-    end
-elseif source == "No_Feed"
+if source == "No_Feed"
     bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = false, xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge, size = (700, 470))
     savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "cumulative_"*exp_name*"_min.png"))
 
@@ -2522,6 +2366,12 @@ else
 	    bmp_cumulative_scatter_min = Plots.scatter(exp_min, exp_cum_meth_vol, markersize = 5, legend = :bottomright, label = "Experimental Data", xlabel = "Time (min)", ylabel = "Cumulative Methane Volume (mL)", title = "Cumulative Methane Production from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470))
 	    Plots.plot!(exp_min, gompertz_bmp(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
 	    savefig(bmp_cumulative_scatter_min, plotsdir("BMPs", source, "methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
+	elseif kinetics == "sma"
+	    bmp_specific_methane = Plots.scatter(exp_min, specific_meth_vol, markersize = 5, label = "Experimental Data", xlabel = "Time (hour)", ylabel = "Cumulative Methane Production (mL/g VS)", title = "Methane Production Kinetics from "*source*" \nUsing "*sample*" "*sludge*" "*run_num, size = (700, 470), legend = :bottomright)
+	    Plots.plot!(exp_min, gompertz_sma(exp_min), label = "Gompertz Model with R^2 = "*string(round(r_squared, digits = 3)))
+	    savefig(bmp_specific_methane, plotsdir("BMPs", source, "specific_methane_kinetics_"*exp_name*"_"*timescale*".png"))
+
 	end
     end
 end
