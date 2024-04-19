@@ -1,0 +1,6 @@
+Reactor_Name,Methane_Potential,SMA,Lag_Time,R_sq
+Reactor 0,1.656,1.76,0.165,0.996
+Reactor 1,2.777,0.82,0.0,0.843
+Reactor 2,3.0,0.485,0.0,0.921
+Reactor 4,2.258,1.624,0.194,0.999
+Reactor FW,3.441,1.023,0.586,0.993
