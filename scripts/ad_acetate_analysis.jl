@@ -40,6 +40,7 @@ exp_name = "acet_test_0_s1"
 source = "Acetate"
 reactor = "Reactor 0"
 sludge = "Sludge 1"
+run_num = "Run 1"
 input_vs = 1.55
 p0 = [40.0, 8.0, 1.0]
 
@@ -220,6 +221,7 @@ exp_name = "acet_test_1_s1"
 source = "Acetate"
 reactor = "Reactor 1"
 sludge = "Sludge 1"
+run_num = "Run 1"
 input_vs = 1.55
 p0 = [20.0, 4.0, 1.0]
 
@@ -400,6 +402,7 @@ exp_name = "acet_test_2_s1"
 source = "Acetate"
 reactor = "Reactor 2"
 sludge = "Sludge 1"
+run_num = "Run 1"
 input_vs = 1.55
 p0 = [30.0, 6.0, 1.0]
 
@@ -579,6 +582,7 @@ exp_name = "acet_test_4_s1"
 source = "Acetate"
 reactor = "Reactor 4"
 sludge = "Sludge 1"
+run_num = "Run 1"
 input_vs = 1.55
 p0 = [40.0, 10.0, 1.0]
 
@@ -758,6 +762,7 @@ exp_name = "acet_test_fw_s1"
 source = "Acetate"
 reactor = "Reactor FW"
 sludge = "Sludge 1"
+run_num = "Run 1"
 input_vs = 1.55
 p0 = [25.0, 6.0, 1.0]
 
@@ -1139,6 +1144,7 @@ exp_name = "acet_test_0_s1"
 source = "Acetate"
 reactor = "Reactor 0"
 sludge = "Sludge 1"
+run_num = "Run 1"
 input_vs = 1.55
 p0 = [40.0, 8.0, 1.0]
 
@@ -1319,6 +1325,7 @@ exp_name = "acet_test_1_s1"
 source = "Acetate"
 reactor = "Reactor 1"
 sludge = "Sludge 1"
+run_num = "Run 1"
 input_vs = 1.55
 p0 = [20.0, 4.0, 1.0]
 
@@ -1499,6 +1506,7 @@ exp_name = "acet_test_2_s1"
 source = "Acetate"
 reactor = "Reactor 2"
 sludge = "Sludge 1"
+run_num = "Run 1"
 input_vs = 1.55
 p0 = [30.0, 6.0, 1.0]
 
@@ -1678,6 +1686,7 @@ exp_name = "acet_test_4_s1"
 source = "Acetate"
 reactor = "Reactor 4"
 sludge = "Sludge 1"
+run_num = "Run 1"
 input_vs = 1.55
 p0 = [40.0, 10.0, 1.0]
 
@@ -1857,6 +1866,7 @@ exp_name = "acet_test_fw_s1"
 source = "Acetate"
 reactor = "Reactor FW"
 sludge = "Sludge 1"
+run_num = "Run 1"
 input_vs = 1.55
 p0 = [25.0, 6.0, 1.0]
 

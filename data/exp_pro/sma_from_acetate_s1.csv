@@ -1,6 +1,6 @@
-Sample_Name,Methane_Potential,SMA,Lag_Time,R_sq
-Sample 0,30.086,4.944,0.0,0.971
-Sample 1,13.51,3.515,0.0,0.96
-Sample 2,18.991,3.942,0.0,0.988
-Sample 4,30.469,6.226,0.0,0.994
-Sample FW,17.428,3.163,0.0,0.9
+Reactor_Name,Methane_Potential,SMA,Lag_Time,R_sq
+Reactor 0,30.086,4.944,0.0,0.971
+Reactor 1,13.51,3.515,0.0,0.96
+Reactor 2,18.991,3.942,0.0,0.988
+Reactor 4,30.469,6.226,0.0,0.994
+Reactor FW,17.428,3.163,0.0,0.9

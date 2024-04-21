@@ -1,6 +1,6 @@
-Sample_Name,Production_Potential,Production_Rate,Lag_Time,R_squared
-Sample 0,5.129,0.148,0.0,0.928
-Sample 1,12.333,0.29,0.0,0.933
-Sample 2,7.414,0.187,0.0,0.988
-Sample 4,6.449,0.181,0.0,0.976
+Reactor_Name,Production_Potential,Production_Rate,Lag_Time,R_squared
+Reactor 0,5.129,0.148,0.0,0.928
+Reactor 1,12.333,0.29,0.0,0.933
+Reactor 2,7.414,0.187,0.0,0.988
+Reactor 4,6.449,0.181,0.0,0.976
 FW 1,2.296,0.081,0.0,0.984

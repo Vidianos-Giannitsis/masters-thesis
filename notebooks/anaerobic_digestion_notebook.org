@@ -559,40 +559,44 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 
 #+RESULTS: ls_output_fw_s1_r2
 #+begin_example
-"bandicam 2024-04-15 12-02-11-665.jpg", "bandicam 2024-04-15 12-04-11-664.jpg",
-"bandicam 2024-04-15 12-06-09-897.jpg", "bandicam 2024-04-15 12-07-09-919.jpg",
-"bandicam 2024-04-15 12-08-09-906.jpg", "bandicam 2024-04-15 12-11-09-909.jpg",
-"bandicam 2024-04-15 12-11-28-595.jpg", "bandicam 2024-04-15 12-12-28-586.jpg",
-"bandicam 2024-04-15 12-13-28-584.jpg", "bandicam 2024-04-15 12-16-17-597.jpg",
-"bandicam 2024-04-15 12-18-17-621.jpg", "bandicam 2024-04-15 12-19-17-631.jpg",
-"bandicam 2024-04-15 12-20-58-735.jpg", "bandicam 2024-04-15 12-21-58-739.jpg",
-"bandicam 2024-04-15 12-29-18-857.jpg", "bandicam 2024-04-15 13-29-18-859.jpg",
-"bandicam 2024-04-15 14-29-18-861.jpg", "bandicam 2024-04-15 15-29-18-874.jpg",
-"bandicam 2024-04-15 16-29-18-867.jpg", "bandicam 2024-04-15 17-29-19-944.jpg",
-"bandicam 2024-04-15 18-29-20-115.jpg", "bandicam 2024-04-15 19-29-20-359.jpg",
-"bandicam 2024-04-15 20-29-20-204.jpg", "bandicam 2024-04-15 21-29-20-212.jpg",
-"bandicam 2024-04-15 22-29-20-206.jpg", "bandicam 2024-04-15 23-29-19-728.jpg",
-"bandicam 2024-04-16 00-29-19-719.jpg", "bandicam 2024-04-16 01-29-19-733.jpg",
-"bandicam 2024-04-16 02-29-19-819.jpg", "bandicam 2024-04-16 03-29-19-916.jpg",
-"bandicam 2024-04-16 04-29-19-934.jpg", "bandicam 2024-04-16 05-29-19-944.jpg",
-"bandicam 2024-04-16 06-29-19-940.jpg", "bandicam 2024-04-16 07-29-19-944.jpg",
-"bandicam 2024-04-16 08-29-19-956.jpg", "bandicam 2024-04-16 09-29-19-947.jpg",
-"bandicam 2024-04-16 10-26-42-895.jpg", "bandicam 2024-04-16 11-26-43-205.jpg",
-"bandicam 2024-04-16 12-26-43-569.jpg", "bandicam 2024-04-16 13-26-43-549.jpg",
-"bandicam 2024-04-16 14-26-43-562.jpg", "bandicam 2024-04-16 15-26-43-554.jpg",
-"bandicam 2024-04-16 16-26-43-556.jpg", "bandicam 2024-04-16 17-26-43-559.jpg",
-"bandicam 2024-04-16 18-26-43-922.jpg", "bandicam 2024-04-16 19-26-43-902.jpg",
-"bandicam 2024-04-16 20-26-43-931.jpg", "bandicam 2024-04-16 21-26-44-059.jpg",
-"bandicam 2024-04-16 22-26-44-099.jpg", "bandicam 2024-04-16 23-26-44-848.jpg",
-"bandicam 2024-04-17 00-26-44-841.jpg", "bandicam 2024-04-17 01-26-44-856.jpg",
-"bandicam 2024-04-17 02-26-44-847.jpg", "bandicam 2024-04-17 03-26-44-849.jpg",
-"bandicam 2024-04-17 04-26-44-852.jpg", "bandicam 2024-04-17 05-26-44-794.jpg",
-"bandicam 2024-04-17 06-26-44-722.jpg", "bandicam 2024-04-17 07-26-44-688.jpg",
-"bandicam 2024-04-17 08-26-44-694.jpg", "bandicam 2024-04-17 09-26-44-680.jpg",
-"bandicam 2024-04-17 10-29-35-074.jpg", "bandicam 2024-04-17 11-29-35-078.jpg",
-"bandicam 2024-04-17 12-29-36-339.jpg", "bandicam 2024-04-17 13-29-36-317.jpg",
-"bandicam 2024-04-17 13-57-20-002.jpg", "bandicam 2024-04-17 14-41-42-861.jpg",
-"bandicam 2024-04-17 15-17-49-851.jpg"
+"bandicam 2024-04-03 14-37-15-369.jpg", "bandicam 2024-04-03 14-45-40-862.jpg",
+"bandicam 2024-04-03 14-51-49-082.jpg", "bandicam 2024-04-03 14-56-51-812.jpg",
+"bandicam 2024-04-03 15-29-08-067.jpg", "bandicam 2024-04-03 16-29-08-087.jpg",
+"bandicam 2024-04-03 17-29-08-355.jpg", "bandicam 2024-04-03 18-29-08-352.jpg",
+"bandicam 2024-04-03 20-29-08-355.jpg", "bandicam 2024-04-03 22-29-08-353.jpg",
+"bandicam 2024-04-04 00-29-08-754.jpg", "bandicam 2024-04-04 02-29-08-758.jpg",
+"bandicam 2024-04-04 04-29-08-760.jpg", "bandicam 2024-04-04 06-29-08-755.jpg",
+"bandicam 2024-04-04 08-29-09-002.jpg", "bandicam 2024-04-04 10-29-09-357.jpg",
+"bandicam 2024-04-04 12-29-09-384.jpg", "bandicam 2024-04-04 14-29-09-390.jpg",
+"bandicam 2024-04-04 16-29-09-384.jpg", "bandicam 2024-04-04 18-29-10-491.jpg",
+"bandicam 2024-04-04 20-29-10-660.jpg", "bandicam 2024-04-04 22-29-10-735.jpg",
+"bandicam 2024-04-05 00-29-10-440.jpg", "bandicam 2024-04-05 02-29-10-498.jpg",
+"bandicam 2024-04-05 04-29-10-676.jpg", "bandicam 2024-04-05 06-29-10-716.jpg",
+"bandicam 2024-04-05 08-29-10-712.jpg", "bandicam 2024-04-05 09-29-10-696.jpg",
+"bandicam 2024-04-05 10-37-27-280.jpg", "bandicam 2024-04-05 10-38-27-278.jpg",
+"bandicam 2024-04-05 10-39-27-276.jpg", "bandicam 2024-04-05 10-40-25-889.jpg",
+"bandicam 2024-04-05 11-40-36-404.jpg", "bandicam 2024-04-05 12-40-36-754.jpg",
+"bandicam 2024-04-05 14-40-36-749.jpg", "bandicam 2024-04-05 16-40-36-776.jpg",
+"bandicam 2024-04-05 18-40-37-133.jpg", "bandicam 2024-04-05 20-40-37-184.jpg",
+"bandicam 2024-04-05 22-40-37-342.jpg", "bandicam 2024-04-06 00-40-37-559.jpg",
+"bandicam 2024-04-06 02-40-37-573.jpg", "bandicam 2024-04-06 04-40-37-567.jpg",
+"bandicam 2024-04-06 06-40-37-889.jpg", "bandicam 2024-04-06 08-40-38-009.jpg",
+"bandicam 2024-04-06 10-40-38-008.jpg", "bandicam 2024-04-06 12-40-38-486.jpg",
+"bandicam 2024-04-06 14-40-38-501.jpg", "bandicam 2024-04-06 16-40-38-661.jpg",
+"bandicam 2024-04-06 18-40-38-699.jpg", "bandicam 2024-04-06 20-40-38-706.jpg",
+"bandicam 2024-04-06 22-40-38-709.jpg", "bandicam 2024-04-07 00-40-39-320.jpg",
+"bandicam 2024-04-07 02-40-39-358.jpg", "bandicam 2024-04-07 04-40-39-364.jpg",
+"bandicam 2024-04-07 06-40-39-358.jpg", "bandicam 2024-04-07 08-40-39-476.jpg",
+"bandicam 2024-04-07 10-40-40-039.jpg", "bandicam 2024-04-07 12-40-40-161.jpg",
+"bandicam 2024-04-07 14-40-40-252.jpg", "bandicam 2024-04-07 16-40-40-328.jpg",
+"bandicam 2024-04-07 18-40-40-704.jpg", "bandicam 2024-04-07 20-40-40-780.jpg",
+"bandicam 2024-04-07 22-40-40-847.jpg", "bandicam 2024-04-08 00-40-41-872.jpg",
+"bandicam 2024-04-08 02-40-41-942.jpg", "bandicam 2024-04-08 04-40-41-412.jpg",
+"bandicam 2024-04-08 06-40-41-369.jpg", "bandicam 2024-04-08 08-40-41-364.jpg",
+"bandicam 2024-04-08 10-40-41-360.jpg", "bandicam 2024-04-08 12-40-41-760.jpg",
+"bandicam 2024-04-08 14-40-41-959.jpg", "bandicam 2024-04-08 16-40-41-983.jpg",
+"bandicam 2024-04-08 18-40-42-029.jpg", "bandicam 2024-04-08 20-40-42-035.jpg",
+"bandicam 2024-04-08 22-40-42-681.jpg"
 #+end_example
 
 #+NAME: deps_fw_s1_r2
@@ -639,13 +643,16 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   "bandicam 2024-04-07 22-40-40-847.jpg", "bandicam 2024-04-08 00-40-41-872.jpg",
   "bandicam 2024-04-08 02-40-41-942.jpg", "bandicam 2024-04-08 04-40-41-412.jpg",
   "bandicam 2024-04-08 06-40-41-369.jpg", "bandicam 2024-04-08 08-40-41-364.jpg",
-  "bandicam 2024-04-08 10-40-41-360.jpg"
+  "bandicam 2024-04-08 10-40-41-360.jpg", "bandicam 2024-04-08 12-40-41-760.jpg",
+  "bandicam 2024-04-08 14-40-41-959.jpg", "bandicam 2024-04-08 16-40-41-983.jpg",
+  "bandicam 2024-04-08 18-40-42-029.jpg", "bandicam 2024-04-08 20-40-42-035.jpg",
+  "bandicam 2024-04-08 22-40-42-681.jpg"
   ]
 #+END_SRC
 
 #+RESULTS: date_saving_fw_s1_r2
 #+begin_example
-69-element Vector{String}:
+75-element Vector{String}:
  "bandicam 2024-04-03 14-37-15-369.jpg"
  "bandicam 2024-04-03 14-45-40-862.jpg"
  "bandicam 2024-04-03 14-51-49-082.jpg"
@@ -657,15 +664,15 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
  "bandicam 2024-04-03 20-29-08-355.jpg"
  "bandicam 2024-04-03 22-29-08-353.jpg"
  ⋮
- "bandicam 2024-04-07 18-40-40-704.jpg"
- "bandicam 2024-04-07 20-40-40-780.jpg"
- "bandicam 2024-04-07 22-40-40-847.jpg"
- "bandicam 2024-04-08 00-40-41-872.jpg"
- "bandicam 2024-04-08 02-40-41-942.jpg"
- "bandicam 2024-04-08 04-40-41-412.jpg"
  "bandicam 2024-04-08 06-40-41-369.jpg"
  "bandicam 2024-04-08 08-40-41-364.jpg"
  "bandicam 2024-04-08 10-40-41-360.jpg"
+ "bandicam 2024-04-08 12-40-41-760.jpg"
+ "bandicam 2024-04-08 14-40-41-959.jpg"
+ "bandicam 2024-04-08 16-40-41-983.jpg"
+ "bandicam 2024-04-08 18-40-42-029.jpg"
+ "bandicam 2024-04-08 20-40-42-035.jpg"
+ "bandicam 2024-04-08 22-40-42-681.jpg"
 #+end_example
 
 ** FW Hydrolysate S2_R1
@@ -1058,6 +1065,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
   source = "Acetate"
   reactor = "Reactor FW"
   sludge = "Sludge 1"
+  run_num = "Run 1"
   input_vs = 1.55
   p0 = [25.0, 6.0, 1.0]
 
@@ -1129,6 +1137,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
   source = "Acetate"
   reactor = "Reactor 0"
   sludge = "Sludge 1"
+  run_num = "Run 1"
   input_vs = 1.55
   p0 = [40.0, 8.0, 1.0]
 
@@ -1205,6 +1214,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
   source = "Acetate"
   reactor = "Reactor 1"
   sludge = "Sludge 1"
+  run_num = "Run 1"
   input_vs = 1.55
   p0 = [20.0, 4.0, 1.0]
 
@@ -1278,6 +1288,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
   source = "Acetate"
   reactor = "Reactor 2"
   sludge = "Sludge 1"
+  run_num = "Run 1"
   input_vs = 1.55
   p0 = [30.0, 6.0, 1.0]
 
@@ -1344,6 +1355,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
   source = "Acetate"
   reactor = "Reactor 4"
   sludge = "Sludge 1"
+  run_num = "Run 1"
   input_vs = 1.55
   p0 = [40.0, 10.0, 1.0]
 
@@ -2374,6 +2386,45 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | Reactor 4  | 1081.081 |       5.988 | 0.554 |
 | Reactor FW |  705.882 |         0.2 | 0.028 |
 
+** Plotting Comparison Plots
+Εκτός από τα παραπάνω, ένα χρήσιμο διάγραμμα θα ήταν να φαίνονται στο ίδιο figure και τα 5 πειράματα με τα υδρολύματα, το οποίο είναι πολύ χρήσιμο για μία όπτικη σύγκριση τους. Καθώς δεν κάνουμε save όλα τα απαραίτητα στοιχεία, το plot θα φτιαχτεί step wise κάνοντας update κάθε καμπύλη.
+
+#+NAME: comp_methane_plot_s1_r1
+#+BEGIN_SRC julia :noweb no-export
+
+  colors = ["#009AFA","#E36F47","#3EA44E","#C371D2","#AC8E18"]
+
+  <<hydrolysate_0_s1_r1>>
+  methane_s1_r1_comp = scatter(exp_hour, cumsum(exp_meth_vol), markersize = 4, legend = :outerright, label = "Exp 0 mL Hydrolysate", xlabel = "Time (hour)", ylabel = "Cumulative Methane Volume (mL)", markercolor = colors[1], size = (900, 600), legendfontsize = 10, labelfontsize = 14, tickfontsize = 12)
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_0_hour[2:4]), label = "Model 0 mL Hydrolysate", linecolor = colors[1])
+
+  <<hydrolysate_1_s1_r1>>
+  scatter!(methane_s1_r1_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Exp 1 mL Hydrolysate", markercolor = colors[2])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_1_hour[2:4]), label = "Model 1 mL Hydrolysate", linecolor = colors[2])
+
+  <<hydrolysate_2_s1_r1>>
+  scatter!(methane_s1_r1_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Exp 2 mL Hydrolysate", markercolor = colors[3])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_2_hour[2:4]), label = "Model 2 mL Hydrolysate", linecolor = colors[3])
+
+  <<hydrolysate_4_s1_r1>>
+  scatter!(methane_s1_r1_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Exp 4 mL Hydrolysate", markercolor = colors[4])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_4_hour[2:4]), label = "Model 4 mL Hydrolysate", linecolor = colors[4])
+
+  <<untreated_fw_s1_r1>>
+  scatter!(methane_s1_r1_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Exp Untreated FW", markercolor = colors[5])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_fw_hour[2:4]), label = "Model Untreated FW", linecolor = colors[5])
+
+  savefig(methane_s1_r1_comp, plotsdir("BMPs", "methane_s1_r1_comp.png"))
+#+END_SRC
+
+#+RESULTS: comp_methane_plot_s1_r1
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/methane_s1_r1_comp.png"
+
+#+RESULTS: comp_methane_plots
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/methane_s1_r1_comp.png"
+
+[[../plots/BMPs/methane_s1_r1_comp.png]]
+
 ** Συμπεράσματα του πειραματικού κύκλου αυτού
 Το πείραμα αυτό ήταν το πρώτο πείραμα όπου τροφοδοτήσαμε με υδρολύματα από FW για να δούμε την απόκριση του συστήματος σε αυτά.
 
@@ -2399,8 +2450,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 
   <<date_saving_fw_s1_r2>>
 
-  inds = 1:69
-  exp_meth_vol = [0, 0, 0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0.05, 0.1, 0.1, 0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.1, 0.05, 0, 0, 0.05, 0.05, 0.05, 0.1, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05, 0.05, 0, 0.05, 0, 0.02, 0.02, 0.01, 0, 0, 0, 0]
+  inds = 1:73
+  exp_meth_vol = [0, 0, 0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0.05, 0.1, 0.1, 0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.1, 0.05, 0, 0, 0.05, 0.05, 0.05, 0.1, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05, 0.05, 0, 0.05, 0, 0.02, 0.02, 0.01, 0, 0, 0, 0, 0, 0, 0, 0]
   meth_vol_hydro_0 = cumsum(exp_meth_vol)[end]
 
   exp_name = "hydrolysate_0_s1_r2"
@@ -2443,7 +2494,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 #+END_SRC
 
 | Timestamp   |   Minutes |    Hours | Methane_Volume | Cumulative_Methane_Volume |
-|-------------+-----------+----------+----------------+---------------------------|
 | 03/04_14:37 |       0.0 |      0.0 |            0.0 |                       0.0 |
 | 03/04_14:45 |    8.4249 |   0.1404 |            0.0 |                       0.0 |
 | 03/04_14:51 |   14.5619 |   0.2427 |            0.0 |                       0.0 |
@@ -2513,6 +2563,10 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | 08/04_06:40 | 6723.4333 | 112.0572 |            0.0 |                      3.45 |
 | 08/04_08:40 | 6843.4332 | 114.0572 |            0.0 |                      3.45 |
 | 08/04_10:40 | 6963.4332 | 116.0572 |            0.0 |                      3.45 |
+| 08/04_12:40 | 7083.4398 | 118.0573 |            0.0 |                      3.45 |
+| 08/04_14:40 | 7203.4432 | 120.0574 |            0.0 |                      3.45 |
+| 08/04_16:40 | 7323.4436 | 122.0574 |            0.0 |                      3.45 |
+| 08/04_18:40 | 7443.4443 | 124.0574 |            0.0 |                      3.45 |
 
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_0_s1_r2_hour.png]]
 
@@ -2529,8 +2583,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 
   <<date_saving_fw_s1_r2>>
 
-  inds = 2:69
-  exp_meth_vol = [0, 0, 0, 0, 0, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.05, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.05, 0.1, 0, 0, 0, 0.1, 0.1, 0.2, 0.4, 0.5, 0.2, 0.1, 0.1, 0.2, 0, 0.1, 0.2, 0.2, 0.1, 0.3, 0.1, 0.1, 0, 0.1, 0.2, 0.2, 0.1, 0.2, 0.2, 0.1, 0.1, 0, 0.1, 0.2, 0, 0.1, 0.1, 0.2, 0.2, 0.1]
+  inds = 2:75
+  exp_meth_vol = [0, 0, 0, 0, 0, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.05, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.05, 0.1, 0, 0, 0, 0.1, 0.1, 0.2, 0.4, 0.5, 0.2, 0.1, 0.1, 0.2, 0, 0.1, 0.2, 0.2, 0.1, 0.3, 0.1, 0.1, 0, 0.1, 0.2, 0.2, 0.1, 0.2, 0.2, 0.1, 0.1, 0, 0.1, 0.2, 0, 0.1, 0.1, 0.2, 0.2, 0.1, 0, 0, 0, 0, 0, 0]
   meth_vol_hydro_1 = cumsum(exp_meth_vol)[end]
   exp_name = "hydrolysate_1_s1_r2"
   source = "Hydrolyzed FW"
@@ -2570,7 +2624,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 #+END_SRC
 
 | Timestamp   |   Minutes |    Hours | Methane_Volume | Cumulative_Methane_Volume |
-|-------------+-----------+----------+----------------+---------------------------|
 | 03/04_14:45 |       0.0 |      0.0 |            0.0 |                       0.0 |
 | 03/04_14:51 |     6.137 |   0.1023 |            0.0 |                       0.0 |
 | 03/04_14:56 |   11.1825 |   0.1864 |            0.0 |                       0.0 |
@@ -2639,6 +2692,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | 08/04_06:40 | 6715.0084 | 111.9168 |            0.2 |                       9.3 |
 | 08/04_08:40 | 6835.0084 | 113.9168 |            0.2 |                       9.5 |
 | 08/04_10:40 | 6955.0083 | 115.9168 |            0.1 |                       9.6 |
+| 08/04_12:40 |  7075.015 | 117.9169 |            0.0 |                       9.6 |
+| 08/04_14:40 | 7195.0183 |  119.917 |            0.0 |                       9.6 |
+| 08/04_16:40 | 7315.0187 |  121.917 |            0.0 |                       9.6 |
+| 08/04_18:40 | 7435.0194 |  123.917 |            0.0 |                       9.6 |
+| 08/04_20:40 | 7555.0196 |  125.917 |            0.0 |                       9.6 |
+| 08/04_22:40 | 7675.0303 | 127.9172 |            0.0 |                       9.6 |
 
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_1_s1_r2_hour.png]]
 
@@ -2655,8 +2714,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 
   <<date_saving_fw_s1_r2>>
 
-  inds = 4:69
-  exp_meth_vol = [0, 0.1, 0.1, 1.3, 0, 0.2, 0.1, 0.4, 0.5, 0.2, 0.1, 0.5, 0, 0.1, 0.2, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0, 0.1, 0.1, 0, 0, 0, 0.1, 0.1, 0.2, 0.05, 0, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.05, 0.05, 0, 0.05, 0.1, 0.1, 0, 0.05, 0.1, 0.1, 0.2, 0.2, 0, 0.1, 0.1, 0, 0, 0, 0, 0, 0, 0.05, 0.05]
+  inds = 4:75
+  exp_meth_vol = [0, 0.1, 0.1, 1.3, 0, 0.2, 0.1, 0.4, 0.5, 0.2, 0.1, 0.5, 0, 0.1, 0.2, 0.2, 0.2, 0.1, 0.05, 0.05, 0.05, 0, 0.1, 0.1, 0, 0, 0, 0.1, 0.1, 0.2, 0.05, 0, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.05, 0.05, 0, 0.05, 0.1, 0.1, 0, 0.05, 0.1, 0.1, 0.2, 0.2, 0, 0.1, 0.1, 0, 0, 0, 0, 0, 0, 0.05, 0.05, 0.05, 0, 0, 0, 0, 0]
   meth_vol_hydro_2 = cumsum(exp_meth_vol)[end]
   exp_name = "hydrolysate_2_s1_r2"
   source = "Hydrolyzed FW"
@@ -2696,7 +2755,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 #+END_SRC
 
 | Timestamp   |   Minutes |    Hours | Methane_Volume | Cumulative_Methane_Volume |
-|-------------+-----------+----------+----------------+---------------------------|
 | 03/04_14:56 |       0.0 |      0.0 |            0.0 |                       0.0 |
 | 03/04_15:29 |   32.2709 |   0.5378 |            0.1 |                       0.1 |
 | 03/04_16:29 |   92.2712 |   1.5379 |            0.1 |                       0.2 |
@@ -2763,6 +2821,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | 08/04_06:40 |  6703.826 | 111.7304 |            0.0 |                       7.8 |
 | 08/04_08:40 | 6823.8259 | 113.7304 |           0.05 |                      7.85 |
 | 08/04_10:40 | 6943.8258 | 115.7304 |           0.05 |                       7.9 |
+| 08/04_12:40 | 7063.8325 | 117.7305 |           0.05 |                      7.95 |
+| 08/04_14:40 | 7183.8358 | 119.7306 |            0.0 |                      7.95 |
+| 08/04_16:40 | 7303.8362 | 121.7306 |            0.0 |                      7.95 |
+| 08/04_18:40 |  7423.837 | 123.7306 |            0.0 |                      7.95 |
+| 08/04_20:40 |  7543.837 | 125.7306 |            0.0 |                      7.95 |
+| 08/04_22:40 | 7663.8478 | 127.7308 |            0.0 |                      7.95 |
 
 
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_2_s1_r2_hour.png]]
@@ -2780,8 +2844,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 
   <<date_saving_fw_s1_r2>>
 
-  inds = 3:69
-  exp_meth_vol = [0, 0, 0, 0, 0.05, 0.1, 0.1, 0.3, 0.3, 0.3, 0.3, 0.3, 0.1, 0.2, 0.1, 0.1, 0.2, 0.1, 0.1, 0.05, 0.1, 0.2, 0.2, 0.1, 0.05, 0.1, 0.1, 0, 0, 0, 0, 0.1, 0.1, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.1, 0.1, 0.2, 0.1, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.1, 0, 0, 0.05, 0.05, 0, 0.05, 0.1]
+  inds = 3:75
+  exp_meth_vol = [0, 0, 0, 0, 0.05, 0.1, 0.1, 0.3, 0.3, 0.3, 0.3, 0.3, 0.1, 0.2, 0.1, 0.1, 0.2, 0.1, 0.1, 0.05, 0.1, 0.2, 0.2, 0.1, 0.05, 0.1, 0.1, 0, 0, 0, 0, 0.1, 0.1, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.1, 0.1, 0.2, 0.1, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.1, 0, 0, 0.05, 0.05, 0, 0.05, 0.1, 0, 0, 0, 0, 0, 0]
   meth_vol_hydro_4 = cumsum(exp_meth_vol)[end]
   exp_name = "hydrolysate_4_s1_r2"
   source = "Hydrolyzed FW"
@@ -2889,6 +2953,12 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | 08/04_06:40 | 6708.8714 | 111.8145 |            0.0 |                      7.25 |
 | 08/04_08:40 | 6828.8714 | 113.8145 |           0.05 |                       7.3 |
 | 08/04_10:40 | 6948.8713 | 115.8145 |            0.1 |                       7.4 |
+| 08/04_12:40 |  7068.878 | 117.8146 |            0.0 |                       7.4 |
+| 08/04_14:40 | 7188.8813 | 119.8147 |            0.0 |                       7.4 |
+| 08/04_16:40 | 7308.8817 | 121.8147 |            0.0 |                       7.4 |
+| 08/04_18:40 | 7428.8824 | 123.8147 |            0.0 |                       7.4 |
+| 08/04_20:40 | 7548.8826 | 125.8147 |            0.0 |                       7.4 |
+| 08/04_22:40 | 7668.8933 | 127.8149 |            0.0 |                       7.4 |
 
 
 [[../plots/BMPs/Hydrolyzed FW/methane_kinetics_hydrolysate_4_s1_r2_hour.png]]
@@ -3173,6 +3243,42 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | Reactor 2  |  555.556 |       6.173 | 1.111 |
 | Reactor 4  | 1081.081 |        0.15 | 0.014 |
 | Reactor FW |  705.882 |         0.1 | 0.014 |
+
+** Plotting Comparison Plots
+Όπως και στον προηγούμενο κύκλο, φτιάχνουμε αυτό το χρήσιμο διάγραμμα.
+
+#+NAME: comp_methane_plot_s1_r2
+#+BEGIN_SRC julia :noweb no-export
+
+  colors = ["#009AFA","#E36F47","#3EA44E","#C371D2","#AC8E18"]
+
+  <<hydrolysate_0_s1_r2>>
+  methane_s1_r2_comp = scatter(exp_hour, cumsum(exp_meth_vol), markersize = 4, legend = :outerright, label = "Exp 0 mL Hydrolysate", xlabel = "Time (hour)", ylabel = "Cumulative Methane Volume (mL)", markercolor = colors[1], size = (900, 600), legendfontsize = 10, labelfontsize = 14, tickfontsize = 12)
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_0_hour[2:4]), label = "Model 0 mL Hydrolysate", linecolor = colors[1])
+
+  <<hydrolysate_1_s1_r2>>
+  scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Exp 1 mL Hydrolysate", markercolor = colors[2])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_1_hour[2:4]), label = "Model 1 mL Hydrolysate", linecolor = colors[2])
+
+  <<hydrolysate_2_s1_r2>>
+  scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Exp 2 mL Hydrolysate", markercolor = colors[3])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_2_hour[2:4]), label = "Model 2 mL Hydrolysate", linecolor = colors[3])
+
+  <<hydrolysate_4_s1_r2>>
+  scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Exp 4 mL Hydrolysate", markercolor = colors[4])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_4_hour[2:4]), label = "Model 4 mL Hydrolysate", linecolor = colors[4])
+
+  <<untreated_fw_s1_r2>>
+  scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Exp Untreated FW", markercolor = colors[5])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_fw_hour[2:4]), label = "Model Untreated FW", linecolor = colors[5])
+
+  savefig(methane_s1_r2_comp, plotsdir("BMPs", "methane_s1_r2_comp.png"))
+#+END_SRC
+
+#+RESULTS: comp_methane_plot_s1_r2
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/methane_s1_r2_comp.png"
+
+[[../plots/BMPs/methane_s1_r2_comp.png]]
 
 ** Συμπεράσματα από τον κύκλο πειραμάτων αυτών
 Ο κύκλος αυτός ήταν αρκετά χρήσιμος επειδή μας έδειξε πως τα προηγούμενα αποτελέσματα έχουν σχετικά καλή επαναληψιμότητα καθώς και στους ρυθμούς αλλά και στην τελική παραγωγή μεθανίου, οι δύο κύκλοι είχαν παρόμοια αποτελέσματα. Το πείραμα δεν είναι τέλεια επαναλήψιμο, αλλά υπάρχουν αρκετές ομοιότητες.
@@ -5165,3 +5271,39 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | Reactor 2  | 223.881 |      29.412 | 13.137 |
 | Reactor 4  | 329.341 |      45.045 | 13.677 |
 | Reactor FW | 299.401 |       6.006 |  2.006 |
+
+** Plotting Comparison Plots
+Όπως και στον προηγούμενο κύκλο, φτιάχνουμε αυτό το χρήσιμο διάγραμμα.
+
+#+NAME: comp_methane_plot_s2_r1
+#+BEGIN_SRC julia :noweb no-export
+
+  colors = ["#009AFA","#E36F47","#3EA44E","#C371D2","#AC8E18"]
+
+  <<hydrolysate_0_s2_r1>>
+  methane_s2_r1_comp = scatter(exp_hour, cumsum(exp_meth_vol), markersize = 4, legend = :outerright, label = "Exp 0 mL Hydrolysate", xlabel = "Time (hour)", ylabel = "Cumulative Methane Volume (mL)", markercolor = colors[1], size = (900, 600), legendfontsize = 10, labelfontsize = 14, tickfontsize = 12)
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_0_hour[2:4]), label = "Model 0 mL Hydrolysate", linecolor = colors[1])
+
+  <<hydrolysate_1_s2_r1>>
+  scatter!(methane_s2_r1_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Exp 1 mL Hydrolysate", markercolor = colors[2])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_1_hour[2:4]), label = "Model 1 mL Hydrolysate", linecolor = colors[2])
+
+  <<hydrolysate_2_s2_r1>>
+  scatter!(methane_s2_r1_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Exp 2 mL Hydrolysate", markercolor = colors[3])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_2_hour[2:4]), label = "Model 2 mL Hydrolysate", linecolor = colors[3])
+
+  <<hydrolysate_4_s2_r1>>
+  scatter!(methane_s2_r1_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Exp 4 mL Hydrolysate", markercolor = colors[4])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_4_hour[2:4]), label = "Model 4 mL Hydrolysate", linecolor = colors[4])
+
+  <<untreated_fw_s2_r1>>
+  scatter!(methane_s2_r1_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Exp Untreated FW", markercolor = colors[5])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_fw_hour[2:4]), label = "Model Untreated FW", linecolor = colors[5])
+
+  savefig(methane_s2_r1_comp, plotsdir("BMPs", "methane_s2_r1_comp.png"))
+#+END_SRC
+
+#+RESULTS: comp_methane_plot_s2_r1
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/methane_s2_r1_comp.png"
+
+[[../plots/BMPs/methane_s2_r1_comp.png]]

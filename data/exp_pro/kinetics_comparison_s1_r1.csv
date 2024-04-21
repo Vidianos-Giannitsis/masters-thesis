@@ -1,6 +1,6 @@
-Sample_Name,Acetate,Hydrolysate,Ratio
-Sample 0,459.84,0.148,0.0322
-Sample 1,326.88,0.29,0.0887
-Sample 2,374.04,0.187,0.05
-Sample 4,579.0,0.181,0.0313
-Sample FW,294.06,0.081,0.0275
+Reactor_Name,Acetate,Hydrolysate,Ratio
+Reactor 0,459.84,0.148,0.0322
+Reactor 1,326.88,0.29,0.0887
+Reactor 2,374.04,0.187,0.05
+Reactor 4,579.0,0.181,0.0313
+Reactor FW,294.06,0.081,0.0275
