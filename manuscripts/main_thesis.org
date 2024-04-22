@@ -1,0 +1,88 @@
+#+TITLE: ΒΙΟΑΠΟΔΟΜΗΣΗ ΥΠΟΛΕΙΜΜΑΤΩΝ ΤΡΟΦΙΜΩΝ ΚΑΙ ΠΑΡΑΓΩΓΗ ΒΙΟΑΕΡΙΟΥ ΜΕΣΩ ΑΝΑΕΡΟΒΙΑΣ ΧΩΝΕΥΣΗΣ ΣΕ ΕΡΓΑΣΤΗΡΙΑΚΗ ΚΑΙ ΠΙΛΟΤΙΚΗ ΚΛΙΜΑΚΑ
+#+AUTHOR: Βιδιάνος Γιαννίτσης
+\renewcommand{\abstractname}{Περίληψη}
+\renewcommand{\tablename}{Πίνακας}
+\renewcommand{\figurename}{Διάγραμμα}
+\renewcommand{\chaptername}{Κεφάλαιο}
+\renewcommand{\partname}{Μέρος}
+\renewcommand{\listfigurename}{Περιεχόμενα Διαγραμμάτων: }
+\renewcommand{\listtablename}{Περιεχόμενα Πινάκων: }
+\renewcommand\listingscaption{Κώδικας}
+#+LATEX_CLASS: report
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[L]{\chaptername~\thechapter}
+\fancyhead[R]{Βιδιάνος Γιαννίτσης}
+
+#+options: toc:nil title:nil author:nil date:nil
+#+LATEX_HEADER: \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+#+BEGIN_SRC latex
+  \renewcommand{\contentsname}{Κεφάλαια: }
+  \begin{titlepage}
+
+  \begin{center}
+    \begin{minipage}{0.2\textwidth}
+      \begin{flushleft}
+	\includegraphics[width=1\textwidth]{~/Pictures/ntua_logo.png}\\[0.4cm]    
+      \end{flushleft}
+    \end{minipage}
+    \begin{minipage}{0.75\textwidth}
+      \textsc{\bfseries \Large ΕΘΝΙΚΟ ΜΕΤΣΟΒΙΟ ΠΟΛΥΤΕΧΝΕΙΟ}\\[0.2cm]
+      \textsc{\bfseries \Large ΣΧΟΛΗ ΧΗΜΙΚΩΝ ΜΗΧΑΝΙΚΩΝ}\\[0.2cm]
+      \textsc{\large \bfseries ΤΟΜΕΑΣ IV: ΣΥΝΘΕΣΗ ΚΑΙ ΑΝΑΠΤΥΞΗ ΒΙΟΜΗΧΑΝΙΚΩΝ ΔΙΑΔΙΚΑΣΙΩΝ}\\[0.2cm]
+      \textsc{\bfseries \large ΕΡΓΑΣΤΗΡΙΟ ΟΡΓΑΝΙΚΗΣ ΧΗΜΙΚΗΣ \\ ΤΕΧΝΟΛΟΓΙΑΣ}\\[0.2cm]
+    \end{minipage}
+    \\[2.5cm]
+
+    \HRule \\[0.3cm]
+    \Huge Βιοαποδόμηση Υπολειμμάτων Τροφίμων και Παραγωγή Βιοαερίου μέσω Αναερόβιας Χώνευσης σε Εργαστηριακή και Πιλοτική Κλίμακα\\[2.5cm]
+
+    \huge Διπλωματική Εργασία \\[0.3cm]
+     \begin{minipage}{0.4\textwidth}
+      \begin{flushleft}
+	\emph{\LARGE Συγγραφέας:}\\
+	  \emph{\LARGE Αριθμός Μητρώου:} \\
+	  \emph{\LARGE e-mail:}
+	\end{flushleft}
+      \end{minipage}
+      \begin{minipage}{0.4\textwidth}
+	\begin{flushright} \large
+	  \LARGE Βιδιάνος Γιαννίτσης\\
+	  \LARGE ch19113\\
+	  \LARGE vidianosgiannitsis@gmail.com
+	\end{flushright}
+      \end{minipage}
+      \HRule \\[0.3cm]
+    \vfill
+  {\LARGE Αθήνα, 2024}
+
+  \end{center}
+
+  \end{titlepage}
+#+END_SRC
+
+* Περιεχόμενα
+:PROPERTIES:
+:UNNUMBERED: 1
+:END:
+\tableofcontents
+\pagebreak
+
+[[list-of-figures:]]
+\pagebreak
+
+[[list-of-tables:]]
+
+* Θεωρητικό Μέρος
+#+INCLUDE: "./intro_of_intro.org::*Εισαγωγή" :minlevel 2
+
+#+INCLUDE: "./introduction_init_manuscript.org" :minlevel 3
+
+* Βιβλιογραφία
+:PROPERTIES:
+:UNNUMBERED: 1
+:END:
+#+print_bibliography:
+
