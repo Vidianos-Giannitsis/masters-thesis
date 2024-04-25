@@ -6,3 +6,4 @@ using StatsBase
 using CSV, DataFrames
 using LsqFit
 using Plots
+using LaTeXStrings

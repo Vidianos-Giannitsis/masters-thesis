@@ -6,6 +6,7 @@ using StatsBase
 using CSV, DataFrames
 using LsqFit
 using Plots
+using LaTeXStrings
 
 ### Data Analysis on Hydrolysate with 0 ml ###
 

@@ -1,6 +1,6 @@
 Reactor_Name,Acetate,Hydrolysate,Ratio
-Reactor 0,2534.4,4.8,0.1894
-Reactor 1,1180.8,10.776,0.9126
-Reactor 2,698.4,8.472,1.2131
-Reactor 4,2338.56,4.44,0.1899
-Reactor FW,1473.12,7.272,0.4936
+Reactor 0,2534.4,1.584,0.0625
+Reactor 1,1180.8,2.592,0.2195
+Reactor 2,698.4,3.0,0.4296
+Reactor 4,2338.56,2.064,0.0883
+Reactor FW,1473.12,2.064,0.1401
