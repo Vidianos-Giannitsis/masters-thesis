@@ -31,7 +31,9 @@
   - [[#update-all][Update all]]
   - [[#plotting-methane-potential][Plotting Methane Potential]]
   - [[#comparing-kinetic-constants][Comparing Kinetic Constants]]
+  - [[#plotting-comparison-plots][Plotting Comparison Plots]]
   - [[#συμπεράσματα-του-πειραματικού-κύκλου-αυτού][Συμπεράσματα του πειραματικού κύκλου αυτού]]
+  - [[#code-block-για-tangling][Code Block για Tangling]]
 - [[#fw-hydrolysate-s1_r2-processing][FW Hydrolysate S1_R2 Processing]]
   - [[#reactor-0-1][Reactor 0]]
   - [[#reactor-1-1][Reactor 1]]
@@ -41,7 +43,9 @@
   - [[#update-all-1][Update all]]
   - [[#plotting-methane-potential-1][Plotting Methane Potential]]
   - [[#kinetic-comparison][Kinetic Comparison]]
+  - [[#plotting-comparison-plots-1][Plotting Comparison Plots]]
   - [[#συμπεράσματα-από-τον-κύκλο-πειραμάτων-αυτών][Συμπεράσματα από τον κύκλο πειραμάτων αυτών]]
+  - [[#code-block-για-tangling-1][Code Block για Tangling]]
 - [[#acetate-experiment-processing-s2][Acetate Experiment Processing S2]]
   - [[#acetate-test-fw-1][Acetate Test FW]]
   - [[#acetate-test-0-1][Acetate Test 0]]
@@ -58,6 +62,10 @@
   - [[#untreated-fw-2][Untreated FW]]
   - [[#update-all-2][Update all]]
   - [[#kinetic-comparison-1][Kinetic Comparison]]
+  - [[#plotting-comparison-plots-2][Plotting Comparison Plots]]
+  - [[#συμπεράσματα-από-τον-κύκλο-αυτόν][Συμπεράσματα από τον κύκλο αυτόν]]
+  - [[#code-block-για-tangling-2][Code Block για Tangling]]
+- [[#code-block-για-δημιουργία-των-comparison-plots][Code block για δημιουργία των comparison plots]]
 
 * Dependencies
 Στο αρχείο αυτό θα οριστούν κάποια functions για να διευκολυνθεί η ανάλυση των BMPs, τα οποία θα είναι generic και μετά θα υπάρχουν κάποια specific code blocks για την εφαρμογή σε κάθε πείραμα. Πριν ξεκινήσουμε, κάνουμε activate το DrWatson project για reproducibility. Επίσης κάνουμε load το Dates.jl που θα χρειαστεί παρακάτω, καθώς και τα CSV.jl και DataFrames.jl που είναι πάντα χρήσιμα σε tabular data. Ακόμη, παρακάτω θα χρειαστούν τα LsqFit.jl για την προσαρμογή του μοντέλου Gompertz, StatsBase για υπολογισμό μέσων και Plots.jl για plotting. Το code block αυτό δεν κάνει tangle πουθενά καθώς είναι κομμάτι του generic code που θα χρησιμοποιηθεί σε πολλά σημεία.
@@ -123,13 +131,6 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 
 Αρχικά, κάνουμε load τα dependencies στο script στο οποίο θα γίνει η ανάλυση του πειράματος αυτού.
 
-#+NAME: deps_acetate_s1
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_s1_analysis.jl
-
-  <<deps>>
-
-#+END_SRC
-
 Έπειτα, ξεκινάμε την ανάλυση αποθηκεύοντας τα file names σε ένα vector της Julia κάνοντας copy τα shell results. Αυτό το vector θα γίνεται loaded σε όλα τα code blocks, για να είναι το κάθε ένα reproducible από μόνο του. Έτσι, στο τελικό script θα υπάρχουν πολλές επαναλήψεις.
 
 *date_saving_acetate_s1*
@@ -169,31 +170,6 @@ ls -mQ ../bmp_pictures/Acet_kinetics_screenshots/
 
 #+END_SRC
 
-#+RESULTS: date_saving_acetate_s1
-#+begin_example
-58-element Vector{String}:
- "bandicam 2024-03-27 18-45-55-857.jpg"
- "bandicam 2024-03-27 18-46-57-161.jpg"
- "bandicam 2024-03-27 18-48-57-160.jpg"
- "bandicam 2024-03-27 18-50-57-170.jpg"
- "bandicam 2024-03-27 18-52-57-164.jpg"
- "bandicam 2024-03-27 18-54-57-162.jpg"
- "bandicam 2024-03-27 18-56-57-167.jpg"
- "bandicam 2024-03-27 18-58-57-165.jpg"
- "bandicam 2024-03-27 19-00-57-170.jpg"
- "bandicam 2024-03-27 19-02-57-179.jpg"
- ⋮
- "bandicam 2024-03-29 12-37-05-858.jpg"
- "bandicam 2024-03-29 12-38-06-101.jpg"
- "bandicam 2024-03-29 12-38-47-045.jpg"
- "bandicam 2024-03-29 12-39-47-039.jpg"
- "bandicam 2024-03-29 12-40-47-050.jpg"
- "bandicam 2024-03-29 12-41-47-047.jpg"
- "bandicam 2024-03-29 12-42-47-057.jpg"
- "bandicam 2024-03-29 12-43-42-169.jpg"
- "bandicam 2024-03-29 12-44-41-398.jpg"
-#+end_example
-
 ** Acetate Experiment S2
 Λόγω κάποιων προβλημάτων στο προηγούμενο πείραμα και για επιβεβαίωση των αποτελεσμάτων, θα χρησιμοποιηθεί και μία δεύτερη λάσπη για πειράματα. Στο section αυτό θα γίνουν loaded τα απαραίτητα πράγματα για το πείραμα αυτό.
 
@@ -220,13 +196,6 @@ ls -mQ ../bmp_pictures/Acet_kinetic_S2/
 
 Αρχικά, κάνουμε load τα dependencies στο script στο οποίο θα γίνει η ανάλυση του πειράματος αυτού.
 
-#+NAME: deps_acetate_s2
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_s2_analysis.jl
-
-  <<deps>>
-
-#+END_SRC
-
 Έπειτα, ξεκινάμε την ανάλυση αποθηκεύοντας τα file names σε ένα vector της Julia κάνοντας copy τα shell results. Αυτό το vector θα γίνεται loaded σε όλα τα code blocks, για να είναι το κάθε ένα reproducible από μόνο του. Έτσι, στο τελικό script θα υπάρχουν πολλές επαναλήψεις.
 
 *date_saving_acetate_s2*
@@ -247,31 +216,6 @@ ls -mQ ../bmp_pictures/Acet_kinetic_S2/
   ]
 
 #+END_SRC
-
-#+RESULTS: date_saving_acetate_s2
-#+begin_example
-21-element Vector{String}:
- "bandicam 2024-04-10 13-59-53-326.jpg"
- "bandicam 2024-04-10 14-00-47-113.jpg"
- "bandicam 2024-04-10 14-01-47-127.jpg"
- "bandicam 2024-04-10 14-02-24-772.jpg"
- "bandicam 2024-04-10 14-03-24-772.jpg"
- "bandicam 2024-04-10 14-04-13-064.jpg"
- "bandicam 2024-04-10 14-05-10-445.jpg"
- "bandicam 2024-04-10 14-06-10-467.jpg"
- "bandicam 2024-04-10 14-07-10-457.jpg"
- "bandicam 2024-04-10 14-07-29-046.jpg"
- ⋮
- "bandicam 2024-04-10 14-09-57-054.jpg"
- "bandicam 2024-04-10 14-10-57-052.jpg"
- "bandicam 2024-04-10 14-11-57-074.jpg"
- "bandicam 2024-04-10 14-12-57-085.jpg"
- "bandicam 2024-04-10 14-13-57-097.jpg"
- "bandicam 2024-04-10 14-14-57-102.jpg"
- "bandicam 2024-04-10 14-15-57-100.jpg"
- "bandicam 2024-04-10 14-16-57-090.jpg"
- "bandicam 2024-04-10 14-17-57-101.jpg"
-#+end_example
 
 Περίπου 12 ώρες μετά από αυτό, ενώ είχε σταματήσει η παραγωγή μεθανίου, ξαναξεκίνησε να παράγεται μεθάνιο από κάποιους αντιδραστήρες και κατέληξε να συνεχίζεται για αρκετές μέρες. Τα αποτελέσματα αυτού του κύκλου θα αναλυθούν όπως και τα παραπάνω, αλλά όχι μαζί, επειδή θα δημιουργήσει πιθανόν προβλήματα το κενό 12 ωρών.
 
@@ -400,31 +344,6 @@ ls -mQ ../bmp_pictures/Acet_kinetic_S2/
   ]
 #+END_SRC
 
-#+RESULTS: date_saving_acetate_s2_2
-#+begin_example
-110-element Vector{String}:
- "bandicam 2024-04-10 21-34-31-153.jpg"
- "bandicam 2024-04-10 22-34-31-192.jpg"
- "bandicam 2024-04-10 23-34-31-838.jpg"
- "bandicam 2024-04-11 00-34-31-881.jpg"
- "bandicam 2024-04-11 01-34-31-928.jpg"
- "bandicam 2024-04-11 02-34-31-966.jpg"
- "bandicam 2024-04-11 03-34-32-016.jpg"
- "bandicam 2024-04-11 04-34-31-806.jpg"
- "bandicam 2024-04-11 05-34-31-785.jpg"
- "bandicam 2024-04-11 06-34-31-782.jpg"
- ⋮
- "bandicam 2024-04-15 02-34-38-641.jpg"
- "bandicam 2024-04-15 03-34-38-650.jpg"
- "bandicam 2024-04-15 04-34-38-646.jpg"
- "bandicam 2024-04-15 05-34-38-657.jpg"
- "bandicam 2024-04-15 06-34-38-653.jpg"
- "bandicam 2024-04-15 07-34-38-648.jpg"
- "bandicam 2024-04-15 08-34-38-862.jpg"
- "bandicam 2024-04-15 09-34-38-937.jpg"
- "bandicam 2024-04-15 10-34-38-979.jpg"
-#+end_example
-
 ** FW Hydrolysate Experiment S1_R1
 Με την ίδια λογική με παραπάνω, κάνουμε load ότι θα χρειαστεί για αυτό το πείραμα.
 
@@ -464,7 +383,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R1/
 #+end_example
 
 #+NAME: deps_fw_s1_r1
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_s1_r1_analysis.jl
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_s1_r1_analysis.jl
 
   <<deps>>
 
@@ -500,56 +419,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R1/
   "bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg"
   ]
 #+END_SRC
-
-#+RESULTS: date_saving_fw_s1_r1
-#+begin_example
-50-element Vector{String}:
- "bandicam 2024-04-01 11-05-53-069.jpg"
- "bandicam 2024-04-01 11-09-37-035.jpg"
- "bandicam 2024-04-01 11-11-37-051.jpg"
- "bandicam 2024-04-01 11-12-37-060.jpg"
- "bandicam 2024-04-01 11-13-26-776.jpg"
- "bandicam 2024-04-01 11-14-26-770.jpg"
- "bandicam 2024-04-01 11-15-26-780.jpg"
- "bandicam 2024-04-01 11-21-53-098.jpg"
- "bandicam 2024-04-01 11-52-12-665.jpg"
- "bandicam 2024-04-01 12-22-12-663.jpg"
- ⋮
- "bandicam 2024-04-03 12-54-03-516.jpg"
- "bandicam 2024-04-03 13-54-03-505.jpg"
- "bandicam 2024-04-03 14-24-03-564.jpg"
- "bandicam 2024-04-03 14-54-49-083.jpg"
- "bandicam 2024-04-03 15-26-51-834.jpg"
- "bandicam 2024-04-03 16-29-08-087.jpg"
- "bandicam 2024-04-03 17-29-08-355.jpg"
- "bandicam 2024-04-03 18-29-08-352.jpg"
- "bandicam 2024-04-03 20-29-08-355.jpg"
-#+end_example
-
-#+RESULTS: date_saving_fw_1
-#+begin_example
-34-element Vector{String}:
- "bandicam 2024-04-01 11-05-53-069.jpg"
- "bandicam 2024-04-01 11-09-37-035.jpg"
- "bandicam 2024-04-01 11-11-37-051.jpg"
- "bandicam 2024-04-01 11-12-37-060.jpg"
- "bandicam 2024-04-01 11-13-26-776.jpg"
- "bandicam 2024-04-01 11-14-26-770.jpg"
- "bandicam 2024-04-01 11-15-26-780.jpg"
- "bandicam 2024-04-01 11-21-53-098.jpg"
- "bandicam 2024-04-01 11-52-12-665.jpg"
- "bandicam 2024-04-01 12-22-12-663.jpg"
- ⋮
- "bandicam 2024-04-02 23-54-02-573.jpg"
- "bandicam 2024-04-03 01-54-02-576.jpg"
- "bandicam 2024-04-03 03-54-02-564.jpg"
- "bandicam 2024-04-03 05-54-02-863.jpg"
- "bandicam 2024-04-03 07-54-02-978.jpg"
- "bandicam 2024-04-03 09-54-02-983.jpg"
- "bandicam 2024-04-03 12-54-03-516.jpg"
- "bandicam 2024-04-03 13-54-03-505.jpg"
- "bandicam 2024-04-03 14-24-03-564.jpg"
-#+end_example
 
 ** FW Hydrolysate Experiment S1_R2
 *ls_output_fw_s1_r2*
@@ -615,7 +484,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
 #+end_example
 
 #+NAME: deps_fw_s1_r2
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_s1_r2_analysis.jl
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_s1_r2_analysis.jl
 
   <<deps>>
 
@@ -678,31 +547,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S1_R2/
   "bandicam 2024-04-10 02-19-57-773.jpg", "bandicam 2024-04-10 03-19-57-782.jpg"
   ]
 #+END_SRC
-
-#+RESULTS: date_saving_fw_s1_r2
-#+begin_example
-104-element Vector{String}:
- "bandicam 2024-04-03 14-37-15-369.jpg"
- "bandicam 2024-04-03 14-45-40-862.jpg"
- "bandicam 2024-04-03 14-51-49-082.jpg"
- "bandicam 2024-04-03 14-56-51-812.jpg"
- "bandicam 2024-04-03 15-29-08-067.jpg"
- "bandicam 2024-04-03 16-29-08-087.jpg"
- "bandicam 2024-04-03 17-29-08-355.jpg"
- "bandicam 2024-04-03 18-29-08-352.jpg"
- "bandicam 2024-04-03 20-29-08-355.jpg"
- "bandicam 2024-04-03 22-29-08-353.jpg"
- ⋮
- "bandicam 2024-04-09 19-19-57-244.jpg"
- "bandicam 2024-04-09 20-19-57-237.jpg"
- "bandicam 2024-04-09 21-19-57-252.jpg"
- "bandicam 2024-04-09 22-19-57-268.jpg"
- "bandicam 2024-04-09 23-19-57-667.jpg"
- "bandicam 2024-04-10 00-19-57-661.jpg"
- "bandicam 2024-04-10 01-19-57-748.jpg"
- "bandicam 2024-04-10 02-19-57-773.jpg"
- "bandicam 2024-04-10 03-19-57-782.jpg"
-#+end_example
 
 ** FW Hydrolysate S2_R1
 *ls_output_fw_s2_r1*
@@ -815,7 +659,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 #+end_example
 
 #+NAME: deps_fw_s2_r1
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_s2_r1_analysis.jl
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_s2_r1_analysis.jl
 
   <<deps>>
 
@@ -925,31 +769,6 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
   "bandicam 2024-04-21 22-50-49-023.jpg"
   ]
 #+END_SRC
-
-#+RESULTS: date_saving_fw_s2_r1
-#+begin_example
-197-element Vector{String}:
- "bandicam 2024-04-15 12-02-11-665.jpg"
- "bandicam 2024-04-15 12-04-11-664.jpg"
- "bandicam 2024-04-15 12-06-09-897.jpg"
- "bandicam 2024-04-15 12-07-09-919.jpg"
- "bandicam 2024-04-15 12-08-09-906.jpg"
- "bandicam 2024-04-15 12-11-09-909.jpg"
- "bandicam 2024-04-15 12-11-28-595.jpg"
- "bandicam 2024-04-15 12-12-28-586.jpg"
- "bandicam 2024-04-15 12-13-28-584.jpg"
- "bandicam 2024-04-15 12-16-17-597.jpg"
- ⋮
- "bandicam 2024-04-21 14-50-48-522.jpg"
- "bandicam 2024-04-21 15-50-48-518.jpg"
- "bandicam 2024-04-21 16-50-48-539.jpg"
- "bandicam 2024-04-21 17-50-48-554.jpg"
- "bandicam 2024-04-21 18-50-48-689.jpg"
- "bandicam 2024-04-21 19-50-48-905.jpg"
- "bandicam 2024-04-21 20-50-48-977.jpg"
- "bandicam 2024-04-21 21-50-49-009.jpg"
- "bandicam 2024-04-21 22-50-49-023.jpg"
-#+end_example
 
 * Data Processing
 Έπειτα, μπορούμε να κάνουμε extract τις πληροφορίες που θέλουμε, με το Dates.jl package της Julia. Σε αυτό το code block, δεν θα ορίσουμε το file vector και αυτό θα υποτεθεί defined. Έτσι, δεν μπορούμε να τρέξουμε independently το block αυτό, αλλά μόνο chained σε ένα definition των files, για να μπορεί να τρέξει αντίστοιχα σε κάθε πείραμα. Επίσης, εκτός από να κάνουμε extract τα time stamps, φτιάχνουμε και ένα δεύτερο vector με time stamp dd/mm_HH:MM το οποίο είναι πιο βολικό στη χρήση για εμένα.
@@ -1590,7 +1409,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 Σε αυτό το section θα υπάρχει ένα helper code block που θα κάνει evaluate όλα τα παραπάνω. Έτσι, αν αλλάξει κάτι το οποίο επηρεάζει περισσότερα από ένα code blocks, θα μπορούν να γίνουν updated ταυτόχρονα πιο εύκολα. Επίσης, μία επιπλέον χρησιμότητα του code block αυτού είναι ότι αποθηκεύει ένα CSV που συγκεντρώνει όλα τα δεδομένα των κινητικών παραμέτρων από την προσαρμογή που έγινε παραπάνω, το οποίο είναι χρήσιμο για συγκρίσεις, παρόλο που τα συγκεκριμένα πειράματα δεν είναι τόσο σημαντικό να συγκριθούν.
 *update_acetate_tests_s1*
 #+NAME: update_acetate_tests_s1
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_analysis.jl
+#+BEGIN_SRC julia :noweb no-export
 
   <<acet_test_0_s1>>
   <<acet_test_1_s1>>
@@ -1623,7 +1442,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | Reactor FW   |               27.014 |           4.901 |      0.0 |       0.9 |
 
 #+NAME: sma_acet_s1
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_analysis.jl
+#+BEGIN_SRC julia :noweb no-export
 
   <<acet_test_0_s1>>
   <<acet_test_1_s1>>
@@ -2186,11 +2005,10 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 [[../plots/BMPs/Untreated FW/specific_methane_kinetics_untreated_fw_s1_r1_hour.png]]
 
 ** Update all
-Όπως και παραπάνω για τα πειράματα στο οξικό, θα υπάρχει και ένα code block το οποίο θα κάνει update όλα τα code blocks, θα τα κάνει tangle σε ένα script file και θα αποθηκεύει ένα CSV με όλα τα κινητικά αποτελέσματα.
 
 *update_hydrolysate_tests_s1_r1*
 #+NAME: update_hydrolysate_tests_s1_r1
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_s1_r1_analysis.jl
+#+BEGIN_SRC julia :noweb no-export
 
   <<hydrolysate_0_s1_r1>>
   <<hydrolysate_1_s1_r1>>
@@ -2242,7 +2060,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | FW 1        |                2.369 |           0.001 |      0.0 |     0.982 |
 
 #+NAME: sma_hydro_s1_r1
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_s1_r1_analysis.jl
+#+BEGIN_SRC julia :noweb no-export
 
   <<hydrolysate_0_s1_r1>>
   <<hydrolysate_1_s1_r1>>
@@ -2520,6 +2338,35 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 Ως προς το biomethane potential (BMP) του συστήματος, όπως θα αναμενόταν τα υδρολύματα παρήγαγαν λιγότερο μεθάνιο από το οξικό. Για την σύγκριση των πειράματων, έγινε έμμεσα συγκρίνοντας τι ποσοστό του αντίστοιχου οξικού ήταν το καθένα. Η χαμηλότερη παραγωγικότητα ήταν από το FW, το οποίο είναι καλό συμπέρασμα επειδή δείχνει την σημασία της προεπεξεργασίας. Υπήρχε μία υπόθεση ότι μπορεί να διέρρεε αέριο από το δοχείο αυτό, αλλά εν τέλει, με βάση τα πειράματα του 2ου κύκλου, έγινε overacidification το οποίο οδήγησε σε κατάρρευση του συστήματος.
 
 Λόγω των προβλημάτων που παρουσιάστηκαν και για να επιβεβαιώσουμε αν είναι επαναλήψιμα αυτά, έγινε και ένα δεύτερο πείραμα με τις ίδιες συνθήκες για να δούμε τα αποτελέσματα του.
+
+** Code Block για Tangling
+Έχοντας κάνει όλη αυτήν την ανάλυση, κάνουμε tangle ένα συνολικό code block σε ένα julia script file για sharing. Λόγω του structure του αρχείου αυτού και το ότι βασίζεται αρκετά στο org babel και το noweb syntax, το script file θα έχει αναγκαστικά πολλές επαναλήψεις. Αλλά θα είναι perfectly usable σε άλλο υπολογιστή θεωρητικά.
+
+#+NAME: s1_r1_complete_analysis_script
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_s1_r1_analysis.jl
+
+  <<update_acetate_tests_s1>>
+
+  sma_table = Tables.table(vcat(reshape(sma_acet_0, 1, 5), reshape(sma_acet_1, 1, 5), reshape(sma_acet_2, 1, 5), reshape(sma_acet_4, 1, 5), reshape(sma_acet_fw, 1, 5)), header = [:Reactor_Name, :Methane_Potential, :SMA, :Lag_Time, :R_sq])
+  CSV.write(datadir("exp_pro", "sma_from_acetate_s1.csv"), sma_table)
+
+  <<update_hydrolysate_tests_s1_r1>>
+
+  sma_table = Tables.table(vcat(reshape(sma_hydro_0, 1, 5), reshape(sma_hydro_1, 1, 5), reshape(sma_hydro_2, 1, 5), reshape(sma_hydro_4, 1, 5), reshape(sma_hydro_fw, 1, 5)), header = [:Reactor_Name, :Methane_Potential, :SMA, :Lag_Time, :R_sq])
+  CSV.write(datadir("exp_pro", "sma_from_hydrolysate_s1_r1.csv"), sma_table)
+
+  comp_name = "s1_r1"
+  sludge = "Sludge 1 "
+  run = "Run 1"
+  <<BMP_comp_plot>>
+
+  sludge = "s1"
+  run = "r1"
+  timescale = "hour"
+
+  <<ad_kinetics_comparison>>
+  <<manual_rate_comparison>>
+#+END_SRC
 
 * FW Hydrolysate S1_R2 Processing
 Στο section αυτό θα αναλυθούν τα αποτελεσματα του δεύτερου πειράματος που χρησιμοποιήσε FW hydrolysate ως υπόστρωμα (S1_R2 επειδή είναι το δεύτερο run με την πρώτη λάσπη). Βρίσκεται σε πλήρη αντιστοιχία με το προηγούμενο πείραμα και έγινε για επαναληψιμότητα. Οπότε, σκοπός είναι να εξετάσουμε αν είναι παρόμοιο με το προηγούμενο ή αν διαφέρει σημαντικά και στην περίπτωση του 2ου, να κρίνουμε ποιά από τις δύο περιπτώσεις είναι πραγματικά ο outlier. Τα σχόλια για το τι είναι κάθε δείγμα θα μείνουν ίδια με παραπάνω για υπενθύμιση.
@@ -3182,11 +3029,10 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 [[../plots/BMPs/Untreated FW/specific_methane_kinetics_untreated_fw_s1_r2_hour.png]]
 
 ** Update all
-Όπως και για τα προηγούμενα, θα υπάρχει και ένα code block το οποίο θα κάνει update όλα τα code blocks, θα τα κάνει tangle σε ένα script file και θα αποθηκεύει ένα CSV με όλα τα κινητικά αποτελέσματα.
 
 *update_hydrolysate_tests_s1_r2*
 #+NAME: update_hydrolysate_tests_s1_r2
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_s1_r2_analysis.jl
+#+BEGIN_SRC julia :noweb no-export
 
   <<hydrolysate_0_s1_r2>>
   <<hydrolysate_1_s1_r2>>
@@ -3237,7 +3083,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | FW           |                2.385 |           0.001 |      0.0 |     0.985 |
 
 #+NAME: sma_hydro_s1_r2
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_s1_r2_analysis.jl
+#+BEGIN_SRC julia :noweb no-export
 
   <<hydrolysate_0_s1_r2>>
   <<hydrolysate_1_s1_r2>>
@@ -3414,10 +3260,39 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 
 Από την άποψη των BMPs, η σειρά είναι 0 > FW > 4 > 2 > 1 (ίδια σειρά με πριν με εξαίρεση την αλλαγή του FW με το 0). Το FW και το 0 είναι πάλι και τα 2 πολύ χαμηλά, το οποίο κάνει ξανά validate ότι η προεπεξεργασία που επιλέχθηκε είναι αρκετά αποτελεσματική Το δείγμα 1 έχει και πάλι την περισσότερη ποσότητα μεθανίου. Αυτό δεν μπορεί να αιτιολογηθεί εύκολα από τα αποτελέσματα του αρχικού πειράματος υδρόλυσης σε αυτές τις συνθήκες, αλλά η αναπάντεχα μεγάλη συγκέντρωση sCOD του, οδηγεί στο συμπέρασμα της καλύτερης διαλυτοποίησης σε αυτό το πείραμα και πιθανόν αυτό να ευθύνεται για την αυξημένη παραγωγή μεθανίου.
 
+** Code Block για Tangling
+Έχοντας κάνει όλη αυτήν την ανάλυση, κάνουμε tangle ένα συνολικό code block σε ένα julia script file για sharing. Λόγω του structure του αρχείου αυτού και το ότι βασίζεται αρκετά στο org babel και το noweb syntax, το script file θα έχει αναγκαστικά πολλές επαναλήψεις. Αλλά θα είναι perfectly usable σε άλλο υπολογιστή θεωρητικά.
+
+#+NAME: s1_r2_complete_analysis_script
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_s1_r2_analysis.jl
+
+  <<update_acetate_tests_s1>>
+
+  sma_table = Tables.table(vcat(reshape(sma_acet_0, 1, 5), reshape(sma_acet_1, 1, 5), reshape(sma_acet_2, 1, 5), reshape(sma_acet_4, 1, 5), reshape(sma_acet_fw, 1, 5)), header = [:Reactor_Name, :Methane_Potential, :SMA, :Lag_Time, :R_sq])
+  CSV.write(datadir("exp_pro", "sma_from_acetate_s1.csv"), sma_table)
+    
+  <<update_hydrolysate_tests_s1_r2>>
+
+  sma_table = Tables.table(vcat(reshape(sma_hydro_0, 1, 5), reshape(sma_hydro_1, 1, 5), reshape(sma_hydro_2, 1, 5), reshape(sma_hydro_4, 1, 5), reshape(sma_hydro_fw, 1, 5)), header = [:Reactor_Name, :Methane_Potential, :SMA, :Lag_Time, :R_sq])
+  CSV.write(datadir("exp_pro", "sma_from_hydrolysate_s1_r2.csv"), sma_table)
+
+  comp_name = "s1_r2"
+  sludge = "Sludge 1 "
+  run = "Run 2"
+  <<BMP_comp_plot>>
+
+  sludge = "s1"
+  run = "r2"
+  timescale = "hour"
+
+  <<ad_kinetics_comparison>>
+  <<manual_rate_comparison>>
+#+END_SRC
+
 * Acetate Experiment Processing S2
 Παρακάτω αναφέρονται οι δοκιμές που έγιναν με 100 μL οξικό σε κάθε δείγμα και θα χρησιμοποιηθούν συγκριτικά σε σχέση με τα FW. Μετά από τα code blocks που τρέχουν τον κώδικα θα υπάρχουν και κάποια από τα corresponding αποτελέσματα. Συγκεκριμένα, ο πίνακας με τα κινητικά δεδομένα και το διάγραμμα παραγωγής μεθανίου το οποίο έχει το curve fitting. Υπάρχουν και κάποια άλλα χρήσιμα διαγράμματα, τα οποία είναι αποθηκευμένα, αλλά εδώ παρατίθενται κάποια για καλύτερη ανάγνωση του αρχείου.
 
-Το section αυτό αφορά την χρήση της 2ης λάσπης.
+Το section αυτό αφορά την χρήση της 2ης λάσπης. Κατά την χρήση αυτής, παρατηρήθηκε ένα περίεργο φαινόμενο, το οποίο επαναλήφθηκε και στα πειράματα αυτά με το οξικό, αλλά και στα επερχόμενα υδρολύματα. Η λάσπη συνέχιζε να παράγει μεθάνιο σε πολύ μεγάλες ποσότητες για πολύ μεγάλο χρόνο, ξεπερνώντας κατά πολύ την ποσότητα που θα αναμενόταν να παράγουν 100 mg COD. Επίσης, στο οξικό η συνέχεια της παραγωγής έγινε μετά από όταν είχε σταματήσει για περίπου μισή μέρα. Οπότε, έγινε η υπόθεση ότι η συνέχεια της παραγωγής ήταν από κάποια τροφή που είχε αποθηκευμένη η λάσπη και δεν οφειλόταν στην τροφοδοσία που κάναμε. Έτσι την θεωρήσαμε ένα negative blank του πειράματος και αφαιρέσαμε την παραγωγή αυτή από τα υδρολύματα για να βγούν πιο εύλογα συμπεράσματα.
 
 ** Acetate Test FW
 Το section αυτό αναφέρεται στη δοκιμή με 100 μL οξικό στο δείγμα labelled ως FW (στο οποίο θα τροφοδοτηθούν untreated FW). 
@@ -3487,6 +3362,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 [[../plots/BMPs/Acetate/specific_methane_kinetics_acet_test_fw_s2.png]]
 
 *** Continued
+Αυτό το section είναι για την συνέχεια του πειράματος, η οποία θα χρησιμοποιηθεί ως το negative blank για την ανάλυση των πειραμάτων με υδρόλυμα.
+
 #+NAME: acet_test_fw_s2_2
 #+BEGIN_SRC julia :noweb no-export
 
@@ -3672,6 +3549,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 [[../plots/BMPs/Acetate/specific_methane_kinetics_acet_test_0_s2.png]]
 
 *** Continued
+Αυτό το section είναι για την συνέχεια του πειράματος, η οποία θα χρησιμοποιηθεί ως το negative blank για την ανάλυση των πειραμάτων με υδρόλυμα.
+
 #+NAME: acet_test_0_s2_2
 #+BEGIN_SRC julia :noweb no-export
 
@@ -3883,6 +3762,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 [[../plots/BMPs/Acetate/specific_methane_kinetics_acet_test_1_s2.png]]
 
 *** Continued
+Αυτό το section είναι για την συνέχεια του πειράματος, η οποία θα χρησιμοποιηθεί ως το negative blank για την ανάλυση των πειραμάτων με υδρόλυμα.
+
 #+NAME: acet_test_1_s2_2
 #+BEGIN_SRC julia :noweb no-export
 
@@ -4073,6 +3954,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 [[../plots/BMPs/Acetate/specific_methane_kinetics_acet_test_2_s2_min.png]]
 
 *** Continued
+Αυτό το section είναι για την συνέχεια του πειράματος, η οποία θα χρησιμοποιηθεί ως το negative blank για την ανάλυση των πειραμάτων με υδρόλυμα.
+
 #+NAME: acet_test_2_s2_2
 #+BEGIN_SRC julia :noweb no-export
 
@@ -4272,6 +4155,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 [[../plots/BMPs/Acetate/specific_methane_kinetics_acet_test_4_s2.png]]
 
 *** Continued
+Αυτό το section είναι για την συνέχεια του πειράματος, η οποία θα χρησιμοποιηθεί ως το negative blank για την ανάλυση των πειραμάτων με υδρόλυμα.
+
 #+NAME: acet_test_4_s2_2
 #+BEGIN_SRC julia :noweb no-export
 
@@ -4419,7 +4304,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 Σε αυτό το section θα υπάρχει ένα helper code block που θα κάνει evaluate όλα τα παραπάνω. Έτσι, αν αλλάξει κάτι το οποίο επηρεάζει περισσότερα από ένα code blocks, θα μπορούν να γίνουν updated ταυτόχρονα πιο εύκολα. Επίσης, μία επιπλέον χρησιμότητα του code block αυτού είναι ότι αποθηκεύει ένα CSV που συγκεντρώνει όλα τα δεδομένα των κινητικών παραμέτρων από την προσαρμογή που έγινε παραπάνω, το οποίο είναι χρήσιμο για συγκρίσεις, παρόλο που τα συγκεκριμένα πειράματα δεν είναι τόσο σημαντικό να συγκριθούν.
 *update_acetate_tests_s2*
 #+NAME: update_acetate_tests_s2
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_analysis.jl
+#+BEGIN_SRC julia :noweb no-export
 
   <<acet_test_0_s2>>
   <<acet_test_1_s2>>
@@ -4449,7 +4334,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | Reactor FW   |               14.451 |           4.298 |    0.586 |     0.993 |
 
 #+NAME: sma_acet_s2
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_analysis.jl
+#+BEGIN_SRC julia :noweb no-export
 
   <<acet_test_0_s2>>
   <<acet_test_1_s2>>
@@ -4482,7 +4367,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 *** Slow Growth Phase
 *update_acetate_tests_s2_2*
 #+NAME: update_acetate_tests_s2_2
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_analysis.jl
+#+BEGIN_SRC julia :noweb no-export
 
   <<acet_test_0_s2_2>>
   <<acet_test_1_s2_2>>
@@ -4512,7 +4397,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | Reactor FW   |               60.343 |           0.766 |    1.903 |     0.998 |
 
 #+NAME: sma_acet_s2_2
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_acetate_analysis.jl
+#+BEGIN_SRC julia :noweb no-export
 
   <<acet_test_0_s2_2>>
   <<acet_test_1_s2_2>>
@@ -4552,6 +4437,8 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 Ως συμπέρασμα, βλέπουμε πως μία πιθανή αιτία για την μεγάλη διαφορά των δύο λασπών μπορεί να είναι η διαφορετική ποσότητα λάσπης (και άρα να πρέπει αυτή να ληφθεί υπόψην στις κινητικές) πέρα από το γεγονός ότι μπορεί να έχουν απλώς πολύ διαφορετική δραστικότητα.
 
 * FW Hydrolysate Data Processing S2_R1
+Όπως αναφέρθηκε παραπάνω, τα δείγματα αυτά είχαν πάρα πολύ μεγάλη παραγωγή βιοαερίου, η οποία παρατηρήθηκε και στα πειράματα που τροφοδοτήσαμε με οξικό. Για τον λόγο αυτό, η παραγωγή εκείνη του οξικού θεωρήθηκε negative blank του πειράματος και θα αφαιρεθεί από όλα τα πειράματα.
+
 ** Reactor 0
 Το δείγμα αυτό είναι labelled ως δείγμα 0 καθώς είναι το δείγμα το οποίο τροφοδοτήθηκε με treated FW, όμως χωρίς προσθήκη του μιξ ενζύμων και μικροοργανισμών. Όπως έχουμε δεί, όλες οι αντιδράσεις που γίνονται κατά την υδρόλυση και ζύμωση μπορούν να γίνουν και χωρίς το μιξ. Όμως, γινόντουσαν πιο αποτελεσματικά με την προσθήκη αυτού. Οπότε, ελπίζουμε πως το δείγμα αυτό θα έχει χειρότερα αποτελέσματα από τα άλλα, το οποίο θα μας οδηγήσει στην υπόθεση ότι το μιξ βελτιώνει όχι μόνο τα κριτήρια υδρόλυσης και οξεογένεσης αλλά και αυτό της μεθανογένεσης.
 
@@ -5483,11 +5370,10 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 [[../plots/BMPs/Untreated FW/specific_methane_kinetics_untreated_fw_s2_r1_hour.png]]
 
 ** Update all
-Όπως και παραπάνω για τα πειράματα στο οξικό, θα υπάρχει και ένα code block το οποίο θα κάνει update όλα τα code blocks, θα τα κάνει tangle σε ένα script file και θα αποθηκεύει ένα CSV με όλα τα κινητικά αποτελέσματα.
 
 *update_hydrolysate_tests_s2_r1*
 #+NAME: update_hydrolysate_tests_s2_r1
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_s2_r1_analysis.jl
+#+BEGIN_SRC julia :noweb no-export
 
   <<hydrolysate_0_s2_r1>>
   <<hydrolysate_1_s2_r1>>
@@ -5539,7 +5425,7 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 | FW 1         |                9.242 |           0.006 |  956.074 |     0.994 |
 
 #+NAME: sma_hydro_s2_r1
-#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_fw_hydrolysate_s2_r1_analysis.jl
+#+BEGIN_SRC julia :noweb no-export
 
   <<hydrolysate_0_s2_r1>>
   <<hydrolysate_1_s2_r1>>
@@ -5682,3 +5568,50 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
 : "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/methane_s2_r1_comp.svg"
 
 [[../plots/BMPs/methane_s2_r1_comp.png]]
+
+** Συμπεράσματα από τον κύκλο αυτόν
+Ο κύκλος αυτός είχε κάποια περίεργα φαινόμενα. Το βασικότερο του πρόβλημα ήταν η πάρα πολύ μεγάλη παραγωγικότητα σε αέριο που είχαν όλα τα δείγματα. Όπως αναφέρθηκε, θεωρήθηκε αρκετά πιθανό αυτή η παραπάνω παραγωγή να ήταν επειδή η ίδια η λάσπη είχε αποθηκεύσει κάποια τροφή και μπορούσε να παράγει πολύ περισσότερο από ότι εμείς τροφοδοτήσαμε. Για αυτόν τον λόγο, αφαιρέθηκε η παραγωγή εκείνης της ποσότητας με βάση το πείραμα του οξικού από την ίδια ποσότητα στα πειράματα των υδρολυμάτων. Μετά από αυτά, τα πειράματα αυτά είναι αρκετά λογικά. Ακολουθούν την ίδια τάση με τα προηγούμενα πειράματα, έχουν ρυθμό παρόμοιας τάξης αλλά παράγουν περισσότερο βιοαέριο (το οποίο είναι λογικό επειδή αναμέναμε πως η λάσπη αυτή είναι πιο ενεργή).
+
+Με βάση και αυτό το πείραμα, μπορούμε να πούμε με αρκετή βεβαιότητα πως ισχύει η παρατήρηση ότι τα υδρολύματα με 1 και 2 ml μιξ έχουν την καλύτερη απόδοση και ότι το 2 ξεκινάει με γρηγορότερο ρυθμό, αλλά έχει χαμηλότερο peak από το 1. Η εξήγηση για αυτό είναι πως η αναλογία 2 ml/200 g FW έχει καλύτερη ζύμωση και άρα το υδρόλυμα είναι πιο έτοιμο για να χρησιμοποιηθεί σε αναερόβια χώνευση, όμως, το 1 είχε λιγότερους μικροοργανισμούς, οπότε περισσότερη οργανική ύλη, με αποτέλεσμα να έχει μεγαλύτερο δυναμικό μεθανίου.
+
+** Code Block για Tangling
+Έχοντας κάνει όλη αυτήν την ανάλυση, κάνουμε tangle ένα συνολικό code block σε ένα julia script file για sharing. Λόγω του structure του αρχείου αυτού και το ότι βασίζεται αρκετά στο org babel και το noweb syntax, το script file θα έχει αναγκαστικά πολλές επαναλήψεις. Αλλά θα είναι perfectly usable σε άλλο υπολογιστή θεωρητικά.
+
+#+NAME: s2_r1_complete_analysis_script
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_s2_r1_analysis.jl
+
+  <<update_acetate_tests_s1>>
+
+  sma_table = Tables.table(vcat(reshape(sma_acet_0, 1, 5), reshape(sma_acet_1, 1, 5), reshape(sma_acet_2, 1, 5), reshape(sma_acet_4, 1, 5), reshape(sma_acet_fw, 1, 5)), header = [:Reactor_Name, :Methane_Potential, :SMA, :Lag_Time, :R_sq])
+  CSV.write(datadir("exp_pro", "sma_from_acetate_s1.csv"), sma_table)
+    
+  <<update_hydrolysate_tests_s2_r1>>
+
+  sma_table = Tables.table(vcat(reshape(sma_hydro_0, 1, 5), reshape(sma_hydro_1, 1, 5), reshape(sma_hydro_2, 1, 5), reshape(sma_hydro_4, 1, 5), reshape(sma_hydro_fw, 1, 5)), header = [:Reactor_Name, :Methane_Potential, :SMA, :Lag_Time, :R_sq])
+  CSV.write(datadir("exp_pro", "sma_from_hydrolysate_s2_r1.csv"), sma_table)
+
+  comp_name = "s2_r1"
+  sludge = "Sludge 2 "
+  run = "Run 1"
+  <<BMP_comp_plot>>
+
+  sludge = "s1"
+  run = "r2"
+  timescale = "hour"
+
+  <<ad_kinetics_comparison>>
+  <<manual_rate_comparison>>
+#+END_SRC
+
+* Code block για δημιουργία των comparison plots
+Ένα από τα πιο ωραία plots που έχω φτιάξει για την ανάλυση των αποτελεσμάτων της αναερόβιας χώνευσης είναι τα comparison plots μεταξύ των πειραμάτων υδρολυμάτων. Στο section αυτό θα οριστεί ένα code block για το tangling αυτών των 3 code block (τα οποία είναι perfectly standalone) σε ένα script file.
+
+#+NAME: hydrolysate_comparison_tangle
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/ad_hydrolysate_comparison_plots.jl
+
+  <<comp_methane_plot_s1_r1>>
+  <<comp_methane_plot_s1_r2>>
+  <<comp_methane_plot_s2_r1>>
+    
+#+END_SRC
+
