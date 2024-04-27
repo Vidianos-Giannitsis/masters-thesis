@@ -1,0 +1,6 @@
+Reactor_Name,Production_Potential,Production_Rate,Lag_Time,R_squared
+Acetate,29.798,6.83,0.0,0.969
+Reactor P1,9.929,0.006,173.101,0.986
+Reactor P3,8.255,0.004,218.287,0.976
+Reactor P1,1.309,0.001,717.904,0.996
+Reactor P3,6.275,0.004,153.843,0.989

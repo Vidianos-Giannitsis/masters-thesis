@@ -10,6 +10,7 @@
   - [[#fw-hydrolysate-experiment-s1_r1][FW Hydrolysate Experiment S1_R1]]
   - [[#fw-hydrolysate-experiment-s1_r2][FW Hydrolysate Experiment S1_R2]]
   - [[#fw-hydrolysate-s2_r1][FW Hydrolysate S2_R1]]
+  - [[#orca-experiment][Orca Experiment]]
 - [[#data-processing][Data Processing]]
   - [[#curve-fitting][Curve Fitting]]
   - [[#plotting][Plotting]]
@@ -66,6 +67,12 @@
   - [[#συμπεράσματα-από-τον-κύκλο-αυτόν][Συμπεράσματα από τον κύκλο αυτόν]]
   - [[#code-block-για-tangling-2][Code Block για Tangling]]
 - [[#code-block-για-δημιουργία-των-comparison-plots][Code block για δημιουργία των comparison plots]]
+- [[#orca-experiment-processing][Orca Experiment Processing]]
+  - [[#acetate-experiment-s3][Acetate Experiment S3]]
+  - [[#orca-hydrolysate-p1_s2][Orca Hydrolysate P1_S2]]
+  - [[#orca-hydrolysate-p3_s2][Orca Hydrolysate P3_S2]]
+  - [[#orca-hydrolysate-p1_s3][Orca Hydrolysate P1_S3]]
+  - [[#orca-hydrolysate-p3_s3][Orca Hydrolysate P3_S3]]
 
 * Dependencies
 Στο αρχείο αυτό θα οριστούν κάποια functions για να διευκολυνθεί η ανάλυση των BMPs, τα οποία θα είναι generic και μετά θα υπάρχουν κάποια specific code blocks για την εφαρμογή σε κάθε πείραμα. Πριν ξεκινήσουμε, κάνουμε activate το DrWatson project για reproducibility. Επίσης κάνουμε load το Dates.jl που θα χρειαστεί παρακάτω, καθώς και τα CSV.jl και DataFrames.jl που είναι πάντα χρήσιμα σε tabular data. Ακόμη, παρακάτω θα χρειαστούν τα LsqFit.jl για την προσαρμογή του μοντέλου Gompertz, StatsBase για υπολογισμό μέσων και Plots.jl για plotting. Το code block αυτό δεν κάνει tangle πουθενά καθώς είναι κομμάτι του generic code που θα χρησιμοποιηθεί σε πολλά σημεία.
@@ -767,6 +774,96 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
   "bandicam 2024-04-21 18-50-48-689.jpg", "bandicam 2024-04-21 19-50-48-905.jpg",
   "bandicam 2024-04-21 20-50-48-977.jpg", "bandicam 2024-04-21 21-50-49-009.jpg",
   "bandicam 2024-04-21 22-50-49-023.jpg"
+  ]
+#+END_SRC
+
+** Orca Experiment
+*ls_output_orca*
+#+NAME: ls_output_orca
+#+BEGIN_SRC sh :results output
+ls -mQ ../bmp_pictures/ORCA/
+#+END_SRC
+
+#+RESULTS: ls_output_orca
+#+begin_example
+"bandicam 2024-04-25 12-10-06-490.jpg", "bandicam 2024-04-25 12-11-06-497.jpg",
+"bandicam 2024-04-25 12-12-06-486.jpg", "bandicam 2024-04-25 12-13-06-496.jpg",
+"bandicam 2024-04-25 12-14-06-491.jpg", "bandicam 2024-04-25 12-15-06-500.jpg",
+"bandicam 2024-04-25 12-16-06-500.jpg", "bandicam 2024-04-25 12-17-06-499.jpg",
+"bandicam 2024-04-25 12-18-06-493.jpg", "bandicam 2024-04-25 12-19-06-492.jpg",
+"bandicam 2024-04-25 12-21-06-490.jpg", "bandicam 2024-04-25 12-22-06-501.jpg",
+"bandicam 2024-04-25 12-25-06-491.jpg", "bandicam 2024-04-25 12-28-06-491.jpg",
+"bandicam 2024-04-25 12-29-06-492.jpg", "bandicam 2024-04-25 12-30-06-492.jpg",
+"bandicam 2024-04-25 12-31-06-489.jpg", "bandicam 2024-04-25 12-31-19-310.jpg",
+"bandicam 2024-04-25 12-32-19-322.jpg", "bandicam 2024-04-25 12-33-19-326.jpg",
+"bandicam 2024-04-25 12-35-19-324.jpg", "bandicam 2024-04-25 12-36-19-323.jpg",
+"bandicam 2024-04-25 12-36-24-976.jpg", "bandicam 2024-04-25 12-37-24-970.jpg",
+"bandicam 2024-04-25 12-38-24-970.jpg", "bandicam 2024-04-25 12-39-00-506.jpg",
+"bandicam 2024-04-25 12-39-14-253.jpg", "bandicam 2024-04-25 12-40-14-253.jpg",
+"bandicam 2024-04-25 12-41-14-253.jpg", "bandicam 2024-04-25 12-42-10-077.jpg",
+"bandicam 2024-04-25 12-43-10-088.jpg", "bandicam 2024-04-25 12-44-10-086.jpg",
+"bandicam 2024-04-25 12-45-10-080.jpg", "bandicam 2024-04-25 12-46-10-091.jpg",
+"bandicam 2024-04-25 12-47-10-090.jpg", "bandicam 2024-04-25 12-48-10-088.jpg",
+"bandicam 2024-04-25 12-49-10-084.jpg", "bandicam 2024-04-25 12-50-10-093.jpg",
+"bandicam 2024-04-25 12-51-10-081.jpg", "bandicam 2024-04-25 12-52-10-090.jpg",
+"bandicam 2024-04-25 12-53-10-085.jpg", "bandicam 2024-04-25 12-54-10-083.jpg",
+"bandicam 2024-04-25 12-55-10-104.jpg", "bandicam 2024-04-25 12-56-10-113.jpg",
+"bandicam 2024-04-25 12-57-08-862.jpg", "bandicam 2024-04-25 13-57-09-221.jpg",
+"bandicam 2024-04-25 14-57-09-440.jpg", "bandicam 2024-04-25 15-57-09-529.jpg",
+"bandicam 2024-04-25 16-57-09-582.jpg", "bandicam 2024-04-25 17-57-09-620.jpg",
+"bandicam 2024-04-25 18-57-09-656.jpg", "bandicam 2024-04-25 19-57-09-675.jpg",
+"bandicam 2024-04-25 20-57-09-720.jpg", "bandicam 2024-04-25 21-57-09-746.jpg",
+"bandicam 2024-04-25 22-57-09-965.jpg", "bandicam 2024-04-25 23-57-10-101.jpg",
+"bandicam 2024-04-26 00-57-10-113.jpg", "bandicam 2024-04-26 01-57-10-104.jpg",
+"bandicam 2024-04-26 02-57-10-111.jpg", "bandicam 2024-04-26 03-57-10-116.jpg",
+"bandicam 2024-04-26 04-57-10-117.jpg", "bandicam 2024-04-26 05-57-10-098.jpg",
+"bandicam 2024-04-26 06-57-10-121.jpg", "bandicam 2024-04-26 07-57-10-257.jpg",
+"bandicam 2024-04-26 08-57-10-556.jpg", "bandicam 2024-04-26 09-57-10-661.jpg",
+"bandicam 2024-04-26 10-57-10-673.jpg", "bandicam 2024-04-26 11-57-10-694.jpg",
+"bandicam 2024-04-26 12-37-16-786.jpg", "bandicam 2024-04-26 12-48-45-153.jpg",
+"bandicam 2024-04-26 13-48-45-166.jpg", "bandicam 2024-04-26 14-16-43-996.jpg"
+#+end_example
+
+*date_saving_orca*
+#+NAME: date_saving_orca
+#+BEGIN_SRC julia
+
+  file_vec = ["bandicam 2024-04-25 12-10-06-490.jpg", "bandicam 2024-04-25 12-11-06-497.jpg",
+  "bandicam 2024-04-25 12-12-06-486.jpg", "bandicam 2024-04-25 12-13-06-496.jpg",
+  "bandicam 2024-04-25 12-14-06-491.jpg", "bandicam 2024-04-25 12-15-06-500.jpg",
+  "bandicam 2024-04-25 12-16-06-500.jpg", "bandicam 2024-04-25 12-17-06-499.jpg",
+  "bandicam 2024-04-25 12-18-06-493.jpg", "bandicam 2024-04-25 12-19-06-492.jpg",
+  "bandicam 2024-04-25 12-21-06-490.jpg", "bandicam 2024-04-25 12-22-06-501.jpg",
+  "bandicam 2024-04-25 12-25-06-491.jpg", "bandicam 2024-04-25 12-28-06-491.jpg",
+  "bandicam 2024-04-25 12-29-06-492.jpg", "bandicam 2024-04-25 12-30-06-492.jpg",
+  "bandicam 2024-04-25 12-31-06-489.jpg", "bandicam 2024-04-25 12-31-19-310.jpg",
+  "bandicam 2024-04-25 12-32-19-322.jpg", "bandicam 2024-04-25 12-33-19-326.jpg",
+  "bandicam 2024-04-25 12-35-19-324.jpg", "bandicam 2024-04-25 12-36-19-323.jpg",
+  "bandicam 2024-04-25 12-36-24-976.jpg", "bandicam 2024-04-25 12-37-24-970.jpg",
+  "bandicam 2024-04-25 12-38-24-970.jpg", "bandicam 2024-04-25 12-39-00-506.jpg",
+  "bandicam 2024-04-25 12-39-14-253.jpg", "bandicam 2024-04-25 12-40-14-253.jpg",
+  "bandicam 2024-04-25 12-41-14-253.jpg", "bandicam 2024-04-25 12-42-10-077.jpg",
+  "bandicam 2024-04-25 12-43-10-088.jpg", "bandicam 2024-04-25 12-44-10-086.jpg",
+  "bandicam 2024-04-25 12-45-10-080.jpg", "bandicam 2024-04-25 12-46-10-091.jpg",
+  "bandicam 2024-04-25 12-47-10-090.jpg", "bandicam 2024-04-25 12-48-10-088.jpg",
+  "bandicam 2024-04-25 12-49-10-084.jpg", "bandicam 2024-04-25 12-50-10-093.jpg",
+  "bandicam 2024-04-25 12-51-10-081.jpg", "bandicam 2024-04-25 12-52-10-090.jpg",
+  "bandicam 2024-04-25 12-53-10-085.jpg", "bandicam 2024-04-25 12-54-10-083.jpg",
+  "bandicam 2024-04-25 12-55-10-104.jpg", "bandicam 2024-04-25 12-56-10-113.jpg",
+  "bandicam 2024-04-25 12-57-08-862.jpg", "bandicam 2024-04-25 13-57-09-221.jpg",
+  "bandicam 2024-04-25 14-57-09-440.jpg", "bandicam 2024-04-25 15-57-09-529.jpg",
+  "bandicam 2024-04-25 16-57-09-582.jpg", "bandicam 2024-04-25 17-57-09-620.jpg",
+  "bandicam 2024-04-25 18-57-09-656.jpg", "bandicam 2024-04-25 19-57-09-675.jpg",
+  "bandicam 2024-04-25 20-57-09-720.jpg", "bandicam 2024-04-25 21-57-09-746.jpg",
+  "bandicam 2024-04-25 22-57-09-965.jpg", "bandicam 2024-04-25 23-57-10-101.jpg",
+  "bandicam 2024-04-26 00-57-10-113.jpg", "bandicam 2024-04-26 01-57-10-104.jpg",
+  "bandicam 2024-04-26 02-57-10-111.jpg", "bandicam 2024-04-26 03-57-10-116.jpg",
+  "bandicam 2024-04-26 04-57-10-117.jpg", "bandicam 2024-04-26 05-57-10-098.jpg",
+  "bandicam 2024-04-26 06-57-10-121.jpg", "bandicam 2024-04-26 07-57-10-257.jpg",
+  "bandicam 2024-04-26 08-57-10-556.jpg", "bandicam 2024-04-26 09-57-10-661.jpg",
+  "bandicam 2024-04-26 10-57-10-673.jpg", "bandicam 2024-04-26 11-57-10-694.jpg",
+  "bandicam 2024-04-26 12-37-16-786.jpg", "bandicam 2024-04-26 12-48-45-153.jpg",
+  "bandicam 2024-04-26 13-48-45-166.jpg", "bandicam 2024-04-26 14-16-43-996.jpg"
   ]
 #+END_SRC
 
@@ -5615,3 +5712,582 @@ ls -mQ ../bmp_pictures/Hydrolyzed_FW_S2_R1/
     
 #+END_SRC
 
+* Orca Experiment Processing
+Αυτό το section είναι για τον τελευταίο πειραματικό κύκλο αναερόβιας χώνευσης, ο οποίος έγινε για την μελέτη των υδρολυμάτων της πιλοτικής μονάδας (Orca). Συγκεκριμένα, εξετάστηκαν 2 διαφορετικά υδρολύματα, τα οποία είχαν αναλογία εμβολίου:υποστρώματος περίπου 0.005 και 0.1, οι οποίες είναι αντίστοιχες των πειραμάτων με 1 και 2 ml μιξ από τα υδρολύματα εργαστηριακής κλίμακας. Καθώς υπήρχε ο διαθέσιμος χώρος, εξετάστηκαν 2 διαφορετικές λάσπες. Η μία είναι η λάσπη από την Ριτσώνα που χρησιμοποιήθηκε και παραπάνω (Sludge 2) ενώ η άλλη είναι μία καινούργια λάσπη, από την βιομηχανία Tasty, η οποία εξετάζεται για την μεθανογόνο δραστικότητα της. Για την λάσπη αυτή έγινε και πείραμα οξικού. Αυτό είναι και το πρώτο που θα παρουσιαστεί εδώ.
+
+** Acetate Experiment S3
+Το πείραμα αυτό έγινε με 100 mg COD οξικού οξέος για να εξετάσει την ενεργότητα της λάσπης αυτής.
+
+*acet_test_s3*
+#+NAME: acet_test_s3
+#+BEGIN_SRC julia :noweb no-export 
+
+  <<date_saving_orca>>
+
+  inds = 1:18
+  exp_meth_vol = [0, 10.5, 7, 4, 3, 2, 1, 1, 0.5, 0.5, 0.3, 0.3, 0, 0, 0, 0, 0, 0] 
+  meth_vol_acet = cumsum(exp_meth_vol)[end]
+  exp_name = "acet_test_s3"
+  source = "Acetate"
+  reactor = ""
+  sludge = "Sludge 3"
+  run_num = ""
+  input_vs = 0.5
+  p0 = [40.0, 8.0, 1.0]
+
+  <<bmp_data_processing>>
+  max_rate_acet = max_manual_rate
+
+  <<bmp_curve_fitting_min>>
+  model_acet = vcat("Acetate", round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  p0 = [25.8, 5.0, 1.0]
+  <<sma_curve_fitting_min>>
+  sma_acet = vcat("Acetate", round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  return("../data/exp_pro/"*exp_name*".csv")
+
+#+END_SRC
+
+#+RESULTS: acet_test_s3
+: "../data/exp_pro/acet_test_s3.csv"
+
+#+NAME: acet_data_s3
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<acet_test_s3()>> '(4))
+#+END_SRC
+
+#+CAPTION: Κινητικά δεδομένα
+| Timestamp   |  Seconds | Minutes | Methane_Volume | Cumulative_Methane_Volume |
+| 25/04_12:10 |      0.0 |     0.0 |            0.0 |                       0.0 |
+| 25/04_12:11 |   60.007 |  1.0001 |           10.5 |                      10.5 |
+| 25/04_12:12 |  119.996 |  1.9999 |            7.0 |                      17.5 |
+| 25/04_12:13 |  180.006 |  3.0001 |            4.0 |                      21.5 |
+| 25/04_12:14 |  240.001 |     4.0 |            3.0 |                      24.5 |
+| 25/04_12:15 |   300.01 |  5.0002 |            2.0 |                      26.5 |
+| 25/04_12:16 |   360.01 |  6.0002 |            1.0 |                      27.5 |
+| 25/04_12:17 |  420.009 |  7.0002 |            1.0 |                      28.5 |
+| 25/04_12:18 |  480.003 |     8.0 |            0.5 |                      29.0 |
+| 25/04_12:19 |  540.002 |     9.0 |            0.5 |                      29.5 |
+| 25/04_12:21 |    660.0 |    11.0 |            0.3 |                      29.8 |
+| 25/04_12:22 |  720.011 | 12.0002 |            0.3 |                      30.1 |
+| 25/04_12:25 |  900.001 |    15.0 |            0.0 |                      30.1 |
+| 25/04_12:28 | 1080.001 |    18.0 |            0.0 |                      30.1 |
+| 25/04_12:29 | 1140.002 |    19.0 |            0.0 |                      30.1 |
+| 25/04_12:30 | 1200.002 |    20.0 |            0.0 |                      30.1 |
+| 25/04_12:31 | 1259.999 |    21.0 |            0.0 |                      30.1 |
+| 25/04_12:31 |  1272.82 | 21.2137 |            0.0 |                      30.1 |
+
+[[../plots/BMPs/Acetate/methane_kinetics_acet_test_s3_min.png]]
+
+[[../plots/BMPs/Acetate/specific_methane_kinetics_acet_test_s3_min.png]]
+
+** Orca Hydrolysate P1_S2
+Το section αυτό αφορά το πείραμα με το υδρόλυμα του πιλότου με code name "P1_S2". Το P1 έχει να κάνει με τον πειραματικό κύκλο του υδρολύματος (ήταν ο πρώτος κύκλος με το μιξ Progen) ενώ το S2 αφορά πως χρησιμοποιεί την 2η λάσπη. Το πείραμα αυτό είχε το χαμηλό επίπεδο αραίωσης από τα 2 που εξετάστηκαν (παρόλο που παρατηρήθηκε στα πειράματα εκείνα πως η αραίωση στο top spray δεν βοηθούσε στην πράξη την υδρόλυση κάτα κάποιον τρόπο, μόνο μείωσε το τελικό COD) καθώς και το χαμηλό επίπεδο ποσότητας μιξ (το οποίο σε αναλογία είναι αντίστοιχο με την ποσότητα 1 ml μιξ από τα πειράματα εργαστηριακής κλίμακας). 
+
+*hydrolysate_orca_p1_s2*
+#+NAME: hydrolysate_orca_p1_s2
+#+BEGIN_SRC julia :noweb no-export 
+
+  <<date_saving_orca>>
+
+  inds = 28:72
+  exp_meth_vol = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.2, 0.3, 0.5, 0.1, 0.2, 0.5, 0.2, 0.2, 0.2, 0.1, 0.1, 0.5, 0.1, 0.5, 0.3, 0.5, 0.2, 0.2, 0.1, 0.5, 0.3, 0.5, 0.1, 0.1, 0.7, 0.2] 
+  meth_vol_p1_s2 = cumsum(exp_meth_vol)[end]
+  exp_name = "orca_p1_s2"
+  source = "Orca Hydrolysate"
+  reactor = "Reactor P1"
+  sludge = "Sludge 2"
+  run_num = ""
+  input_vs = 4.2
+
+  <<bmp_data_processing>>
+  max_rate_p1_s2 = max_manual_rate
+
+    # The same model is fit either with min or hour
+  p0 = [6.0, 0.01, 1.0]
+  <<bmp_curve_fitting_min>>
+  model_hydro_p1_s2_min = vcat(reactor, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  p0 = [6.0, 0.2, 1.0]
+  <<bmp_curve_fitting_hour>>
+  model_hydro_p1_s2_hour = vcat(reactor, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  p0 = [6.0, 10.0, 1.0]
+  <<sma_curve_fitting_hour>>
+  sma_hydro_p1_s2 = vcat(reactor, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  return("../data/exp_pro/"*exp_name*".csv")
+
+#+END_SRC
+
+#+RESULTS: hydrolysate_orca_p1_s2
+: "../data/exp_pro/orca_p1_s2.csv"
+
+#+NAME: orca_p1_s2_data
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<hydrolysate_orca_p1_s2()>> '(4))
+#+END_SRC
+
+#+CAPTION: Κινητικά δεδομένα
+| Timestamp   |   Minutes |   Hours | Methane_Volume | Cumulative_Methane_Volume |
+| 25/04_12:40 |       0.0 |     0.0 |            0.0 |                       0.0 |
+| 25/04_12:41 |       1.0 |  0.0167 |            0.0 |                       0.0 |
+| 25/04_12:42 |    1.9304 |  0.0322 |            0.0 |                       0.0 |
+| 25/04_12:43 |    2.9306 |  0.0488 |            0.0 |                       0.0 |
+| 25/04_12:44 |    3.9306 |  0.0655 |            0.0 |                       0.0 |
+| 25/04_12:45 |    4.9305 |  0.0822 |            0.0 |                       0.0 |
+| 25/04_12:46 |    5.9306 |  0.0988 |            0.0 |                       0.0 |
+| 25/04_12:47 |    6.9306 |  0.1155 |            0.0 |                       0.0 |
+| 25/04_12:48 |    7.9306 |  0.1322 |            0.0 |                       0.0 |
+| 25/04_12:49 |    8.9305 |  0.1488 |            0.0 |                       0.0 |
+| 25/04_12:50 |    9.9307 |  0.1655 |            0.0 |                       0.0 |
+| 25/04_12:51 |   10.9305 |  0.1822 |            0.0 |                       0.0 |
+| 25/04_12:52 |   11.9306 |  0.1988 |            0.0 |                       0.0 |
+| 25/04_12:53 |   12.9305 |  0.2155 |            0.0 |                       0.0 |
+| 25/04_12:54 |   13.9305 |  0.2322 |            0.0 |                       0.0 |
+| 25/04_12:55 |   14.9308 |  0.2488 |            0.0 |                       0.0 |
+| 25/04_12:56 |    15.931 |  0.2655 |            0.0 |                       0.0 |
+| 25/04_12:57 |   16.9102 |  0.2818 |            0.0 |                       0.0 |
+| 25/04_13:57 |   76.9161 |  1.2819 |            0.5 |                       0.5 |
+| 25/04_14:57 |  136.9198 |   2.282 |            0.2 |                       0.7 |
+| 25/04_15:57 |  196.9213 |   3.282 |            0.3 |                       1.0 |
+| 25/04_16:57 |  256.9222 |   4.282 |            0.5 |                       1.5 |
+| 25/04_17:57 |  316.9228 |   5.282 |            0.1 |                       1.6 |
+| 25/04_18:57 |  376.9234 |  6.2821 |            0.2 |                       1.8 |
+| 25/04_19:57 |  436.9237 |  7.2821 |            0.5 |                       2.3 |
+| 25/04_20:57 |  496.9244 |  8.2821 |            0.2 |                       2.5 |
+| 25/04_21:57 |  556.9249 |  9.2821 |            0.2 |                       2.7 |
+| 25/04_22:57 |  616.9285 | 10.2821 |            0.2 |                       2.9 |
+| 25/04_23:57 |  676.9308 | 11.2822 |            0.1 |                       3.0 |
+| 26/04_00:57 |   736.931 | 12.2822 |            0.1 |                       3.1 |
+| 26/04_01:57 |  796.9308 | 13.2822 |            0.5 |                       3.6 |
+| 26/04_02:57 |   856.931 | 14.2822 |            0.1 |                       3.7 |
+| 26/04_03:57 |   916.931 | 15.2822 |            0.5 |                       4.2 |
+| 26/04_04:57 |  976.9311 | 16.2822 |            0.3 |                       4.5 |
+| 26/04_05:57 | 1036.9308 | 17.2822 |            0.5 |                       5.0 |
+| 26/04_06:57 | 1096.9311 | 18.2822 |            0.2 |                       5.2 |
+| 26/04_07:57 | 1156.9334 | 19.2822 |            0.2 |                       5.4 |
+| 26/04_08:57 | 1216.9384 | 20.2823 |            0.1 |                       5.5 |
+| 26/04_09:57 | 1276.9401 | 21.2823 |            0.5 |                       6.0 |
+| 26/04_10:57 | 1336.9403 | 22.2823 |            0.3 |                       6.3 |
+| 26/04_11:57 | 1396.9407 | 23.2823 |            0.5 |                       6.8 |
+| 26/04_12:37 | 1437.0422 | 23.9507 |            0.1 |                       6.9 |
+| 26/04_12:48 |  1448.515 | 24.1419 |            0.1 |                       7.0 |
+| 26/04_13:48 | 1508.5152 | 25.1419 |            0.7 |                       7.7 |
+| 26/04_14:16 | 1536.4957 | 25.6083 |            0.2 |                       7.9 |
+
+[[../plots/BMPs/Orca Hydrolysate/methane_kinetics_orca_p1_s2_hour.png]]
+
+[[../plots/BMPs/Orca Hydrolysate/specific_methane_kinetics_orca_p1_s2_hour.png]]
+
+** Orca Hydrolysate P3_S2
+Το section αυτό αφορά το πείραμα με το υδρόλυμα του πιλότου με code name "P3_S2". Το P3 έχει να κάνει με τον πειραματικό κύκλο του υδρολύματος (ήταν ο τρίτος κύκλος με το μιξ Progen) ενώ το S2 αφορά πως χρησιμοποιεί την 2η λάσπη. Το πείραμα αυτό είχε το υψηλό επίπεδο αραίωσης από τα 2 που εξετάστηκαν (παρόλο που παρατηρήθηκε στα πειράματα εκείνα πως η αραίωση στο top spray δεν βοηθούσε στην πράξη την υδρόλυση κάτα κάποιον τρόπο, μόνο μείωσε το τελικό COD) καθώς και το υψηλό επίπεδο ποσότητας μιξ (το οποίο σε αναλογία είναι περίπου αντίστοιχο με την ποσότητα 2 ml μιξ από τα πειράματα εργαστηριακής κλίμακας). 
+
+*hydrolysate_orca_p3_s2*
+#+NAME: hydrolysate_orca_p3_s2
+#+BEGIN_SRC julia :noweb no-export 
+
+  <<date_saving_orca>>
+
+  inds = 32:72
+  exp_meth_vol = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0.2, 0.2, 0.2, 0.3, 0.3, 0.2, 0.2, 0.1, 0.2, 0.2, 0.3, 0.2, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2, 0.2, 0.3, 0.2, 0.7, 1] 
+  meth_vol_p3_s2 = cumsum(exp_meth_vol)[end]
+  exp_name = "orca_p3_s2"
+  source = "Orca Hydrolysate"
+  reactor = "Reactor P3"
+  sludge = "Sludge 2"
+  run_num = ""
+  input_vs = 4.2
+
+  <<bmp_data_processing>>
+  max_rate_p3_s2 = max_manual_rate
+
+    # The same model is fit either with min or hour
+  p0 = [6.0, 0.01, 1.0]
+  <<bmp_curve_fitting_min>>
+  model_hydro_p3_s2_min = vcat(reactor, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  p0 = [6.0, 0.2, 1.0]
+  <<bmp_curve_fitting_hour>>
+  model_hydro_p3_s2_hour = vcat(reactor, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  p0 = [6.0, 10.0, 1.0]
+  <<sma_curve_fitting_hour>>
+  sma_hydro_p3_s2 = vcat(reactor, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  return("../data/exp_pro/"*exp_name*".csv")
+
+#+END_SRC
+
+#+RESULTS: hydrolysate_orca_p3_s2
+
+#+NAME: orca_p3_s2_data
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<hydrolysate_orca_p3_s2()>> '(4))
+#+END_SRC
+
+#+CAPTION: Κινητικά δεδομένα
+| Timestamp   |   Minutes |   Hours | Methane_Volume | Cumulative_Methane_Volume |
+| 25/04_12:44 |       0.0 |     0.0 |            0.0 |                       0.0 |
+| 25/04_12:45 |    0.9999 |  0.0167 |            0.0 |                       0.0 |
+| 25/04_12:46 |    2.0001 |  0.0333 |            0.0 |                       0.0 |
+| 25/04_12:47 |    3.0001 |    0.05 |            0.0 |                       0.0 |
+| 25/04_12:48 |       4.0 |  0.0667 |            0.0 |                       0.0 |
+| 25/04_12:49 |       5.0 |  0.0833 |            0.0 |                       0.0 |
+| 25/04_12:50 |    6.0001 |     0.1 |            0.0 |                       0.0 |
+| 25/04_12:51 |    6.9999 |  0.1167 |            0.0 |                       0.0 |
+| 25/04_12:52 |    8.0001 |  0.1333 |            0.0 |                       0.0 |
+| 25/04_12:53 |       9.0 |    0.15 |            0.0 |                       0.0 |
+| 25/04_12:54 |      10.0 |  0.1667 |            0.0 |                       0.0 |
+| 25/04_12:55 |   11.0003 |  0.1833 |            0.0 |                       0.0 |
+| 25/04_12:56 |   12.0004 |     0.2 |            0.0 |                       0.0 |
+| 25/04_12:57 |   12.9796 |  0.2163 |            0.0 |                       0.0 |
+| 25/04_13:57 |   72.9856 |  1.2164 |            0.0 |                       0.0 |
+| 25/04_14:57 |  132.9892 |  2.2165 |            0.5 |                       0.5 |
+| 25/04_15:57 |  192.9907 |  3.2165 |            0.0 |                       0.5 |
+| 25/04_16:57 |  252.9916 |  4.2165 |            0.2 |                       0.7 |
+| 25/04_17:57 |  312.9922 |  5.2165 |            0.2 |                       0.9 |
+| 25/04_18:57 |  372.9928 |  6.2165 |            0.2 |                       1.1 |
+| 25/04_19:57 |  432.9932 |  7.2166 |            0.3 |                       1.4 |
+| 25/04_20:57 |  492.9939 |  8.2166 |            0.3 |                       1.7 |
+| 25/04_21:57 |  552.9943 |  9.2166 |            0.2 |                       1.9 |
+| 25/04_22:57 |   612.998 | 10.2166 |            0.2 |                       2.1 |
+| 25/04_23:57 |  673.0003 | 11.2167 |            0.1 |                       2.2 |
+| 26/04_00:57 |  733.0004 | 12.2167 |            0.2 |                       2.4 |
+| 26/04_01:57 |  793.0003 | 13.2167 |            0.2 |                       2.6 |
+| 26/04_02:57 |  853.0004 | 14.2167 |            0.3 |                       2.9 |
+| 26/04_03:57 |  913.0005 | 15.2167 |            0.2 |                       3.1 |
+| 26/04_04:57 |  973.0005 | 16.2167 |            0.2 |                       3.3 |
+| 26/04_05:57 | 1033.0002 | 17.2167 |            0.2 |                       3.5 |
+| 26/04_06:57 | 1093.0006 | 18.2167 |            0.2 |                       3.7 |
+| 26/04_07:57 | 1153.0028 | 19.2167 |            0.2 |                       3.9 |
+| 26/04_08:57 | 1213.0078 | 20.2168 |            0.1 |                       4.0 |
+| 26/04_09:57 | 1273.0096 | 21.2168 |            0.2 |                       4.2 |
+| 26/04_10:57 | 1333.0098 | 22.2168 |            0.2 |                       4.4 |
+| 26/04_11:57 | 1393.0101 | 23.2168 |            0.2 |                       4.6 |
+| 26/04_12:37 | 1433.1117 | 23.8852 |            0.3 |                       4.9 |
+| 26/04_12:48 | 1444.5844 | 24.0764 |            0.2 |                       5.1 |
+| 26/04_13:48 | 1504.5847 | 25.0764 |            0.7 |                       5.8 |
+| 26/04_14:16 | 1532.5652 | 25.5428 |            1.0 |                       6.8 |
+
+[[../plots/BMPs/Orca Hydrolysate/methane_kinetics_orca_p3_s2_hour.png]]
+
+[[../plots/BMPs/Orca Hydrolysate/specific_methane_kinetics_orca_p3_s2_hour.png]]
+
+** Orca Hydrolysate P1_S3
+Το section αυτό αφορά το πείραμα με το υδρόλυμα του πιλότου με code name "P1_S3". Το P1 έχει να κάνει με τον πειραματικό κύκλο του υδρολύματος (ήταν ο πρώτος κύκλος με το μιξ Progen) ενώ το S3 αφορά πως χρησιμοποιεί την 3η λάσπη, η οποία είναι η λάσπη tasty που εξετάζεται στον κύκλο αυτό και θα συγκριθεί άμεσα με την προηγούμενη. Το πείραμα αυτό είχε το χαμηλό επίπεδο αραίωσης από τα 2 που εξετάστηκαν (παρόλο που παρατηρήθηκε στα πειράματα εκείνα πως η αραίωση στο top spray δεν βοηθούσε στην πράξη την υδρόλυση κάτα κάποιον τρόπο, μόνο μείωσε το τελικό COD) καθώς και το χαμηλό επίπεδο ποσότητας μιξ (το οποίο σε αναλογία είναι αντίστοιχο με την ποσότητα 1 ml μιξ από τα πειράματα εργαστηριακής κλίμακας). 
+
+*hydrolysate_orca_p1_s3*
+#+NAME: hydrolysate_orca_p1_s3
+#+BEGIN_SRC julia :noweb no-export 
+
+  <<date_saving_orca>>
+
+  inds = 19:72
+  exp_meth_vol = vcat(zeros(37), 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05)
+  meth_vol_p1_s3 = cumsum(exp_meth_vol)[end]
+  exp_name = "orca_p1_s3"
+  source = "Orca Hydrolysate"
+  reactor = "Reactor P1"
+  sludge = "Sludge 3"
+  run_num = ""
+  input_vs = 0.5
+
+  <<bmp_data_processing>>
+  max_rate_p1_s3 = max_manual_rate
+
+    # The same model is fit either with min or hour
+  p0 = [6.0, 0.01, 1.0]
+  <<bmp_curve_fitting_min>>
+  model_hydro_p1_s3_min = vcat(reactor, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  p0 = [6.0, 0.2, 1.0]
+  <<bmp_curve_fitting_hour>>
+  model_hydro_p1_s3_hour = vcat(reactor, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  p0 = [6.0, 10.0, 1.0]
+  <<sma_curve_fitting_hour>>
+  sma_hydro_p1_s3 = vcat(reactor, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  return("../data/exp_pro/"*exp_name*".csv")
+
+#+END_SRC
+
+#+RESULTS: hydrolysate_orca_p1_s3
+: "../data/exp_pro/orca_p1_s3.csv"
+
+#+NAME: orca_p1_s3_data
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<hydrolysate_orca_p1_s3()>> '(4))
+#+END_SRC
+
+#+CAPTION: Κινητικά δεδομένα
+| Timestamp   |   Minutes |   Hours | Methane_Volume | Cumulative_Methane_Volume |
+| 25/04_12:32 |       0.0 |     0.0 |            0.0 |                       0.0 |
+| 25/04_12:33 |    1.0001 |  0.0167 |            0.0 |                       0.0 |
+| 25/04_12:35 |       3.0 |    0.05 |            0.0 |                       0.0 |
+| 25/04_12:36 |       4.0 |  0.0667 |            0.0 |                       0.0 |
+| 25/04_12:36 |    4.0942 |  0.0682 |            0.0 |                       0.0 |
+| 25/04_12:37 |    5.0941 |  0.0849 |            0.0 |                       0.0 |
+| 25/04_12:38 |    6.0941 |  0.1016 |            0.0 |                       0.0 |
+| 25/04_12:39 |    6.6864 |  0.1114 |            0.0 |                       0.0 |
+| 25/04_12:39 |    6.9155 |  0.1153 |            0.0 |                       0.0 |
+| 25/04_12:40 |    7.9155 |  0.1319 |            0.0 |                       0.0 |
+| 25/04_12:41 |    8.9155 |  0.1486 |            0.0 |                       0.0 |
+| 25/04_12:42 |    9.8459 |  0.1641 |            0.0 |                       0.0 |
+| 25/04_12:43 |   10.8461 |  0.1808 |            0.0 |                       0.0 |
+| 25/04_12:44 |   11.8461 |  0.1974 |            0.0 |                       0.0 |
+| 25/04_12:45 |    12.846 |  0.2141 |            0.0 |                       0.0 |
+| 25/04_12:46 |   13.8462 |  0.2308 |            0.0 |                       0.0 |
+| 25/04_12:47 |   14.8461 |  0.2474 |            0.0 |                       0.0 |
+| 25/04_12:48 |   15.8461 |  0.2641 |            0.0 |                       0.0 |
+| 25/04_12:49 |    16.846 |  0.2808 |            0.0 |                       0.0 |
+| 25/04_12:50 |   17.8462 |  0.2974 |            0.0 |                       0.0 |
+| 25/04_12:51 |    18.846 |  0.3141 |            0.0 |                       0.0 |
+| 25/04_12:52 |   19.8461 |  0.3308 |            0.0 |                       0.0 |
+| 25/04_12:53 |   20.8461 |  0.3474 |            0.0 |                       0.0 |
+| 25/04_12:54 |    21.846 |  0.3641 |            0.0 |                       0.0 |
+| 25/04_12:55 |   22.8464 |  0.3808 |            0.0 |                       0.0 |
+| 25/04_12:56 |   23.8465 |  0.3974 |            0.0 |                       0.0 |
+| 25/04_12:57 |   24.8257 |  0.4138 |            0.0 |                       0.0 |
+| 25/04_13:57 |   84.8316 |  1.4139 |            0.0 |                       0.0 |
+| 25/04_14:57 |  144.8353 |  2.4139 |            0.0 |                       0.0 |
+| 25/04_15:57 |  204.8368 |  3.4139 |            0.0 |                       0.0 |
+| 25/04_16:57 |  264.8377 |   4.414 |            0.0 |                       0.0 |
+| 25/04_17:57 |  324.8383 |   5.414 |            0.0 |                       0.0 |
+| 25/04_18:57 |  384.8389 |   6.414 |            0.0 |                       0.0 |
+| 25/04_19:57 |  444.8392 |   7.414 |            0.0 |                       0.0 |
+| 25/04_20:57 |    504.84 |   8.414 |            0.0 |                       0.0 |
+| 25/04_21:57 |  564.8404 |   9.414 |            0.0 |                       0.0 |
+| 25/04_22:57 |   624.844 | 10.4141 |            0.0 |                       0.0 |
+| 25/04_23:57 |  684.8463 | 11.4141 |           0.05 |                      0.05 |
+| 26/04_00:57 |  744.8465 | 12.4141 |           0.05 |                       0.1 |
+| 26/04_01:57 |  804.8464 | 13.4141 |           0.05 |                      0.15 |
+| 26/04_02:57 |  864.8465 | 14.4141 |           0.05 |                       0.2 |
+| 26/04_03:57 |  924.8466 | 15.4141 |           0.05 |                      0.25 |
+| 26/04_04:57 |  984.8466 | 16.4141 |           0.05 |                       0.3 |
+| 26/04_05:57 | 1044.8463 | 17.4141 |           0.05 |                      0.35 |
+| 26/04_06:57 | 1104.8466 | 18.4141 |           0.05 |                       0.4 |
+| 26/04_07:57 | 1164.8489 | 19.4141 |           0.05 |                      0.45 |
+| 26/04_08:57 | 1224.8539 | 20.4142 |           0.05 |                       0.5 |
+| 26/04_09:57 | 1284.8556 | 21.4143 |           0.05 |                      0.55 |
+| 26/04_10:57 | 1344.8558 | 22.4143 |           0.05 |                       0.6 |
+| 26/04_11:57 | 1404.8562 | 23.4143 |           0.05 |                      0.65 |
+| 26/04_12:37 | 1444.9577 | 24.0826 |           0.05 |                       0.7 |
+| 26/04_12:48 | 1456.4305 | 24.2738 |           0.05 |                      0.75 |
+| 26/04_13:48 | 1516.4307 | 25.2738 |           0.05 |                       0.8 |
+| 26/04_14:16 | 1544.4112 | 25.7402 |           0.05 |                      0.85 |
+
+[[../plots/BMPs/Orca Hydrolysate/methane_kinetics_orca_p1_s3_hour.png]]
+
+[[../plots/BMPs/Orca Hydrolysate/specific_methane_kinetics_orca_p1_s3_hour.png]]
+
+** Orca Hydrolysate P3_S3
+Το section αυτό αφορά το πείραμα με το υδρόλυμα του πιλότου με code name "P3_S3". Το P3 έχει να κάνει με τον πειραματικό κύκλο του υδρολύματος (ήταν ο τρίτος κύκλος με το μιξ Progen) ενώ το S3 αφορά πως χρησιμοποιεί την 3η λάσπη, δηλαδή την λάσπη tasty η οποία εξετάζεται στον κύκλο αυτόν. Το πείραμα αυτό είχε το υψηλό επίπεδο αραίωσης από τα 2 που εξετάστηκαν (παρόλο που παρατηρήθηκε στα πειράματα εκείνα πως η αραίωση στο top spray δεν βοηθούσε στην πράξη την υδρόλυση κάτα κάποιον τρόπο, μόνο μείωσε το τελικό COD) καθώς και το υψηλό επίπεδο ποσότητας μιξ (το οποίο σε αναλογία είναι περίπου αντίστοιχο με την ποσότητα 2 ml μιξ από τα πειράματα εργαστηριακής κλίμακας). 
+
+*hydrolysate_orca_p3_s3*
+#+NAME: hydrolysate_orca_p3_s3
+#+BEGIN_SRC julia :noweb no-export 
+
+  <<date_saving_orca>>
+
+  inds = 22:72
+  exp_meth_vol = vcat(zeros(23), ones(28)/5) 
+  meth_vol_p3_s3 = cumsum(exp_meth_vol)[end]
+  exp_name = "orca_p3_s3"
+  source = "Orca Hydrolysate"
+  reactor = "Reactor P3"
+  sludge = "Sludge 3"
+  run_num = ""
+  input_vs = 0.5
+
+  <<bmp_data_processing>>
+  max_rate_p3_s3 = max_manual_rate
+
+    # The same model is fit either with min or hour
+  p0 = [6.0, 0.01, 1.0]
+  <<bmp_curve_fitting_min>>
+  model_hydro_p3_s3_min = vcat(reactor, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  p0 = [6.0, 0.2, 1.0]
+  <<bmp_curve_fitting_hour>>
+  model_hydro_p3_s3_hour = vcat(reactor, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  p0 = [6.0, 10.0, 1.0]
+  <<sma_curve_fitting_hour>>
+  sma_hydro_p3_s3 = vcat(reactor, round.(model_params, digits = 3), round(r_squared, digits = 3))
+  <<bmp_data_plotting>>
+
+  return("../data/exp_pro/"*exp_name*".csv")
+
+#+END_SRC
+
+#+RESULTS: hydrolysate_orca_p3_s3
+: "../data/exp_pro/orca_p3_s3.csv"
+
+#+NAME: orca_p3_s3_data
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<hydrolysate_orca_p3_s3()>> '(4))
+#+END_SRC
+
+#+CAPTION: Κινητικά δεδομένα
+| Timestamp   |   Minutes |   Hours | Methane_Volume | Cumulative_Methane_Volume |
+| 25/04_12:36 |       0.0 |     0.0 |            0.0 |                       0.0 |
+| 25/04_12:36 |    0.0942 |  0.0016 |            0.0 |                       0.0 |
+| 25/04_12:37 |    1.0941 |  0.0182 |            0.0 |                       0.0 |
+| 25/04_12:38 |    2.0941 |  0.0349 |            0.0 |                       0.0 |
+| 25/04_12:39 |    2.6864 |  0.0448 |            0.0 |                       0.0 |
+| 25/04_12:39 |    2.9155 |  0.0486 |            0.0 |                       0.0 |
+| 25/04_12:40 |    3.9155 |  0.0653 |            0.0 |                       0.0 |
+| 25/04_12:41 |    4.9155 |  0.0819 |            0.0 |                       0.0 |
+| 25/04_12:42 |    5.8459 |  0.0974 |            0.0 |                       0.0 |
+| 25/04_12:43 |    6.8461 |  0.1141 |            0.0 |                       0.0 |
+| 25/04_12:44 |     7.846 |  0.1308 |            0.0 |                       0.0 |
+| 25/04_12:45 |     8.846 |  0.1474 |            0.0 |                       0.0 |
+| 25/04_12:46 |    9.8461 |  0.1641 |            0.0 |                       0.0 |
+| 25/04_12:47 |   10.8461 |  0.1808 |            0.0 |                       0.0 |
+| 25/04_12:48 |   11.8461 |  0.1974 |            0.0 |                       0.0 |
+| 25/04_12:49 |    12.846 |  0.2141 |            0.0 |                       0.0 |
+| 25/04_12:50 |   13.8462 |  0.2308 |            0.0 |                       0.0 |
+| 25/04_12:51 |    14.846 |  0.2474 |            0.0 |                       0.0 |
+| 25/04_12:52 |   15.8461 |  0.2641 |            0.0 |                       0.0 |
+| 25/04_12:53 |    16.846 |  0.2808 |            0.0 |                       0.0 |
+| 25/04_12:54 |    17.846 |  0.2974 |            0.0 |                       0.0 |
+| 25/04_12:55 |   18.8464 |  0.3141 |            0.0 |                       0.0 |
+| 25/04_12:56 |   19.8465 |  0.3308 |            0.0 |                       0.0 |
+| 25/04_12:57 |   20.8256 |  0.3471 |            0.2 |                       0.2 |
+| 25/04_13:57 |   80.8316 |  1.3472 |            0.2 |                       0.4 |
+| 25/04_14:57 |  140.8353 |  2.3473 |            0.2 |                       0.6 |
+| 25/04_15:57 |  200.8368 |  3.3473 |            0.2 |                       0.8 |
+| 25/04_16:57 |  260.8376 |  4.3473 |            0.2 |                       1.0 |
+| 25/04_17:57 |  320.8383 |  5.3473 |            0.2 |                       1.2 |
+| 25/04_18:57 |  380.8389 |  6.3473 |            0.2 |                       1.4 |
+| 25/04_19:57 |  440.8392 |  7.3473 |            0.2 |                       1.6 |
+| 25/04_20:57 |    500.84 |  8.3473 |            0.2 |                       1.8 |
+| 25/04_21:57 |  560.8404 |  9.3473 |            0.2 |                       2.0 |
+| 25/04_22:57 |   620.844 | 10.3474 |            0.2 |                       2.2 |
+| 25/04_23:57 |  680.8463 | 11.3474 |            0.2 |                       2.4 |
+| 26/04_00:57 |  740.8465 | 12.3474 |            0.2 |                       2.6 |
+| 26/04_01:57 |  800.8464 | 13.3474 |            0.2 |                       2.8 |
+| 26/04_02:57 |  860.8465 | 14.3474 |            0.2 |                       3.0 |
+| 26/04_03:57 |  920.8466 | 15.3474 |            0.2 |                       3.2 |
+| 26/04_04:57 |  980.8466 | 16.3474 |            0.2 |                       3.4 |
+| 26/04_05:57 | 1040.8462 | 17.3474 |            0.2 |                       3.6 |
+| 26/04_06:57 | 1100.8466 | 18.3474 |            0.2 |                       3.8 |
+| 26/04_07:57 | 1160.8489 | 19.3475 |            0.2 |                       4.0 |
+| 26/04_08:57 | 1220.8539 | 20.3476 |            0.2 |                       4.2 |
+| 26/04_09:57 | 1280.8556 | 21.3476 |            0.2 |                       4.4 |
+| 26/04_10:57 | 1340.8558 | 22.3476 |            0.2 |                       4.6 |
+| 26/04_11:57 | 1400.8562 | 23.3476 |            0.2 |                       4.8 |
+| 26/04_12:37 | 1440.9577 |  24.016 |            0.2 |                       5.0 |
+| 26/04_12:48 | 1452.4305 | 24.2072 |            0.2 |                       5.2 |
+| 26/04_13:48 | 1512.4307 | 25.2072 |            0.2 |                       5.4 |
+| 26/04_14:16 | 1540.4112 | 25.6735 |            0.2 |                       5.6 |
+
+[[../plots/BMPs/Orca Hydrolysate/methane_kinetics_orca_p3_s3_hour.png]]
+
+[[../plots/BMPs/Orca Hydrolysate/specific_methane_kinetics_orca_p3_s3_hour.png]]
+
+*update_orca_tests*
+#+NAME: update_orca_tests
+#+BEGIN_SRC julia :noweb no-export
+
+  <<acet_test_s3>>
+  <<hydrolysate_orca_p1_s2>>
+  <<hydrolysate_orca_p3_s2>>
+  <<hydrolysate_orca_p1_s3>>
+  <<hydrolysate_orca_p3_s3>>
+
+  model_fit_table_min = Tables.table(vcat(reshape(model_acet, 1, 5), reshape(model_hydro_p1_s2_min, 1, 5), reshape(model_hydro_p3_s2_min, 1, 5), reshape(model_hydro_p1_s3_min, 1, 5), reshape(model_hydro_p3_s3_min, 1, 5)), header = [:Reactor_Name, :Production_Potential, :Production_Rate, :Lag_Time, :R_squared])
+  CSV.write(datadir("exp_pro", "methane_from_orca_hydrolysate_kinetics_min.csv"), model_fit_table_min)
+
+  # Change acetate rate to the correct timescale for hours
+  model_acet[3] = model_acet[3]*60
+
+  model_fit_table_hour = Tables.table(vcat(reshape(model_acet, 1, 5), reshape(model_hydro_p1_s2_hour, 1, 5), reshape(model_hydro_p3_s2_hour, 1, 5), reshape(model_hydro_p1_s3_hour, 1, 5), reshape(model_hydro_p3_s3_hour, 1, 5)), header = [:Reactor_Name, :Production_Potential, :Production_Rate, :Lag_Time, :R_squared])
+  CSV.write(datadir("exp_pro", "methane_from_orca_hydrolysate_kinetics_hour.csv"), model_fit_table_hour)
+  return("../data/exp_pro/methane_from_orca_hydrolysate_kinetics_hour.csv")
+#+END_SRC
+
+#+RESULTS: update_hydrolysate_tests_s1_r1
+: "../data/exp_pro/methane_from_hydrolysate_kinetics_min_s1_r1.csv"
+
+#+NAME: orca_hydrolysate_kinetic_name_min
+#+BEGIN_SRC julia
+
+  return("../data/exp_pro/methane_from_orca_hydrolysate_kinetics_min.csv")
+#+END_SRC
+
+#+NAME: hydrolysate_kinetics_hour_s1_r1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<update_orca_tests()>> '(4))
+#+END_SRC
+
+#+CAPTION: Kinetics with timescale in hours
+| Reactor_Name | Production_Potential | Production_Rate | Lag_Time | R_squared |
+| Acetate      |               29.798 |           409.8 |      0.0 |     0.969 |
+| Reactor P1   |                9.929 |           0.352 |    2.885 |     0.986 |
+| Reactor P3   |                8.255 |           0.265 |    3.638 |     0.976 |
+| Reactor P1   |                1.309 |            0.06 |   11.965 |     0.996 |
+| Reactor P3   |                6.274 |           0.264 |    2.564 |     0.989 |
+
+#+NAME: hydrolysate_kinetics_minute_s1_r1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<orca_hydrolysate_kinetic_name_min()>> '(4))
+#+END_SRC
+
+#+CAPTION: Kinetics with timescale in minutes
+| Reactor_Name | Production_Potential | Production_Rate | Lag_Time | R_squared |
+| Acetate      |               29.798 |            6.83 |      0.0 |     0.969 |
+| Reactor P1   |                9.929 |           0.006 |  173.101 |     0.986 |
+| Reactor P3   |                8.255 |           0.004 |  218.287 |     0.976 |
+| Reactor P1   |                1.309 |           0.001 |  717.904 |     0.996 |
+| Reactor P3   |                6.275 |           0.004 |  153.843 |     0.989 |
+
+#+NAME: sma_orca_hydrolysate
+#+BEGIN_SRC julia :noweb no-export
+
+  <<acet_test_s3>>
+  <<hydrolysate_orca_p1_s2>>
+  <<hydrolysate_orca_p3_s2>>
+  <<hydrolysate_orca_p1_s3>>
+  <<hydrolysate_orca_p3_s3>>
+
+  # Change acetate rate to the correct timescale for hours
+  sma_acet[3] = sma_acet[3]*60
+
+  sma_table = Tables.table(vcat(reshape(sma_acet, 1, 5), reshape(sma_hydro_p1_s2, 1, 5), reshape(sma_hydro_p3_s2, 1, 5), reshape(sma_hydro_p1_s3, 1, 5), reshape(sma_hydro_p3_s3, 1, 5)), header = [:Reactor_Name, :Methane_Potential, :SMA, :Lag_Time, :R_sq])
+  CSV.write(datadir("exp_pro", "sma_from_orca_hydrolysate.csv"), sma_table)
+
+  return("../data/exp_pro/sma_from_orca_hydrolysate.csv")
+#+END_SRC
+
+#+RESULTS: sma_hydro_s1_r1
+: "../data/exp_pro/sma_from_hydrolysate_s1_r1.csv"
+
+#+NAME: acet_sma_data_s1_r1
+#+BEGIN_SRC elisp :results table :noweb no-export
+  (org-table-import-after-n-lines 4 <<sma_orca_hydrolysate()>> '(4))
+#+END_SRC
+
+#+CAPTION: SMA Kinetics in hours
+| Reactor_Name | Methane_Potential |    SMA | Lag_Time |  R_sq |
+| Acetate      |            59.467 | 870.78 |      0.0 | 0.977 |
+| Reactor P1   |             2.364 |  0.084 |    2.885 | 0.986 |
+| Reactor P3   |             1.966 |  0.063 |    3.638 | 0.976 |
+| Reactor P1   |             2.618 |  0.121 |   11.965 | 0.996 |
+| Reactor P3   |            12.549 |  0.529 |    2.564 | 0.989 |
