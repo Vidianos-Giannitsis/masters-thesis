@@ -2,7 +2,7 @@
 #+AUTHOR: Βιδιάνος Γιαννίτσης
 \renewcommand{\abstractname}{Περίληψη}
 \renewcommand{\tablename}{Πίνακας}
-\renewcommand{\figurename}{Διάγραμμα}
+\renewcommand{\figurename}{Σχήμα}
 \renewcommand{\chaptername}{Κεφάλαιο}
 \renewcommand{\partname}{Μέρος}
 \renewcommand{\listfigurename}{Περιεχόμενα Διαγραμμάτων: }
@@ -10,7 +10,7 @@
 \renewcommand\listingscaption{Κώδικας}
 #+LATEX_CLASS: report
 #+LATEX_HEADER: \usepackage{fancyhdr}
-#+LATEX_HEADER: \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+#+LATEX_HEADER: \geometry{a4paper,width=150mm,top=25mm,bottom=25mm}
 \pagestyle{fancy}
 \fancyhead{}
 \fancyhead[L]{\chaptername~\thechapter}
@@ -78,7 +78,11 @@
 * Θεωρητικό Μέρος
 #+INCLUDE: "./intro_of_intro.org::*Εισαγωγή" :minlevel 2
 
-#+INCLUDE: "./introduction_init_manuscript.org" :minlevel 3
+* Πειραματικό Μέρος
+** Υλικά και Μεθόδοι
+** Ανάλυση Αποτελεσμάτων
+** Συζήτηση Αποτελεσμάτων
+** Συμπεράσματα
 
 * Βιβλιογραφία
 :PROPERTIES:
