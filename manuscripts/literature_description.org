@@ -28,6 +28,10 @@
 
 [cite:@dharTechnoeconomicEvaluationUltrasound2012] - Τεχνοοικονομική ανάλυση της προεπεξεργασίας λάσπης με θερμική τεχνική καθώς και υπέρηχους. Εξετάζει το feasibility της κάθε τεχνικής οικονομικά. Όχι τόσο κοντινό, αλλά ίσως χρήσιμο.
 
+[cite:@srisowmeyaCriticalConsiderationsTwostage2020] - Μιλάει για διάφορα pretreatment methods για FW. Επίσης λέει τα πλεονεκτήματα του two-phase για την μεθανογένεση και πως τα process conditions επηρεάζουν την διεργασία.
+
+[cite:@graunkeExaminingMechanismsShortterm2014] - Εξετάζουν τη μέγιστη δυνατή ταχεία φάση υδρόλυσης υπολειμμάτων τροφών χρησιμοποιώντας ένζυμα στις βέλτιστες συνθήκες και χωρίς κανένα inhibition. 30% διαλυτοποίηση από το FW ως έχει, 60% με τα ένζυμα μέσα σε 4 ώρες. Εξετάστηκαν μέχρι 8 για rapid hydrolysis.
+
 ** Solid-State Fermentation
 [cite:@aroraBioreactorsSolidState2018] - Review για βιοαντιδραστήρες για SSF. Δεν έδωσα πάρα πολύ σημασία επειδή δεν είχα καταλάβει καλά και έλεγε κυρίως για τεχνολογίες αντιδραστήρων και ελάχιστα γενικά στοιχεία για SSF, αλλά μιάς και έκανα σημειώσεις το κρατάω και μπορεί να γίνει cited κάπου.
 
@@ -59,6 +63,8 @@
 
 ** 3-phase
 [cite:@zhangThreestageAnaerobicDigester2017] - Άρθρο που εξετάζει την χρήση τριών φάσεων (ξεχωριστά υδρόλυση και οξεογένεση) και λέει πως προσφέρει πλεονεκτήματα όπως ακόμη καλύτερο process stability και ως αποτέλεσμα καλύτερα methane yields σε υψηλά OLRs. Δεν χρειάζεται να το αναφέρουμε σε βάθος, αλλά μπορεί να γίνει ένα build-up για αυτό στην εισαγωγή.
+
+[cite:@zhangThreestageAnaerobicCodigestion2019] - Συνέχεια του προηγούμενου. Κάνει και ένα microbial analysis το οποίο είναι ενδιαφέρον.
 
 ** Dark Fermentation
 [cite:@ghimireReviewDarkFermentative2015] - Καλό review για dark fermentation. Μιλάει για τα VFAs ως platform και για 2-stage AD τα οποία μπορεί να είναι χρήσιμα.
@@ -174,8 +180,10 @@
 
 [cite:@xuAnaerobicDigestionFood2018] - Ενδιαφέρον review για το AD. Μιλάει κυρίως για reactor failure και πως αυτό μπορεί να διορθωθεί προσθέτοντας trace elements, κάνοντας co-digestion ή με multi-stage AD.
 
-* Reading list
-[cite:@yeImprovingStabilityEfficiency2018] - An in-depth review on AD additives for better performance and stability.
-[cite:@srisowmeyaCriticalConsiderationsTwostage2020] - AD review paper covering pretreatments and 2 phase processes that could be helpful for citing.
+[cite:@yeImprovingStabilityEfficiency2018] - Πολύ ωραίο review για πρόσθετα στην αναερόβια χώνευση. Πιάνει πολλές κατηγορίες και για αυτό δεν τοποθετείται σε ένα section. Έχει pretreatment, SSF, DIET, trace elements, buffering με βάση additives που προστίθενται στην διεργασία της χώνευσης.
 
-Πιθανόν κάποια ακόμη papers για κινητική ανάλυση
+* Reading list
+** Kinetics
+[cite:@deepanrajEffectSubstratePretreatment2017] - Effect of pretreatment on biogas production with Gompertz
+[cite:@khadkaEffectSubstrateInoculum2022] - Effect of sludge:inoculum ratio on biogas production kinetics
+[cite:@sunyotoEffectBiocharAddition2016] - Effect of biochar on methane production with Gompertz

@@ -4,17 +4,32 @@
 \renewcommand{\tablename}{Πίνακας}
 \renewcommand{\figurename}{Σχήμα}
 \renewcommand{\chaptername}{Κεφάλαιο}
+\renewcommand{\chapterautorefname}{Κεφάλαιο}
 \renewcommand{\partname}{Μέρος}
 \renewcommand{\listfigurename}{Περιεχόμενα Διαγραμμάτων: }
 \renewcommand{\listtablename}{Περιεχόμενα Πινάκων: }
 \renewcommand\listingscaption{Κώδικας}
 #+LATEX_CLASS: report
+#+LATEX_HEADER: \usepackage[automake]{glossaries-extra}
 #+LATEX_HEADER: \usepackage{fancyhdr}
 #+LATEX_HEADER: \geometry{a4paper,width=150mm,top=25mm,bottom=25mm}
+#+LATEX_HEADER: \makeglossaries
 \pagestyle{fancy}
 \fancyhead{}
 \fancyhead[L]{\chaptername~\thechapter}
 \fancyhead[R]{Βιδιάνος Γιαννίτσης}
+\newacronym{fw}{FW}{υπολείμματα τροφών}
+\newacronym{fao}{FAO}{Οργανισμός Τροφίμων και Αγρονομίας των Ηνωμένων Πολιτειών}
+\newacronym{co2eq}{$CO_2$-eq}{ισοδύναμο διοξειδίου του άνθρακα}
+\newacronym{xyta}{ΧΥΤΑ}{Χώρους Υγειονομικής Ταφής Απορριμάτων}
+\newacronym{syngas}{syngas}{αέριο σύνθεσης}
+\newacronym{pla}{PLA}{πολυγαλακτικό οξύ}
+\newacronym{trl}{TRL}{technology readiness level}
+\newacronym{vfa}{VFAs}{πτητικά λιπαρά οξέα}
+\newacronym{hrt}{HRT}{υδραυλικός χρόνος παραμονής}
+\newacronym{olr}{OLR}{ρυθμός οργανικής φόρτισης}
+\newacronym{uasb}{UASB}{αντιδραστήρας ανοδικής ροής διαμέσου στρώσης ιλύος}
+\newacronym{mix}{μιξ}{σκεύασμα ενζύμων και μικροοργανισμών}
 
 #+options: toc:nil title:nil author:nil date:nil
 #+LATEX_HEADER: \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
@@ -74,15 +89,70 @@
 \pagebreak
 
 [[list-of-tables:]]
+\pagebreak
+
+\printglossary
+\printglossary[type = \acronymtype, title = Συντομογραφίες]
 
 * Θεωρητικό Μέρος
 #+INCLUDE: "./intro_of_intro.org::*Εισαγωγή" :minlevel 2
 
+#+INCLUDE: "./anaerobic_digestion_problems.org" :minlevel 2
+
+** Προεπεξεργασία Υπολειμμάτων Τροφών
+\label{sec:fw_pretreatment}
+
+*** Structure
+Γενικά στοιχεία υδρόλυσης, mechanical, thermal, chemical treatments, γιατί η ενζυμική υδρόλυση είναι γενικά η πιο αποτελεσματική διεργασία και πως μπορεί να μειωθεί το κόστος της. Για την μείωση του κόστους, θα αναφερθεί το solid-state fermentation (SSF) ως μία σημαντική τεχνολογία. Εκτός από αυτό, θα μιλήσουμε για την ρύθμιση των συνθηκών της υδρόλυσης έτσι ώστε οι μικροοργανισμοί της λάσπης να εκκρίνουν μεγάλες ποσότητες ενζύμων και να επιταχύνουν την υδρόλυση, το οποίο είναι feasible είτε για 2 ή 3 stage AD (στο κεφάλαιο αυτό πάνε όλα όσα λένε για 3-stage AD με ρύθμιση συνθηκών, αλλά και τα microaeration studies) και στο τέλος ίσως αναφερθούν και λίγα περισσότερα για το μιξ που επιλέξαμε εμείς.
+
+*** Μηχανική Προεπεξεργασία
+
+*** Θερμική Προεπεξεργασία
+
+*** Χημική Προεπεξεργασία
+
+*** Βιολογική Προεπεξεργασία
+**** SSF
+**** Ρύθμιση συνθηκών
+**** Μιξ
+
+** Οξεογένεση
+\label{sec:acidogenesis}
+
+*** Structure
+Η χαρά του παιδιού σε mixed culture acidogenic fermentation. Έχω να γράψω χίλιες δυό βλακείες εδώ. Λογικά το structure θα είναι κάτι του στυλ να ξεκινήσουμε με όλα τα δυνατά μεταβολικά μονοπάτια οξεογενής ζύμωσης. Πως προσανατολίζουμε την ζύμωση σε κάθε μονοπάτι και να κλείσουμε με το πως επηρεάζει το μονοπάτι την μεθανογένεση και ποια είναι τα θεωρητικά καλύτερα pathways. Εδώ θα είναι το κύριο ζουμί της εργασίας επειδή έφαγα μια ζωή να τα ψάχνω.
+
+*** Μεταβολικά Μονοπάτια Οξεογενής Ζύμωσης
+
+*** Έλεγχος του μεταβολικού μονοπατιού
+
+*** Χρήση των μεταβολικών προιόντων στην αναερόβια χώνευση
+**** Όξικο
+**** Βουτηρικό
+**** Προπιονικό
+**** Φορμικό
+**** Γαλακτικό
+**** Αιθανόλη
+**** Άλλα
+
+** Οξικογένεση και Μεθανογένεση
+\label{sec:methanogenesis}
+
+*** Structure
+Εδώ είναι το άλλο σημαντικό κομμάτι της εργασίας. Θα μιλήσουμε για το πως γίνεται η μεθανογένεση και την θερμοδυναμική της οξικογένεσης, η οποία γίνεται enabled από συντροφικό μεταβολισμό. Θα έχει πολύ microbial community interactions, θερμοδυναμική της μετατροπής της κάθε ένωσης σε μεθάνιο, σύγκριση IHT με DIET και κινητική ανάλυση παραγωγής μεθανίου με Gompertz
+
 * Πειραματικό Μέρος
 ** Υλικά και Μεθόδοι
+\label{sec:materials_methods}
+
 ** Ανάλυση Αποτελεσμάτων
+\label{sec:result_analysis}
+
 ** Συζήτηση Αποτελεσμάτων
-** Συμπεράσματα
+\label{sec:result_discussion}
+
+** Συμπεράσματα και Προτάσεις
+\label{sec:conclusion}
 
 * Βιβλιογραφία
 :PROPERTIES:
