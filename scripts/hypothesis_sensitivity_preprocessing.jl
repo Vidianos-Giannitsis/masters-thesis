@@ -112,7 +112,7 @@ ax_comp = Axis(fig_comp[1,1], xticks = (1:5, xtick),
 prod_comp = barplot!(ax_comp, xdata_complete, prod_plot, stack = grp1, dodge = grp2, color = colors[grp1], bar_labels = bar_l, label_size = 16)
 elements = [PolyElement(polycolor = colors[i]) for i in 1:length(plot_label)]
 Legend(fig_comp[1,2], elements, plot_label, "Products: ", labelsize = 20, titlesize = 20)
-save(plotsdir("35_40_comp", "final_products.png"), fig_comp)
+save(plotsdir("35_40_comp", "final_products.svg"), fig_comp)
 
 prod45 = select(df45_1, 1, 5:8)
 

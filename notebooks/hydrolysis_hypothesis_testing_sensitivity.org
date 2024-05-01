@@ -213,11 +213,11 @@
   prod_comp = barplot!(ax_comp, xdata_complete, prod_plot, stack = grp1, dodge = grp2, color = colors[grp1], bar_labels = bar_l, label_size = 16)
   elements = [PolyElement(polycolor = colors[i]) for i in 1:length(plot_label)]
   Legend(fig_comp[1,2], elements, plot_label, "Products: ", labelsize = 20, titlesize = 20)
-  save(plotsdir("35_40_comp", "final_products.png"), fig_comp)
+  save(plotsdir("35_40_comp", "final_products.svg"), fig_comp)
 #+END_SRC
 
 #+RESULTS: prod_visualization
-: CairoMakie.Screen{IMAGE}
+: CairoMakie.Screen{SVG}
 
 #+ATTR_ORG: :width 800px
 [[../plots/10_11/final_product_bar_10_11.png]]
@@ -1184,7 +1184,7 @@ To GlobalSensitivity.jl προσφέρει δύο είδη ανάλυσης ευ
 #+END_SRC
 
 #+RESULTS: tornado_visualization
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/sensitivity/temperature_tornado.png"
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/sensitivity/temperature_tornado.svg"
 
 Παρακάτω φαίνονται και τα αντίστοιχα plots
 
