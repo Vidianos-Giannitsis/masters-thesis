@@ -18,7 +18,7 @@
 \fancyhead{}
 \fancyhead[L]{\chaptername~\thechapter}
 \fancyhead[R]{Βιδιάνος Γιαννίτσης}
-\newacronym{fw}{FW}{υπολείμματα τροφών}
+\newacronym{fw}{ΥΤ}{υπολείμματα τροφών}
 \newacronym{fao}{FAO}{Οργανισμός Τροφίμων και Αγρονομίας των Ηνωμένων Πολιτειών}
 \newacronym{co2eq}{$CO_2$-eq}{ισοδύναμο διοξειδίου του άνθρακα}
 \newacronym{xyta}{ΧΥΤΑ}{Χώρους Υγειονομικής Ταφής Απορριμάτων}
@@ -30,6 +30,7 @@
 \newacronym{olr}{OLR}{ρυθμός οργανικής φόρτισης}
 \newacronym{uasb}{UASB}{αντιδραστήρας ανοδικής ροής διαμέσου στρώσης ιλύος}
 \newacronym{mix}{μιξ}{σκεύασμα ενζύμων και μικροοργανισμών}
+\newacronym{ad}{ΑΧ}{αναερόβια χώνευση}
 
 #+options: toc:nil title:nil author:nil date:nil
 #+LATEX_HEADER: \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
