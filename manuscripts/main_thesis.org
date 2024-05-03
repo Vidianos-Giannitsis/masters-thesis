@@ -31,6 +31,13 @@
 \newacronym{uasb}{UASB}{αντιδραστήρας ανοδικής ροής διαμέσου στρώσης ιλύος}
 \newacronym{mix}{μιξ}{σκεύασμα ενζύμων και μικροοργανισμών}
 \newacronym{ad}{ΑΧ}{αναερόβια χώνευση}
+\newacronym{ts}{TS}{ολικά στερεά}
+\newacronym{vs}{VS}{πτητικά στερεά}
+\newacronym{cod}{COD}{χημικά απαιτούμενο οξυγόνο}
+\newacronym{scod}{sCOD}{διαλυτό COD}
+\newacronym{tcod}{tCOD}{ολικό COD}
+\newacronym{pi}{PI}{Process Intensification}
+\newacronym{ssf}{SSF}{Solid State Fermentation}
 
 #+options: toc:nil title:nil author:nil date:nil
 #+LATEX_HEADER: \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
@@ -100,22 +107,7 @@
 
 #+INCLUDE: "./anaerobic_digestion_problems.org" :minlevel 2
 
-** Προεπεξεργασία Υπολειμμάτων Τροφών
-\label{sec:fw_pretreatment}
-
-*** Structure
-Γενικά στοιχεία υδρόλυσης, mechanical, thermal, chemical treatments, γιατί η ενζυμική υδρόλυση είναι γενικά η πιο αποτελεσματική διεργασία και πως μπορεί να μειωθεί το κόστος της. Για την μείωση του κόστους, θα αναφερθεί το solid-state fermentation (SSF) ως μία σημαντική τεχνολογία. Εκτός από αυτό, θα μιλήσουμε για την ρύθμιση των συνθηκών της υδρόλυσης έτσι ώστε οι μικροοργανισμοί της λάσπης να εκκρίνουν μεγάλες ποσότητες ενζύμων και να επιταχύνουν την υδρόλυση, το οποίο είναι feasible είτε για 2 ή 3 stage AD (στο κεφάλαιο αυτό πάνε όλα όσα λένε για 3-stage AD με ρύθμιση συνθηκών, αλλά και τα microaeration studies) και στο τέλος ίσως αναφερθούν και λίγα περισσότερα για το μιξ που επιλέξαμε εμείς.
-
-*** Μηχανική Προεπεξεργασία
-
-*** Θερμική Προεπεξεργασία
-
-*** Χημική Προεπεξεργασία
-
-*** Βιολογική Προεπεξεργασία
-**** SSF
-**** Ρύθμιση συνθηκών
-**** Μιξ
+#+INCLUDE: "./pretreatments.org" :minlevel 2
 
 ** Οξεογένεση
 \label{sec:acidogenesis}
