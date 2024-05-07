@@ -56,6 +56,8 @@
 \newacronym{redox}{redox}{οξειδωαναγογικό δυναμικό}
 \newacronym{iht}{IHT}{interspecies hydrogen transfer}
 \newacronym{diet}{DIET}{direct interspecies electron transfer}
+\newacronym{tvfa}{tVFAs}{συνολικά πτητικά λιπαρά οξέα}
+\newacronym{bmp}{BMP}{βιοχημικό δυναμικό μεθανίου}
 
 #+options: toc:nil title:nil author:nil date:nil
 #+LATEX_HEADER: \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
