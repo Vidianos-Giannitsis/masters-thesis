@@ -1,0 +1,376 @@
+%% Creator: Inkscape 1.3.2 (091e20ef0f, 2023-11-25, custom), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'metabolic_pathways_svg-tex.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{1701.26630167bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.7927198)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.26833559,0.77198862){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Lipids\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.57468413,0.77336547){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Carbohydrates\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.88675589,0.76770617){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Proteins\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.18958436,0.7262303){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glycerol\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.36383391,0.72666591){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Fatty Acids\end{tabular}}}}%
+    \put(0.26937879,0.75261287){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Lipase \end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.18955063,0.53658854){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Pyruvate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.15677605,0.32152511){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+\end{tabular}}}}%
+    \put(0.09258421,0.28999003){\color[rgb]{0,0,0}\rotatebox{28.27362372}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+\end{tabular}}}}}%
+    \put(0.15684869,0.30386759){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}%
+    \put(0.07006923,0.27764987){\color[rgb]{0,0,0}\rotatebox{28.19707531}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.21123349,0.50811004){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Pyruvate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.08502903,0.68303627){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2 $NAD^+$\end{tabular}}}}%
+    \put(0.22332443,0.57996521){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+ + 2ADP\end{tabular}}}}%
+    \put(0.22008533,0.56443418){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+ + 2ATP\end{tabular}}}}%
+    \put(0.36683085,0.69281556){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acyl-CoA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.41535068,0.63515122){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2-trans-Enoyl-CoA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.41994209,0.68500961){\color[rgb]{0,0,0}\rotatebox{31.45076695}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}FAD\end{tabular}}}}}%
+    \put(0.4350896,0.67286128){\color[rgb]{0,0,0}\rotatebox{40.1465202}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}FADH2\end{tabular}}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.31461063,0.68727228){\color[rgb]{0,0,0}\rotatebox{42.22528733}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetyl-CoA\end{tabular}}}}}%
+    \put(0.43714128,0.60360577){\color[rgb]{0,0,0}\rotatebox{-37.69606437}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}$H_2O$\end{tabular}}}}}%
+    \put(0.34223677,0.58092876){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}L-3-hydroxyacyl-CoA\end{tabular}}}}%
+    \put(0.32121078,0.58184704){\color[rgb]{0,0,0}\rotatebox{46.43797013}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}}%
+    \put(0.29698936,0.5914252){\color[rgb]{0,0,0}\rotatebox{37.88350438}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH+ H\end{tabular}}}}}%
+    \put(0.2947161,0.63414687){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}3-ketoacyl-CoA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.41974486,0.73278206){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Fatty Acid\\β-oxidation\end{tabular}}}}%
+    \put(0.87835177,0.71535815){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Amino Acid A\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.90091569,0.74664185){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Protease\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=15]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.95157127,0.72042389){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Keto Acid B\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=16]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.88309797,0.65420485){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Keto Acid A\end{tabular}}}}%
+    \put(0.95383805,0.65496904){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Amino Acid B\end{tabular}}}}%
+    \put(0.90999655,0.62063558){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Pyruvate, other\\keto-acids and\\VFAs\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=17]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.87693955,0.68827179){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Amino-acid\\Oxidation\end{tabular}}}}%
+    \put(0.25868865,0.73234413){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{0}\smash{\begin{tabular}[t]{c}EMP\\Pathway\end{tabular}}}}%
+    \put(0.57074746,0.73869193){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Oligosaccharides\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=18]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.53676184,0.70587056){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Mannose\end{tabular}}}}%
+    \put(0.58504555,0.70526372){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Sucrose\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=19]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.52370959,0.66982383){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glucose\end{tabular}}}}%
+    \put(0.60837462,0.66927314){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Fructose\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=20]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.63299892,0.70952096){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Other small\\sacchariddes\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=21]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.60137482,0.75621723){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Carbohydrases\end{tabular}}}}%
+    \put(0.44206826,0.77549096){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Hydrolysis\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=22]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.50206517,0.62261096){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glucose-6-Phosphate\end{tabular}}}}%
+    \put(0.4982972,0.59050674){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Fructose-6-Phosphate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=23]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.4927086,0.54108816){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Fructose-1,6-Diphosphate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=24]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.57712503,0.51245562){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{0}\smash{\begin{tabular}[t]{c}Dihydroxyacetone\\Phosphate\end{tabular}}}}%
+    \put(0.41114281,0.51438277){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glyceraldehyde\\3-Phosphate (2)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=25]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.59038996,0.61597289){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Fructose-1-Phosphate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=26]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.62377619,0.47416879){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glyceraldehyde\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=27]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.66007351,0.43788406){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glycerol\end{tabular}}}}%
+    \put(0.54667664,0.4378131){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glycerol-3-Phosphate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=28]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.56272424,0.65579225){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0.5562534,0.57342154){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0.64649562,0.65508435){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0.56188112,0.63877593){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}%
+    \put(0.5565626,0.55709053){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}%
+    \put(0.64752289,0.63642344){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=29]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.55655254,0.46813786){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0.52575638,0.47439457){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=30]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.64006395,0.41514202){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0.61733166,0.41454726){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}%
+    \put(0.39128816,0.45150577){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}1,3-bisphosphoglycerate (2)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=31]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.399741,0.39738517){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}3-phosphoglycerate (2)\end{tabular}}}}%
+    \put(0.39935094,0.36456573){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2-phosphoglycerate (2)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=32]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.40975076,0.49327743){\color[rgb]{0,0,0}\makebox(0,0)[rt]{\lineheight{0}\smash{\begin{tabular}[t]{r}2 NAD+\end{tabular}}}}%
+    \put(0.4107633,0.46936482){\color[rgb]{0,0,0}\makebox(0,0)[rt]{\lineheight{0}\smash{\begin{tabular}[t]{r}2 NADH + 2H+\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=33]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.40919692,0.43073668){\color[rgb]{0,0,0}\makebox(0,0)[rt]{\lineheight{0}\smash{\begin{tabular}[t]{r}2 ADP\end{tabular}}}}%
+    \put(0.40668262,0.417091){\color[rgb]{0,0,0}\makebox(0,0)[rt]{\lineheight{0}\smash{\begin{tabular}[t]{r}2 ATP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=34]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.62448344,0.36328748){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Pyruvate (2)\end{tabular}}}}%
+    \put(0.50831148,0.36329152){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Phosphoenolpyruvate (2)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=35]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.58423472,0.38822405){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2 ADP\end{tabular}}}}%
+    \put(0.61118187,0.38790212){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2 ATP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=36]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.49491193,0.39011367){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2 $H_2O$\end{tabular}}}}%
+    \put(0.64832226,0.67374671){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}EMP Pathway\end{tabular}}}}%
+    \put(0.36865628,0.53095705){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Pyruvate\\Formation\\with the\\mechanism\\described\end{tabular}}}}%
+    \put(0.23568396,0.61003361){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Pyruvate\\Formation\end{tabular}}}}%
+    \put(0.17431539,0.61434172){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glyceraldehyde\\3-Phosphate\end{tabular}}}}%
+    \put(0.22774912,0.7099483){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0.22616171,0.69295054){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=37]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.16381376,0.56566378){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}$H_2O$\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=38]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.20736778,0.43939707){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetyl-CoA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=39]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.24894874,0.4864739){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Fdox\end{tabular}}}}%
+    \put(0.24964471,0.46595451){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Fdred\end{tabular}}}}%
+    \put(0.13735381,0.46463529){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}$H_2$ + $CO_2$\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=40]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.03091404,0.46596694){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Formate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=41]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.04408408,0.51322616){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Formate Equilibrium\\in mixed acid fermentation\\Requires neutral or alkaline pH\end{tabular}}}}%
+    \put(0.2134424,0.33788038){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetate\end{tabular}}}}%
+    \put(0.28876819,0.42155205){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetaldehyde\end{tabular}}}}%
+    \put(0.29540222,0.36413181){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Ethanol\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=42]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.22611858,0.41716667){\color[rgb]{0,0,0}\rotatebox{-18.504589}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+\end{tabular}}}}}%
+    \put(0.32431871,0.40289611){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+\end{tabular}}}}%
+    \put(0.26891598,0.40831112){\color[rgb]{0,0,0}\rotatebox{-18.43197819}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}}%
+    \put(0.32579557,0.38332556){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}%
+    \put(0.11324707,0.41170756){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetacetyl-CoA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=43]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.18160741,0.3933393){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetyl-CoA\end{tabular}}}}%
+    \put(0.02459796,0.3777291){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetone\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=44]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.04161654,0.40112014){\color[rgb]{0,0,0}\rotatebox{45.04439085}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}$CO_2$\end{tabular}}}}}%
+    \put(0.10330587,0.36540177){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}3-hydroxybutyryl-CoA\end{tabular}}}}%
+    \put(0.11738996,0.33557273){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Crotonyl-CoA\end{tabular}}}}%
+    \put(0.11957926,0.28927239){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Butyryl-CoA\end{tabular}}}}%
+    \put(0.19246407,0.25040552){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Butyrate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=45]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.06044926,0.25527258){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Butanol\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=46]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.25556294,0.37718139){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}%
+    \put(0.25373335,0.35356656){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=47]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.17029439,0.29290036){\color[rgb]{0,0,0}\rotatebox{-26.78883818}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}}%
+    \put(0.1928128,0.2846146){\color[rgb]{0,0,0}\rotatebox{-31.90982463}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=48]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.01965193,0.43907797){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ABE Fermentation\end{tabular}}}}%
+    \put(0.14615945,0.2332258){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Butyrate-type Fermentation\\or mixed acid.\\Is usually the dominant\\pathway in pH 5.0-7.0\end{tabular}}}}%
+    \put(0.27501497,0.34286342){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetate-Ethanol type\\Fermentation, ABE\\\\\end{tabular}}}}%
+    \put(0.15799983,0.51314536){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Pyruvate\\Oxidation\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=49]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.76552839,0.72683182){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glucose\end{tabular}}}}%
+    \put(0.74501694,0.683939){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glucose-6-Phosphate\end{tabular}}}}%
+    \put(0.73668562,0.63125386){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}6-Phosphogluconolaetone\end{tabular}}}}%
+    \put(0.73554073,0.5987973){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}6-phosphate gluconic acid\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=50]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.80165827,0.71149765){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0.80261677,0.69704702){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=51]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.80686911,0.66655996){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}%
+    \put(0.80596164,0.6475959){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=52]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.80365872,0.57978681){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}%
+    \put(0.80383931,0.55971433){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+\end{tabular}}}}%
+    \put(0.73906182,0.53785283){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Ribulose-5-phosphate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=53]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.73261149,0.55828582){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}$CO_2$\end{tabular}}}}%
+    \put(0.74036287,0.50473902){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Xylulose-5-phosphate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=54]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.71553616,0.46754296){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glyceraldehyde\\3-phosphate\end{tabular}}}}%
+    \put(0.82858009,0.46430473){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetyl-CoA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=55]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.69838638,0.71215403){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Phosphoketolase\\Pathway (PK)\end{tabular}}}}%
+    \put(0.72445462,0.39628663){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Pyruvate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=56]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.76802331,0.43896381){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+ + 2ADP\end{tabular}}}}%
+    \put(0.76296041,0.41967954){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+ + 2 ATP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=57]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.69908937,0.42092848){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}$CO_2$\end{tabular}}}}%
+    \put(0.92525565,0.49106642){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetate\end{tabular}}}}%
+    \put(0.92468697,0.42305497){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Ethanol\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=58]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.86871689,0.50009241){\color[rgb]{0,0,0}\rotatebox{28.54562984}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}}%
+    \put(0.89329266,0.50878969){\color[rgb]{0,0,0}\rotatebox{32.6524686}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}}%
+    \put(0.83764196,0.44055993){\color[rgb]{0,0,0}\rotatebox{-32.73700439}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2 NADH +H+\end{tabular}}}}}%
+    \put(0.88686019,0.41482775){\color[rgb]{0,0,0}\rotatebox{-32.58437336}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2NAD+\end{tabular}}}}}%
+    \put(0.90445445,0.54550054){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Due to more hydrogen\\being produced in the PK\\pathway compared to\\EMP, acetate production is\\often inhibited albeit possible\end{tabular}}}}%
+    \put(0.92365858,0.38889954){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Lactate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=59]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.81604509,0.35419239){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+\end{tabular}}}}%
+    \put(0.86918454,0.35211894){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}%
+    \put(0.86366801,0.59228626){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Heterolactic fermentation via the PK\\pathway is the most common pathway\\to heterolactic fermentation, although\\some microorganisms can have other\\pathways for this.\end{tabular}}}}%
+    \put(0.92739473,0.4715161){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Requires acidic\\pH and lactic\\acid bacteria in\\the inoculum\end{tabular}}}}%
+    \put(0.63370637,0.59377396){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}The most common\\route of sugars\\to pyruvate\end{tabular}}}}%
+    \put(0.71463112,0.37361565){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Pyruvate formation\end{tabular}}}}%
+    \put(0.02616359,0.23473303){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Requires specific\\bacteria (typically\\Clostridia) in the inoculum\\to happen. Needs slightly\\acidic pH (4.5-6.0 typically)\end{tabular}}}}%
+    \put(0.24266829,0.31471495){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetate is produced with ethanol as\\the co-product instead of butyrate if\\the pH is very acidic (4.0-4.5 being\\optimal)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=60]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.89335283,0.31303041){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Pyruvate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=61]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.7365971,0.31422355){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Oxaloacetate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=62]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.84752535,0.32943826){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=63]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.7707146,0.29778025){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{0}\smash{\begin{tabular}[t]{c}exchange of\\$CO_2$\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=64]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.80896814,0.25014107){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Propionyl-CoA\end{tabular}}}}%
+    \put(0.80768461,0.21449997){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Propionate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=65]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.78225548,0.25806518){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{0}\smash{\begin{tabular}[t]{c}Exchange of\\CoA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=66]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.89500055,0.24878364){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Lactate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=67]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.84704223,0.29438957){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+\end{tabular}}}}%
+    \put(0.86104602,0.27003165){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}%
+    \put(0.92694325,0.32453731){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Homolactate\\fermentation\\where lactate\\has no co-products.\\This lactate is more\\likely to react to\\propionate, although\\that reaction has fairly\\low yield in pH lower\\than 5, leading to\\lactate accumulation.\\Happens in similar \\conditions to\\heterolactate.\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=68]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.89348702,0.2075741){\color[rgb]{0,0,0}\rotatebox{36.50290922}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH\\+ H+\end{tabular}}}}}%
+    \put(0.86376371,0.19204486){\color[rgb]{0,0,0}\rotatebox{29.46516903}{\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}}%
+    \put(0.59707502,0.31333238){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Malate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=69]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.67046332,0.28362265){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+\end{tabular}}}}%
+    \put(0.62956025,0.28386266){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}%
+    \put(0.70835915,0.25086246){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Succinyl-CoA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=70]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.72619853,0.27410529){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Methylmalonyl-CoA\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=71]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.71441761,0.20872751){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Succinate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=72]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.59776112,0.20989049){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Fumarate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=73]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.62668232,0.1817245){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+\end{tabular}}}}%
+    \put(0.67682339,0.1823214){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=74]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.64565124,0.23863621){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0.67489804,0.2391972){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}%
+    \put(0.43024535,0.32580529){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Propionate-type fermentation. Is favored in\\acidic pH, but usually has good yield between\\pH 5-6. Propionate inhibits these reactions\\however so very high yields are never expected.\\Both the reduction of lactate and the other\\pathway (transcarboxylase cycle) have the same\\final yield, so the intermediates matter only if they\\are accumulated in the reactor. \end{tabular}}}}%
+    \put(0.46121724,0.23251857){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Succinate is the most common\\intermediate to accumulate, and it\\usually happens at pH near neutral\\and in low amounts, unless specific\\microorganisms are in the inoculum.\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=75]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.01203793,0.76312117){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glucose\end{tabular}}}}%
+    \put(0.08356367,0.76496321){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glucose-6-phosphate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=76]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.04180677,0.78453383){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0.0657351,0.78472281){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}%
+    \put(0.08177222,0.70873858){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}6-phosphogluconate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=77]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.13128324,0.74530793){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}%
+    \put(0.12919829,0.72926428){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH+H+\end{tabular}}}}%
+    \put(0.08684084,0.6732092){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2-keto-3-deoxy-6\\phospogluconate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=78]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.13075229,0.68639863){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}$H_2O$\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=79]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.01341294,0.6356515){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glyceraldehyde\\3-Phosphate\end{tabular}}}}%
+    \put(0.10697766,0.62641215){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Pyruvate (2)\end{tabular}}}}%
+    \put(0.10994161,0.54042782){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Ethanol (2)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=80]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.0544036,0.58194521){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2NADH + H+\end{tabular}}}}%
+    \put(0.04784927,0.55522614){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2NAD + 2$CO_2$\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=81]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.05999734,0.60853713){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2ADP\\+ NAD+\end{tabular}}}}%
+    \put(0.09125935,0.6089965){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}2 ATP + H+\\+ NADH \end{tabular}}}}%
+    \put(0.00592511,0.73755646){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Ethanol fermentation\\by the ED pathway.\\Produces less ATP\\but both Pyruvate\\moles go to ethanol.\\\\Requires special\\bacteria or yeasts not\\found in typical\\inoculum\end{tabular}}}}%
+    \put(0.00977615,0.6048128){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Needs\\acidic pH\\with\\4.5-5.0\\as the\\optimal\end{tabular}}}}%
+    \put(0.81143495,0.13852617){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Valerate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=82]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.77156616,0.17166295){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}6 $H_2$\\+ 2 $CO_2$\end{tabular}}}}%
+    \put(0.73503778,0.15031105){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Mixed acid\\fermentation\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=83]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.36855513,0.2654338){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glucose\end{tabular}}}}%
+    \put(0.3487818,0.22472435){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glucose-6-phosphate\end{tabular}}}}%
+    \put(0.2345832,0.22252124){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Fructose-6-phosphate (1/2)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=84]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.39956909,0.15809789){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Fructose-6-phosphate (1/2)\end{tabular}}}}%
+    \put(0.21730995,0.1601091){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetyl-CoA (1/2)\end{tabular}}}}%
+    \put(0.1038337,0.16330106){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetate (1/2)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=85]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.19430625,0.13596762){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}1/2 ADP\end{tabular}}}}%
+    \put(0.157118,0.13348362){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}1/2 ATP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=86]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.29435088,0.16376855){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Erythrose\\4-phosphate (1/2)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=87]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.34130931,0.25348112){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0.34173493,0.23956379){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=88]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.26771303,0.12521015){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}7-Sedum-Phosphate (1/2)\end{tabular}}}}%
+    \put(0.27225102,0.08030936){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Ribose-5-phosphate (1/2)\end{tabular}}}}%
+    \put(0.40036501,0.12212567){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glyceraldehyde\\3-phosphate (1/2)\end{tabular}}}}%
+    \put(0.40040601,0.07884586){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Xylulose-5-phosphate (1/2)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=89]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.39943029,0.03480794){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Xylulose-5-phosphate (1/2)\end{tabular}}}}%
+    \put(0.26747657,0.03603688){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Ribulose-5-phosphate (1/2)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=90]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.5624583,0.08059372){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Glyceraldehyde-3-phosphate\end{tabular}}}}%
+    \put(0.58442645,0.03428677){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetyl-CoA\end{tabular}}}}%
+    \put(0.71014807,0.03453254){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Acetate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=91]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.66168542,0.00608869){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ADP\end{tabular}}}}%
+    \put(0.69073127,0.00536195){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}ATP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=92]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.70983835,0.08009853){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Pyruvate\end{tabular}}}}%
+    \put(0.7997519,0.0777054){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Lactate\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=93]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.65311038,0.11631108){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD +\\ 2ADP\end{tabular}}}}%
+    \put(0.68577956,0.11765772){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + \\H+ + 2ATP\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=94]{metabolic_pathways_svg-tex.pdf}}%
+    \put(0.73208007,0.10338076){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NADH + H+\end{tabular}}}}%
+    \put(0.77851421,0.10253332){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}NAD+\end{tabular}}}}%
+    \put(0.2336478,0.27084581){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Bifidus Pathway\end{tabular}}}}%
+    \put(0.10000926,0.12243962){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Some microorganisms have been shown to\\have this pathway in their metabolism known\\as the bifidus pathway. It produces acetate\\in large quantity together with lactate.\\Xylulose-5-phosphate is synthesized, but\\instead of being produced via oxidation and\\removal of CO2, it is produced with acetate\\as a co-product making this similar to the\\PK pathway in product profile, but with a very\\distinctly different pathway.\\\\It has an optimal pH of 4.5-5.0.\end{tabular}}}}%
+    \put(0.50242923,0.16681503){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Xylulose-5-phosphate is the core intermediate of the pathway and\\after its production this process basically becomes heterolactic\\fermentation. However, Xylulose-5-phosphate is produced with no\\oxidative steps, therefore, Acetyl-CoA cannot be reduced to ethanol\\and only acetate is a possible metabolite.\end{tabular}}}}%
+    \put(0.86597931,0.16704687){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}Requires neutral or alkaline pH and\\is only feasible if all of formate, acetate,\\propionate and buturate are also\\produced (hence why it is called mixed\\acid fermentation).\end{tabular}}}}%
+  \end{picture}%
+\endgroup%

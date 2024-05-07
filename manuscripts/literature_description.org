@@ -183,7 +183,9 @@
 [cite:@yeImprovingStabilityEfficiency2018] - Πολύ ωραίο review για πρόσθετα στην αναερόβια χώνευση. Πιάνει πολλές κατηγορίες και για αυτό δεν τοποθετείται σε ένα section. Έχει pretreatment, SSF, DIET, trace elements, buffering με βάση additives που προστίθενται στην διεργασία της χώνευσης.
 
 * Reading list
+[cite:@saadyHomoacetogenesisHydrogenProduction2013] - ΑΡΘΡΑΡΑ με θερμοδυναμικές. Σίγουρα θα το χρησιμοποιήσω σε πολλά σημεία. Might as well να το διαβάσω και λίγο πιο αναλυτικά από μόνο τους πίνακες.
 ** Kinetics
 [cite:@deepanrajEffectSubstratePretreatment2017] - Effect of pretreatment on biogas production with Gompertz
 [cite:@khadkaEffectSubstrateInoculum2022] - Effect of sludge:inoculum ratio on biogas production kinetics
 [cite:@sunyotoEffectBiocharAddition2016] - Effect of biochar on methane production with Gompertz
+

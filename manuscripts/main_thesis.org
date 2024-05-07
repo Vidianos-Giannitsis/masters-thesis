@@ -38,6 +38,24 @@
 \newacronym{tcod}{tCOD}{ολικό COD}
 \newacronym{pi}{PI}{Process Intensification}
 \newacronym{ssf}{SSF}{Solid State Fermentation}
+\newacronym{orp}{ORP}{οξειδοαναγωγικό δυναμικό}
+\newacronym{emp}{EMP}{μονοπάτι Embden-Meyerhof}
+\newacronym{lcfa}{LCFA}{long chain fatty acids}
+\newacronym{acet-coa}{Acetyl-CoA}{ακέτυλο συνένζυμο Α}
+\newacronym{nad}{NAD$^+$}{nicotinamide adenine dinucleotide}
+\newacronym{nadh}{NADH}{nicotinamide adenine dinucleotide hydrogen}
+\newacronym{fd}{Fd}{ferredoxins}
+\newacronym{dg}{ΔG}{μεταβολή ελεύθερης ενέργειας Gibbs}
+\newacronym{abe}{ABE}{ζύμωση ακετόνης-βουτανόλης-αιθανόλης}
+\newacronym{ed}{ED}{μονοπάτι Entner-Doudoroff}
+\newacronym{pp}{PP}{μονοπάτι Pentose Phosphate}
+\newacronym{pk}{PK}{μονοπάτι Phosphoketolase}
+\newacronym{am}{AM}{ακετοκλαστικοί μεθανογόνοι}
+\newacronym{hm}{YM}{υδρογονοτρόφοι μεθανογόνοι}
+\newacronym{zvi}{ZVI}{σίδηρος μηδενικού σθένους}
+\newacronym{redox}{redox}{οξειδωαναγογικό δυναμικό}
+\newacronym{iht}{IHT}{interspecies hydrogen transfer}
+\newacronym{diet}{DIET}{direct interspecies electron transfer}
 
 #+options: toc:nil title:nil author:nil date:nil
 #+LATEX_HEADER: \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
@@ -109,30 +127,9 @@
 
 #+INCLUDE: "./pretreatments.org" :minlevel 2
 
-** Οξεογένεση
-\label{sec:acidogenesis}
+#+INCLUDE: "./acidogenesis.org" :minlevel 2
 
-*** Structure
-Η χαρά του παιδιού σε mixed culture acidogenic fermentation. Έχω να γράψω χίλιες δυό βλακείες εδώ. Λογικά το structure θα είναι κάτι του στυλ να ξεκινήσουμε με όλα τα δυνατά μεταβολικά μονοπάτια οξεογενής ζύμωσης. Πως προσανατολίζουμε την ζύμωση σε κάθε μονοπάτι και να κλείσουμε με το πως επηρεάζει το μονοπάτι την μεθανογένεση και ποια είναι τα θεωρητικά καλύτερα pathways. Εδώ θα είναι το κύριο ζουμί της εργασίας επειδή έφαγα μια ζωή να τα ψάχνω.
-
-*** Μεταβολικά Μονοπάτια Οξεογενής Ζύμωσης
-
-*** Έλεγχος του μεταβολικού μονοπατιού
-
-*** Χρήση των μεταβολικών προιόντων στην αναερόβια χώνευση
-**** Όξικο
-**** Βουτηρικό
-**** Προπιονικό
-**** Φορμικό
-**** Γαλακτικό
-**** Αιθανόλη
-**** Άλλα
-
-** Οξικογένεση και Μεθανογένεση
-\label{sec:methanogenesis}
-
-*** Structure
-Εδώ είναι το άλλο σημαντικό κομμάτι της εργασίας. Θα μιλήσουμε για το πως γίνεται η μεθανογένεση και την θερμοδυναμική της οξικογένεσης, η οποία γίνεται enabled από συντροφικό μεταβολισμό. Θα έχει πολύ microbial community interactions, θερμοδυναμική της μετατροπής της κάθε ένωσης σε μεθάνιο, σύγκριση IHT με DIET και κινητική ανάλυση παραγωγής μεθανίου με Gompertz
+#+INCLUDE: "./acetogenesis_methanogenesis.org" :minlevel 2
 
 * Πειραματικό Μέρος
 ** Υλικά και Μεθόδοι
