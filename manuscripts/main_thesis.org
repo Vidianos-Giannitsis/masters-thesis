@@ -58,6 +58,8 @@
 \newacronym{diet}{DIET}{direct interspecies electron transfer}
 \newacronym{tvfa}{tVFAs}{συνολικά πτητικά λιπαρά οξέα}
 \newacronym{bmp}{BMP}{βιοχημικό δυναμικό μεθανίου}
+\newacronym{kel}{ΚΕΛ}{κέντρο επεξεργασίας λυμάτων}
+\newacronym{ss}{SS}{αιωρούμενα στερεά}
 
 #+options: toc:nil title:nil author:nil date:nil
 #+LATEX_HEADER: \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
@@ -134,8 +136,7 @@
 #+INCLUDE: "./acetogenesis_methanogenesis.org" :minlevel 2
 
 * Πειραματικό Μέρος
-** Υλικά και Μεθόδοι
-\label{sec:materials_methods}
+#+INCLUDE: "./experimental.org" :minlevel 2
 
 ** Ανάλυση Αποτελεσμάτων
 \label{sec:result_analysis}
