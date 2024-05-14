@@ -60,6 +60,7 @@
 \newacronym{bmp}{BMP}{βιοχημικό δυναμικό μεθανίου}
 \newacronym{kel}{ΚΕΛ}{κέντρο επεξεργασίας λυμάτων}
 \newacronym{ss}{SS}{αιωρούμενα στερεά}
+\newacronym{hplc}{HPLC}{υγρή χρωματογραφία υψηλής απόδοσης}
 
 #+options: toc:nil title:nil author:nil date:nil
 #+LATEX_HEADER: \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
