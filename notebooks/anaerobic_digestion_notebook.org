@@ -6551,6 +6551,7 @@ ls -mQ ../bmp_pictures/ORCA/
 
 [[../plots/BMPs/Orca Hydrolysate/specific_methane_kinetics_orca_p3_s3_hour.png]]
 
+** Update All ORCA
 *update_orca_tests*
 #+NAME: update_orca_tests
 #+BEGIN_SRC julia :noweb no-export
@@ -6665,7 +6666,7 @@ ls -mQ ../bmp_pictures/ORCA/
 [[../plots/BMPs/methane_orca_s2_comp.svg]]
 
 *** Sludge 3
-Ξεκινάμε με την 2η λάσπη (Ριτσώνα)
+Πειράματα με την τρίτη λάσπη (κοκκώδης λάσπη tasty).
 
 #+NAME: comp_methane_plot_s3_orca
 #+BEGIN_SRC julia :noweb no-export
@@ -6689,3 +6690,70 @@ ls -mQ ../bmp_pictures/ORCA/
 [[../plots/BMPs/methane_orca_s3_comp.svg]]
 
 Ένα πολύ καλό συμπέρασμα που βγαίνει από τα 2 αυτά διαγράμματα είναι πως κατά την κλιμάκωση της διεργασίας, διατηρήθηκε η τάση που υπήρχε στα εργαστηριακά πειράματα, δηλαδή το υδρόλυμα με 2 ml ξεκινάει ως το πιο γρήγορο με μικρότερο χρόνο καθυστέρησης, αλλά σε κάποια χρονική στιγμή, το 1 ml να το ξεπερνάει και να καταλήγει ως το επικρατέστερο πείραμα. Αυτό φαίνεται ξεκάθαρα στη λάσπη tasty, αλλά σε μικρότερο βαθμό υπάρχει ως φαινόμενο και στην λάσπη της Ριτσώνας.
+
+*** Poster Plot
+Για το πόστερ της εργασίας που θα χρησιμοποιήσουμε για το συνέδριο, θέλω ένα λίγο διαφορετικό συνδυαστικό διάγραμμα. Σε αυτό θα υπάρχει ένα layout με side-by-side τα αποτελέσματα lab και pilot scale της 2ης λάσπης (της μόνης που έχουμε και τα 2) και από κάτω ένα κοινό legend μιάς και μπορεί να είναι κοινό. Για καλύτερο έλεγχο του layout θα χρησιμοποιήσω το Makie, το οποίο θεωρώ καλύτερο για τέτοια.
+
+#+NAME: poster_plots
+#+BEGIN_SRC julia :noweb no-export
+
+  using CairoMakie
+  colors = ["#009AFA", "#E36F47", "#3EA44E", "#C371D2", "#AC8E18", "#009AFA", "#E36F47", "#3EA44E", "#C371D2", "#AC8E18",]
+
+  post_fig = Figure(size = (1350, 900))
+  lab_ax = Axis(post_fig[1,1],
+		title = "Lab Scale Hydrolysates",
+		xlabel = "Time (hour)",
+		ylabel = "Cumulative Methane Volume (mL)", titlesize = 36,
+		xlabelsize = 28, ylabelsize = 28,
+		xticklabelsize = 28, yticklabelsize = 28,
+		yticks = [0, 5, 10, 15, 20, 25, 30, 35])
+
+  <<hydrolysate_0_s2_r1>>
+  hydro_0_s = Makie.scatter!(lab_ax, exp_hour, cumsum(exp_meth_vol), markersize = 7, color = colors[1])
+  hydro_0_p = Makie.lines!(lab_ax, exp_hour, gompertz_bmp(exp_hour, model_hydro_0_hour[2:4]), color = colors[1])
+
+  <<hydrolysate_1_s2_r1>>
+  hydro_1_s = Makie.scatter!(lab_ax, exp_hour, cumsum(exp_meth_vol), markersize = 7, color = colors[2])
+  hydro_1_p = Makie.lines!(lab_ax, exp_hour, gompertz_bmp(exp_hour, model_hydro_1_hour[2:4]), color = colors[2])
+
+  <<hydrolysate_2_s2_r1>>
+  hydro_2_s = Makie.scatter!(lab_ax, exp_hour, cumsum(exp_meth_vol), markersize = 7, color = colors[3])
+  hydro_2_p = Makie.lines!(lab_ax, exp_hour, gompertz_bmp(exp_hour, model_hydro_2_hour[2:4]), color = colors[3])
+
+  <<hydrolysate_4_s2_r1>>
+  hydro_4_s = Makie.scatter!(lab_ax, exp_hour, cumsum(exp_meth_vol), markersize = 7, color = colors[4])
+  hydro_4_p = Makie.lines!(lab_ax, exp_hour, gompertz_bmp(exp_hour, model_hydro_4_hour[2:4]), color = colors[4])
+
+  <<untreated_fw_s2_r1>>
+  fw_s = Makie.scatter!(lab_ax, exp_hour, cumsum(exp_meth_vol), markersize = 7, color = colors[5])
+  fw_p = Makie.lines!(lab_ax, exp_hour, gompertz_bmp(exp_hour, model_hydro_fw_hour[2:4]), color = colors[5])
+
+  pilot_ax = Axis(post_fig[1,2:3],
+		  title = "Pilot Scale Hydrolysates",
+		  xlabel = "Time (hour)",
+		  ylabel = "Cumulative Methane Volume (mL)", titlesize = 36,
+		  xlabelsize = 28, ylabelsize = 28,
+		  xticklabelsize = 28, yticklabelsize = 28,
+		  yticks = [0, 5, 10, 15, 20, 25])
+
+  <<hydrolysate_orca_p1_s2>>
+  orca_1_s = Makie.scatter!(pilot_ax, exp_hour, cumsum(exp_meth_vol), markersize = 7, color = colors[2])
+  orca_1_p = Makie.lines!(pilot_ax, exp_hour, gompertz_bmp(exp_hour, model_hydro_p1_s2_hour[2:4]), color = colors[2])
+
+  <<hydrolysate_orca_p3_s2>>
+  orca_3_s = Makie.scatter!(pilot_ax, exp_hour, cumsum(exp_meth_vol), markersize = 7, color = colors[3])
+  orca_3_p = Makie.lines!(pilot_ax, exp_hour, gompertz_bmp(exp_hour, model_hydro_p3_s2_hour[2:4]), color = colors[3])
+
+  scatter_names = ["Hydrolysate (0 L mix) Exp", "Hydrolysate (0.005 L mix/kg FW) Exp", "Hydrolysate (0.01 L mix/kg FW) Exp", "Hydrolysate (0.02 L mix/kg FW) Exp", "Untreated FW Exp"]
+  plot_names = ["Hydrolysate (0 L mix) Theoretical with R^2 = "*string(model_hydro_0_hour[5]), "Hydrolysate (0.005 L mix/kg FW) Theoretical\n Lab-Scale R^2 = "*string(model_hydro_1_hour[5])*", Pilot-Scale R^2 = "*string(model_hydro_p1_s2_hour[5]), "Hydrolysate (0.01 L mix/kg FW) Theoretical\n Lab-Scale R^2 = "*string(model_hydro_2_hour[5])*", Pilot-Scale R^2 = "*string(model_hydro_p3_s2_hour[5]), "Hydrolysate (0.02 L mix/kg FW) Theoretical\n with R^2 = "*string(model_hydro_4_hour[5]), "Untreated FW Theoretical with R^2 = "*string(model_hydro_fw_hour[5])]
+
+  Legend(post_fig[2, 1], [hydro_0_s, hydro_1_s, hydro_2_s, hydro_4_s, fw_s], scatter_names, labelsize = 28)
+  Legend(post_fig[2, 2:3], [hydro_0_p, hydro_1_p, hydro_2_p, hydro_4_p, fw_p], plot_names, labelsize = 28)
+
+  save(plotsdir("BMPs", "poster_bmp.svg"), post_fig)
+
+#+END_SRC
+
+#+RESULTS: poster_plots
+: CairoMakie.Screen{SVG}

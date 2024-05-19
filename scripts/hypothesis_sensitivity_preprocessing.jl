@@ -68,7 +68,7 @@ eth = prod[4,:]
 using CairoMakie
 colors = Makie.wong_colors()
 
-xtick = ["0", "1", "2", "4", "8"]
+xtick = ["0", "0.005", "0.01", "0.02", "0.04"]
 plot_label = ["Lactate", "Acetate", "Propionate", "Ethanol"]
 xdata = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
 grp = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]
@@ -105,13 +105,13 @@ bar_l = ["", "", "", "35 C", "", "", "", "35 C", "", "", "", "35 C", "", "", "",
 fig_comp = Figure(size = (900, 600))
 ax_comp = Axis(fig_comp[1,1], xticks = (1:5, xtick),
 	       title = "Products of acidogenic fermentation",
-	       xlabel = "Mix Amount (ml)",
-	       ylabel = "Products (g/L)", titlesize = 22,
-	       xlabelsize = 18, ylabelsize = 18,
-	       xticksize = 16.0, yticksize = 16.0)
-prod_comp = barplot!(ax_comp, xdata_complete, prod_plot, stack = grp1, dodge = grp2, color = colors[grp1], bar_labels = bar_l, label_size = 16)
+	       xlabel = "Mix Amount (L/kg FW)",
+	       ylabel = "Products (g/L)", titlesize = 36,
+	       xlabelsize = 28, ylabelsize = 28,
+	       xticklabelsize = 28, yticklabelsize = 28)
+prod_comp = barplot!(ax_comp, xdata_complete, prod_plot, stack = grp1, dodge = grp2, color = colors[grp1], bar_labels = bar_l, label_size = 18)
 elements = [PolyElement(polycolor = colors[i]) for i in 1:length(plot_label)]
-Legend(fig_comp[1,2], elements, plot_label, "Products: ", labelsize = 20, titlesize = 20)
+Legend(fig_comp[1,2], elements, plot_label, "Products: ", labelsize = 32, titlesize = 32)
 save(plotsdir("35_40_comp", "final_products.svg"), fig_comp)
 
 prod45 = select(df45_1, 1, 5:8)
