@@ -1,11 +1,9 @@
-prefix=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env
-exec_prefix=${prefix}
-libdir=${exec_prefix}/lib
-includedir=${prefix}/include
+libdir=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env/lib
+includedir=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env/include
 
 Name: OpenSSL-libssl
 Description: Secure Sockets Layer and cryptography libraries
-Version: 3.2.0
+Version: 3.3.0
 Requires.private: libcrypto
 Libs: -L${libdir} -lssl
 Cflags: -I${includedir}

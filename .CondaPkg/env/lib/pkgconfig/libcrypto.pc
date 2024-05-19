@@ -1,13 +1,11 @@
-prefix=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env
-exec_prefix=${prefix}
-libdir=${exec_prefix}/lib
-includedir=${prefix}/include
-enginesdir=${libdir}/engines-3
-modulesdir=${libdir}/ossl-modules
+libdir=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env/lib
+includedir=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env/include
+enginesdir=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env/lib/engines-3
+modulesdir=/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/.CondaPkg/env/lib/ossl-modules
 
 Name: OpenSSL-libcrypto
 Description: OpenSSL cryptography library
-Version: 3.2.0
+Version: 3.3.0
 Libs: -L${libdir} -lcrypto
-Libs.private: -ldl -pthread 
+Libs.private: -ldl -pthread
 Cflags: -I${includedir}
