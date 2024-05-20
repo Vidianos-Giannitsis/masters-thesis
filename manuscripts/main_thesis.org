@@ -5,8 +5,9 @@
 \renewcommand{\figurename}{Σχήμα}
 \renewcommand{\chaptername}{Κεφάλαιο}
 \renewcommand{\chapterautorefname}{Κεφάλαιο}
+\renewcommand{\sectionautorefname}{Ενότητα}
 \renewcommand{\partname}{Μέρος}
-\renewcommand{\listfigurename}{Περιεχόμενα Διαγραμμάτων: }
+\renewcommand{\listfigurename}{Περιεχόμενα Σχημάτων: }
 \renewcommand{\listtablename}{Περιεχόμενα Πινάκων: }
 \renewcommand\listingscaption{Κώδικας}
 #+LATEX_CLASS: report
@@ -58,6 +59,7 @@
 \newacronym{diet}{DIET}{direct interspecies electron transfer}
 \newacronym{tvfa}{tVFAs}{συνολικά πτητικά λιπαρά οξέα}
 \newacronym{bmp}{BMP}{βιοχημικό δυναμικό μεθανίου}
+\newacronym{sma}{SMA}{ειδική μεθανογόνος δραστικότητα της λάσπης}
 \newacronym{kel}{ΚΕΛ}{κέντρο επεξεργασίας λυμάτων}
 \newacronym{ss}{SS}{αιωρούμενα στερεά}
 \newacronym{hplc}{HPLC}{υγρή χρωματογραφία υψηλής απόδοσης}
