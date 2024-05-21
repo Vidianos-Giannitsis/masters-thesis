@@ -62,6 +62,8 @@
 \newacronym{sma}{SMA}{ειδική μεθανογόνος δραστικότητα της λάσπης}
 \newacronym{kel}{ΚΕΛ}{κέντρο επεξεργασίας λυμάτων}
 \newacronym{ss}{SS}{αιωρούμενα στερεά}
+\newacronym{tss}{TSS}{ολικά αιωρούμενα στερεά}
+\newacronym{vss}{VSS}{πτητικά αιωρούμενα στερεά}
 \newacronym{hplc}{HPLC}{υγρή χρωματογραφία υψηλής απόδοσης}
 \newacronym{si}{S/I}{υποστρώματος προς εμβόλιο}
 
@@ -141,9 +143,6 @@
 
 * Πειραματικό Μέρος
 #+INCLUDE: "./experimental.org" :minlevel 2
-
-** Ανάλυση Αποτελεσμάτων
-\label{sec:result_analysis}
 
 ** Συζήτηση Αποτελεσμάτων
 \label{sec:result_discussion}
