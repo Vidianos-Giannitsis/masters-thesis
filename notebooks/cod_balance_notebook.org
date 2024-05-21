@@ -356,6 +356,16 @@
   cod_plot = plot(cod_1_plot, cod_2_plot, layout = (2,1), size = (900, 600))
   savefig(cod_plot, get_plot_name("cod", date, plot_type))
 
+  cod_meas_plot_1 = scatter(t1, cod_1_meas, xlabel = "Time (h)", ylabel = "COD (g/l)",
+			    title = "Sample 1", markersize = 4,
+			    markercolor = "#009AFA", legend = false)
+  plot!(t1, cod_1_meas, linecolor = "#009AFA")
+  cod_meas_plot_2 = scatter(t2, cod_2_meas, xlabel = "Time (h)", ylabel = "COD (g/l)",
+			    title = "Sample 2", markersize = 4,
+			    markercolor = "#E36F47", legend = false)
+  plot!(t2, cod_2_meas, linecolor = "#E36F47")
+  cod_meas_plot = plot(cod_meas_plot_1, cod_meas_plot_2, size = (900, 600), left_margin = 3Plots.mm, plot_title = "COD Measurements")
+  savefig(cod_meas_plot, get_plot_name("cod", date, "scatter"))
 #+END_SRC
 
 #+RESULTS: cod_balance_plots_23_10

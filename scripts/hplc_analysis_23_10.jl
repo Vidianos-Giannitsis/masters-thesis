@@ -49,7 +49,8 @@ savefig(eth_scatter, get_plot_name("ethanol", date, plot_type))
 
 scatter_final = plot(suc_scatter, gluc_scatter, fruc_scatter,
 			 lact_scatter, ac_scatter, prop_scatter,
-			 eth_scatter, layout = 9, size = (1350, 900))
+		     eth_scatter, layout = 9, size = (1350, 900),
+		     left_margin = 5Plots.mm)
 savefig(scatter_final, get_plot_name("final", date, plot_type))
 
 
@@ -106,5 +107,5 @@ scatter!(t2, df2310_2_prod, markersize = 6, markercolor = "#E36F47", label = "(2
 savefig(prod_conc_2310, get_plot_name("product_conc", date, plot_type))
 
 final_plot_2310 = plot(sugars_conc_2310, prod_conc_2310, total_conc_2310,
-		       size = (1200, 800))
+		       size = (1200, 800), left_margin = 5Plots.mm)
 savefig(final_plot_2310, get_plot_name("total_plots", date, plot_type))

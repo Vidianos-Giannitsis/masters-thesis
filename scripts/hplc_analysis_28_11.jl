@@ -61,7 +61,7 @@ savefig(pH_scatter, get_plot_name("pH", date, plot_type))
 scatter_final = plot(suc_scatter, gluc_scatter, fruc_scatter,
 			 lact_scatter, ac_scatter, prop_scatter,
 			 eth_scatter, pH_scatter,
-			 layout = 9, size = (1350, 900))
+			 layout = 9, size = (1350, 900), left_margin = 5Plots.mm)
 savefig(scatter_final, get_plot_name("final", date, plot_type))
 
 plot_type = "scatter"
@@ -218,5 +218,6 @@ scatter!(t, [df0_prod df1_prod df2_prod df4_prod df8_prod], markersize = 6, labe
 	 markercolor = colors)
 savefig(prod_conc, get_plot_name("product_conc", date, plot_type))
 
-final_plot = plot(sugars_conc, prod_conc, total_conc, size = (1200, 800))
+final_plot = plot(sugars_conc, prod_conc, total_conc, size = (1200, 800),
+		  left_margin = 5Plots.mm)
 savefig(final_plot, get_plot_name("total_plots", date, plot_type))

@@ -207,13 +207,12 @@
   scatter_final = plot(suc_scatter, gluc_scatter, fruc_scatter,
 			   lact_scatter, ac_scatter, prop_scatter,
 			   eth_scatter, pH_scatter,
-			   layout = 9, size = (1350, 900))
+			   layout = 9, size = (1350, 900), left_margin = 5Plots.mm)
   savefig(scatter_final, get_plot_name("final", date, plot_type))
 
 #+END_SRC
 
 #+RESULTS: scatter_plots
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/28_11/final_scatter_28_11.png"
 
 ** Scatter ανά δείγμα
 Ένας εναλλακτικός τρόπος να δείξουμε τα δεδομένα όμως είναι όλες οι ενώσεις κάθε δείγματος μαζί αντί για όλα τα δείγματα μαζί για κάθε ένωση, έχοντας δηλαδή ένα διάγραμμα ανά ποσότητα mix και όλες τις ενώσεις ως διαφορετικά χρώματα σε αυτό.
@@ -303,7 +302,8 @@
 
   scatter_final = plot(suc_scatter, gluc_scatter, fruc_scatter,
 			   lact_scatter, ac_scatter, prop_scatter,
-			   eth_scatter, layout = 9, size = (1350, 900))
+		       eth_scatter, layout = 9, size = (1350, 900),
+		       left_margin = 5Plots.mm)
   savefig(scatter_final, get_plot_name("final", date, plot_type))
 
 #+END_SRC
@@ -815,13 +815,13 @@
 	   markercolor = colors)
   savefig(prod_conc, get_plot_name("product_conc", date, plot_type))
 
-  final_plot = plot(sugars_conc, prod_conc, total_conc, size = (1200, 800))
+  final_plot = plot(sugars_conc, prod_conc, total_conc, size = (1200, 800),
+		    left_margin = 5Plots.mm)
   savefig(final_plot, get_plot_name("total_plots", date, plot_type))
 
 #+END_SRC
 
 #+RESULTS: cumulative_plots
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/10_11/total_plots_scatter_10_11.png"
 
 Αντίστοιχα, βάζουμε το code block που φτιάχνει τα plots για το πείραμα στις 23/10. Καθώς μπορεί να μην έχει την σωστή τιμή το date variable, θα γίνει updated για τα plots αυτά (αυτό είναι κυρίως για το interactivity του notebook, στο tangled source σίγουρα θα είναι σωστό το date).
 
@@ -865,7 +865,7 @@
   savefig(prod_conc_2310, get_plot_name("product_conc", date, plot_type))
 
   final_plot_2310 = plot(sugars_conc_2310, prod_conc_2310, total_conc_2310,
-			 size = (1200, 800))
+			 size = (1200, 800), left_margin = 5Plots.mm)
   savefig(final_plot_2310, get_plot_name("total_plots", date, plot_type))
 
 #+END_SRC
