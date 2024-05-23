@@ -2225,7 +2225,7 @@ ls -mQ ../bmp_pictures/ORCA/
 | Reactor 1    |               12.334 |           0.005 |      0.0 |     0.933 |
 | Reactor 2    |                7.471 |           0.003 |      0.0 |     0.986 |
 | Reactor 4    |                6.418 |           0.003 |      0.0 |     0.976 |
-| FW 1        |                2.369 |           0.001 |      0.0 |     0.982 |
+| FW 1         |                2.369 |           0.001 |      0.0 |     0.982 |
 
 #+NAME: sma_hydro_s1_r1
 #+BEGIN_SRC julia :noweb no-export

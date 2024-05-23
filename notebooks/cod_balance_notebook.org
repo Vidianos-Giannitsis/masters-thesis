@@ -202,6 +202,13 @@
   cod_plot = plot(cod0_plot, cod72_plot, layout = (2,1), size = (900, 600))
   savefig(cod_plot, get_plot_name("cod", date, plot_type))
 
+  cod_groupedbar = groupedbar([0, 1, 2, 3, 4], [cod0_meas cod72_meas],
+			      xlabel = "Amount of mix (mL)",
+			      ylabel = "COD (g/l)", label = ["0h" "72h"],
+			      xticks = (0:4, mix_amount),
+			      title = "COD during Hydrolysis")
+  savefig(cod_groupedbar, get_plot_name("cod", date, "groupedbar"))
+
   vfa_plot = groupedbar([0, 1, 2, 3, 4],
 			[VFA_vec[1] VFA_vec[2] VFA_vec[3] VFA_vec[4]],
 			bar_position = :stack, xticks = (0:4, mix_amount),
