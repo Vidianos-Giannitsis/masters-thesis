@@ -66,6 +66,7 @@
 \newacronym{vss}{VSS}{πτητικά αιωρούμενα στερεά}
 \newacronym{hplc}{HPLC}{υγρή χρωματογραφία υψηλής απόδοσης}
 \newacronym{si}{S/I}{υποστρώματος προς εμβόλιο}
+\newacronym{anova}{ANOVA}{ανάλυση διακύμανσης}
 
 #+options: toc:nil title:nil author:nil date:nil
 #+LATEX_HEADER: \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
