@@ -6745,8 +6745,8 @@ ls -mQ ../bmp_pictures/ORCA/
   orca_3_s = Makie.scatter!(pilot_ax, exp_hour, cumsum(exp_meth_vol), markersize = 7, color = colors[3])
   orca_3_p = Makie.lines!(pilot_ax, exp_hour, gompertz_bmp(exp_hour, model_hydro_p3_s2_hour[2:4]), color = colors[3])
 
-  scatter_names = ["Hydrolysate (0 L mix) Exp", "Hydrolysate (0.005 L mix/kg FW) Exp", "Hydrolysate (0.01 L mix/kg FW) Exp", "Hydrolysate (0.02 L mix/kg FW) Exp", "Untreated FW Exp"]
-  plot_names = ["Hydrolysate (0 L mix) Theoretical with R^2 = "*string(model_hydro_0_hour[5]), "Hydrolysate (0.005 L mix/kg FW) Theoretical\n Lab-Scale R^2 = "*string(model_hydro_1_hour[5])*", Pilot-Scale R^2 = "*string(model_hydro_p1_s2_hour[5]), "Hydrolysate (0.01 L mix/kg FW) Theoretical\n Lab-Scale R^2 = "*string(model_hydro_2_hour[5])*", Pilot-Scale R^2 = "*string(model_hydro_p3_s2_hour[5]), "Hydrolysate (0.02 L mix/kg FW) Theoretical\n with R^2 = "*string(model_hydro_4_hour[5]), "Untreated FW Theoretical with R^2 = "*string(model_hydro_fw_hour[5])]
+  scatter_names = ["Hydrolysate (0 L mix) Exp", "Hydrolysate (5 mL mix/kg FW) Exp", "Hydrolysate (10 mL mix/kg FW) Exp", "Hydrolysate (20 mL mix/kg FW) Exp", "Untreated FW Exp"]
+  plot_names = ["Hydrolysate (0 L mix) Theoretical with R^2 = "*string(model_hydro_0_hour[5]), "Hydrolysate (5 mL mix/kg FW) Theoretical\n Lab-Scale R^2 = "*string(model_hydro_1_hour[5])*", Pilot-Scale R^2 = "*string(model_hydro_p1_s2_hour[5]), "Hydrolysate (10 mL mix/kg FW) Theoretical\n Lab-Scale R^2 = "*string(model_hydro_2_hour[5])*", Pilot-Scale R^2 = "*string(model_hydro_p3_s2_hour[5]), "Hydrolysate (20 mL mix/kg FW) Theoretical\n with R^2 = "*string(model_hydro_4_hour[5]), "Untreated FW Theoretical with R^2 = "*string(model_hydro_fw_hour[5])]
 
   Legend(post_fig[2, 1], [hydro_0_s, hydro_1_s, hydro_2_s, hydro_4_s, fw_s], scatter_names, labelsize = 28)
   Legend(post_fig[2, 2:3], [hydro_0_p, hydro_1_p, hydro_2_p, hydro_4_p, fw_p], plot_names, labelsize = 28)

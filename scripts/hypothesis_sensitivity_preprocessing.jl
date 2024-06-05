@@ -68,7 +68,7 @@ eth = prod[4,:]
 using CairoMakie
 colors = Makie.wong_colors()
 
-xtick = ["0", "0.005", "0.01", "0.02", "0.04"]
+xtick = ["0", "5", "10", "20", "40"]
 plot_label = ["Lactate", "Acetate", "Propionate", "Ethanol"]
 xdata = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
 grp = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]
@@ -105,7 +105,7 @@ bar_l = ["", "", "", "35 C", "", "", "", "35 C", "", "", "", "35 C", "", "", "",
 fig_comp = Figure(size = (900, 600))
 ax_comp = Axis(fig_comp[1,1], xticks = (1:5, xtick),
 	       title = "Products of acidogenic fermentation",
-	       xlabel = "Mix Amount (L/kg FW)",
+	       xlabel = "Mix Amount (mL/kg FW)",
 	       ylabel = "Products (g/L)", titlesize = 36,
 	       xlabelsize = 28, ylabelsize = 28,
 	       xticklabelsize = 28, yticklabelsize = 28)

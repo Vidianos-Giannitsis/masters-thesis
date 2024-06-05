@@ -169,7 +169,7 @@
   using CairoMakie
   colors = Makie.wong_colors()
 
-  xtick = ["0", "0.005", "0.01", "0.02", "0.04"]
+  xtick = ["0", "5", "10", "20", "40"]
   plot_label = ["Lactate", "Acetate", "Propionate", "Ethanol"]
   xdata = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
   grp = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]
@@ -206,7 +206,7 @@
   fig_comp = Figure(size = (900, 600))
   ax_comp = Axis(fig_comp[1,1], xticks = (1:5, xtick),
 		 title = "Products of acidogenic fermentation",
-		 xlabel = "Mix Amount (L/kg FW)",
+		 xlabel = "Mix Amount (mL/kg FW)",
 		 ylabel = "Products (g/L)", titlesize = 36,
 		 xlabelsize = 28, ylabelsize = 28,
 		 xticklabelsize = 28, yticklabelsize = 28)
@@ -1146,10 +1146,10 @@ To GlobalSensitivity.jl προσφέρει δύο είδη ανάλυσης ευ
 
   # Create the tornado plot
   high_tornado = bar(xrange_high, sorted_sens_high, color = colors_high,
-		       xlabel = "Sensitivity", yticks = (xrange_high, sorted_names_high),
-		       orientation = :h, legend = false,
-		       title = "Tornado Diagram for Mix Amounts 2-8 ml",
-		       size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+		     xlabel = "Sensitivity", yticks = (xrange_high, sorted_names_high),
+		     orientation = :h, legend = false,
+		     title = "Tornado Diagram for Mix Amounts 2-8 ml",
+		     size = (900, 600), tickfontsize = 12, guidefontsize = 14)
   savefig(high_tornado, plotsdir("sensitivity", "tornado_high.png"))
 
   # We also want to do a tornado plot of the sensitivity analysis
@@ -1175,12 +1175,14 @@ To GlobalSensitivity.jl προσφέρει δύο είδη ανάλυσης ευ
 
   # Create the tornado plot
   temp_tornado = bar(xrange_temp, sorted_sens_temp, color = colors_temp,
-		       xlabel = "Sensitivity to Mix Amount",
-		       yticks = (xrange_temp, sorted_names_temp),
-		       orientation = :h, legend = false,
-		       title = "Tornado Diagram for Discrete Temperature Ranges",
-		       size = (900, 600), tickfontsize = 12, guidefontsize = 14)
-  savefig(temp_tornado, plotsdir("sensitivity", "temperature_tornado.png"))
+		     xlabel = "Sensitivity to Mix Amount",
+		     yticks = (xrange_temp, sorted_names_temp),
+		     orientation = :h, legend = false,
+		     title = "Sensitivity Analysis",
+		     size = (800, 900), tickfontsize = 20,
+		     xlabelfontsize = 20, titlefontsize = 32,
+		     left_margin = 8Plots.mm)
+  savefig(temp_tornado, plotsdir("sensitivity", "temperature_tornado.svg"))
 #+END_SRC
 
 #+RESULTS: tornado_visualization

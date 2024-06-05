@@ -239,10 +239,10 @@ colors_high = ifelse.(sorted_sens_high .< 0, "#440154", "#DCE319")
 
 # Create the tornado plot
 high_tornado = bar(xrange_high, sorted_sens_high, color = colors_high,
-		     xlabel = "Sensitivity", yticks = (xrange_high, sorted_names_high),
-		     orientation = :h, legend = false,
-		     title = "Tornado Diagram for Mix Amounts 2-8 ml",
-		     size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+		   xlabel = "Sensitivity", yticks = (xrange_high, sorted_names_high),
+		   orientation = :h, legend = false,
+		   title = "Tornado Diagram for Mix Amounts 2-8 ml",
+		   size = (900, 600), tickfontsize = 12, guidefontsize = 14)
 savefig(high_tornado, plotsdir("sensitivity", "tornado_high.png"))
 
 # We also want to do a tornado plot of the sensitivity analysis
@@ -268,9 +268,11 @@ colors_temp = ifelse.(sorted_sens_temp .< 0, "#440154", "#DCE319")
 
 # Create the tornado plot
 temp_tornado = bar(xrange_temp, sorted_sens_temp, color = colors_temp,
-		     xlabel = "Sensitivity to Mix Amount",
-		     yticks = (xrange_temp, sorted_names_temp),
-		     orientation = :h, legend = false,
-		     title = "Tornado Diagram for Discrete Temperature Ranges",
-		     size = (900, 600), tickfontsize = 12, guidefontsize = 14)
-savefig(temp_tornado, plotsdir("sensitivity", "temperature_tornado.png"))
+		   xlabel = "Sensitivity to Mix Amount",
+		   yticks = (xrange_temp, sorted_names_temp),
+		   orientation = :h, legend = false,
+		   title = "Sensitivity Analysis",
+		   size = (800, 900), tickfontsize = 20,
+		   xlabelfontsize = 20, titlefontsize = 32,
+		   left_margin = 8Plots.mm)
+savefig(temp_tornado, plotsdir("sensitivity", "temperature_tornado.svg"))
