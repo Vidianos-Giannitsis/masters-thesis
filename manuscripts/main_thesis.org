@@ -145,8 +145,7 @@
 * Πειραματικό Μέρος
 #+INCLUDE: "./experimental.org" :minlevel 2
 
-** Συζήτηση Αποτελεσμάτων
-\label{sec:result_discussion}
+#+INCLUDE: "./result_discussion.org" :minlevel 2
 
 ** Συμπεράσματα και Προτάσεις
 \label{sec:conclusion}
