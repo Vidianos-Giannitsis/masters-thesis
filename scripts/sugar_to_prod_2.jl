@@ -128,6 +128,8 @@ sug_to_prod_2310_1 = df2310_1_prod./(first(df2310_1_sugars) - last(df2310_1_suga
 sug_to_prod_2310_2 = df2310_2_prod./(first(df2310_2_sugars) - last(df2310_2_sugars))
 Δprod_2310_2 = (last(sug_to_prod_2310_2) - first(sug_to_prod_2310_2))*100
 
+Δprod_2310 = mean([Δprod_2310_1, Δprod_2310_2])
+
 Δprod_plot_10_11 = scatter([0, 1, 2, 3, 4], [Δprod_10_11],
 		     xticks = (0:4, mix_amount), xlabel = "Amount of mix (ml)",
 		     ylabel = "Product Yield (%)", markersize = 6,
@@ -154,6 +156,6 @@ savefig(Δprod_comp_plot_1, plotsdir("35_40_comp/Δprod.png"))
 		     ylabel = "Product Yield (%)", markersize = 6,
 		     title = "Yield of sugars to products",
 		     label = ["35 C" "40 C"])
-scatter!([2], [Δprod_2310_1 Δprod_2310_2], markersize = 6,
-	 label = ["45 C (1)" "45 C (2)"])
+scatter!([2], [Δprod_2310], markersize = 6,
+	 label = "45 C")
 savefig(Δprod_comp_plot_2, plotsdir("35_40_45_comp/Δprod.png"))

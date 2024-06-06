@@ -199,8 +199,9 @@ colors_total = ifelse.(sorted_sens_total .< 0, "#440154", "#DCE319")
 global_tornado = bar(xrange_total, sorted_sens_total, color = colors_total,
 		     xlabel = "Sensitivity", yticks = (xrange_total, sorted_names_total),
 		     orientation = :h, legend = false,
-		     title = "Tornado Diagram for Global Sensitivity Analysis",
-		     size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+		     title = "Global Sensitivity Analysis",
+		     size = (700, 800), tickfontsize = 12, guidefontsize = 14,
+		     left_margin = 6Plots.mm, titlefontsize = 18)
 savefig(global_tornado, plotsdir("sensitivity", "global_tornado.png"))
 
 # Do this for the low mix amount domain
@@ -220,8 +221,9 @@ colors_low = ifelse.(sorted_sens_low .< 0, "#440154", "#DCE319")
 low_tornado = bar(xrange_low, sorted_sens_low, color = colors_low,
 		  xlabel = "Sensitivity", yticks = (xrange_low, sorted_names_low),
 		  orientation = :h, legend = false,
-		  title = "Tornado Diagram for Mix Amounts 0-2 ml",
-		  size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+		  title = "Sensitivity Analysis - Mix Amounts 0-2 ml",
+		  size = (700, 800), tickfontsize = 12, guidefontsize = 14,
+		  left_margin = 6Plots.mm, titlefontsize = 15)
 savefig(low_tornado, plotsdir("sensitivity", "tornado_low.png"))
 
 # And the high mix amount domain
@@ -241,8 +243,9 @@ colors_high = ifelse.(sorted_sens_high .< 0, "#440154", "#DCE319")
 high_tornado = bar(xrange_high, sorted_sens_high, color = colors_high,
 		   xlabel = "Sensitivity", yticks = (xrange_high, sorted_names_high),
 		   orientation = :h, legend = false,
-		   title = "Tornado Diagram for Mix Amounts 2-8 ml",
-		   size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+		   title = "Sensitivity Analysis - Mix Amounts 2-8 ml",
+		   size = (700, 800), tickfontsize = 12, guidefontsize = 14,
+		   left_margin = 6Plots.mm, titlefontsize = 15)
 savefig(high_tornado, plotsdir("sensitivity", "tornado_high.png"))
 
 # We also want to do a tornado plot of the sensitivity analysis
@@ -271,8 +274,18 @@ temp_tornado = bar(xrange_temp, sorted_sens_temp, color = colors_temp,
 		   xlabel = "Sensitivity to Mix Amount",
 		   yticks = (xrange_temp, sorted_names_temp),
 		   orientation = :h, legend = false,
-		   title = "Sensitivity Analysis",
-		   size = (800, 900), tickfontsize = 20,
-		   xlabelfontsize = 20, titlefontsize = 32,
-		   left_margin = 8Plots.mm)
-savefig(temp_tornado, plotsdir("sensitivity", "temperature_tornado.svg"))
+		   title = "Sensitivity Analysis - Discrete Temperature Ranges",
+		   size = (700, 800), tickfontsize = 12,
+		   left_margin = 4Plots.mm)
+savefig(temp_tornado, plotsdir("sensitivity", "temperature_tornado.png"))
+
+# Create the tornado plot
+temp_tornado_poster = bar(xrange_temp, sorted_sens_temp, color = colors_temp,
+			  xlabel = "Sensitivity to Mix Amount",
+			  yticks = (xrange_temp, sorted_names_temp),
+			  orientation = :h, legend = false,
+			  title = "Sensitivity Analysis",
+			  size = (800, 900), tickfontsize = 20,
+			  xlabelfontsize = 20, titlefontsize = 32,
+			  left_margin = 8Plots.mm)
+savefig(temp_tornado_poster, plotsdir("sensitivity", "temperature_tornado.svg"))
