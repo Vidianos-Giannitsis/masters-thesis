@@ -141,17 +141,34 @@
   tVFA_40 = [df0_40_tVFA, df1_40_tVFA, df2_40_tVFA, df4_40_tVFA, df8_40_tVFA]
   acidification_40 = tVFA_40./cod72_meas
 
-  acid_plot = groupedbar([0, 1, 2, 3, 4], [acidification_35 acidification_40],
-			 label = ["35 C" "40 C"], xlabel = "Amount of mix (ml)",
+  date = "23_10"
+  df1_45_conc = CSV.read(get_conc_csv(date, "1"), DataFrame)
+  df1_45_conc = df1_45_conc[1:19, 2:8]
+
+  df2_45_conc = CSV.read(get_conc_csv(date, "2"), DataFrame)
+  df2_45_conc = df2_45_conc[1:15, 2:8]
+
+  cod_yields = [cod_sucrose(), cod_glucose(), cod_fructose(), cod_acetate(),
+		cod_propionate(), cod_lactate(), cod_ethanol()]
+  df1_45_tVFA = [sum(Vector(df1_45_conc[i, 4:7]).*cod_yields[4:7]) for i in 1:19]
+  df2_45_tVFA = [sum(Vector(df2_45_conc[i, 4:7]).*cod_yields[4:7]) for i in 1:15]
+
+  cod_1_meas = process_cod_data("1", date; dilution = 50)./1000
+  cod_2_meas = process_cod_data("2", date; dilution = 50)./1000
+
+  acidification_45 = [0, 0, mean([df1_45_tVFA[15]/cod_1_meas[15], df2_45_tVFA[11]/cod_2_meas[11]]), 0, 0]
+
+  acid_plot = groupedbar([0, 1, 2, 3, 4], [acidification_35 acidification_40 acidification_45],
+			 label = ["35 C" "40 C" "45 C"], xlabel = "Amount of mix (ml)",
 			 ylabel = "tVFAs (gCOD-eq/L)/sCOD (g/L)",
 			 title = "Acidification Rate", xticks = (0:4, mix_amount),
 			 legend = :bottom)
-  savefig(acid_plot, plotsdir("35_40_comp", "acidification_comp.png"))
+  savefig(acid_plot, plotsdir("35_40_45_comp", "acidification_comp.png"))
 
 #+END_SRC
 
 #+RESULTS: acidification
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/35_40_comp/acidification_comp.png"
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/35_40_45_comp/acidification_comp.png"
 
 [[../plots/35_40_comp/acidification_comp.png]]
 
@@ -401,3 +418,127 @@
 #+CAPTION: Σύγκριση της μέτρησης COD άμεσα ή μέσω της HPLC - Πείραμα 23/10
 #+ATTR_ORG: :width 700px
 [[/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/23_10/cod_comparison_23_10.png]]
+
+* Πείραμα 06_06
+Στο πείραμα αυτό έγιναν οι αναλύσεις για το αρχικό FW, τα υδρολύματα της ORCA και τέλος του υδρολύματος που χρησιμοποιήθηκε ως feedstock για την αναερόβια χώνευση.
+** HPLC Data
+ Αρχικά διαβάζουμε τα δεδομένα της HPLC και κάνουμε τις μετατροπές σε COD-eq.
+ 
+*hplc_data_processing_06_06*
+#+NAME: hplc_data_processing_06_06
+#+BEGIN_SRC julia
+
+  date = "06_06"
+  df0606_conc = CSV.read(get_conc_csv(date, "1"), DataFrame)
+  df1_conc = df0606_conc[:, 2:end]
+  fw_df = df1_conc[1, :]
+  fw_conc = Vector(fw_df)
+
+  orca_df = df0606_conc[2:3, :]
+  orca_conc = Matrix(orca_df[:, 2:end])
+
+  hydro_40 = df0606_conc[4:11, :]
+
+  cod_yields = [cod_sucrose(), cod_glucose(), cod_fructose(), cod_acetate(),
+		cod_propionate(), cod_lactate(), cod_ethanol()]
+
+  cod_1_theor = [sum(Vector(df1_conc[i, :]).*cod_yields) for i in 1:11]
+
+#+END_SRC
+
+#+RESULTS: hplc_data_processing_23_10
+#+begin_example
+15-element Vector{Float64}:
+ 7.015000272531603
+ 5.846938417433187
+ 7.6399174100207325
+ 7.997976681370974
+ 6.6871703605535835
+ 6.395296146167445
+ 6.2604839683030225
+ 5.72184891837552
+ 6.3462461803153385
+ 4.939608588161173
+ 5.482878203834697
+ 6.226055413739973
+ 6.19398460285115
+ 5.421508167019161
+ 5.811939563034854
+#+end_example
+
+** COD Data
+Έπειτα, κάνουμε την επεξεργασία του COD data, το οποίο για αυτό το πείραμα δεν υπήρχε διαθέσιμο σε συγκέντρωση αλλά μόνο σε απορρόφηση. Όμως ο κώδικας είναι πολύ compact λόγω του helper function ~process_cod_data~ που κάνει την μετατροπή μόνο του.
+
+*cod_data_processing_23_10*
+#+NAME: cod_data_processing_23_10
+#+BEGIN_SRC julia
+
+  cod_1_meas = process_cod_data("1", date; dilution = 50)./1000
+  cod_1_error = cod_1_meas - cod_1_theor
+  cod_2_meas = process_cod_data("2", date; dilution = 50)./1000
+  cod_2_error = cod_2_meas - cod_2_theor
+
+#+END_SRC
+
+** Plotting
+Τέλος, μπορούν να γίνουν τα plots για αυτό το πείραμα που λόγω του πλήθους των στοιχείων έχει νόημα μόνο να είναι σε scatter plot.
+
+*cod_balance_plots_23_10*
+#+NAME: cod_balance_plots_23_10
+#+BEGIN_SRC julia
+
+  label = ["COD Measurement" "HPLC Measurement"]
+  plot_type = "comparison"
+
+  cod_1_plot = scatter(t1, [cod_1_meas cod_1_theor], label=label,
+		   xlabel = "Time (h)", ylabel = "COD (g/l)",
+		   title = "Sample 1", markersize = 6)
+  savefig(cod_1_plot, get_plot_name("cod_1", date, plot_type))
+
+  cod_2_plot = scatter(t2, [cod_2_meas cod_2_theor], label=label,
+		   xlabel = "Time (h)", ylabel = "COD (g/l)",
+		   title = "Sample 2", markersize = 6)
+  savefig(cod_2_plot, get_plot_name("cod_2", date, plot_type))
+
+  cod_plot = plot(cod_1_plot, cod_2_plot, layout = (2,1), size = (900, 600))
+  savefig(cod_plot, get_plot_name("cod", date, plot_type))
+
+  cod_meas_plot_1 = scatter(t1, cod_1_meas, xlabel = "Time (h)", ylabel = "COD (g/l)",
+			    title = "Sample 1", markersize = 4,
+			    markercolor = "#009AFA", legend = false)
+  plot!(t1, cod_1_meas, linecolor = "#009AFA")
+  cod_meas_plot_2 = scatter(t2, cod_2_meas, xlabel = "Time (h)", ylabel = "COD (g/l)",
+			    title = "Sample 2", markersize = 4,
+			    markercolor = "#E36F47", legend = false)
+  plot!(t2, cod_2_meas, linecolor = "#E36F47")
+  cod_meas_plot = plot(cod_meas_plot_1, cod_meas_plot_2, size = (900, 600), left_margin = 3Plots.mm, plot_title = "COD Measurements")
+  savefig(cod_meas_plot, get_plot_name("cod", date, "scatter"))
+#+END_SRC
+
+#+RESULTS: cod_balance_plots_23_10
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/23_10/cod_comparison_23_10.png"
+
+** Τελικά code blocks
+Έπειτα, βάζουμε το τελικό code block που με χρήση του noweb syntax θα κάνει tangle στα script files.
+
+#+NAME: deps_23_10
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/cod_balance_23_10.jl
+<<dependencies>>
+#+END_SRC
+
+#+NAME: cod_balance_23_10
+#+BEGIN_SRC julia :noweb no-export :tangle ../scripts/cod_balance_23_10.jl
+
+  <<hplc_data_processing_23_10>>
+  <<cod_data_processing_23_10>>
+  <<cod_balance_plots_23_10>>
+    
+#+END_SRC
+
+#+RESULTS: cod_balance_23_10
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/23_10/cod_comparison_23_10.png"
+
+#+CAPTION: Σύγκριση της μέτρησης COD άμεσα ή μέσω της HPLC - Πείραμα 23/10
+#+ATTR_ORG: :width 700px
+[[/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/23_10/cod_comparison_23_10.png]]
+

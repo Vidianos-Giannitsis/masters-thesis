@@ -152,6 +152,28 @@
  171
 #+end_example
 
+** Πείραμα 06-06
+Αυτό είναι το τελευταίο πείραμα HPLC που έγινε το οποίο είχε τα υδρολύματα της όρκας και το υδρόλυμα που χρησιμοποιήθηκε για την χώνευση. Επίσης, είχε και ένα δείγμα της διαλυτής φάσης του ανεπεξέργαστου FW για να έχουμε μία εικόνα του τι έχει. Αρχικά θα μετατραπούν τα αποτελέσματα του σε συγκεντρώσεις και μετά θα χωριστούν ανά πείραμα.
+
+*area_to_conc_06_06*
+#+NAME: area_to_conc_06_06
+#+BEGIN_SRC julia
+
+  date = "06_06"
+  df0606_conc = process_area_data2(get_area_csv(date, "1"), get_conc_csv(date, "1"))
+
+  fw_df = df0606_conc[1, 2:end]
+  fw_conc = Vector(fw_df)
+  fw_diluted = fw_conc./3
+
+  orca_df = df0606_conc[2:3, :]
+  orca_conc = Matrix(orca_df[:, 2:end])
+
+  hydro_40 = df0606_conc[4:11, :]
+#+END_SRC
+
+Εκτός από τις συγκεντρώσεις του FW, υπολογίζεται και η συγκέντρωση αυτού δια 3 για να παρατηρηθεί αν είναι αντίστοιχο των ζυμώσεων την στιγμή 0. Είναι κοντά και σε κάποιες περιπτώσεις λίγο χαμηλότερο από αυτά. Αυτό είναι αναμενόμενο επειδή μόνο και μόνο η αραίωση αυξάνει σε ένα βαθμό το διαλυτό COD του υποστρώματος, άρα αναμένεται πως κάποια σάκχαρα διαλυτοποιήθηκαν κατά την αραίωση.
+
 * Δημιουργία Scatter Plots
 Έχοντας διαβάσει τα παραπάνω δεδομένα, μπορούμε να αρχίσουμε να κάνουμε διαγράμματα. Ένα πρώτο παράδειγμα είναι scatter plots. Τα παρακάτω code blocks είναι φτιαγμένα ώστε να βασίζονται στα data frames και το variable date που διαβάστηκαν παραπάνω έτσι ώστε αν καλεστούν sequentially με κάποιο από τα παραπάνω να παραχθούν τα κατάλληλα διαγράμματα. Το helper function ~get_plot_name~ που υπάρχει στο src directory κάνει facilitate αυτή τη συμπεριφορά κάνοντας εύκολη την δημιουργία των file names από το variable date, το είδος της ένωσης και το plot type που κάνουμε. Αυτά τα blocks είναι για τα πειράματα 10 και 28 Νοεμβρίου τα οποία έχουν το ίδιο format και όποιο άλλο γίνει πιθανόν με την ίδια λογική.
 
@@ -1027,10 +1049,12 @@
 
   sug_to_prod_2310_2 = df2310_2_prod./(first(df2310_2_sugars) - last(df2310_2_sugars))
   Δprod_2310_2 = (last(sug_to_prod_2310_2) - first(sug_to_prod_2310_2))*100
+
+  Δprod_2310 = mean([Δprod_2310_1, Δprod_2310_2])
 #+END_SRC
 
 #+RESULTS: sugar_to_prod_2
-: 46.99854472977895
+: 34.728232407416534
 
 *** Plots
 *sugar_to_prod_plots_2*
@@ -1063,13 +1087,12 @@
 		       ylabel = "Product Yield (%)", markersize = 6,
 		       title = "Yield of sugars to products",
 		       label = ["35 C" "40 C"])
-  scatter!([2], [Δprod_2310_1 Δprod_2310_2], markersize = 6,
-	   label = ["45 C (1)" "45 C (2)"])
+  scatter!([2], [Δprod_2310], markersize = 6,
+	   label = "45 C")
   savefig(Δprod_comp_plot_2, plotsdir("35_40_45_comp/Δprod.png"))
 #+END_SRC
 
 #+RESULTS: sugar_to_prod_plots_2
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/35_40_45_comp/Δprod.png"
 
 #+CAPTION: Λόγος μεταβολής προιόντων προς αρχικά σάκχαρα για όλα τα πειράματα
 [[/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/35_40_45_comp/Δprod.png]]
