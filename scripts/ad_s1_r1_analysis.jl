@@ -1144,11 +1144,22 @@ file_vec = ["bandicam 2024-04-01 11-05-53-069.jpg", "bandicam 2024-04-01 11-09-3
 "bandicam 2024-04-03 13-54-03-505.jpg", "bandicam 2024-04-03 14-24-03-564.jpg",
 "bandicam 2024-04-03 14-54-49-083.jpg", "bandicam 2024-04-03 15-26-51-834.jpg",
 "bandicam 2024-04-03 16-29-08-087.jpg", "bandicam 2024-04-03 17-29-08-355.jpg",
-"bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg"
+"bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg",
+"bandicam 2024-04-03 21-29-08-363.jpg", "bandicam 2024-04-03 22-29-08-353.jpg",
+"bandicam 2024-04-03 23-29-08-747.jpg", "bandicam 2024-04-04 00-29-08-754.jpg",
+"bandicam 2024-04-04 01-29-08-762.jpg", "bandicam 2024-04-04 02-29-08-758.jpg",
+"bandicam 2024-04-04 03-29-08-766.jpg", "bandicam 2024-04-04 04-29-08-760.jpg",
+"bandicam 2024-04-04 05-29-08-770.jpg", "bandicam 2024-04-04 06-29-08-755.jpg",
+"bandicam 2024-04-04 07-29-08-753.jpg", "bandicam 2024-04-04 08-29-09-002.jpg",
+"bandicam 2024-04-04 09-29-09-269.jpg", "bandicam 2024-04-04 10-29-09-357.jpg",
+"bandicam 2024-04-04 11-29-09-380.jpg", "bandicam 2024-04-04 12-29-09-384.jpg",
+"bandicam 2024-04-04 13-29-09-383.jpg", "bandicam 2024-04-04 14-29-09-390.jpg",
+"bandicam 2024-04-04 15-29-09-398.jpg", "bandicam 2024-04-04 16-29-09-384.jpg",
+"bandicam 2024-04-04 17-29-10-236.jpg"
 ]
 
-inds = 2:49
-exp_meth_vol = [0, 0.2, 0.02, 0.02, 0.01, 0.2, 0.2, 0.5, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05, 0, 0, 0, 0, 0, 0]
+inds = 3:50
+exp_meth_vol = [0, 0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0.2, 0.1, 0.05, 0.05, 0.1, 0.1, 0.05, 0.1, 0.1, 0.1, 0.2, 0.3, 0.1, 0.1, 0.1, 0.1, 0.1, 0, 0, 0, 0, 0.2, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.3, 0.2, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0]
 meth_vol_hydro_0 = cumsum(exp_meth_vol)[end]
 
 exp_name = "hydrolysate_0_s1_r1"
@@ -1291,7 +1302,7 @@ else
 end
 
 
-p0 = [6.0, 10.0, 1.0]
+p0 = [6.0, 0.1, 1.0]
 
 gompertz_sma(t, p) = @. p[1]*exp(-exp((((p[2]*exp(1))/p[1])*(p[3] - t)) + 1))
 lb = [0.0, 0.0, 0.0]
@@ -1375,11 +1386,22 @@ file_vec = ["bandicam 2024-04-01 11-05-53-069.jpg", "bandicam 2024-04-01 11-09-3
 "bandicam 2024-04-03 13-54-03-505.jpg", "bandicam 2024-04-03 14-24-03-564.jpg",
 "bandicam 2024-04-03 14-54-49-083.jpg", "bandicam 2024-04-03 15-26-51-834.jpg",
 "bandicam 2024-04-03 16-29-08-087.jpg", "bandicam 2024-04-03 17-29-08-355.jpg",
-"bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg"
+"bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg",
+"bandicam 2024-04-03 21-29-08-363.jpg", "bandicam 2024-04-03 22-29-08-353.jpg",
+"bandicam 2024-04-03 23-29-08-747.jpg", "bandicam 2024-04-04 00-29-08-754.jpg",
+"bandicam 2024-04-04 01-29-08-762.jpg", "bandicam 2024-04-04 02-29-08-758.jpg",
+"bandicam 2024-04-04 03-29-08-766.jpg", "bandicam 2024-04-04 04-29-08-760.jpg",
+"bandicam 2024-04-04 05-29-08-770.jpg", "bandicam 2024-04-04 06-29-08-755.jpg",
+"bandicam 2024-04-04 07-29-08-753.jpg", "bandicam 2024-04-04 08-29-09-002.jpg",
+"bandicam 2024-04-04 09-29-09-269.jpg", "bandicam 2024-04-04 10-29-09-357.jpg",
+"bandicam 2024-04-04 11-29-09-380.jpg", "bandicam 2024-04-04 12-29-09-384.jpg",
+"bandicam 2024-04-04 13-29-09-383.jpg", "bandicam 2024-04-04 14-29-09-390.jpg",
+"bandicam 2024-04-04 15-29-09-398.jpg", "bandicam 2024-04-04 16-29-09-384.jpg",
+"bandicam 2024-04-04 17-29-10-236.jpg"
 ]
 
 inds = 3:49
-exp_meth_vol = [0, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0.2, 0.2, 0.2, 0.2, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.3, 0.3, 0.3, 0.1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.4, 0.6, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.2, 0.2, 0, 0, 0, 0, 0, 0]
+exp_meth_vol = [0, 0.05, 0.05, 0.1, 0.2, 0.2, 0.2, 0.2, 0.3, 0.1, 0.2, 0.2, 0.2, 0.3, 0.4, 0.4, 0.3, 0.4, 0.4, 0.3, 0.2, 0.3, 0.3, 0.3, 0.3, 0.2, 0.3, 0.3, 0.4, 0.5, 0.4, 0.3, 0.3, 0.3, 0.2, 0.2, 0.1, 0.1, 0.1, 0.05, 0.05, 0, 0, 0, 0, 0, 0]
 meth_vol_hydro_1 = cumsum(exp_meth_vol)[end]
 exp_name = "hydrolysate_1_s1_r1"
 source = "Hydrolyzed FW"
@@ -1603,11 +1625,22 @@ file_vec = ["bandicam 2024-04-01 11-05-53-069.jpg", "bandicam 2024-04-01 11-09-3
 "bandicam 2024-04-03 13-54-03-505.jpg", "bandicam 2024-04-03 14-24-03-564.jpg",
 "bandicam 2024-04-03 14-54-49-083.jpg", "bandicam 2024-04-03 15-26-51-834.jpg",
 "bandicam 2024-04-03 16-29-08-087.jpg", "bandicam 2024-04-03 17-29-08-355.jpg",
-"bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg"
+"bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg",
+"bandicam 2024-04-03 21-29-08-363.jpg", "bandicam 2024-04-03 22-29-08-353.jpg",
+"bandicam 2024-04-03 23-29-08-747.jpg", "bandicam 2024-04-04 00-29-08-754.jpg",
+"bandicam 2024-04-04 01-29-08-762.jpg", "bandicam 2024-04-04 02-29-08-758.jpg",
+"bandicam 2024-04-04 03-29-08-766.jpg", "bandicam 2024-04-04 04-29-08-760.jpg",
+"bandicam 2024-04-04 05-29-08-770.jpg", "bandicam 2024-04-04 06-29-08-755.jpg",
+"bandicam 2024-04-04 07-29-08-753.jpg", "bandicam 2024-04-04 08-29-09-002.jpg",
+"bandicam 2024-04-04 09-29-09-269.jpg", "bandicam 2024-04-04 10-29-09-357.jpg",
+"bandicam 2024-04-04 11-29-09-380.jpg", "bandicam 2024-04-04 12-29-09-384.jpg",
+"bandicam 2024-04-04 13-29-09-383.jpg", "bandicam 2024-04-04 14-29-09-390.jpg",
+"bandicam 2024-04-04 15-29-09-398.jpg", "bandicam 2024-04-04 16-29-09-384.jpg",
+"bandicam 2024-04-04 17-29-10-236.jpg"
 ]
 
 inds = 8:49
-exp_meth_vol = [0, 0.5, 0.1, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0, 0, 0, 0, 0, 0]
+exp_meth_vol = [0, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.2, 0.1, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0, 0, 0, 0, 0, 0]
 meth_vol_hydro_2 = cumsum(exp_meth_vol)[end]
 exp_name = "hydrolysate_2_s1_r1"
 source = "Hydrolyzed FW"
@@ -1831,11 +1864,22 @@ file_vec = ["bandicam 2024-04-01 11-05-53-069.jpg", "bandicam 2024-04-01 11-09-3
 "bandicam 2024-04-03 13-54-03-505.jpg", "bandicam 2024-04-03 14-24-03-564.jpg",
 "bandicam 2024-04-03 14-54-49-083.jpg", "bandicam 2024-04-03 15-26-51-834.jpg",
 "bandicam 2024-04-03 16-29-08-087.jpg", "bandicam 2024-04-03 17-29-08-355.jpg",
-"bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg"
+"bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg",
+"bandicam 2024-04-03 21-29-08-363.jpg", "bandicam 2024-04-03 22-29-08-353.jpg",
+"bandicam 2024-04-03 23-29-08-747.jpg", "bandicam 2024-04-04 00-29-08-754.jpg",
+"bandicam 2024-04-04 01-29-08-762.jpg", "bandicam 2024-04-04 02-29-08-758.jpg",
+"bandicam 2024-04-04 03-29-08-766.jpg", "bandicam 2024-04-04 04-29-08-760.jpg",
+"bandicam 2024-04-04 05-29-08-770.jpg", "bandicam 2024-04-04 06-29-08-755.jpg",
+"bandicam 2024-04-04 07-29-08-753.jpg", "bandicam 2024-04-04 08-29-09-002.jpg",
+"bandicam 2024-04-04 09-29-09-269.jpg", "bandicam 2024-04-04 10-29-09-357.jpg",
+"bandicam 2024-04-04 11-29-09-380.jpg", "bandicam 2024-04-04 12-29-09-384.jpg",
+"bandicam 2024-04-04 13-29-09-383.jpg", "bandicam 2024-04-04 14-29-09-390.jpg",
+"bandicam 2024-04-04 15-29-09-398.jpg", "bandicam 2024-04-04 16-29-09-384.jpg",
+"bandicam 2024-04-04 17-29-10-236.jpg"
 ]
 
 inds = 6:49
-exp_meth_vol = [0, 0.1, 0.3, 0.2, 0.3, 0.3, 0.3, 0.3, 0.3, 0.2, 0.2, 0.2, 0.2, 0.1, 0.2, 0.2, 0.4, 0.3, 0.3, 0.3, 0.2, 0.1, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.3, 0.2, 0.1, 0, 0, 0, 0, 0, 0]
+exp_meth_vol = [0, 0.0, 0.05, 0.1, 0.1, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3, 0.3, 0.2, 0.1, 0.2, 0.2, 0.4, 0.3, 0.3, 0.3, 0.2, 0.1, 0.0, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.3, 0.2, 0.1, 0, 0, 0, 0, 0, 0]
 meth_vol_hydro_4 = cumsum(exp_meth_vol)[end]
 exp_name = "hydrolysate_4_s1_r1"
 source = "Hydrolyzed FW"
@@ -2060,11 +2104,22 @@ file_vec = ["bandicam 2024-04-01 11-05-53-069.jpg", "bandicam 2024-04-01 11-09-3
 "bandicam 2024-04-03 13-54-03-505.jpg", "bandicam 2024-04-03 14-24-03-564.jpg",
 "bandicam 2024-04-03 14-54-49-083.jpg", "bandicam 2024-04-03 15-26-51-834.jpg",
 "bandicam 2024-04-03 16-29-08-087.jpg", "bandicam 2024-04-03 17-29-08-355.jpg",
-"bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg"
+"bandicam 2024-04-03 18-29-08-352.jpg", "bandicam 2024-04-03 20-29-08-355.jpg",
+"bandicam 2024-04-03 21-29-08-363.jpg", "bandicam 2024-04-03 22-29-08-353.jpg",
+"bandicam 2024-04-03 23-29-08-747.jpg", "bandicam 2024-04-04 00-29-08-754.jpg",
+"bandicam 2024-04-04 01-29-08-762.jpg", "bandicam 2024-04-04 02-29-08-758.jpg",
+"bandicam 2024-04-04 03-29-08-766.jpg", "bandicam 2024-04-04 04-29-08-760.jpg",
+"bandicam 2024-04-04 05-29-08-770.jpg", "bandicam 2024-04-04 06-29-08-755.jpg",
+"bandicam 2024-04-04 07-29-08-753.jpg", "bandicam 2024-04-04 08-29-09-002.jpg",
+"bandicam 2024-04-04 09-29-09-269.jpg", "bandicam 2024-04-04 10-29-09-357.jpg",
+"bandicam 2024-04-04 11-29-09-380.jpg", "bandicam 2024-04-04 12-29-09-384.jpg",
+"bandicam 2024-04-04 13-29-09-383.jpg", "bandicam 2024-04-04 14-29-09-390.jpg",
+"bandicam 2024-04-04 15-29-09-398.jpg", "bandicam 2024-04-04 16-29-09-384.jpg",
+"bandicam 2024-04-04 17-29-10-236.jpg"
 ]
 
-inds = 22:50
-exp_meth_vol = [0, 0.2, 0, 0.1, 0.1, 0, 0, 0, 0.1, 0.1, 0, 0.1, 0.2, 0.1, 0.1, 0.1, 0.0, 0.1, 0.2, 0.1, 0.2, 0.1, 0.1, 0, 0, 0, 0, 0, 0]
+inds = 22:71
+exp_meth_vol = vcat([0, 0.05, 0, 0.1, 0.1, 0, 0, 0.1, 0.2, 0.1, 0, 0.1, 0.2, 0.1, 0.1, 0.1, 0.0, 0.1, 0.2, 0.1, 0.2, 0.1, 0.1], zeros(27))
 meth_vol_hydro_fw = cumsum(exp_meth_vol)[end]
 exp_name = "untreated_fw_s1_r1"
 source = "Untreated FW"
@@ -2314,7 +2369,7 @@ timescale = "hour"
 
 
 acet_kinetics = CSV.read(datadir("exp_pro", "methane_from_acetate_kinetics_"*sludge*".csv"), DataFrame)
-hydro_kinetics = CSV.read(datadir("exp_pro", "methane_from_hydrolysate_kinetics_"*timescale*"_"*sludge*"_"*run*".csv"), DataFrame)
+hydro_kinetics = CSV.read(datadir("exp_pro", "methane_from_hydrolysate_kinetics_"*timescale*"_"*sludge*"_"*run_num*".csv"), DataFrame)
 
 # Acetate rates are in minutes while hydrolysate in hours
 acet_rates = acet_kinetics.Production_Rate
@@ -2328,11 +2383,11 @@ acet_percent_hydro = round.((hydro_rates./acet_rates_hour).*100, digits = 4)
 
 # Create a new table with the 2 rates and their ratio
 kinetic_comp = Tables.table(hcat(acet_kinetics.Reactor_Name, acet_rates_hour, hydro_rates, acet_percent_hydro), header = [:Reactor_Name, :Acetate, :Hydrolysate, :Ratio])
-CSV.write(datadir("exp_pro", "kinetics_comparison_"*sludge*"_"*run*".csv"), kinetic_comp)
+CSV.write(datadir("exp_pro", "kinetics_comparison_"*sludge*"_"*run_num*".csv"), kinetic_comp)
 
 # We can also do this for SMA
 acet_sma_kinetics = CSV.read(datadir("exp_pro", "sma_from_acetate_"*sludge*".csv"), DataFrame)
-hydro_sma_kinetics = CSV.read(datadir("exp_pro", "sma_from_hydrolysate_"*sludge*"_"*run*".csv"), DataFrame)
+hydro_sma_kinetics = CSV.read(datadir("exp_pro", "sma_from_hydrolysate_"*sludge*"_"*run_num*".csv"), DataFrame)
 
 # Acetate rates are in minutes while hydrolysate in hours
 acet_sma = acet_sma_kinetics.SMA
@@ -2347,7 +2402,7 @@ acet_percent_hydro_sma = round.((hydro_sma_day./acet_sma_day).*100, digits = 4)
 
 # Create a new table with the 2 rates and their ratio
 sma_comp = Tables.table(hcat(acet_sma_kinetics.Reactor_Name, acet_sma_day, hydro_sma_day, acet_percent_hydro_sma), header = [:Reactor_Name, :Acetate, :Hydrolysate, :Ratio])
-CSV.write(datadir("exp_pro", "kinetics_comparison_sma_"*sludge*"_"*run*".csv"), sma_comp)
+CSV.write(datadir("exp_pro", "kinetics_comparison_sma_"*sludge*"_"*run_num*".csv"), sma_comp)
 
 
 reactors = ["Reactor 0", "Reactor 1", "Reactor 2", "Reactor 4", "Reactor FW"]

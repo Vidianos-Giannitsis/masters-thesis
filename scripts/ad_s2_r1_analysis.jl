@@ -3520,7 +3520,7 @@ timescale = "hour"
 
 
 acet_kinetics = CSV.read(datadir("exp_pro", "methane_from_acetate_kinetics_"*sludge*".csv"), DataFrame)
-hydro_kinetics = CSV.read(datadir("exp_pro", "methane_from_hydrolysate_kinetics_"*timescale*"_"*sludge*"_"*run*".csv"), DataFrame)
+hydro_kinetics = CSV.read(datadir("exp_pro", "methane_from_hydrolysate_kinetics_"*timescale*"_"*sludge*"_"*run_num*".csv"), DataFrame)
 
 # Acetate rates are in minutes while hydrolysate in hours
 acet_rates = acet_kinetics.Production_Rate
@@ -3534,11 +3534,11 @@ acet_percent_hydro = round.((hydro_rates./acet_rates_hour).*100, digits = 4)
 
 # Create a new table with the 2 rates and their ratio
 kinetic_comp = Tables.table(hcat(acet_kinetics.Reactor_Name, acet_rates_hour, hydro_rates, acet_percent_hydro), header = [:Reactor_Name, :Acetate, :Hydrolysate, :Ratio])
-CSV.write(datadir("exp_pro", "kinetics_comparison_"*sludge*"_"*run*".csv"), kinetic_comp)
+CSV.write(datadir("exp_pro", "kinetics_comparison_"*sludge*"_"*run_num*".csv"), kinetic_comp)
 
 # We can also do this for SMA
 acet_sma_kinetics = CSV.read(datadir("exp_pro", "sma_from_acetate_"*sludge*".csv"), DataFrame)
-hydro_sma_kinetics = CSV.read(datadir("exp_pro", "sma_from_hydrolysate_"*sludge*"_"*run*".csv"), DataFrame)
+hydro_sma_kinetics = CSV.read(datadir("exp_pro", "sma_from_hydrolysate_"*sludge*"_"*run_num*".csv"), DataFrame)
 
 # Acetate rates are in minutes while hydrolysate in hours
 acet_sma = acet_sma_kinetics.SMA
@@ -3553,7 +3553,7 @@ acet_percent_hydro_sma = round.((hydro_sma_day./acet_sma_day).*100, digits = 4)
 
 # Create a new table with the 2 rates and their ratio
 sma_comp = Tables.table(hcat(acet_sma_kinetics.Reactor_Name, acet_sma_day, hydro_sma_day, acet_percent_hydro_sma), header = [:Reactor_Name, :Acetate, :Hydrolysate, :Ratio])
-CSV.write(datadir("exp_pro", "kinetics_comparison_sma_"*sludge*"_"*run*".csv"), sma_comp)
+CSV.write(datadir("exp_pro", "kinetics_comparison_sma_"*sludge*"_"*run_num*".csv"), sma_comp)
 
 
 reactors = ["Reactor 0", "Reactor 1", "Reactor 2", "Reactor 4", "Reactor FW"]

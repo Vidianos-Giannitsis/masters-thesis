@@ -1,6 +1,6 @@
 Reactor_Name,Production_Potential,Production_Rate,Lag_Time,R_squared
-Reactor 0,5.129,0.002,0.0,0.928
-Reactor 1,12.334,0.005,0.0,0.933
-Reactor 2,7.471,0.003,0.0,0.986
-Reactor 4,6.418,0.003,0.0,0.976
-FW 1,2.369,0.001,0.0,0.982
+Reactor 0,5.56,0.002,359.624,0.992
+Reactor 1,11.309,0.004,219.136,0.979
+Reactor 2,7.182,0.003,66.5,0.991
+Reactor 4,5.902,0.003,116.91,0.988
+FW 1,2.09,0.002,70.446,0.984
