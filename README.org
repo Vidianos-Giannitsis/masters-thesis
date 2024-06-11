@@ -1,6 +1,9 @@
-#+TITLE: Enzymatic Hydrolysis and Anaerobic Digestion of Food Waste - Master's Thesis
+#+TITLE: Food Waste Biodegradation and Biogas Production with Anaerobic Digestion in Lab and Pilot Scale - Master's Thesis
 
-This repository stores a lot of information about my thesis. Since the experiments require a lot of data analysis, the [[https://julialang.org/][Julia Language]] was selected to do all of it and the [[https://juliadynamics.github.io/DrWatson.jl/stable/][DrWatson]] package is used widely to make the project reproducible. DrWatson automatically created most of the structure of this repository and provides a lot of very useful commands to ease this analysis while also making it fully reproducible to anyone interested. The primary purpose is to allow me to version control everything I need for my thesis and have it uploaded on Github to seamlessly sync it between my two machines
+This repository is all about my master's thesis on "Food Waste Biodegradation and Biogas Production with Anaerobic Digestion in Lab and Pilot Scale". In the various folders, a lot of information about the different parts of it can be found. Due to the thesis language being Greek, a lot of the files are in Greek, however, there are some things in English as well.
+
+* Reproducibility
+Since the experiments require a lot of data analysis, the [[https://julialang.org/][Julia Language]] was selected to do all of it and the [[https://juliadynamics.github.io/DrWatson.jl/stable/][DrWatson]] package is used widely to make the project reproducible. DrWatson automatically created most of the structure of this repository and provides a lot of very useful commands to ease this analysis while also making it fully reproducible to anyone interested. The primary purpose is to allow me to version control everything I need for my thesis and have it uploaded on Github to seamlessly sync it between my two machines. However, as a side effect, it makes it much easier to share with others
 
 To (locally) reproduce this project, do the following:
 
@@ -27,3 +30,18 @@ You may notice that most scripts start with the commands:
 #+END_SRC
 
 which auto-activate the project and enable local path handling from DrWatson.
+
+* Repository Structure
+The core structure of the repository is the one Dr. Watson follows, using the following folders:
+
+- ~bmp_pictures~ stores the pictures taken to record the anaerobic digestion process. They are not integral to the repository, but to reproduce the results of those experiments, it is necessary.
+- ~chromatograms~ has all the HPLC chromatograms taken from the experiments
+- ~data~ is used for storing data files and splitting them between raw experimental data in the folder ~exp_raw~, processed data in the folder ~exp_pro~ and data extracted from simulations or other computational need in the folder ~simulations~.
+- ~manuscripts~ contains all versions of my thesis and its various parts, all of which are exported together to create the file ~main_thesis.pdf~, which is my final thesis.
+- ~notebooks~ contains a lot of org documents which serve as literate programming notebooks explaining how the data analysis works and then doing it in Julia, as well as commenting on the results and their conclusions. The majority of data processing and analysis for my thesis is done within these notebooks as I consider literate programming to be a very effective approach for something like this. In the classic logic of literate programming, these files are weaved into pdf files (via latex) and the weaved versions are also in this folder. Due to the importance of this directory, it contains another README explaining its structure more.
+- ~papers~ stores all the files used for the 14th Panhellenic Chemical Engineering Conference where this work was published.
+- ~plots~ contains all the plot files used in this thesis. The folders with dates contain hydrolysis experiments controlled by date (it made it much easier to sort if they are saved by their date stamp) . The ~*_comp~ folders contain comparison plots between different hydrolysis experiments. ~BMPs~ are the AD results. ~sensitivity~ the sensitivity analysis results. ~statistics~ the statistical data plots used in this work, which were obtained from [[https://www.statista.com/][Statista]], who gave us a free trial to use, which allowed for some very useful information to be included in my thesis. Lastly ~metabolic_results~ contains all the plots for the metabolic pathways project which I built from the ground-up for use in my thesis.
+- ~reports~ contain presentations and other files created for my thesis that were made for something and don't fit in other categories.
+- ~spreadsheets~ are for any Excel spreadsheets I made or was sent for sharing data
+- ~scripts~ and ~src~ are the tangled code versions of the code used in the notebooks. Even though most of the processing was done in the notebooks, it is in general good practice to tangle these to .jl files, if the project is meant to be reproducible. The difference between them is that files stored in ~src~ contain mostly functions which are primitives for use in the ~scripts~, which contain the actual data processing. Note that in some cases (especially in the anaerobic digestion analysis), the [[https://www.statista.com/][noweb syntax]] in org was used for making code blocks independent and runable on their own as well as making the notebook much more readable and avoiding repetition. This leads to the tangled files containing a lot of duplicate code and being larger than necessary probably. Another way to do this could have been julia functions, which could help with the above problems and would also export better in the .jl files. However, where the noweb syntax was used, replacing it with functions would require them to have a very large amount of both inputs and outputs, which would lead to increased complexity to interpret them, compared to the code blocks as they are in the notebooks, which are very simple to understand and readable.
+ 

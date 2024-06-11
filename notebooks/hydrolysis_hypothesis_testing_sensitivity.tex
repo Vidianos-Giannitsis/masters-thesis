@@ -1,4 +1,4 @@
-% Created 2024-01-25 Πεμ 16:07
+% Created 2024-06-11 Τρι 13:46
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -21,7 +21,7 @@
 \usepackage{mathtools}
 \usepackage{esdiff}
 \usepackage{makeidx}
-\usepackage{glossaries}
+\usepackage[acronym]{glossaries}
 \usepackage{newfloat}
 \usepackage{minted}
 \usepackage[a4paper, margin=3cm]{geometry}
@@ -35,7 +35,7 @@
  pdftitle={Hypothesis testing and sensitivity analysis of Hydrolysis HPLC data},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.1 (Org mode 9.6.6)}, 
+ pdfcreator={Emacs 29.3 (Org mode 9.6.15)}, 
  pdflang={English}}
 \makeatletter
 \newcommand{\citeprocitem}[2]{\hyper@linkstart{cite}{citeproc_bib_item_#1}#2\hyper@linkend}
@@ -52,7 +52,7 @@
 \end{abstract}
 
 \section{Dependencies}
-\label{sec:org2bc028d}
+\label{sec:orgb345dc5}
 Αρχικά, όπως και στα άλλα notebooks, πρέπει να κάνουμε load κάποια dependencies τα οποία θα χρειαστούμε για αυτό το code base.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -65,7 +65,7 @@ using CSV, DataFrames, Statistics, Distributions
 \end{minted}
 
 \section{Φόρτωση των δεδομένων}
-\label{sec:org291ccc8}
+\label{sec:org6beb8f4}
 Έπειτα, πρέπει να διαβάσουμε τα CSVs με τα δεδομένα για να μπορέσουμε να κάνουμε την ανάλυση μας.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -96,7 +96,7 @@ df45_2 = CSV.read(get_conc_csv(exp_45, mix_amount[3]), DataFrame)
 \end{minted}
 
 \section{Επεξεργασία πρωτογενών δεδομένων}
-\label{sec:orgfcc97f9}
+\label{sec:orgd7987b7}
 Βέβαια, δεν θέλουμε αυτούς τους πίνακες. Αρχικά θέλουμε να συγκρίνουμε τις 5 ποσότητες σε κάθε θερμοκρασία, οπότε θέλουμε τα vector των τελικών συγκεντρώσεων κάθε ένωσης.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -141,52 +141,85 @@ eth = prod[4,:]
 \end{minted}
 
 \section{Visualization των αποτελεσμάτων αυτών}
-\label{sec:org8e823c0}
-Για να είναι πιο ευπαρουσίαστα τα αποτελέσματα της ανάλυσης, αξίζει να κάνουμε κάποια διαγράμματα που δείχνουν την τελική συγκέντρωση της κάθε ένωσης ανάλογα με το mix amount.
+\label{sec:org10d2234}
+Για να είναι πιο ευπαρουσίαστα τα αποτελέσματα της ανάλυσης, αξίζει να κάνουμε κάποια διαγράμματα που δείχνουν την τελική συγκέντρωση της κάθε ένωσης ανάλογα με το mix amount και την θεροκρασία. Ο καλύτερος τρόπος να γίνει visualized αυτό είναι μέσω κάποιων stacked bar plots.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
 
-using Plots
+using CairoMakie
+colors = Makie.wong_colors()
 
-xtick = ["0", "1", "2", "4", "8"]
-plot_label = ["Lactate" "Acetate" "Propionate" "Ethanol"]
+xtick = ["0", "5", "10", "20", "40"]
+plot_label = ["Lactate", "Acetate", "Propionate", "Ethanol"]
+xdata = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
+grp = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]
 
-prod_scatter_35 = scatter(1:5, [lact_mean_35 acet_mean_35 prop_mean_35 eth_mean_35],
-                          xticks = (1:5, ["0", "1", "2", "4", "8"]),
-                          xlabel = "Mix Amount (ml)", ylabel = "Concentration (g/l)",
-                          markersize = 6, label = plot_label,
-                          title = "Product Concentration by mix amount - 35 C")
-savefig(plotsdir("10_11", "final_prod_scatter_10_11.png"))
+vfa_conc_35 = vcat(prod35_0, prod35_1, prod35_2, prod35_4, prod35_8)
+vfa_conc_40 = vcat(prod40_0, prod40_1, prod40_2, prod40_4, prod40_8)
 
-prod_scatter_40 = scatter(1:5, [lact_mean_40 acet_mean_40 prop_mean_40 eth_mean_40],
-                          xticks = (1:5, ["0", "1", "2", "4", "8"]),
-                          xlabel = "Mix Amount (ml)", ylabel = "Concentration (g/l)",
-                          markersize = 6, label = plot_label,
-                          title = "Product Concentration by mix amount - 40 C")
-savefig(plotsdir("28_11", "final_prod_scatter_28_11.png"))
+fig_35 = Figure(size = (600, 400))
+ax_35 = Axis(fig_35[1,1], xticks = (1:5, xtick),
+             title = "Products of acidogenic fermentation at 35 C",
+             xlabel = "Mix Amount (ml)",
+             ylabel = "Products (g/L)")
+prod_35 = barplot!(ax_35, xdata, vfa_conc_35, stack = grp, color = colors[grp])
+elements = [PolyElement(polycolor = colors[i]) for i in 1:length(plot_label)]
+Legend(fig_35[1,2], elements, plot_label, "Products: ")
+save(get_plot_name("final_product", "10_11", "bar"), fig_35)
 
+fig_40 = Figure(size = (600, 400))
+ax_40 = Axis(fig_40[1,1], xticks = (1:5, xtick),
+             title = "Products of acidogenic fermentation at 40 C",
+             xlabel = "Mix Amount (ml)",
+             ylabel = "Products (g/L)")
+prod_40 = barplot!(ax_40, xdata, vfa_conc_40, stack = grp, color = colors[grp])
+elements = [PolyElement(polycolor = colors[i]) for i in 1:length(plot_label)]
+Legend(fig_40[1,2], elements, plot_label, "Products: ")
+save(get_plot_name("final_product", "28_11", "bar"), fig_40)
+
+prod_plot = vcat(prod35_0, prod35_1, prod35_2, prod35_4, prod35_8, prod40_0, prod40_1, prod40_2, prod40_4, prod40_8)
+xdata_complete = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5]
+grp1 = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4]
+grp2 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+bar_l = ["", "", "", "35 C", "", "", "", "35 C", "", "", "", "35 C", "", "", "", "35 C", "", "", "", "35 C", "", "", "", "40 C", "", "", "", "40 C", "", "", "", "40 C", "", "", "", "40 C", "", "", "", "40 C"]
+
+fig_comp = Figure(size = (900, 600))
+ax_comp = Axis(fig_comp[1,1], xticks = (1:5, xtick),
+               title = "Products of acidogenic fermentation",
+               xlabel = "Mix Amount (mL/kg FW)",
+               ylabel = "Products (g/L)", titlesize = 36,
+               xlabelsize = 28, ylabelsize = 28,
+               xticklabelsize = 28, yticklabelsize = 28)
+prod_comp = barplot!(ax_comp, xdata_complete, prod_plot, stack = grp1, dodge = grp2, color = colors[grp1], bar_labels = bar_l, label_size = 18)
+elements = [PolyElement(polycolor = colors[i]) for i in 1:length(plot_label)]
+Legend(fig_comp[1,2], elements, plot_label, "Products: ", labelsize = 32, titlesize = 32)
+save(plotsdir("35_40_comp", "final_products.svg"), fig_comp)
 \end{minted}
 
 \begin{center}
-\includegraphics[width=.9\linewidth]{../plots/10_11/final_prod_scatter_10_11.png}
+\includegraphics[width=.9\linewidth]{../plots/10_11/final_product_bar_10_11.png}
 \end{center}
 
 \begin{center}
-\includegraphics[width=.9\linewidth]{../plots/28_11/final_prod_scatter_28_11.png}
+\includegraphics[width=.9\linewidth]{../plots/28_11/final_product_bar_28_11.png}
+\end{center}
+
+\begin{center}
+\includesvg[width=.9\linewidth]{../plots/35_40_comp/final_products}
 \end{center}
 
 \section{Δημιουργία ψευδο-κατανομής των δεδομένων}
-\label{sec:org1ca7c95}
+\label{sec:orgf7b3992}
 Για να κάνουμε ANOVA χρειάζεται κάθε μέτρηση να έχει ένα sample size μεγαλύτερο του 1 (και εφόσον κάνουμε στατιστική ανάλυση, τυπικά θέλουμε πάνω από 5 για στατιστικά σημαντικά αποτελέσματα). Δεν μπορούμε να κάνουμε το πείραμα τόσες φορές, οπότε χρειαζόμαστε έναν μηχανισμό για να φτιάξουμε δεδομένα.
 
 Ένα claim το οποίο δεν είναι κακό είναι ότι αν κάναμε πολλές φορές το πείραμα, τα αποτελέσματα θα ακολουθούσαν κανονική κατανομή. Οπότε, με έναν μέσο όρο και μία τυπική απόκλιση, μπορούμε να φτιάξουμε δεδομένα τα οποία θα είναι περίπου σωστά και να τρέξουμε με αυτά την ANOVA. Οι μέσοι όροι θα είναι προφανώς οι τιμές που θα έχουμε παρατηρήσει. Για τις τυπικές αποκλίσεις θέλουμε κάτι άλλο. Από τα συγκεκριμένα πειράματα δεν μπορούμε να βγάλουμε κάπως ακριβής τυπική απόκλιση. Όμως, έχουμε το προπαρασκευαστικό πείραμα που έγινε στους 45 C στο οποίο είχαμε συχνή δειγματοληψία. Παρότι οι μεταβολές που παρατηρούνται μεταξύ των τριών μετρήσεων της ίδιας μέρας μπορεί να οφείλονται και στην διεξαγωγή των αντιδράσεων, θα υποθέσουμε ότι αυτό είναι αμελητέο και μπορεί να υπολογιστεί τυπική απόκλιση από αυτά. Θα υπολογιστεί η ημερήσια τυπική απόκλιση του πειράματος και στις κατανομές θα χρησιμοποιήσουμε τον μέσο όρο αυτής.
 
 \subsection{Υπολογισμός της τυπικής απόκλισης}
-\label{sec:org7bd22bf}
+\label{sec:orgab72ce1}
 Για να πάρουμε τα δεδομένα ακολουθούμε μία παρόμοια λογική με παραπάνω και μόλις βρούμε τα διανύσματα που θέλουμε υπολογίζουμε τo standard deviation τους.
 
 \subsubsection{Outliers}
-\label{sec:orgeaacb12}
+\label{sec:orge1da1c6}
 Αξίζει να σημειωθεί πως η στιγμή 0 και η 26η ώρα στην 1η μέρα είναι πιθανά outliers για το γαλακτικό και ίσως δεν πρέπει να ληφθούν υπόψην. Αντίστοιχα για το οξικό στις 72 ώρες. Ακόμη, η αιθανόλη την στιγμή 0 (είναι unusually high σε σύγκριση με τα άλλα). 
 
 Τα διορθωμένα αναφέρονται αλλά σε πρώτη φάση θα γίνει η δοκιμή να μην συμπεριληφθούν. 
@@ -226,7 +259,7 @@ std_final = mean([std_d0, std_d1, std_d2, std_d3])
 \end{verbatim}
 
 \subsection{Δημιουργία των κατανομών}
-\label{sec:orgd83374a}
+\label{sec:orge70d6d1}
 Έχοντας την τυπική απόκλιση και τον μέσο όρο μπορούμε να φτιάξουμε τις κατανομές. Χάριν ευκολίας, θα φτιαχτούν vectorized κατανομές.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -244,7 +277,7 @@ eth_dist_40 = [Normal(eth_mean_40[i], std_final[4]) for i in 1:length(eth_mean_4
 \end{minted}
 
 \subsection{Sampling}
-\label{sec:orgfd008a0}
+\label{sec:org7bb3984}
 Έχοντας τις κατανομές, μπορούμε να κάνουμε sample έναν αριθμό από δείγματα για να τρέξουμε την ANOVA. Εφόσον έχουμε την δυνατότητα να πάρουμε όσα samples θέλουμε, μπορούμε να βάλουμε και μεγάλα νούμερα, αλλά για παράδειγμα 20 δείγματα είναι μάλλον ένα καλό νούμερο.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -265,7 +298,7 @@ eth_samples_40 = [rand(eth_dist_40[i], samples) for i in 1:length(eth_mean_40)]
 \end{minted}
 
 \section{ANOVA}
-\label{sec:orgdb043ba}
+\label{sec:org152c7a5}
 Έχοντας κάνει sample έχουμε τώρα κάποια διανύσματα όπου τα καθένα έχει 20 παρατηρήσεις και μπορεί να γίνει μία ANOVA για να δείξει σε ποιά από τα 8 συστήματα (4 προιόντα, 2 θερμοκρασίες) έπαιξε όντως ρόλο η προσθήκη του μιξ και σε ποιά δεν φαίνεται να έπαιξε. Αρχικά, γράφουμε ένα function που κάνει implement την ANOVA.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -331,9 +364,9 @@ DataFrame(anova_table)
 \end{minted}
 
 \section{Άλλα hypothesis tests}
-\label{sec:org0863aa8}
+\label{sec:org426c62f}
 \subsection{ANOVA σε 2 mL και πάνω}
-\label{sec:org15c4b19}
+\label{sec:orgd8c0236}
 Από τα διαγράμματα που είχαμε κάνει, είχε παρατηρηθεί πως ενδέχεται να μην έχει νόημα να βάλουμε πάνω από 2 ml του mix. Στους 35, η συμπεριφορά που παρατηρήθηκε ήταν καθαρά αρνητική ενώ στους 40 σε πολλά φάνηκε να είναι περίπου αμελητέα αν όχι αρνητική. Οπότε, έχει νόημα να κάνουμε anova και εδώ για να δούμε τι βγάζει.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -364,7 +397,7 @@ DataFrame(anova_table_2plus)
 Στους 40 επίσης όλες οι μεταβολές είναι στατιστικά σημαντικές, αλλά 3 από τα 4 προιόντα αυξάνονται. Αξίζει να αναφερθεί ότι αν συμπεριληφθεί στο stdev της αιθανόλης η πρώτη τιμή (η οποία είναι πάνω από διπλάσια των άλλων), θα απορριφθεί η στατιστική σημαντικότητα της αιθανόλης. Στην πράξη όμως, εφόσον μειώνεται, το να είναι στατιστικά ασήμαντη μεταβολή οδηγεί στο ίδιο συμπέρασμα (δεν βελτιώνεται).
 
 \subsection{T-test για 4-8 ml στους 40}
-\label{sec:orgf0589d6}
+\label{sec:orga5861de}
 Εφόσον στους 40 υπάρχει evidence για να πάμε πάνω από 2 ml, αξίζει να δούμε και αν υπάρχει evidence για να πάμε στα 8 ml ή αν δεν είναι στατιστικά σημαντικό σε σχέση με το 4.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -380,7 +413,7 @@ ttest_40_res = [pvalue(lact_ttest_40), pvalue(acet_ttest_40), pvalue(prop_ttest_
 Τα αποτελέσματα του test αυτού δείχνουν πως η αλλαγή του οξικού δεν είναι στατιστικά σημαντική με μεγάλη βεβαιότητα. Ακόμη για την αιθανόλη απορρίπτεται η υπόθεση μόνο με 95\% βεβαιότητα. Οπότε, αν σκεφτούμε το αυξημένο κόστος της προσθήκης μεγαλύτερης ποσότητας, αφού επηρεάζεται μόνο το γαλακτικό και το προπιονικό είναι πιθανό να μην μας ενδιαφέρει πολυ η προσθήκη 8 ml σε αντίθεση με τα 4.
 
 \subsection{ANOVA σε 2 ml και κάτω}
-\label{sec:org8848659}
+\label{sec:org14afa7e}
 Εφόσον στους 35 δεν έχει νόημα να πάμε πάνω από 2, αξίζει να εξεταστεί αν έχει νόημα και το 2 ή μήπως ούτε αυτό χρειάζεται και θα λειτουργούσε το ίδιο και χωρίς ένζυμα. Χάριν ευκολίας, εξετάζουμε το ίδιο ερώτημα και για τους 40, παρόλο που έκει έχουμε δείξει ότι το 4 ml είναι σημαντικά καλύτερο από το 2 και αναμένουμε ότι κάτι παρόμοιο θα ισχύει και εδώ.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -411,7 +444,7 @@ DataFrame(anova_table_2minus)
 Για τους 40, προκύπτει πως δεν μπορούμε σε καμία περίπτωση να πούμε ότι το οξικό αυξάνεται με στατιστικά σημαντικό τρόπο στην περιοχή αυτή. Όπως είδαμε παραπάνω, επίσης ρόλο δεν παίζει η μεταβολή από 4 σε 8 ml. Οπότε στην πράξη, η μόνη αλλαγή που έπαιξε ρόλο στην συγκέντρωση του οξικού ήταν αυτή από τα 2 στα 4 ml που ούτε αυτή έπαιξε μεγάλο ρόλο. Ακόμη, η μεταβολή της αιθανόλης από 0 εώς 2 βγαίνει οριακά ότι δεν μπορεί να απορριφθεί με confidence interval 95\%.
 
 \subsection{Επίδραση της θερμοκρασίας}
-\label{sec:org7bec9b6}
+\label{sec:orge35eeab}
 Εκτός από τα παραπάνω που έδειξαν ότι οι διαφορετικές παίζουν ρόλο και ανάλογα με το τι θέλουμε επιλέγουμε ποια θα πάρουμε, έχει νόημα να εξετάσουμε και αν είναι στατιστικά σημαντική η επίδραση της θερμοκρασίας. Για αυτό, πρέπει να κάνουμε t-test μεταξύ ίδιων ποσοτήτων στις 2 θερμοκρασίες. Ο κώδικας για αυτό είναι παρακάτω.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -437,7 +470,7 @@ DataFrame(temp_ttest_table)
 Από τα αποτελέσματα, είναι εμφανές πως η θερμοκρασία παίζει ρόλο σχεδόν παντού. Οι μόνες περιπτώσεις όπου δεν παίζει ρόλο είναι για το οξικό στις ποσότητες 0 και 1 ml όπου η συμπεριφορά είναι ίδια. Αυτό οδηγεί και στο συμπέρασμα ότι το οξικό παράγεται μάλλον από μικροοργανισμούς που υπάρχουν ήδη στα food waste και δεν εξαρτάται τόσο από την θερμοκρασία. Όμως, η προσθήκη του μιξ στους 35, μειώνει σημαντικά το παραγώμενο οξικό οξύ, οπότε μάλλον στους 35 υπάρχει μία μεσόφιλη αντίδραση κατανάλωσης του οξικού οξέος που ενεργοποιείται από τους μικροοργανισμούς του μιξ και η οποία φαίνεται να απενεργοποιείται με την αύξηση της θερμοκρασίας.
 
 \section{Code block όλων των ελέγχων υποθέσεων}
-\label{sec:orge815b27}
+\label{sec:orge874475}
 Σε ορισμένες περιπτώσεις είναι χρήσιμο να κάνουμε έναν προς έναν τους ελέγχους υποθέσεων, αλλά σε άλλες περιπτώσεις βολεύει περισσότερο να κάνουμε eval ένα code block και να γίνουν όλα μαζί updated. Οπότε, στο code block, με χρήση του noweb syntax κάνουμε evaluate όλους τους ελέγχους υποθέσεων. Δεν κάνει tangle πουθενά επειδή είναι καθαρά convenience στο org version.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -452,7 +485,7 @@ DataFrame(temp_ttest_table)
 \end{minted}
 
 \section{Σενάριο χωρίς ορισμένα outliers}
-\label{sec:org576cb50}
+\label{sec:orgd4b32a0}
 Όπως φάνηκε από τους παραπάνω ελέγχους υποθέσεων, απορρίφθηκαν μόνο σενάρια του οξικού και της αιθανόλης. Με βάση την παραπάνω αναφορά, μία τιμή της αιθανόλης και μία του οξικού φαινόντουσαν ως outliers στον υπολογισμό της τυπικής απόκλισης, οπότε, μπορούμε να δοκιμάσουμε τι θα γίνει αν δεν συμπεριληφθούν αυτά και αν κάπως αλλάζουν τα συμπεράσματα μας. Για να εξεταστεί αυτό, ξαναυπολογίζουμε διαφορετικά τις τυπικές αποκλίσεις και έπειτα τρέχουμε όλους τους ελέγχους υποθέσεων. Επειδή εκτός από αυτό το code block όλα τα υπόλοιπα είναι τα ίδια, θα γίνει χρήση του noweb synatx του org για να ξανακάνει evaluate όλα τα blocks.
 
 Επειδή αυτό θα τοποθετηθεί σε διαφορετικά script file για λόγους οργάνωσης, αρχικά κάνουμε load όλα τα dependencies.
@@ -517,7 +550,7 @@ std_final = mean([std_d0, std_d1, std_d2, std_d3])
 \end{minted}
 
 \subsection{Αλλαγές που παραητρούνται στο σενάριο αυτό}
-\label{sec:org2efec78}
+\label{sec:orgdc5d814}
 Γενικά όλα τα pValues που έχουν να κάνουν με οξικό και αιθανόλη μειώνονται (αφού μειώσαμε την τυπική τους απόκλιση). Από αυτά τα οποία είχαμε απορρίψει, το μόνο συμπέρασμα το οποίο μπορεί να αλλάξει είναι αυτό στην περίπτωση της ANOVA σε ποσότητες μιξ 0-2 ml.
 
 Εκεί, και η αιθανόλη και το οξικό είχαν μεγάλα pValue και δεν μπορούσαμε να απορρίψουμε την υπόθεση ότι δεν παίζει ρόλο η προσθήκη του μιξ σε αυτά. Αν βγάλουμε τις δύο τιμές που θεωρήσαμε outliers, φαίνεται ότι με 95\% βεβαιότητα είναι στατιστικά σημαντική η διαφορά που προκαλούν αυτές οι 2 ποσότητες.
@@ -525,7 +558,7 @@ std_final = mean([std_d0, std_d1, std_d2, std_d3])
 Η αιθανόλη στους 40 για ποσότητες 4 με 8 ml παραμένει απορρίψημη μόνο με 95\% βεβαιότητα (το pValue δεν μίκρυνε αρκετά για να γίνει κάτω από 0.01 και να απορριφθεί με 99\% βεβαιότητα) ενώ το οξικό σε ποσότητες 4 με 8 ml και η θερμοκρασιακή του επίδραση για ποσότητες 0 και 1 παραμένουν να έχουν μεγάλα pValue και να μην μπορούν να απορριφθούν.
 
 \section{Τελικά συμπεράσματα από τα hypothesis tests}
-\label{sec:org9e56826}
+\label{sec:org98e6ce3}
 Στο αρχείο αυτό έγιναν διάφορα hypothesis tests με σκοπό να δούμε αν οι παραμέτροι που ελέγχουμε έχουν στατιστικά σημαντική επίδραση στην τελική συγκέντρωση των προιόντων. Σε γενικές γραμμές, οι περισσότερες παραμέτροι έχουν σημαντική επίδραση, καθώς σε ελάχιστες περιπτώσεις δεν μπορούσε να απορριφθεί η υπόθεση H\textsubscript{0}. Σε κάποιες περιπτώσεις όμως, αυτό το συμπέρασμα δεν μπορεί να βγεί με τόση βεβαιότητα.
 
 Τα τεστ που έγιναν είναι τα εξής: ANOVA μεταξύ των 5 διαφορετικών ποσοτήτων mix στις 2 δύο θερμοκρασίες και στα 4 προιόντα. ANOVA μεταξύ των ποσοτήτων 2, 4 και 8 ml και στις 2 θερμοκρασίες για να δούμε αν πραγματικά επιφέρει κάτι η προσθήκη πάνω από 2 ml. t-test μεταξύ 4 και 8 ml στους 40 (όπου είχε νόημα να αυξήσουμε πάνω από 2 ml με βάση το προηγούμενο). ANOVA μεταξύ 0, 1 και 2 ml στους 35 για να δούμε αν έχουν νόημα τα 2 ml επειδή τα παραπάνω σίγουρα δεν έχουν. t-test συγκρίνοντας τις 2 θερμοκρασίες για κάθε mix\textsubscript{amount} και ένωση.
@@ -533,13 +566,13 @@ std_final = mean([std_d0, std_d1, std_d2, std_d3])
 Καθώς οι περισσότερες υποθέσεις απορρίφθηκαν με μεγάλη βεβαιότητα (μεγαλύτερη από 99.99\%), παρακάτω θα σημειωθούν όσες απορρίφθηκαν με λιγότερη ή δεν μπόρεσαν να απορριφθούν.
 
 \subsection{Απόρριψη με 95\% βεβαιότητα}
-\label{sec:org23df8b1}
+\label{sec:org655a9dc}
 Αιθανόλη στους 40 σε ποσότητες 4 με 8 ml. Στο domain 2-8 είναι σημαντική η μεταβολή οπότε από 2 σε 4 υπάρχει αλλαγή.
 
 Αιθανόλη και οξικό στους 40 για ποσότητες 0-2 ml αν αφαιρεθεί ένα outlier στον υπολογισμό της τυπικής τους απόκλισης. Σε άλλη περίπτωση, δεν μπορούν να απορριφθούν οι υποθέσεις αυτές.
 
 \subsection{Δεν μπόρεσαν να απορριφθούν}
-\label{sec:org90ed39d}
+\label{sec:org9ff8a22}
 Οξικό σε ποσότητες 4 με 8 ml. Γενικά και για την αιθανόλη και το οξικό βλέπουμε ότι η σημαντικότερη αλλαγή και στα 2 είναι μεταξύ 2 και 4 ml, απλώς στο οξικό είναι πιο δύσκολο να πούμε ότι συνέβη και κάπου αλλού.
 
 Η επίδραση της θερμοκρασίας στο οξικό στα 0 και 1 ml mix.
@@ -547,7 +580,7 @@ std_final = mean([std_d0, std_d1, std_d2, std_d3])
 Οπότε, το τελικό συμπέρασμα είναι πως στους 35, υπάρχει ευαισθησία σε όλο το εύρος των ποσοτήτων που βάλαμε, αλλά στα 2 ml φαίνεται να λειτουργεί καλύτερα από ότι σε παραπάνω. Στους 40, τα 4 ml δείχνουν να έχουν την καλύτερη λειτουργία καθώς αποτελούν βελτίωση από τα 2 ml και δεν είναι στατιστικά σημαντική η βελτίωση αν πάμε στα 8 ml για 1 από τις 4 ενώσεις, ενώ άλλη μία (αιθανόλη) μειώνεται κιόλας. Οπότε, το κόστος αύξησης στα 8 ml λογικά δεν είναι επιθυμητό. Από άποψη θερμοκρασίας, το οξικό στα 0 και 1 ml είναι ίδιο και στις 2 περιπτώσεις.
 
 \section{Ανάλυση Ευαισθησίας}
-\label{sec:org45a1836}
+\label{sec:org4f25bb9}
 Έχοντας δει κάποια ποιοτικά συμπεράσματα από την ANOVA παραπάνω και γνωρίζοντας πλέον ότι σχεδόν όλες οι μεταβολές είναι στατιστικά σημαντικές, μπορούμε να προχωρήσουμε σε ποσοτικά αποτελέσματα και να δούμε πόσο επηρεάζει η κάθε παράμετρος πραγματικά. Αυτό μπορεί να γίνει με ανάλυση ευαισθησίας. Για να τρέξουμε την ανάλυση ευαισθησίας ως προς τις δύο παραμέτρους λειτουργίας, χρειαζόμαστε για κάθε ένωση μία συνάρτηση η οποία παίρνει ένα διάνυσμα των δύο μεταβλητών και δίνει μία προβλεπόμενη συγκέντρωση. Από τα πειράματα, έχουμε 10 διαφορετικά σημεία για 5 ποσότητες μιξ και 2 θερμοκρασίες. Μεταξύ των σημείων δεν έχουμε κάποιο δεδομένο, οπότε η μόνη προσέγγιση που μπορούμε να κάνουμε είναι πως συνδέουμε γραμμικά τα σημεία. Αυτό ενέχει ένα σφάλμα σίγουρα, αλλά είναι η καλύτερη δυνατή προσέγγιση που μπορεί να γίνει. Ως κομμάτι του preprocessing, θα γίνει και αυτό tangled στο ίδιο αρχείο με τα παραπάνω, καθώς χρησιμοποιεί και τα ίδια δεδομένα.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -626,7 +659,7 @@ end
 \end{minted}
 
 \subsection{Εφαρμογή της ανάλυσης ευαισθησίας}
-\label{sec:org5bc795f}
+\label{sec:org7b3ae6a}
 Έχοντας γράψει τα παραπάνω, μπορούμε να ορίσουμε διάφορα domains και να τρέξουμε σε αυτά την ανάλυση. Εκτός από το συνολικό domain, έχει ενδιαφέρον να κοιτάξουμε τις περιοχές των χαμηλών και υψηλών ποσοτήτων του mix (0 εώς 2 και 2 εώς 8) για να ενισχύσουμε περαιτέρω την υπόθεση μας ότι από 0 εώς 2 έχουμε ισχυρές θετικές επιδράσεις ενώ από 2 εώς 8 ελαφρώς θετικές ή και αρνητικές. Επίσης, έχει ενδιαφέρον να προσπαθήσουμε να δούμε την επίδραση του mix amount στα δύο επίπεδα θερμοκρασίας πιο συγκεκριμένα, καθώς μπορεί να δώσει διαφορετικά συμπεράσματα από τα παραπάνω. Αυτό το τελευταίο δεν έχει νόημα να συμπεριληφθεί στην ανάλυση Sobol, καθώς εκεί θα βγεί ότι στο domain αυτό το 99.999\% της μεταβλητότητας εξαρτάται από το mix amount ή κάτι παρόμοιο.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -801,9 +834,9 @@ save(plotsdir("sensitivity/high_sobol.png"), sobol_high_fig)
 \end{minted}
 
 \subsection{Αποτελέσματα}
-\label{sec:orgd41b163}
+\label{sec:orgf204c4c}
 \subsubsection{Morris}
-\label{sec:orgafb32c4}
+\label{sec:org4b39fdf}
 \begin{center}
 \includegraphics[width=.9\linewidth]{../plots/sensitivity/global_morris.png}
 \end{center}
@@ -821,7 +854,7 @@ save(plotsdir("sensitivity/high_sobol.png"), sobol_high_fig)
 \end{center}
 
 \subsubsection{Sobol}
-\label{sec:org27e15a9}
+\label{sec:org503714a}
 \begin{center}
 \includegraphics[width=.9\linewidth]{../plots/sensitivity/global_sobol.png}
 \end{center}
@@ -835,7 +868,7 @@ save(plotsdir("sensitivity/high_sobol.png"), sobol_high_fig)
 \end{center}
 
 \subsection{Plotting σε tornado diagrams}
-\label{sec:orgd82653f}
+\label{sec:org10f9e73}
 Τα tornado diagrams είναι χρήσιμα διαγράμματα στην ανάλυση ευαισθησίας καθώς δίνουν ένα πιο εύκολο στην κατανόηση look στην ευαισθησία. Το παρακάτω code block κάνει plot τα αντίστοιχα αποτελέσματα σε ένα tornado plot. Για να γίνει αυτό, κάνουμε sort τα αποτελέσματα της ευαισθησίας μαζί με τα labels τους κατ'απόλυτη τιμή αλλά δεν κάνουμε plot την απόλυτη τιμή επειδή θέλουμε να φαίνεται πότε μία επίδραση είναι αρνητική. Έπειτα, ορίζουμε δύο χρώματα (ένα για τις θετικές και ένα για τις αρνητικές επιδράσεις) και κάνουμε plot το tornado diagram με αυτά τα στοιχεία. Αυτό επαναλαμβάνεται για όλες τις αναλύσεις που κάναμε.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -860,8 +893,9 @@ colors_total = ifelse.(sorted_sens_total .< 0, "#440154", "#DCE319")
 global_tornado = bar(xrange_total, sorted_sens_total, color = colors_total,
                      xlabel = "Sensitivity", yticks = (xrange_total, sorted_names_total),
                      orientation = :h, legend = false,
-                     title = "Tornado Diagram for Global Sensitivity Analysis",
-                     size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+                     title = "Global Sensitivity Analysis",
+                     size = (700, 800), tickfontsize = 12, guidefontsize = 14,
+                     left_margin = 6Plots.mm, titlefontsize = 18)
 savefig(global_tornado, plotsdir("sensitivity", "global_tornado.png"))
 
 # Do this for the low mix amount domain
@@ -881,8 +915,9 @@ colors_low = ifelse.(sorted_sens_low .< 0, "#440154", "#DCE319")
 low_tornado = bar(xrange_low, sorted_sens_low, color = colors_low,
                   xlabel = "Sensitivity", yticks = (xrange_low, sorted_names_low),
                   orientation = :h, legend = false,
-                  title = "Tornado Diagram for Mix Amounts 0-2 ml",
-                  size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+                  title = "Sensitivity Analysis - Mix Amounts 0-2 ml",
+                  size = (700, 800), tickfontsize = 12, guidefontsize = 14,
+                  left_margin = 6Plots.mm, titlefontsize = 15)
 savefig(low_tornado, plotsdir("sensitivity", "tornado_low.png"))
 
 # And the high mix amount domain
@@ -900,10 +935,11 @@ colors_high = ifelse.(sorted_sens_high .< 0, "#440154", "#DCE319")
 
 # Create the tornado plot
 high_tornado = bar(xrange_high, sorted_sens_high, color = colors_high,
-                     xlabel = "Sensitivity", yticks = (xrange_high, sorted_names_high),
-                     orientation = :h, legend = false,
-                     title = "Tornado Diagram for Mix Amounts 2-8 ml",
-                     size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+                   xlabel = "Sensitivity", yticks = (xrange_high, sorted_names_high),
+                   orientation = :h, legend = false,
+                   title = "Sensitivity Analysis - Mix Amounts 2-8 ml",
+                   size = (700, 800), tickfontsize = 12, guidefontsize = 14,
+                   left_margin = 6Plots.mm, titlefontsize = 15)
 savefig(high_tornado, plotsdir("sensitivity", "tornado_high.png"))
 
 # We also want to do a tornado plot of the sensitivity analysis
@@ -929,12 +965,24 @@ colors_temp = ifelse.(sorted_sens_temp .< 0, "#440154", "#DCE319")
 
 # Create the tornado plot
 temp_tornado = bar(xrange_temp, sorted_sens_temp, color = colors_temp,
-                     xlabel = "Sensitivity to Mix Amount",
-                     yticks = (xrange_temp, sorted_names_temp),
-                     orientation = :h, legend = false,
-                     title = "Tornado Diagram for Discrete Temperature Ranges",
-                     size = (900, 600), tickfontsize = 12, guidefontsize = 14)
+                   xlabel = "Sensitivity to Mix Amount",
+                   yticks = (xrange_temp, sorted_names_temp),
+                   orientation = :h, legend = false,
+                   title = "Sensitivity Analysis - Discrete Temperature Ranges",
+                   size = (700, 800), tickfontsize = 12,
+                   left_margin = 4Plots.mm)
 savefig(temp_tornado, plotsdir("sensitivity", "temperature_tornado.png"))
+
+# Create the tornado plot
+temp_tornado_poster = bar(xrange_temp, sorted_sens_temp, color = colors_temp,
+                          xlabel = "Sensitivity to Mix Amount",
+                          yticks = (xrange_temp, sorted_names_temp),
+                          orientation = :h, legend = false,
+                          title = "Sensitivity Analysis",
+                          size = (800, 900), tickfontsize = 20,
+                          xlabelfontsize = 20, titlefontsize = 32,
+                          left_margin = 8Plots.mm)
+savefig(temp_tornado_poster, plotsdir("sensitivity", "temperature_tornado.svg"))
 \end{minted}
 
 Παρακάτω φαίνονται και τα αντίστοιχα plots
@@ -956,7 +1004,7 @@ savefig(temp_tornado, plotsdir("sensitivity", "temperature_tornado.png"))
 \end{center}
 
 \section{Συμπεράσματα}
-\label{sec:org6af63cf}
+\label{sec:org979780e}
 Έχοντας δει πως οι μεταβολές είναι στατιστικά σημαντικές από την ANOVA, η ανάλυση ευαισθησίας αυτή μας έδωσε και κάποια ποσοτικά αποτελέσματα τα οποία μας είναι χρήσιμα.
 
 Από την συνολική ανάλυση ευαισθησίας βλέπουμε πως το γαλακτικό οξύ έχει σχετικά μεγάλη εξάρτηση και από τις δύο παραμέτρους, αλλά επηρεάζεται περισσότερο από το mix amount. Το οξικό οξύ επηρεάζεται γενικά αρνητικά από το mix amount και θετικά από την θερμοκρασία, με την θερμοκρασία να είανι πολύ πιο καθοριστική στη μεταβλητότητα. Το προπιονικό φαίνεται να έχει ασθενή επίδραση και με τους δύο παράγοντες, όμως τα αποτελέσματα του είναι αρκετά διαφορετικά για τα δύο πειράματα, το οποίο μας οδηγεί στην σκέψη ότι η σημαντικότερη επίδραση είναι λόγω κάποιας αλληλεπίδρασης και δεν μπορεί να δωθεί στον έναν ή τον άλλο παράγοντα. Τέλος, η αιθανόλη έχει μία ισχυρή αρνητική επίδραση από την θερμοκρασία η οποία αποτελεί περίπου το 85\% της μεταβλητότητας της και στην συνολική ανάλυση φαίνεται να έχει αμελητέα επίδραση από την ποσότητα του mix.

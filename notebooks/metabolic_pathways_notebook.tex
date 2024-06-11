@@ -1,4 +1,4 @@
-% Created 2024-02-04 Κυρ 17:47
+% Created 2024-06-11 Τρι 13:57
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -21,7 +21,7 @@
 \usepackage{mathtools}
 \usepackage{esdiff}
 \usepackage{makeidx}
-\usepackage{glossaries}
+\usepackage[acronym]{glossaries}
 \usepackage{newfloat}
 \usepackage{minted}
 \usepackage[a4paper, margin=3cm]{geometry}
@@ -35,7 +35,7 @@
  pdftitle={Notebook for metabolic pathway prediction},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.2 (Org mode 9.6.15)}, 
+ pdfcreator={Emacs 29.3 (Org mode 9.6.15)}, 
  pdflang={English}}
 \makeatletter
 \newcommand{\citeprocitem}[2]{\hyper@linkstart{cite}{citeproc_bib_item_#1}#2\hyper@linkend}
@@ -49,17 +49,17 @@
 
 
 \section{Description of the core concepts}
-\label{sec:orga9e9f91}
-This notebook is about a personal project of mine, which is mostly done as a learning experience in Julia, but if succesful can have application in my thesis (hence why it is in this directory). The idea is that since we know from literature every pathway a mixed culture fermentation can follow, if we have data for the input and output of either a continuous (in steady state) or batch reactor, we can try to find which pathways were followed and to what extent in each case.
+\label{sec:org0c70bdd}
+This notebook is about a personal project of mine, which is mostly done as a learning experience in Julia, but if succesful can have application in my thesis. The idea is that since we know from literature every pathway a mixed culture fermentation can follow, if we have data for the input and output of either a continuous (in steady state) or batch reactor, we can try to find which pathways were followed and to what extent in each case.
 
 This example can be made into an optimization problem as the extent to which each pathway is followed can be considered the parameters of the simulator and with an L2 loss between experimental data and the output of the simulator, we can optimize it with the classic SciML toolchain.
 
 This can be very useful both for understanding the behaviour of a mixed culture of microorganisms and how they behave in different conditions but also can have very large application in modelling. Modelling mixed cultures is in general fairly hard because of the large amount of processes that can happen, but if we can quantify to what extent each process happens, it makes modelling much easier.
 
 \section{Primitives}
-\label{sec:orga422e71}
+\label{sec:orgf5c1853}
 \subsection{Molar mass definition}
-\label{sec:org6476d80}
+\label{sec:org0c46c8d}
 Since we generally measure concentration in g/l, but reactions are described in molar terms, a very important primitive to implement is molar mass. We define molar mass for a general C\textsubscript{a}H\textsubscript{b}O\textsubscript{c}N\textsubscript{d}S\textsubscript{e} compound with the function
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -71,7 +71,7 @@ end
 \end{minted}
 
 \subsection{Molar mass of substances used}
-\label{sec:orgd787e8c}
+\label{sec:org36e4cb7}
 and then calculate molar mass for all substances used in the system.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -156,7 +156,7 @@ end
 \end{minted}
 
 \subsection{Concentration to mass}
-\label{sec:orgdb6214d}
+\label{sec:org1d056ad}
 Since we define molar mass, we can easily convert moles to mass and opposite. However, what we typically measure is concentration, so we also need a function to convert mass to concentration, which is easy as concentration to mass is multiplication with volume and the opposite is division. This is shown below
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -172,11 +172,11 @@ end
 \end{minted}
 
 \section{Core pathways}
-\label{sec:org6a77985}
+\label{sec:orgf3385fc}
 Then, we can start writing down the metabolic pathways which can happen in this system. The concept is that they all operate in a variable named st (state), which is a named tuple holding the concentration of each compound and return a new state of how the concentrations changed due to this process. Furthermore, they all have one (or multiple) goals, which describe to what extent each reaction is followed.
 
 \subsection{Initial state}
-\label{sec:org1fd0c50}
+\label{sec:org3355eae}
 Therefore, we first need an initial state. A test state used for a lot of what is implemented here is displayed below.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -190,7 +190,7 @@ state = (glucose = 16.0, pyruvate = 0.0, hydrogen = 0.0, water = 700.0, co2 = 0.
 \end{minted}
 
 \subsection{Glycolysis definition and explanation}
-\label{sec:org71f81c7}
+\label{sec:org1d9040d}
 After that, we can start writing down reactions. The first reaction we define is glycolysis, the pathway through which glucose is converted to pyruvate, hydrogen and energy. 
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -213,7 +213,7 @@ end
 The logic of the function is we define the stoichiometry, which is known, convert it to mass stoichiometry with the molar mass primitives defined above, find the factor \texttt{change} which calculates the conversion of the reaction in mass terms, from the goal given and update the state so that all compounds are changed by this variable times the mass stoichiometric coefficient. For the variable for which goal is defined, its value can more simply be the value of goal. It also runs an error check if the goal of glucose is larger than the glucose in the initial state. Since it is consumed, it cannot be more than its initial value, so the function should give an error if this is given. The logic of all other core reactions is the same, so it won't be explained again below. 
 
 \subsection{Other sugars}
-\label{sec:org61804f5}
+\label{sec:org833adf8}
 However, in a lot of cases we don't have only glucose. The case study I am doing contains sucrose and fructose, but other sugars could be similarly defined. Sucrose is hydrolyzed to an equimolar mixture of glucose and fructose, while fructose enters the EMP pathway (glycolysis) producing glyceraldehyde-3-phosphate, which is an intermediate of pyruvate. Since this system tries to look at a bigger picture and not every intermediate of the process, the implementation of fructolysis will be that fructose isomerises to glucose and goes through glycolysis. Theoretically it is not correct, but with the amount of abstracted detail we have assumed, it does not give any error. Below are there implementations.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -246,7 +246,7 @@ end
 \end{minted}
 
 \section{Pathways of pyruvate consumption}
-\label{sec:orgc2b8663}
+\label{sec:org1a642eb}
 As mentioned, pyruvate is the core intermediate of the process, produced during glycolysis. There are many pathways it can partake in, producing different products depending on conditions. The core ones (abstracting intermediates of the processes) are:
 
 \begin{itemize}
@@ -378,7 +378,7 @@ end
 \end{minted}
 
 \section{Other pathways stemming from glycolysis}
-\label{sec:orgd205f67}
+\label{sec:org9400f29}
 However, there are also some other important reactions that are in these pathways as the above products are in some cases intermediates for the production of something else. The reactions taking some of these products and converting them to other products are: 
 
 \begin{itemize}
@@ -521,11 +521,11 @@ end
 \end{minted}
 
 \section{Other pathways for glucose consumption}
-\label{sec:org0ddf1fb}
+\label{sec:org5c2afc5}
 However, the glycolytic pathway for pyruvate production and its conversion to products isn't the only possible route. There are also other pathways for the consumption of glucose.
 
 \subsection{Heterolactic fermentation}
-\label{sec:orgfd40084}
+\label{sec:org518b794}
 One such pathway is the PK pathway where glucose is converted to one mole of glyceraldehyde-3-phosphate (which is then converted to pyruvate) and one mole of acetyl-CoA. This route produces 3 hydrogen moles together with those, which means that reductions are heavily favored. For this reason, the pyruvate produced is converted to lactate and acetyl-CoA favors the reductive pathway of ethanol production instead of acetate, although acetate can be seen in this pathway. This is also called the heterolactic fermentation pathway due to how lactate is produced together with a co-product. The two primitive reactions for heterolactate with ethanol and acetate are defined and then a compound reaction that combines them.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -588,7 +588,7 @@ end
 \end{minted}
 
 \subsection{Bifidus fermentation}
-\label{sec:org23b3f41}
+\label{sec:orgcd7d26f}
 Another possible pathway is bifidus fermentation where 1/4th of the glucose is converted immediately to acetyl-CoA (half a molecule) and the rest of the carbons (5) go through a different pathway to pyruvate and acetyl-CoA. However, in this process, only one hydrogen is produced (oxidation of glyceraldehyde-3-phosphate to pyruvate) so pathways of reduction are not as favored and acetyl-CoA is converted to acetate. The common co-product however remains lactate using the one hydrogen created from pyruvate.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -613,7 +613,7 @@ end
 \end{minted}
 
 \subsection{Ethanol fermentation}
-\label{sec:org513cc9d}
+\label{sec:org22fde92}
 Another common pathway of glucose consumption is the ethanol fermentation which happens in yeasts. This is not very common in a typical mixed culture, but is added here for completion purposes and due to how easy it is to implement.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -635,7 +635,7 @@ end
 \end{minted}
 
 \subsection{Glucose consumption}
-\label{sec:org2136e01}
+\label{sec:org622afbb}
 Having defined 4 different pathways in which glucose is consumed, there is interest in defining a glucose consumption function which given the amount of glucose in each pathway can calculate the products. Then, this can be linked to pyruvate consumption pathways to final products. This is shown here.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -667,7 +667,7 @@ end
 \end{minted}
 
 \subsection{Aerobic consumption}
-\label{sec:orge4fc921}
+\label{sec:org048b268}
 In aerobic conditions (with oxygen in the reactor), glucose goes down the glycolytic pathway, but pyruvate is not converted into any of the aforementioned products, but rather enters the Krebs cycle where it continuously produces energy, CO\textsubscript{2} and hydrogen. Pyruvate is first converted to acetyl-CoA in this process (which abstracting the details of CoA can be simulated with the conversion to acetate we have written down) and then that breaks down to CO\textsubscript{2} and hydrogen in the Krebs cycle. NAD\^{}+ and FAD is required for this process and for it to be in its oxidized state all the time, this process needs to be done with oxygen. By the electron balance of these, 2 moles of oxygen are required per run of the Krebs cycle. Also 2 moles of water are necessary. Therefore, in our reaction system which abstracts the details of each pathway, it could be described as \(CH3COOH + 2 H_2O \xrightarrow{2O_2} 2 CO_{2} + 4H_2\) where the Oxygen is written in the arrow becuase the redox reactions it participates in are hidden. Kreb's cycle operates for as long as there is oxygen in the reactor, therefore, the goal of this function will be oxygen to 0. However, if written as two reactions (pyruvate to acetate and acetate oxidation), we will get incorrect results, as we want pyruvate to acetate for as much as oxygen can be produced. Therefore, we need to combine the reactions. The implementation is shown below
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -693,7 +693,7 @@ end
 \end{minted}
 
 \section{Acetogenic routes}
-\label{sec:orgebed82a}
+\label{sec:org7d047e0}
 Another big part of a typical anaerobic mixed culture fermentation is acetogenesis, the process in which various materials (such as propionate, butyrate, lactate, ethanol etc.) are converted to acetate. These processes are described below.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -851,7 +851,7 @@ end
 \end{minted}
 
 \section{Common fermentative pathways}
-\label{sec:org64c3d17}
+\label{sec:orgcb6c0ab}
 After defining all the above, there is a lot of interest in some very common compound fermentative pathways. For example, we know from literature that a very common pathway is that ethanol and acetate are produced in equimolar amounts, so instead of writing that in the final function we want to use, we can implement it directly and then use this in the final function that describes the combination of pathways we assume to be followed. Besides acetate-ethanol fermentation, we know that a fermentation of butyrate with acetate in a 3:1 molar analogy is common and propionate-acetate in a 2:1.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -938,7 +938,7 @@ end
 \end{minted}
 
 \subsection{ABE Fermentation}
-\label{sec:orgf8252af}
+\label{sec:orge636528}
 Another common pathway studied in literature is ABE fermentation. In this, there is an acidogenic phase where mostly acetate and butyrate are produced (with some ethanol production) and after some time, the culture enters the solventogenic phase where ethanol is produced with a higher yield and together with acetone and butanol. This system is described with the below, fairly complex, function. Note that the extent to which each product is produced is not set in stone for ABE fermentation so all of these are given as keyword arguments.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -983,7 +983,7 @@ end
 \end{minted}
 
 \section{Test on experiments}
-\label{sec:orgc7dfd25}
+\label{sec:orgecc675b}
 This section is about a test for the experiments we have done to see if we can validate the data. Obviously, we first need to import dependencies and our data.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -1103,7 +1103,7 @@ init_mass40_8 = conc_to_mass(init_st40_8, v)
 \end{minted}
 
 \subsection{Parameterized final metabolic pathway}
-\label{sec:org5b4d303}
+\label{sec:org081f399}
 Then, we can define the compound reaction function that lists all the pathways we believe are occuring.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -1181,11 +1181,11 @@ end
 \end{minted}
 
 \subsection{Finding the true metabolic pathway}
-\label{sec:orgbc374a8}
+\label{sec:orgd4b63a0}
 The above function is very useful. Given all its required parameters, it returns an output state of what it believes is the effluent concentrations. However, randomly trying parameters until our system starts looking correct isn't a good approach. What we want is to find the parameter set for which the function output matches the experimental data as much as possible, which can be formulated as a parameter estimation problem, which we can very easily solve with the SciML tooling. First, we need a function y = f(x,p) which given an input and a parameter set, returns an output. However, we want to have knowledge of the initial and final states, so we first a generalized function that does this work and while testing we can make it more specific to have the above signature. The next few code blocks are the backend which the optimization interface will use and for that reason it will be tangled to a src file and not to scripts. The function \texttt{mixed\_culture\_fermentation} defined above is necessary for this to work so it will also be tangled to that file.
 
 \subsubsection{Generic optimization function}
-\label{sec:org0263a04}
+\label{sec:orgf0b8314}
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
 
 <<final_pathway>>
@@ -1202,7 +1202,7 @@ end
 This function is a generalized function that does this exact thing. It takes an initial state that needs to be of the format \texttt{mixed\_culture\_fermentation} will accept, a dataframe whose first column is time and then has 7 other columns with the products and which has 4 rows, and a vector. The vector is one of 5 elements containing our parameters. The function that we will use in the final optimization will not have the dataframe as a parameter, but rather we will wrap that part inside a closure. In the same logic, we can write our loss function.
 
 \subsubsection{Calculating the loss of our experiments}
-\label{sec:orga77d348}
+\label{sec:org45ffdeb}
 However, before writing the loss function, one problem can be noted. Ethanol reaches a maximum during either 24 or 48 hours and after that starts decreasing. The decrease is easily explainable if we consider acetogenic reactions for it. The above does not consider them, so training on that data means overestimating the other acetogenic fluxes and having to train on ethanol that is not the final condition. Therefore, we need a function that takes the initial state and the dataframe containing final as well as intermediate states and returns how much acetogenesis changes each of the three variables we are training on. This is necessary as if we add the acetogenic reaction above, we risk never finding the maximum ethanol and the system predicting that ethanol acetogenesis happens only to a very small degree. For this reason we use this correction.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -1250,7 +1250,7 @@ end
 \end{minted}
 
 \subsubsection{Defining a predictor function for the optimization}
-\label{sec:orgf50c832}
+\label{sec:org5a94ed4}
 Lastly, we want a predictor function for use after optimization. The optimization problem simply returns the parameter vector, however, what we are interested in is what the output state looks like and its loss, besides the parameters. Using the same signature as above (initial\textsubscript{state} being a named Tuple, df being a data frame, p being the parameter vector and v being volume) this predictor function returns that verbosely that the parameter set p, which it is given gives an effluent with these concentrations which when compared with experimental data gives this loss.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -1268,7 +1268,7 @@ end
 \end{minted}
 
 \subsubsection{Testing on a specific dataset}
-\label{sec:org802ff69}
+\label{sec:orgd93cfb4}
 Now, we can test this system for a specific dataset. To do this, we will move back to the metabolic\textsubscript{tests.jl} file, but include the optimization interface source.
 
 Firstly, we need to specialize the loss and predictor to our specific dataset. We know the initial state, we know the dataframe we extract data from and we know that volume is 0.8 L. Note that to be consistent with the optimization interface of SciML, what we consider our problem's parameters (aka the things we are optimizing for) is the \texttt{u} vector while the \texttt{p} vector here signifies any known parameters of the model which we are not trying to estimate. There are none of these in our model (as we consider every parameter unknown) but there are many examples where this p is used and for that reason it is mandatory for the interface to work.
@@ -1342,7 +1342,7 @@ A very likely for difficulty of convergence is that the system gets multiple "il
 It should also be noted that a crude test was ran to check if a global optimizer like ParticleSwarm or a Genetic Algorithm can outperform BFGS. In general, global optimizers perform very well in some problems where they find the global minimum which has a loss than any other local minimum, but in the case of very complex optimization problems, they may be outperformed by algorithms that very efficiently find local minima. Due to the very low loss of the BFGS examples, it was expected that it's hard to outperform this. However, the test was done and these algorithms either didn't converge or converged to worse minima than BFGS, so this guess is probably the best we can make.
 
 \section{Running the optimization routine for the other 9 experiments}
-\label{sec:orgd5fdec8}
+\label{sec:org68566d4}
 After doing a test, we can now easily expand it to all experiments.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -1484,7 +1484,7 @@ sol40_8 = solve(optprob_40_8, Optim.BFGS())
 \end{minted}
 
 \section{Saving the optimization results}
-\label{sec:orgc752861}
+\label{sec:org1667490}
 In the format everything is written, concatenating init\textsubscript{st}, df and sol with the temperature and mix amount gives the signature with which we call the functions.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -1529,7 +1529,7 @@ wsave(datadir("simulations", "metabolic_pathways.jld2"), evaled_dict)
 The above code block collects the variable names of the initial state, dataframe, optimization solution and volume (which is the signature all optimization functions use) and saves it in a dictionary. Then, it saves the dictionary into a file. Now, instead of reading the raw data and running through the optimization interface again, we can simply read this file and have all the data necessary to analyze the results.
 
 \section{Result analysis}
-\label{sec:org6635a79}
+\label{sec:org4fb7173}
 The analysis that needs to be performed after performing the optimization is to which extent each compound is produced and consumed by each reaction. We know Sucrose and Fructose only participate in one reaction for production/consumption each. From the parameter estimation, we already know the extent to which glucose goes to either glycolysis or heterolactate fermentation, the extent to which pyruvate goes to each anaerobic reaction and the mass of oxygen in the reactor. From the oxygen, we can calculate the consumed pyruvate and from that, the pyruvate that went to that reaction, finding the percent of total pyruvate in each of its reactions. We assume propionate is only produced by one reaction. And from the pyruvate reaction fluxes, we can find how much of each product was from each reaction.
 
 But before calculating anything, we need to define some dependencies.
@@ -1545,7 +1545,7 @@ include(srcdir("metabolic_pathways", "opt_interface.jl"))
 \end{minted}
 
 \subsection{Finding the various fluxes}
-\label{sec:orge9e94cd}
+\label{sec:org0a3f579}
 One important but very easy calculation is what percentage of the maximum glucose and fructose is produced from sucrose hydrolysis and what is pre-existent. Furthermore, not all fructose is consumed in most reactions.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -1734,7 +1734,7 @@ end
 \end{minted}
 
 \subsection{Constructing the table containing all the fluxes}
-\label{sec:org53d6e6d}
+\label{sec:org0e4d1e7}
 With these, we can construct a table of how the fluxes are after each reaction. We start with the initial state and move to sucrose hydrolysis (R1), glycolysis/fructolysis (R2), heterolactic fermentation (R3), pyruvate oxidation (R4), acetate fermentation (R5), lactate type fermentation (R6), ethanol fermentation (R7), acetate ethanol type fermentation (R8), lactate reduction to propionate (R9), ethanol acetogenesis (R10) and concluding at what is the final state. This will be for the 8 most important compounds, Sucrose, Glucose, Fructose, Pyruvate, Lactate, Acetate, Propionate and Ethanol. The initial state can be calculated as 1 - sum(production). These are shown in the next block.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -1908,7 +1908,7 @@ end
 \end{minted}
 
 \subsection{Graph Networks}
-\label{sec:org57235a1}
+\label{sec:orgbc9aeeb}
 All the above analysis very useful and the matrices created by it have a lot of significance. But, in reality, when presenting results, bare tables are not a very good representation. The best way to show results is typically some kind of visual tool. In the case of metabolic networks, a commonly employed method is using directed graphs. A directed graph shows how material flows from one compound to the other both qualitatively and quantitatively as the nodes (indicating the compounds) and the edges (indicating the pathways) can both be named for qualitative descriptions and can be colored to show qualitative descriptions (using the viridis color map for example).
 
 Below are three functions which are used to create the graph plot using Makie. The first generates the graph indicating which pathways are feasible and their names. The second, generates the quantitative attributes. It gets the concentrations of the compounds and their fluxes from previously defined functions and using the 20 colors of the viridis color map, tries to create a color scaling to the given vectors. For readability, the same is done with the font colors but using shades of grey, as the darkest colors need light fonts and the lightest need dark fonts. It returns these attributes to be used in the plot. Finally the third function does the plotting using the generated graph with its qualitative and quantitative characteristics. It also configures other plot attributes for the optimal (in my opinion) look of the graph plot as well as insert some explanatory labels for the plot to be more easily understandable. The result is great, indicating why an image is worth a thousand words.
@@ -1975,13 +1975,13 @@ end
 \end{minted}
 
 \subsubsection{Sample result}
-\label{sec:orge2590d4}
+\label{sec:org1682c98}
 \begin{center}
 \includegraphics[width=.9\linewidth]{../plots/metabolic_results/35_0.png}
 \end{center}
 
 \section{Performing the result analysis on each dataset}
-\label{sec:org28e635e}
+\label{sec:org81b5e4d}
 This section has the goal of loading the jld2 file saved above and initializing all the necessary variables to do the result analysis (meaning generate the needed tables and plots). The majority of dependencies are in \texttt{metabolism\_results.jl}. DrWatson and JLD2 which are needed are not however.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -2012,7 +2012,7 @@ st40_8, df40_8, p40_8, v = data_dir["40_8"]
 \end{minted}
 
 \subsection{Generate the necessary tables}
-\label{sec:orgd824732}
+\label{sec:org0a41a36}
 The above code for result analysis creates a lot of useful to have tables. I want to save 4 different table formats for each experiment. These are: The reaction flux table, the flux table containing the reactions as well as initial and final state, the "readable" flux table containing the labels of each column and row and the absolute flux table which is not normalized in (0, 1) but in the absolute concentration values measured. For simplicity, a helper function will be defined which runs all 4 and return the 4 tables and then only one function needs to be ran for each experiment.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -2097,7 +2097,7 @@ CSV.write(datadir("simulations", "flux_tables", "absolute_flux_table40_8.csv"), 
 \end{minted}
 
 \subsection{Create the graphs}
-\label{sec:org91351b2}
+\label{sec:orga90c9ee}
 The tables are useful to log the results and be able to revisit them at any point. But, they are not very easy to read. For this reason, the graph function were created because the graphs offer a powerful visualization technique of the table data. This code block generates these.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -2126,7 +2126,7 @@ save(plotsdir("metabolic_results", "40_8.png"), f40_8)
 \end{minted}
 
 \section{Shifts in metabolic reactions from changing parameters}
-\label{sec:org74c5c5e}
+\label{sec:orgc23dbb5}
 Having all this, we can conclude how the metabolic pathways change by varying a parameter.
 
 35 C: Increasing the mix amount significantly inhibits acetogenic pathways (the main indication for this is ethanol to acetate which is seen to a large extent in 0 and 1 ml but vanishes after, but also pyruvate to acetate has a very small rate in anything but 1 ml) and to a lesser extent inhibits propionate production while promoting reducing reactions such as pyruvate to lactate (direct reduction) and ethanol (reduction of Acetyl-CoA, produced from pyruvate). Also, Fructose is consumed more effectively. This indicates that heterolactic fermentation is carried by the indigenous microorganisms of the FW (as its flux doesn't increase with mix amount) but this group of microorganisms isn't inhibited by the microorganisms we insert (seen by the small decreases in heterolactate flux). Lactate gets very high amounts in high mix amounts as both groups of microorganisms are capable of producing significant amount of lactate. The other reactions don't seem significantly affected. A detail that should be noted is that by using this flux-based analysis process which gets relative values and doesn't care as much about the differences between initial conditions, we see that the experiments at 2 ml and 8 ml yield almost identical results. The main difference is that there is a flux of 10\% of pyruvate going to acetate-ethanol type fermentation instead of pure ethanol (which is reflected by the fact that slightly more acetate is produced at 8 ml), but besides that, which is a minor change, the two have many similarities. This is very nicely indicated in the graph where none of the arrow color changes, but all the node color changes because the experiment at 2 ml had more sugars. This was also noticed when we did the yield plots which compared total products with total sugars and these two experiments gave the same results. Curiously, 4 ml yields worse results than both, but these show even further that increasing the max amount from 2 to 8 ml does nothing.
@@ -2138,7 +2138,7 @@ One last thing that we notice is the relationship between ethanol and acetate. A
 Some of these are visible if you look at the graph networks or the matrices generated above, but although the graph visualization is very nice and indicative, we don't want to have to show 9 identical looking graphs with only the colors changing, so we want some more fine-tuned graphs to be able to better summarize some results. These are shown below.
 
 \subsection{Amount of glucose consumed in heterolactic fermentation}
-\label{sec:org520486d}
+\label{sec:orge53b047}
 The glucose being consumed in heterolactic fermentation is the majority of the total glucose and it's flux is very similar in all experiments, with its changes not being able to be attributed to the mix. Therefore, I believe it is done by the indigenous microorganisms. To indicate this better, we can plot how it changes in the various experiments. A bar plot is the ideal way to do this.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -2161,7 +2161,7 @@ save(plotsdir("metabolic_results", "heterolactate_flux.png"), het_plot)
 In this plot it is evident that 8/10 are at 80\% or just above it (40 C/2 ml is slightly higher but not by too much) and then 2 diverge a bit by being lower, but even then, not by a very large extent. The standard deviation of the ten observations is only 0.05 which is definitely low enough to be called randomnes.
 
 \subsection{Amount of lactate consumed for propionate production}
-\label{sec:orgb1bb36b}
+\label{sec:orgbacb1fc}
 Propionate production shows signs of inhibition at 35 C (although to a lesser extent compared to acetate) and shows stagnation at 40 C after 1 ml. These are both plotted to indicate these.
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -2201,7 +2201,7 @@ save(plotsdir("metabolic_results", "propionate_flux_40.png"), prop_40_p)
 \end{center}
 
 \subsection{Pyruvate Flux Pie Plots}
-\label{sec:org692dc50}
+\label{sec:org0961f9f}
 One of the things that we want to indicate is that acetate and ethanol fermentations act competitively between the two temperatures (meaning that one is strongly inhibited and the other strongly produced). But an interesting point (which is due to the indigenous microorganisms as it appears most evidently at 0 ml) is that if the inhibited one were to be produced, it would be produced in acetate/ethanol type fermentation, which is the 1:1 ratio fermentation producing both.  
 
 \begin{minted}[breaklines=true,breakanywhere=true]{julia}
@@ -2285,7 +2285,7 @@ save(plotsdir("metabolic_results", "pyr_flux_tot.png"), pyr_flux_f)
 \end{center}
 
 \section{General conclusions of the study}
-\label{sec:orgf66268f}
+\label{sec:orgf3c42cf}
 After doing all the above work, we have basically concluded this project with some conclusions. Using information from literature about the possible pathways followed by our reaction system, we designed an infrastructure that with knowledge of to what extent each reaction was done, can predict the reactor effluent. The backwards problem of this formulation is that knowing the effluent of our reactor system we can predict to what extent each reaction was done. This backwards problem can easily be solved with the SciML tooling if formulated properly in Julia. With a robust local optimization method, we can bring the loss down to 1e-16/1e-20 in every case meaning a perfect prediction of the effluent. Having the results of this, we can design the metabolic pathway matrix which shows to which extent each compound is produced/consumed by each reaction, a very useful tool for this problem. From that matrix, we can draw our conclusions, as well as use visualization tools to support them.
 
 The metabolic network graph created is a very nice image that contains a lot of information about our system all packed into one image. It is a very convenient representation of the results of this process without too many details. Other visualizations of the entire system are not necessary. However, more specific images are used to support some of the conclusions below.
