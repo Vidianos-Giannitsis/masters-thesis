@@ -6,6 +6,7 @@
 \renewcommand{\chaptername}{Κεφάλαιο}
 \renewcommand{\chapterautorefname}{Κεφάλαιο}
 \renewcommand{\sectionautorefname}{Ενότητα}
+\renewcommand{\appendixautorefname}{Παράρτημα}
 \renewcommand{\partname}{Μέρος}
 \renewcommand{\appendixname}{Παράρτημα}
 \renewcommand{\listfigurename}{Περιεχόμενα Σχημάτων: }
