@@ -3433,20 +3433,20 @@ ls -mQ ../bmp_pictures/ORCA/
   colors = ["#009AFA","#E36F47","#3EA44E","#C371D2","#AC8E18"]
 
   <<hydrolysate_0_s1_r2>>
-  methane_s1_r2_comp = scatter(exp_hour, cumsum(exp_meth_vol), markersize = 4, legend = :outerright, label = "Hydrolysate (0 ml mix) Exp", xlabel = "Time (hour)", ylabel = "Cumulative Methane Volume (mL)", markercolor = colors[1], size = (1000, 600), legendfontsize = 12, labelfontsize = 14, tickfontsize = 12, left_margin=3Plots.mm,  bottom_margin=3Plots.mm, yticks = 0:2:10)
-  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_0_hour[2:4]), label = "Hydrolysate (0 ml mix) Theoretical\n with "*L"R^2 = "*string(model_hydro_0_hour[5]), linecolor = colors[1])
+  methane_s1_r2_comp = scatter(exp_hour, cumsum(exp_meth_vol), markersize = 4, legend = :outerright, label = "Hydrolysate (0 mL mix) Exp", xlabel = "Time (hour)", ylabel = "Cumulative Methane Volume (mL)", markercolor = colors[1], size = (1000, 600), legendfontsize = 12, labelfontsize = 14, tickfontsize = 12, left_margin=3Plots.mm,  bottom_margin=3Plots.mm, yticks = 0:2:10)
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_0_hour[2:4]), label = "Hydrolysate (0 mL mix) Theoretical\n with "*L"R^2 = "*string(model_hydro_0_hour[5]), linecolor = colors[1])
 
   <<hydrolysate_1_s1_r2>>
-  scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (1 ml mix) Exp", markercolor = colors[2])
-  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_1_hour[2:4]), label = "Hydrolysate (1 ml mix) Theoretical\n with "*L"R^2 = "*string(model_hydro_1_hour[5]), linecolor = colors[2])
+  scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (5 mL mix/kg FW) Exp", markercolor = colors[2])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_1_hour[2:4]), label = "Hydrolysate (5 mL mix/kg FW) Theoretical\n with "*L"R^2 = "*string(model_hydro_1_hour[5]), linecolor = colors[2])
 
   <<hydrolysate_2_s1_r2>>
-  scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (2 ml mix) Exp", markercolor = colors[3])
-  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_2_hour[2:4]), label = "Hydrolysate (2 ml mix) Theoretical\n with "*L"R^2 = "*string(model_hydro_2_hour[5]), linecolor = colors[3])
+  scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (10 mL mix/kg FW) Exp", markercolor = colors[3])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_2_hour[2:4]), label = "Hydrolysate (10 mL mix/kg FW) Theoretical\n with "*L"R^2 = "*string(model_hydro_2_hour[5]), linecolor = colors[3])
 
   <<hydrolysate_4_s1_r2>>
-  scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (4 ml mix) Exp", markercolor = colors[4])
-  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_4_hour[2:4]), label = "Hydrolysate (4 ml mix) Theoretical\n with "*L"R^2 = "*string(model_hydro_4_hour[5]), linecolor = colors[4])
+  scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (20 mL mix/kg FW) Exp", markercolor = colors[4])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_4_hour[2:4]), label = "Hydrolysate (20 mL mix/kg FW) Theoretical\n with "*L"R^2 = "*string(model_hydro_4_hour[5]), linecolor = colors[4])
 
   <<untreated_fw_s1_r2>>
   scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Untreated FW Exp", markercolor = colors[5])
@@ -3456,7 +3456,7 @@ ls -mQ ../bmp_pictures/ORCA/
 #+END_SRC
 
 #+RESULTS: comp_methane_plot_s1_r2
-: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/methane_s1_r2_comp.png"
+: "/home/vidianos/Documents/9o_εξάμηνο/Masters_Thesis/plots/BMPs/methane_s1_r2_comp.svg"
 
 [[../plots/BMPs/methane_s1_r2_comp.png]]
 
@@ -6713,12 +6713,12 @@ ls -mQ ../bmp_pictures/ORCA/
   colors = ["#E36F47","#3EA44E"]
 
   <<hydrolysate_orca_p1_s3>>
-  methane_s3_orca_comp = scatter(exp_hour, cumsum(exp_meth_vol), markersize = 4, legend = :outerright, label = "Hydrolysate (0.005 L mix/kg FW) Exp", xlabel = "Time (hour)", ylabel = "Cumulative Methane Volume (mL)", markercolor = colors[1], size = (1000, 600), legendfontsize = 12, labelfontsize = 14, tickfontsize = 12, left_margin=3Plots.mm,  bottom_margin=3Plots.mm)
-  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_p1_s3_hour[2:4]), label = "Hydrolysate (0.005 L mix/kg FW) Theoretical\n with "*L"R^2 = "*string(model_hydro_p1_s3_hour[5]), linecolor = colors[1])
+  methane_s3_orca_comp = scatter(exp_hour, cumsum(exp_meth_vol), markersize = 4, legend = :outerright, label = "Hydrolysate (5 mL mix/kg FW) Exp", xlabel = "Time (hour)", ylabel = "Cumulative Methane Volume (mL)", markercolor = colors[1], size = (1000, 600), legendfontsize = 15, labelfontsize = 14, tickfontsize = 12, left_margin=3Plots.mm,  bottom_margin=3Plots.mm)
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_p1_s3_hour[2:4]), label = "Hydrolysate (5 mL mix/kg FW) Theoretical\n with "*L"R^2 = "*string(model_hydro_p1_s3_hour[5]), linecolor = colors[1])
 
   <<hydrolysate_orca_p3_s3>>
-  scatter!(methane_s3_orca_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (0.01 L mix/kg FW) Exp", markercolor = colors[2])
-  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_p3_s3_hour[2:4]), label = "Hydrolysate (0.01 L mix/kg FW) Theoretical\n with "*L"R^2 = "*string(model_hydro_p3_s3_hour[5]), linecolor = colors[2])
+  scatter!(methane_s3_orca_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (10 mL mix/kg FW) Exp", markercolor = colors[2])
+  plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_p3_s3_hour[2:4]), label = "Hydrolysate (10 mL mix/kg FW) Theoretical\n with "*L"R^2 = "*string(model_hydro_p3_s3_hour[5]), linecolor = colors[2])
 
   savefig(methane_s3_orca_comp, plotsdir("BMPs", "methane_orca_s3_comp.svg"))
 #+END_SRC

@@ -1476,8 +1476,8 @@ end
 
 
 return("../data/exp_pro/"*exp_name*".csv")
-methane_s1_r2_comp = scatter(exp_hour, cumsum(exp_meth_vol), markersize = 4, legend = :outerright, label = "Hydrolysate (0 ml mix) Exp", xlabel = "Time (hour)", ylabel = "Cumulative Methane Volume (mL)", markercolor = colors[1], size = (1000, 600), legendfontsize = 12, labelfontsize = 14, tickfontsize = 12, left_margin=3Plots.mm,  bottom_margin=3Plots.mm, yticks = 0:2:10)
-plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_0_hour[2:4]), label = "Hydrolysate (0 ml mix) Theoretical\n with "*L"R^2 = "*string(model_hydro_0_hour[5]), linecolor = colors[1])
+methane_s1_r2_comp = scatter(exp_hour, cumsum(exp_meth_vol), markersize = 4, legend = :outerright, label = "Hydrolysate (0 mL mix) Exp", xlabel = "Time (hour)", ylabel = "Cumulative Methane Volume (mL)", markercolor = colors[1], size = (1000, 600), legendfontsize = 12, labelfontsize = 14, tickfontsize = 12, left_margin=3Plots.mm,  bottom_margin=3Plots.mm, yticks = 0:2:10)
+plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_0_hour[2:4]), label = "Hydrolysate (0 mL mix) Theoretical\n with "*L"R^2 = "*string(model_hydro_0_hour[5]), linecolor = colors[1])
 
 
 ### Data Analysis on Hydrolysate with 1 ml ###
@@ -1734,8 +1734,8 @@ end
 
 
 return("../data/exp_pro/"*exp_name*".csv")
-scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (1 ml mix) Exp", markercolor = colors[2])
-plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_1_hour[2:4]), label = "Hydrolysate (1 ml mix) Theoretical\n with "*L"R^2 = "*string(model_hydro_1_hour[5]), linecolor = colors[2])
+scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (5 mL mix/kg FW) Exp", markercolor = colors[2])
+plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_1_hour[2:4]), label = "Hydrolysate (5 mL mix/kg FW) Theoretical\n with "*L"R^2 = "*string(model_hydro_1_hour[5]), linecolor = colors[2])
 
 
 ### Data Analysis on Hydrolysate with 2 ml ###
@@ -1992,8 +1992,8 @@ end
 
 
 return("../data/exp_pro/"*exp_name*".csv")
-scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (2 ml mix) Exp", markercolor = colors[3])
-plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_2_hour[2:4]), label = "Hydrolysate (2 ml mix) Theoretical\n with "*L"R^2 = "*string(model_hydro_2_hour[5]), linecolor = colors[3])
+scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (10 mL mix/kg FW) Exp", markercolor = colors[3])
+plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_2_hour[2:4]), label = "Hydrolysate (10 mL mix/kg FW) Theoretical\n with "*L"R^2 = "*string(model_hydro_2_hour[5]), linecolor = colors[3])
 
 
 ### Data Analysis on Hydrolysate with 4 ml ###
@@ -2251,8 +2251,8 @@ end
 
 
 return("../data/exp_pro/"*exp_name*".csv")
-scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (4 ml mix) Exp", markercolor = colors[4])
-plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_4_hour[2:4]), label = "Hydrolysate (4 ml mix) Theoretical\n with "*L"R^2 = "*string(model_hydro_4_hour[5]), linecolor = colors[4])
+scatter!(methane_s1_r2_comp, exp_hour, cumsum(exp_meth_vol), markersize = 4, label = "Hydrolysate (20 mL mix/kg FW) Exp", markercolor = colors[4])
+plot!(exp_hour, gompertz_bmp(exp_hour, model_hydro_4_hour[2:4]), label = "Hydrolysate (20 mL mix/kg FW) Theoretical\n with "*L"R^2 = "*string(model_hydro_4_hour[5]), linecolor = colors[4])
 
 
 ### Data Analysis on Untreated FW ###

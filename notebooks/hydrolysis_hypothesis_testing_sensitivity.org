@@ -1155,6 +1155,17 @@ To GlobalSensitivity.jl προσφέρει δύο είδη ανάλυσης ευ
 		     left_margin = 6Plots.mm, titlefontsize = 15)
   savefig(high_tornado, plotsdir("sensitivity", "tornado_high.png"))
 
+  high_torn_pres = bar(xrange_high, sorted_sens_high, color = colors_high,
+		       xlabel = "Sensitivity",
+		       yticks = (xrange_high, sorted_names_high),
+		       orientation = :h, legend = false,
+		       title = "Mix Amounts 2-8 ml",
+		       size = (900, 1000), tickfontsize = 20, xlabelfontsize = 20,
+		       left_margin = 9Plots.mm, titlefontsize = 32,
+		       right_margin = 4Plots.mm)
+  savefig(high_torn_pres, plotsdir("sensitivity", "tornado_high.svg"))
+
+
   # We also want to do a tornado plot of the sensitivity analysis
   # performed for each temperature. Theoretically, the sensitivity we
   # have is how each parameter affects the system on its own, but making
@@ -1186,12 +1197,11 @@ To GlobalSensitivity.jl προσφέρει δύο είδη ανάλυσης ευ
 		     left_margin = 4Plots.mm)
   savefig(temp_tornado, plotsdir("sensitivity", "temperature_tornado.png"))
 
-  # Create the tornado plot
   temp_tornado_poster = bar(xrange_temp, sorted_sens_temp, color = colors_temp,
 			    xlabel = "Sensitivity to Mix Amount",
 			    yticks = (xrange_temp, sorted_names_temp),
 			    orientation = :h, legend = false,
-			    title = "Sensitivity Analysis",
+			    title = "Discrete Temperatures",
 			    size = (800, 900), tickfontsize = 20,
 			    xlabelfontsize = 20, titlefontsize = 32,
 			    left_margin = 8Plots.mm)
